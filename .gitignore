@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+.workbuddy/
+.omc/
+.claude/
+*.log
+.idea/
+.vscode/

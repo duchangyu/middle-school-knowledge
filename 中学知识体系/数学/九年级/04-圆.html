@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九年级数学 · 圆</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本节专用样式（数学紫主题） ===== */
+    .sec-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      color: var(--math);
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--bg-soft);
+    }
+    .sec-desc { color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* 页内快速导航 */
+    .toc-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .toc-strip a {
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .toc-strip a:hover { border-color: var(--math); color: var(--math); }
+
+    /* 生活实例卡片 */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .example-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .example-card .emoji { font-size: 40px; }
+    .example-card .ex-title { font-weight: 700; margin: 8px 0 4px; }
+    .example-card .ex-desc { font-size: 13px; color: var(--text-secondary); }
+
+    /* 概念定义 */
+    .def-box {
+      background: rgba(155,89,182,0.08);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 18px;
+      text-align: center;
+    }
+    .def-box .math { color: var(--math); font-weight: 700; }
+
+    .svg-wrap { text-align: center; margin: 16px 0; }
+    .svg-wrap svg {
+      width: 100%;
+      max-width: 560px;
+      background: #fff;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .svg-caption { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+
+    .key-points li { margin-bottom: 6px; }
+
+    /* 滑块布局 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .slider-row .slider-label {
+      width: 110px;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .slider-row .slider-label small { display: block; font-weight: 400; font-size: 12px; color: var(--text-secondary); }
+    .slider-row .range { flex: 1; }
+    .slider-row .val {
+      width: 64px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* 读数面板 */
+    .readout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .readout-item {
+      background: rgba(155,89,182,0.08);
+      border: 1.5px solid rgba(155,89,182,0.3);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      text-align: center;
+    }
+    .readout-item .r-label { font-size: 13px; color: var(--text-secondary); }
+    .readout-item .r-value { font-size: 17px; font-weight: 800; color: var(--math); }
+
+    /* 画布 */
+    .canvas-box {
+      width: 100%;
+      height: 420px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .canvas-box canvas { display: block; width: 100%; height: 100%; }
+
+    /* 图例 */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .legend .sw {
+      display: inline-block;
+      width: 18px;
+      height: 4px;
+      border-radius: 2px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .legend .sw.dash { height: 0; border-top: 2px dashed #E74C3C; width: 22px; }
+
+    /* 公式展示 */
+    .equation-display {
+      font-size: 22px;
+      text-align: center;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      letter-spacing: 1px;
+    }
+    .equation-display .math { color: var(--math); font-weight: 800; }
+
+    /* 对比表格 */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14.5px;
+    }
+    .compare-table th, .compare-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    .compare-table th { background: rgba(155,89,182,0.1); color: var(--math); }
+    .compare-table td:first-child { background: var(--bg-soft); font-weight: 600; white-space: nowrap; }
+    .compare-table .hl { color: var(--math); font-weight: 700; }
+
+    .status-line { text-align: center; font-size: 15px; margin-top: 10px; }
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+
+    /* 概念标签 */
+    .concept-tags {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .concept-tag {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      border-left: 4px solid var(--math);
+      transition: all 0.2s;
+    }
+    .concept-tag:hover { transform: translateX(4px); box-shadow: var(--shadow); }
+    .concept-tag .ct-name { font-weight: 700; color: var(--math); font-size: 16px; margin-bottom: 4px; }
+    .concept-tag .ct-desc { font-size: 13px; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" style="background: linear-gradient(135deg, #7D3C98, #9B59B6); box-shadow: 0 2px 12px rgba(125,60,152,0.3);">
+  <div class="navbar-brand">⭕ 圆</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+    <li><a href="../八年级/index.html">📐 数学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>圆</span>
+  </div>
+
+  <h1 style="font-size: 30px; margin-bottom: 8px;">⭕ 圆</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 20px;">
+    车轮滚滚、摩天轮旋转、一轮圆月挂天边——"圆"就藏在生活的每个角落里。
+    动手拖一拖角度和半径，你会发现：<b style="color: var(--math);">圆的一切性质，都来自"到定点距离相等"</b>这一句简单的话！
+  </p>
+
+  <div class="toc-strip">
+    <a href="#intro">🎯 引入</a>
+    <a href="#concept">📖 基本概念</a>
+    <a href="#explore1">🎛️ 探索1·圆的性质</a>
+    <a href="#explore2">📐 探索2·圆周角定理</a>
+    <a href="#explore3">📏 探索3·弧长与扇形</a>
+    <a href="#explore4">✂️ 探索4·切线性质</a>
+    <a href="#area">🧩 圆面积推导</a>
+    <a href="#quiz">✏️ 练一练</a>
+  </div>
+
+  <!-- ========== 引入 ========== -->
+  <section class="card" id="intro">
+    <div class="sec-title">🎯 引入：生活中到处都是圆</div>
+    <p class="sec-desc">为什么车轮要做成圆形？为什么摩天轮转起来那么稳？答案都藏在一个共同的几何图形里——<b>圆</b>。</p>
+
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="emoji">🚗</div>
+        <div class="ex-title">车轮</div>
+        <div class="ex-desc">车轴到地面的距离始终不变，所以车开起来才平稳不颠簸。</div>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🎡</div>
+        <div class="ex-title">摩天轮</div>
+        <div class="ex-desc">每个轿厢到中心的距离都一样，转一圈画出一个完美的圆。</div>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🌕</div>
+        <div class="ex-title">圆月</div>
+        <div class="ex-desc">古人说"月圆如镜"——满月时，月亮边缘每一点到中心的距离都相等。</div>
+      </div>
+    </div>
+
+    <div class="def-box">
+      <b>圆的定义</b>：在平面内，到<b class="math">定点</b>的距离等于<b class="math">定长</b>的所有点组成的图形叫做<b class="math">圆</b>。<br>
+      定点叫<b>圆心</b>（O），定长叫<b>半径</b>（r）。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 想一想</div>
+      车轮为什么不能做成方形或三角形？因为只有圆能做到：<b>边缘上每一点到中心的距离都相等</b>，
+      这样车轴（圆心）在运动中始终保持同一高度，车子才平稳。这就是"圆的定义"在生活中的妙用！
+    </div>
+  </section>
+
+  <!-- ========== 圆的基本概念 ========== -->
+  <section class="card" id="concept">
+    <div class="sec-title">📖 圆的基本概念</div>
+    <p class="sec-desc">认识圆，先认识它的"家庭成员"——圆心、半径、直径、弦、弧、圆心角、圆周角。</p>
+
+    <div class="svg-wrap">
+      <svg viewBox="0 0 520 360" role="img" aria-label="圆的基本元素示意图">
+        <!-- 圆 -->
+        <circle cx="200" cy="180" r="120" fill="rgba(155,89,182,0.06)" stroke="#9B59B6" stroke-width="2.5"/>
+        <!-- 圆心 O -->
+        <circle cx="200" cy="180" r="4" fill="#2C3E50"/>
+        <text x="188" y="200" font-size="16" font-weight="bold" fill="#2C3E50">O</text>
+        <!-- 半径 r（到右上） -->
+        <line x1="200" y1="180" x2="285" y2="95" stroke="#E74C3C" stroke-width="2.5"/>
+        <text x="250" y="128" font-size="15" font-weight="bold" fill="#E74C3C">r</text>
+        <!-- 直径 d（水平） -->
+        <line x1="80" y1="180" x2="320" y2="180" stroke="#27AE60" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <text x="324" y="184" font-size="15" font-weight="bold" fill="#27AE60">d</text>
+        <!-- 弦 AB（斜线） -->
+        <line x1="125" y1="130" x2="275" y2="230" stroke="#F39C12" stroke-width="3"/>
+        <circle cx="125" cy="130" r="4" fill="#F39C12"/>
+        <circle cx="275" cy="230" r="4" fill="#F39C12"/>
+        <text x="108" y="124" font-size="14" font-weight="bold" fill="#F39C12">A</text>
+        <text x="282" y="248" font-size="14" font-weight="bold" fill="#F39C12">B</text>
+        <text x="190" y="186" font-size="12" fill="#F39C12">弦 AB</text>
+        <!-- 劣弧标注 -->
+        <path d="M 275 230 A 120 120 0 0 1 125 130" fill="none" stroke="#3498DB" stroke-width="4"/>
+        <text x="240" y="270" font-size="13" fill="#3498DB" font-weight="bold">劣弧 AB</text>
+        <!-- 圆心角 -->
+        <path d="M 220 180 A 20 20 0 0 0 200 162" fill="none" stroke="#9B59B6" stroke-width="2"/>
+        <text x="222" y="166" font-size="12" fill="#9B59B6" font-weight="bold">圆心角</text>
+
+        <!-- 右侧：圆周角示意 -->
+        <circle cx="410" cy="180" r="100" fill="rgba(155,89,182,0.04)" stroke="#9B59B6" stroke-width="2"/>
+        <circle cx="410" cy="180" r="3" fill="#2C3E50"/>
+        <text x="400" y="198" font-size="13" font-weight="bold" fill="#2C3E50">O</text>
+        <!-- A、B 两点 -->
+        <line x1="345" y1="135" x2="475" y2="135" stroke="#F39C12" stroke-width="2"/>
+        <circle cx="345" cy="135" r="3.5" fill="#F39C12"/>
+        <circle cx="475" cy="135" r="3.5" fill="#F39C12"/>
+        <text x="334" y="128" font-size="12" font-weight="bold" fill="#F39C12">A</text>
+        <text x="478" y="128" font-size="12" font-weight="bold" fill="#F39C12">B</text>
+        <!-- P 点在优弧上 -->
+        <circle cx="410" cy="275" r="3.5" fill="#E74C3C"/>
+        <text x="402" y="293" font-size="13" font-weight="bold" fill="#E74C3C">P</text>
+        <line x1="345" y1="135" x2="410" y2="275" stroke="#E74C3C" stroke-width="1.8"/>
+        <line x1="475" y1="135" x2="410" y2="275" stroke="#E74C3C" stroke-width="1.8"/>
+        <!-- 圆周角 -->
+        <path d="M 393 263 A 18 18 0 0 0 427 263" fill="none" stroke="#9B59B6" stroke-width="2"/>
+        <text x="380" y="258" font-size="12" fill="#9B59B6" font-weight="bold">圆周角</text>
+      </svg>
+      <div class="svg-caption">
+        <span style="color:#E74C3C; font-weight:bold;">红</span>=半径 r　
+        <span style="color:#27AE60; font-weight:bold;">绿虚线</span>=直径 d = 2r　
+        <span style="color:#F39C12; font-weight:bold;">橙</span>=弦 AB　
+        <span style="color:#3498DB; font-weight:bold;">蓝</span>=劣弧 AB　
+        <span style="color:#9B59B6; font-weight:bold;">紫弧</span>=圆心角 / 圆周角
+      </div>
+    </div>
+
+    <div class="concept-tags">
+      <div class="concept-tag">
+        <div class="ct-name">⭕ 圆心 O</div>
+        <div class="ct-desc">圆的中心点，到圆上每一点的距离都等于半径 r。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">📏 半径 r</div>
+        <div class="ct-desc">连接圆心与圆上一点的线段，决定了圆的大小。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">➖ 直径 d</div>
+        <div class="ct-desc">过圆心的弦，d = 2r，是圆中最长的弦。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">〰️ 弦</div>
+        <div class="ct-desc">圆上任意两点间的线段（直径是特殊的弦）。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">🌙 弧（优弧/劣弧）</div>
+        <div class="ct-desc">圆上两点间的部分。大于半圆叫<b>优弧</b>，小于半圆叫<b>劣弧</b>。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">📐 圆心角</div>
+        <div class="ct-desc">顶点在圆心的角，如 ∠AOB。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">📍 圆周角</div>
+        <div class="ct-desc">顶点在圆周上，两边都和圆相交的角，如 ∠APB。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">🌙 等弧</div>
+        <div class="ct-desc">能互相重合的弧。等弧对等弦、对等圆心角、对等圆周角。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 交互探索 1：圆的性质 ========== -->
+  <section class="card" id="explore1">
+    <div class="sec-title">🎛️ 交互探索 1：圆心角、弧、弦</div>
+    <p class="sec-desc">拖动滑块改变圆心角 α 的大小，观察它对应的弧、弦如何变化。记住一句话：<b>等弧对等弦对等圆心角</b>。</p>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">圆心角 α</span><small>0° ~ 360°</small></div>
+      <input type="range" class="range" id="slider1" min="0" max="360" step="1" value="90">
+      <div class="val" id="val1" style="color: var(--math);">90°</div>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="svg1" viewBox="0 0 480 360"></svg>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-item">
+        <div class="r-label">圆心角 α</div>
+        <div class="r-value" id="r1a">90°</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">弧 AB 长度</div>
+        <div class="r-value" id="r1b">弧 = α/360 × 2πr</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">弦 AB 长度</div>
+        <div class="r-value" id="r1c">2r·sin(α/2)</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔍 观察要点</div>
+      ① α = 0° 时，A、B 重合，弦长为 0；α = 360° 时 A、B 再次重合，弦长也是 0，但弧是整圆。<br>
+      ② α = 180° 时，弦 AB 正好是<b>直径</b>，是圆中最长的弦。<br>
+      ③ 在<b>同圆或等圆</b>中，圆心角相等 ⇒ 弧相等 ⇒ 弦相等，三者一一对应。
+    </div>
+  </section>
+
+  <!-- ========== 交互探索 2：圆周角定理 ========== -->
+  <section class="card" id="explore2">
+    <div class="sec-title">📐 交互探索 2：圆周角定理</div>
+    <p class="sec-desc">圆心角固定后，把圆周角的顶点 P 在<b>优弧</b>上任意拖动——你会惊奇地发现：圆周角始终等于圆心角的<b>一半</b>！</p>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">圆心角 α</span><small>30° ~ 180°</small></div>
+      <input type="range" class="range" id="slider2a" min="30" max="180" step="1" value="100">
+      <div class="val" id="val2a" style="color: var(--math);">100°</div>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--info);">P 在优弧位置</span><small>左 ← → 右</small></div>
+      <input type="range" class="range" id="slider2b" min="2" max="98" step="1" value="50">
+      <div class="val" id="val2b" style="color: var(--info);">50%</div>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="svg2" viewBox="0 0 480 360"></svg>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-item">
+        <div class="r-label">圆心角 ∠AOB</div>
+        <div class="r-value" id="r2a">100°</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">圆周角 ∠APB</div>
+        <div class="r-value" id="r2b">50°</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">关系</div>
+        <div class="r-value" id="r2c">∠APB = α/2</div>
+      </div>
+    </div>
+
+    <div class="def-box" style="font-size:16px;">
+      <b>圆周角定理</b>：在同圆或等圆中，同弧所对的<b class="math">圆周角等于它所对的圆心角的一半</b>。<br>
+      即 <span class="math">∠APB = ½ ∠AOB</span>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 推论（很重要）</div>
+      ① <b>直径所对的圆周角是直角（90°）</b>——因为直径对应的圆心角是 180°，圆周角就是 90°。<br>
+      ② <b>同弧或等弧所对的圆周角相等</b>——把 P 随便挪到优弧哪个位置，圆周角都不变！<br>
+      ③ 90° 的圆周角所对的弦一定是<b>直径</b>。
+    </div>
+  </section>
+
+  <!-- ========== 交互探索 3：弧长与扇形面积 ========== -->
+  <section class="card" id="explore3">
+    <div class="sec-title">📏 交互探索 3：弧长与扇形面积</div>
+    <p class="sec-desc">扇形就是"披萨切片"。调节半径 r 和圆心角 n°，实时算出这一片的<b>弧长</b>和<b>面积</b>。</p>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">半径 r</span><small>1 ~ 10</small></div>
+      <input type="range" class="range" id="slider3r" min="1" max="10" step="0.5" value="5">
+      <div class="val" id="val3r" style="color: var(--math);">5</div>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--info);">圆心角 n</span><small>10° ~ 360°</small></div>
+      <input type="range" class="range" id="slider3n" min="10" max="360" step="1" value="90">
+      <div class="val" id="val3n" style="color: var(--info);">90°</div>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="svg3" viewBox="0 0 480 320"></svg>
+    </div>
+
+    <div class="equation-display" id="eq3">
+      l = <span class="math">nπr/180</span> = <span class="math" id="r3l">7.85</span>　　S = <span class="math">nπr²/360</span> = <span class="math" id="r3s">19.63</span>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-item">
+        <div class="r-label">半径 r</div>
+        <div class="r-value" id="r3r">5</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">圆心角 n</div>
+        <div class="r-value" id="r3n">90°</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">弧长 l</div>
+        <div class="r-value" id="r3l2">7.85</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">扇形面积 S</div>
+        <div class="r-value" id="r3s2">19.63</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 公式怎么来的？</div>
+      整个圆周长 = 2πr，整个圆面积 = πr²。圆心角 n° 占整圆 360° 的 <b>n/360</b>，所以：<br>
+      弧长 l = 2πr × (n/360) = <b>nπr / 180</b>　　扇形面积 S = πr² × (n/360) = <b>nπr² / 360</b>
+    </div>
+
+    <div class="warning-box">
+      ⚠️ <b>易错点</b>：公式里的 n 是<b>角度制</b>（度°），不是弧度！π 取 3.14159。
+    </div>
+  </section>
+
+  <!-- ========== 交互探索 4：切线性质 ========== -->
+  <section class="card" id="explore4">
+    <div class="sec-title">✂️ 交互探索 4：切线的性质</div>
+    <p class="sec-desc">从圆外一点 P 向圆作两条切线 PA、PB（A、B 是切点）。无论 P 离圆多远，这三个结论始终成立：</p>
+
+    <div class="concept-tags">
+      <div class="concept-tag">
+        <div class="ct-name">① 切线与半径垂直</div>
+        <div class="ct-desc">∠OAP = ∠OBP = 90°（切线 ⊥ 过切点的半径）</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">② PA = PB</div>
+        <div class="ct-desc">从圆外一点引圆的两条切线，切线长相等。</div>
+      </div>
+      <div class="concept-tag">
+        <div class="ct-name">③ OP 平分 ∠APB</div>
+        <div class="ct-desc">圆心与外点的连线平分两条切线的夹角。</div>
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">P 到圆心距离 d</span><small>r+10 ~ r+200</small></div>
+      <input type="range" class="range" id="slider4" min="90" max="280" step="2" value="160">
+      <div class="val" id="val4" style="color: var(--math);">160</div>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="svg4" viewBox="0 0 520 360"></svg>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-item">
+        <div class="r-label">圆心距 OP</div>
+        <div class="r-value" id="r4d">160</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">切线长 PA=PB</div>
+        <div class="r-value" id="r4pa">138.6</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">∠APB</div>
+        <div class="r-value" id="r4angle">60.0°</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">∠APO（=∠BPO）</div>
+        <div class="r-value" id="r4half">30.0°</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 切线长怎么算？</div>
+      因为 ∠OAP = 90°，所以 △OAP 是<b>直角三角形</b>。用勾股定理：<br>
+      <b>PA² + OA² = OP²</b>　⇒　<b>PA = √(OP² − r²)</b> = √(d² − r²)<br>
+      这就是把 <a href="../八年级/08-勾股定理.html" style="color: var(--math); font-weight:700;">勾股定理</a> 用到圆里的典型例子！
+    </div>
+  </section>
+
+  <!-- ========== 圆的面积公式推导 ========== -->
+  <section class="card" id="area">
+    <div class="sec-title">🧩 圆的面积公式推导：把圆"拆"成长方形</div>
+    <p class="sec-desc">把圆切成 n 等份（小扇形），上下交错拼起来——n 越大，越像一个<b>长方形</b>！长方形的长≈πr，宽≈r，所以面积≈πr²。</p>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">等份数 n</span><small>4 ~ 64（偶数）</small></div>
+      <input type="range" class="range" id="sliderN" min="4" max="64" step="2" value="12">
+      <div class="val" id="valN" style="color: var(--math);">12</div>
+    </div>
+
+    <div class="canvas-box">
+      <canvas id="canvasArea" width="760" height="420"></canvas>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-item">
+        <div class="r-label">等份数 n</div>
+        <div class="r-value" id="aN">12</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">长方形长（≈πr）</div>
+        <div class="r-value" id="aLen">≈ πr</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">长方形宽（≈r）</div>
+        <div class="r-value" id="aWid">≈ r</div>
+      </div>
+      <div class="readout-item">
+        <div class="r-label">面积（≈πr²）</div>
+        <div class="r-value" id="aArea">≈ πr²</div>
+      </div>
+    </div>
+
+    <div class="def-box" style="font-size:18px;">
+      <b>圆的面积公式</b>：<span class="math">S = πr²</span><br>
+      <span style="font-size:14px; color: var(--text-secondary);">推导：把圆等分为 n 份拼成近似长方形，长 = 半圆周长 = πr，宽 = r，所以 S = πr × r = πr²。</span>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🎯 动手试一试</div>
+      把 n 从 4 慢慢拖到 64：你会发现左侧的圆被切得越来越"碎"，右侧的图形从一个<b>凹凸不平的波浪形</b>慢慢变得几乎和长方形一模一样——
+      这就是<b>极限思想</b>！当 n → ∞ 时，拼出的图形就是真正的长方形，面积就是 πr²。
+    </div>
+  </section>
+
+  <!-- ========== 练习题 ========== -->
+  <section class="card" id="quiz">
+    <div class="sec-title">✏️ 练一练</div>
+    <p class="sec-desc">点一点选项试试身手，答错也没关系，会有提示哦！</p>
+
+    <div class="quiz-question" id="quiz1">
+      <div class="question-text">1️⃣ 如图，A、B、C 是 ⊙O 上的三点，∠AOB = 80°，则圆周角 ∠ACB 等于（　）</div>
+      <div class="quiz-option" data-idx="0">A. 40°</div>
+      <div class="quiz-option" data-idx="1">B. 80°</div>
+      <div class="quiz-option" data-idx="2">C. 160°</div>
+      <div class="quiz-option" data-idx="3">D. 20°</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz2">
+      <div class="question-text">2️⃣ 一个扇形的半径 r = 6，圆心角 n = 120°，则该扇形的弧长 l = （π 取 3.14159）（　）</div>
+      <div class="quiz-option" data-idx="0">A. 4π</div>
+      <div class="quiz-option" data-idx="1">B. 12π</div>
+      <div class="quiz-option" data-idx="2">C. 6π</div>
+      <div class="quiz-option" data-idx="3">D. 8π</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz3">
+      <div class="question-text">3️⃣ 从圆外一点 P 引 ⊙O 的两条切线 PA、PB，切点为 A、B，若 ⊙O 的半径 r = 3，OP = 5，则切线长 PA = （　）</div>
+      <div class="quiz-option" data-idx="0">A. 3</div>
+      <div class="quiz-option" data-idx="1">B. 4</div>
+      <div class="quiz-option" data-idx="2">C. 5</div>
+      <div class="quiz-option" data-idx="3">D. 8</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 提示</div>
+      第 1 题用<b>圆周角定理</b>（圆周角 = 圆心角的一半）；第 2 题用<b>弧长公式</b> l = nπr/180；
+      第 3 题用<b>切线性质</b>（切线 ⊥ 半径 → 勾股定理 PA = √(OP² − r²)）。
+    </div>
+  </section>
+
+  <!-- ========== 学科交叉参考 ========== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 圆 ↔ <a href="../../物理/八年级/01-机械运动.html">物理·八年级 机械运动</a>（圆周运动：匀速圆周运动的周期、线速度、角速度）</p>
+    <p>· 圆 ↔ <a href="../八年级/08-勾股定理.html">数学·八年级 勾股定理</a>（切线长计算 PA = √(d² − r²)，直角三角形 OAP）</p>
+    <p>· 圆 ↔ <a href="02-二次函数.html">数学·九年级 二次函数</a>（圆的方程 x² + y² = r² 与二次关系）</p>
+  </div>
+
+  <!-- ========== 章节导航 ========== -->
+  <div class="step-nav">
+    <a href="03-旋转.html" class="btn btn-outline">← 上一章：旋转</a>
+    <a href="index.html" class="btn btn-outline">📚 目录</a>
+    <a href="05-概率初步.html" class="btn btn-primary" style="background: var(--math);">下一章：概率初步 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var PI = 3.14159;
+  function $id(id) { return document.getElementById(id); }
+  function fmt(v, d) { d = d == null ? 2 : d; return v.toFixed(d); }
+  function deg2rad(d) { return d * PI / 180; }
+
+  // ===== 通用：在 SVG 中创建元素 =====
+  function el(name, attrs, parent) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  // ===== 交互探索 1：圆心角、弧、弦 =====
+  var svg1 = $id('svg1');
+  function draw1() {
+    var alpha = parseInt($id('slider1').value);
+    $id('val1').textContent = alpha + '°';
+    clear(svg1);
+
+    var cx = 240, cy = 180, R = 120;
+    // 圆
+    el('circle', { cx: cx, cy: cy, r: R, fill: 'rgba(155,89,182,0.05)', stroke: '#9B59B6', 'stroke-width': 2 }, svg1);
+    // 圆心
+    el('circle', { cx: cx, cy: cy, r: 3.5, fill: '#2C3E50' }, svg1);
+    el('text', { x: cx - 14, y: cy + 18, 'font-size': 14, 'font-weight': 'bold', fill: '#2C3E50' }, svg1).textContent = 'O';
+
+    // A 点在 0°（正右），B 点在 -alpha°（顺时针旋转 alpha）
+    var rad = deg2rad(alpha);
+    var Ax = cx + R, Ay = cy;
+    var Bx = cx + R * Math.cos(rad);
+    var By = cy + R * Math.sin(rad);  // SVG y 向下，顺时针为正
+
+    // 劣弧（从 A 到 B，顺时针），加粗蓝色
+    if (alpha > 0.5 && alpha < 359.5) {
+      el('path', {
+        d: 'M ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 ' + (alpha > 180 ? 1 : 0) + ' 1 ' + Bx + ' ' + By,
+        fill: 'none', stroke: '#3498DB', 'stroke-width': 4
+      }, svg1);
+    }
+
+    // 扇形填充（半透明紫）
+    if (alpha > 0.5 && alpha < 359.5) {
+      el('path', {
+        d: 'M ' + cx + ' ' + cy + ' L ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 ' + (alpha > 180 ? 1 : 0) + ' 1 ' + Bx + ' ' + By + ' Z',
+        fill: 'rgba(155,89,182,0.18)', stroke: 'none'
+      }, svg1);
+    }
+
+    // 半径 OA、OB
+    el('line', { x1: cx, y1: cy, x2: Ax, y2: Ay, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg1);
+    el('line', { x1: cx, y1: cy, x2: Bx, y2: By, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg1);
+
+    // 弦 AB
+    el('line', { x1: Ax, y1: Ay, x2: Bx, y2: By, stroke: '#F39C12', 'stroke-width': 3 }, svg1);
+
+    // A、B 点
+    el('circle', { cx: Ax, cy: Ay, r: 4, fill: '#F39C12' }, svg1);
+    el('circle', { cx: Bx, cy: By, r: 4, fill: '#F39C12' }, svg1);
+    el('text', { x: Ax + 8, y: Ay + 4, 'font-size': 14, 'font-weight': 'bold', fill: '#F39C12' }, svg1).textContent = 'A';
+    el('text', { x: Bx + 8, y: By + 14, 'font-size': 14, 'font-weight': 'bold', fill: '#F39C12' }, svg1).textContent = 'B';
+
+    // 圆心角弧标记
+    if (alpha > 4) {
+      var r2 = 28;
+      el('path', {
+        d: 'M ' + (cx + r2) + ' ' + cy + ' A ' + r2 + ' ' + r2 + ' 0 ' + (alpha > 180 ? 1 : 0) + ' 1 ' + (cx + r2 * Math.cos(rad)) + ' ' + (cy + r2 * Math.sin(rad)),
+        fill: 'none', stroke: '#9B59B6', 'stroke-width': 2
+      }, svg1);
+      var midAng = rad / 2;
+      el('text', { x: cx + 40 * Math.cos(midAng), y: cy + 40 * Math.sin(midAng) + 5, 'font-size': 14, 'font-weight': 'bold', fill: '#9B59B6', 'text-anchor': 'middle' }, svg1).textContent = 'α';
+    }
+
+    // 弧 AB 标签
+    var midArc = rad / 2;
+    var lx = cx + (R + 18) * Math.cos(midArc);
+    var ly = cy + (R + 18) * Math.sin(midArc);
+    if (alpha > 8 && alpha < 352) {
+      el('text', { x: lx, y: ly, 'font-size': 12, fill: '#3498DB', 'font-weight': 'bold', 'text-anchor': 'middle' }, svg1).textContent = '弧AB';
+    }
+
+    // 读数
+    $id('r1a').textContent = alpha + '°';
+    var chordLen = alpha === 0 || alpha === 360 ? 0 : 2 * R * Math.sin(deg2rad(alpha) / 2);
+    var arcLen = alpha / 360 * 2 * PI * R;
+    $id('r1b').textContent = fmt(arcLen, 1);
+    $id('r1c').textContent = fmt(chordLen, 1);
+  }
+  $id('slider1').addEventListener('input', draw1);
+  draw1();
+
+  // ===== 交互探索 2：圆周角定理 =====
+  var svg2 = $id('svg2');
+  function draw2() {
+    var alpha = parseInt($id('slider2a').value);
+    var t = parseInt($id('slider2b').value) / 100;  // P 在优弧上的位置参数
+    $id('val2a').textContent = alpha + '°';
+    $id('val2b').textContent = parseInt($id('slider2b').value) + '%';
+    clear(svg2);
+
+    var cx = 240, cy = 180, R = 120;
+    // 圆
+    el('circle', { cx: cx, cy: cy, r: R, fill: 'rgba(155,89,182,0.04)', stroke: '#9B59B6', 'stroke-width': 2 }, svg2);
+    // 圆心
+    el('circle', { cx: cx, cy: cy, r: 3.5, fill: '#2C3E50' }, svg2);
+    el('text', { x: cx - 14, y: cy + 18, 'font-size': 14, 'font-weight': 'bold', fill: '#2C3E50' }, svg2).textContent = 'O';
+
+    // A、B 关于 x 轴对称，AB 劣弧在右侧，圆心角 = alpha
+    // A 在 -alpha/2，B 在 +alpha/2（SVG 顺时针为正，所以 A 在上、B 在下）
+    var halfA = deg2rad(alpha) / 2;
+    var Ax = cx + R * Math.cos(halfA), Ay = cy - R * Math.sin(halfA);  // 上方
+    var Bx = cx + R * Math.cos(halfA), By = cy + R * Math.sin(halfA);  // 下方
+
+    // 劣弧 AB（右侧，经过正右方）
+    el('path', {
+      d: 'M ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 0 1 ' + Bx + ' ' + By,
+      fill: 'none', stroke: '#3498DB', 'stroke-width': 4
+    }, svg2);
+
+    // P 在优弧上，角度从 alpha/2 经过 180° 到 360-alpha/2
+    // 用参数 t: angle = alpha/2 + t * (360 - alpha)，取屏幕坐标
+    var pAngleDeg = alpha / 2 + t * (360 - alpha);
+    var pAngleRad = deg2rad(pAngleDeg);
+    // 屏幕坐标：x = cx + R*cos(angle), y = cy + R*sin(angle)（SVG y 向下，顺时针为正）
+    // angle=0 在右，angle=90 在下，angle=180 在左，angle=270 在上
+    // 我们希望 P 在左侧（优弧），所以 pAngleDeg 在 90~270 之间最好
+    var Px = cx + R * Math.cos(pAngleRad);
+    var Py = cy + R * Math.sin(pAngleRad);
+
+    // 扇形 OAB 填充
+    el('path', {
+      d: 'M ' + cx + ' ' + cy + ' L ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 0 1 ' + Bx + ' ' + By + ' Z',
+      fill: 'rgba(155,89,182,0.12)', stroke: 'none'
+    }, svg2);
+
+    // 半径 OA、OB
+    el('line', { x1: cx, y1: cy, x2: Ax, y2: Ay, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg2);
+    el('line', { x1: cx, y1: cy, x2: Bx, y2: By, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg2);
+
+    // 圆心角弧标记
+    var r2 = 26;
+    el('path', {
+      d: 'M ' + (cx + r2 * Math.cos(-halfA)) + ' ' + (cy + r2 * Math.sin(-halfA)) + ' A ' + r2 + ' ' + r2 + ' 0 0 1 ' + (cx + r2 * Math.cos(halfA)) + ' ' + (cy + r2 * Math.sin(halfA)),
+      fill: 'none', stroke: '#9B59B6', 'stroke-width': 2
+    }, svg2);
+    el('text', { x: cx + 38, y: cy + 5, 'font-size': 13, 'font-weight': 'bold', fill: '#9B59B6', 'text-anchor': 'middle' }, svg2).textContent = 'α';
+
+    // PA、PB（圆周角两边）
+    el('line', { x1: Px, y1: Py, x2: Ax, y2: Ay, stroke: '#E74C3C', 'stroke-width': 2 }, svg2);
+    el('line', { x1: Px, y1: Py, x2: Bx, y2: By, stroke: '#E74C3C', 'stroke-width': 2 }, svg2);
+
+    // 圆周角弧标记
+    var vPA = { x: Ax - Px, y: Ay - Py };
+    var vPB = { x: Bx - Px, y: By - Py };
+    var lenPA = Math.hypot(vPA.x, vPA.y);
+    var lenPB = Math.hypot(vPB.x, vPB.y);
+    var uPA = { x: vPA.x / lenPA, y: vPA.y / lenPA };
+    var uPB = { x: vPB.x / lenPB, y: vPB.y / lenPB };
+    var r3 = 20;
+    var sA = { x: Px + uPA.x * r3, y: Py + uPA.y * r3 };
+    var sB = { x: Px + uPB.x * r3, y: Py + uPB.y * r3 };
+    el('path', {
+      d: 'M ' + sA.x + ' ' + sA.y + ' A ' + r3 + ' ' + r3 + ' 0 0 1 ' + sB.x + ' ' + sB.y,
+      fill: 'none', stroke: '#9B59B6', 'stroke-width': 2
+    }, svg2);
+    var midU = { x: (uPA.x + uPB.x) / 2, y: (uPA.y + uPB.y) / 2 };
+    var midLen = Math.hypot(midU.x, midU.y);
+    el('text', {
+      x: Px + (r3 + 14) * (midU.x / midLen), y: Py + (r3 + 14) * (midU.y / midLen) + 4,
+      'font-size': 13, 'font-weight': 'bold', fill: '#9B59B6', 'text-anchor': 'middle'
+    }, svg2).textContent = 'β';
+
+    // A、B、P 点
+    el('circle', { cx: Ax, cy: Ay, r: 4, fill: '#F39C12' }, svg2);
+    el('circle', { cx: Bx, cy: By, r: 4, fill: '#F39C12' }, svg2);
+    el('circle', { cx: Px, cy: Py, r: 5, fill: '#E74C3C' }, svg2);
+    el('text', { x: Ax + 8, y: Ay - 4, 'font-size': 14, 'font-weight': 'bold', fill: '#F39C12' }, svg2).textContent = 'A';
+    el('text', { x: Bx + 8, y: By + 14, 'font-size': 14, 'font-weight': 'bold', fill: '#F39C12' }, svg2).textContent = 'B';
+    el('text', { x: Px - 14, y: Py + 4, 'font-size': 15, 'font-weight': 'bold', fill: '#E74C3C', 'text-anchor': 'end' }, svg2).textContent = 'P';
+
+    // 读数
+    var beta = alpha / 2;
+    $id('r2a').textContent = alpha + '°';
+    $id('r2b').textContent = fmt(beta, 1) + '°';
+    $id('r2c').textContent = '∠APB = α/2';
+  }
+  $id('slider2a').addEventListener('input', draw2);
+  $id('slider2b').addEventListener('input', draw2);
+  draw2();
+
+  // ===== 交互探索 3：弧长与扇形面积 =====
+  var svg3 = $id('svg3');
+  function draw3() {
+    var r = parseFloat($id('slider3r').value);
+    var n = parseInt($id('slider3n').value);
+    $id('val3r').textContent = r;
+    $id('val3n').textContent = n + '°';
+    clear(svg3);
+
+    // 圆心在左侧，扇形向右展开
+    var cx = 110, cy = 160;
+    var scale = 16;  // 1 单位 = 16 像素
+    var R = r * scale;
+
+    // 完整圆（淡色参考）
+    el('circle', { cx: cx, cy: cy, r: R, fill: 'none', stroke: '#DDE4EB', 'stroke-width': 1, 'stroke-dasharray': '3 3' }, svg3);
+
+    // 扇形：从 0° 到 n°（顺时针，向右展开）
+    var rad = deg2rad(n);
+    var Ax = cx + R, Ay = cy;
+    var Bx = cx + R * Math.cos(rad);
+    var By = cy + R * Math.sin(rad);
+
+    // 扇形填充（半透明紫色）
+    el('path', {
+      d: 'M ' + cx + ' ' + cy + ' L ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 ' + (n > 180 ? 1 : 0) + ' 1 ' + Bx + ' ' + By + ' Z',
+      fill: 'rgba(155,89,182,0.28)', stroke: '#9B59B6', 'stroke-width': 2
+    }, svg3);
+
+    // 弧 AB 加粗
+    el('path', {
+      d: 'M ' + Ax + ' ' + Ay + ' A ' + R + ' ' + R + ' 0 ' + (n > 180 ? 1 : 0) + ' 1 ' + Bx + ' ' + By,
+      fill: 'none', stroke: '#9B59B6', 'stroke-width': 4
+    }, svg3);
+
+    // 半径 OA、OB
+    el('line', { x1: cx, y1: cy, x2: Ax, y2: Ay, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg3);
+    el('line', { x1: cx, y1: cy, x2: Bx, y2: By, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg3);
+
+    // 圆心
+    el('circle', { cx: cx, cy: cy, r: 3.5, fill: '#2C3E50' }, svg3);
+    el('text', { x: cx - 14, y: cy + 18, 'font-size': 14, 'font-weight': 'bold', fill: '#2C3E50' }, svg3).textContent = 'O';
+
+    // 半径标注 r（沿 OA）
+    var midA = { x: (cx + Ax) / 2, y: (cy + Ay) / 2 };
+    el('text', { x: midA.x, y: midA.y - 8, 'font-size': 15, 'font-weight': 'bold', fill: '#E74C3C', 'text-anchor': 'middle' }, svg3).textContent = 'r=' + r;
+
+    // 圆心角弧
+    if (n > 4) {
+      var r2 = 24;
+      el('path', {
+        d: 'M ' + (cx + r2) + ' ' + cy + ' A ' + r2 + ' ' + r2 + ' 0 ' + (n > 180 ? 1 : 0) + ' 1 ' + (cx + r2 * Math.cos(rad)) + ' ' + (cy + r2 * Math.sin(rad)),
+        fill: 'none', stroke: '#9B59B6', 'stroke-width': 2
+      }, svg3);
+      var midAng = rad / 2;
+      el('text', {
+        x: cx + 40 * Math.cos(midAng), y: cy + 40 * Math.sin(midAng) + 5,
+        'font-size': 13, 'font-weight': 'bold', fill: '#9B59B6', 'text-anchor': 'middle'
+      }, svg3).textContent = n + '°';
+    }
+
+    // 弧长标签
+    var arcMidAng = rad / 2;
+    var lx = cx + (R + 16) * Math.cos(arcMidAng);
+    var ly = cy + (R + 16) * Math.sin(arcMidAng);
+    el('text', { x: lx, y: ly, 'font-size': 12, fill: '#9B59B6', 'font-weight': 'bold', 'text-anchor': 'middle' }, svg3).textContent = 'l';
+
+    // 计算
+    var l = n * PI * r / 180;
+    var S = n * PI * r * r / 360;
+    $id('r3r').textContent = r;
+    $id('r3n').textContent = n + '°';
+    $id('r3l').textContent = fmt(l, 2);
+    $id('r3s').textContent = fmt(S, 2);
+    $id('r3l2').textContent = fmt(l, 2);
+    $id('r3s2').textContent = fmt(S, 2);
+  }
+  $id('slider3r').addEventListener('input', draw3);
+  $id('slider3n').addEventListener('input', draw3);
+  draw3();
+
+  // ===== 交互探索 4：切线性质 =====
+  var svg4 = $id('svg4');
+  function draw4() {
+    var d = parseInt($id('slider4').value);  // OP 距离
+    $id('val4').textContent = d;
+    clear(svg4);
+
+    var r = 80;
+    var cx = 160, cy = 180;
+    var Px = cx + d, Py = cy;
+
+    // 切点角度：cos(θ) = r/d
+    var theta = Math.acos(r / d);
+    var sinT = Math.sin(theta), cosT = Math.cos(theta);
+    // A 在上，B 在下（OP 沿 x 轴正向）
+    var Ax = cx + r * cosT, Ay = cy - r * sinT;
+    var Bx = cx + r * cosT, By = cy + r * sinT;
+
+    // 圆
+    el('circle', { cx: cx, cy: cy, r: r, fill: 'rgba(155,89,182,0.06)', stroke: '#9B59B6', 'stroke-width': 2.5 }, svg4);
+    // 圆心 O
+    el('circle', { cx: cx, cy: cy, r: 4, fill: '#2C3E50' }, svg4);
+    el('text', { x: cx - 16, y: cy + 20, 'font-size': 15, 'font-weight': 'bold', fill: '#2C3E50' }, svg4).textContent = 'O';
+
+    // OP 连线（紫色虚线）
+    el('line', { x1: cx, y1: cy, x2: Px, y2: Py, stroke: '#9B59B6', 'stroke-width': 2, 'stroke-dasharray': '6 4' }, svg4);
+
+    // 半径 OA、OB
+    el('line', { x1: cx, y1: cy, x2: Ax, y2: Ay, stroke: '#27AE60', 'stroke-width': 2.5 }, svg4);
+    el('line', { x1: cx, y1: cy, x2: Bx, y2: By, stroke: '#27AE60', 'stroke-width': 2.5 }, svg4);
+
+    // 切线 PA、PB
+    el('line', { x1: Px, y1: Py, x2: Ax, y2: Ay, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg4);
+    el('line', { x1: Px, y1: Py, x2: Bx, y2: By, stroke: '#E74C3C', 'stroke-width': 2.5 }, svg4);
+
+    // 直角符号 ∠OAP（在 A 点）
+    var size = 12;
+    // A 点处的两条方向：AO 方向和 AP 方向
+    var uAO = { x: (cx - Ax) / r, y: (cy - Ay) / r };
+    var uAP = { x: (Px - Ax) / Math.hypot(Px - Ax, Py - Ay), y: (Py - Ay) / Math.hypot(Px - Ax, Py - Ay) };
+    var c1 = { x: Ax + uAO.x * size, y: Ay + uAO.y * size };
+    var c2 = { x: Ax + (uAO.x + uAP.x) * size, y: Ay + (uAO.y + uAP.y) * size };
+    var c3 = { x: Ax + uAP.x * size, y: Ay + uAP.y * size };
+    el('path', { d: 'M ' + c1.x + ' ' + c1.y + ' L ' + c2.x + ' ' + c2.y + ' L ' + c3.x + ' ' + c3.y, fill: 'none', stroke: '#27AE60', 'stroke-width': 1.5 }, svg4);
+
+    // 直角符号 ∠OBP（在 B 点）
+    var uBO = { x: (cx - Bx) / r, y: (cy - By) / r };
+    var uBP = { x: (Px - Bx) / Math.hypot(Px - Bx, Py - By), y: (Py - By) / Math.hypot(Px - Bx, Py - By) };
+    var d1 = { x: Bx + uBO.x * size, y: By + uBO.y * size };
+    var d2 = { x: Bx + (uBO.x + uBP.x) * size, y: By + (uBO.y + uBP.y) * size };
+    var d3 = { x: Bx + uBP.x * size, y: By + uBP.y * size };
+    el('path', { d: 'M ' + d1.x + ' ' + d1.y + ' L ' + d2.x + ' ' + d2.y + ' L ' + d3.x + ' ' + d3.y, fill: 'none', stroke: '#27AE60', 'stroke-width': 1.5 }, svg4);
+
+    // 切点 A、B
+    el('circle', { cx: Ax, cy: Ay, r: 4, fill: '#27AE60' }, svg4);
+    el('circle', { cx: Bx, cy: By, r: 4, fill: '#27AE60' }, svg4);
+    el('text', { x: Ax - 14, y: Ay - 6, 'font-size': 14, 'font-weight': 'bold', fill: '#27AE60' }, svg4).textContent = 'A';
+    el('text', { x: Bx - 14, y: By + 18, 'font-size': 14, 'font-weight': 'bold', fill: '#27AE60' }, svg4).textContent = 'B';
+
+    // P 点
+    el('circle', { cx: Px, cy: Py, r: 5, fill: '#E74C3C' }, svg4);
+    el('text', { x: Px + 10, y: Py + 5, 'font-size': 15, 'font-weight': 'bold', fill: '#E74C3C' }, svg4).textContent = 'P';
+
+    // 标注 PA = PB
+    el('text', { x: (Px + Ax) / 2, y: (Py + Ay) / 2 - 8, 'font-size': 12, 'font-weight': 'bold', fill: '#E74C3C', 'text-anchor': 'middle' }, svg4).textContent = 'PA';
+    el('text', { x: (Px + Bx) / 2, y: (Py + By) / 2 + 16, 'font-size': 12, 'font-weight': 'bold', fill: '#E74C3C', 'text-anchor': 'middle' }, svg4).textContent = 'PB';
+
+    // 计算
+    var paLen = Math.sqrt(d * d - r * r);
+    var apbHalf = Math.atan(paLen / r) * 180 / PI;  // 半角（度）
+    var apb = 2 * apbHalf;
+    $id('r4d').textContent = d;
+    $id('r4pa').textContent = fmt(paLen, 1);
+    $id('r4angle').textContent = fmt(apb, 1) + '°';
+    $id('r4half').textContent = fmt(apbHalf, 1) + '°';
+  }
+  $id('slider4').addEventListener('input', draw4);
+  draw4();
+
+  // ===== 圆面积推导（Canvas）=====
+  function initCanvas(canvas, fw, fh) {
+    var dpr = window.devicePixelRatio || 1;
+    var W = canvas.clientWidth || fw;
+    var H = canvas.clientHeight || fh;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+    return { ctx: ctx, W: W, H: H };
+  }
+
+  function drawArea() {
+    var n = parseInt($id('sliderN').value);
+    $id('valN').textContent = n;
+    $id('aN').textContent = n;
+
+    var c = initCanvas($id('canvasArea'), 760, 420);
+    var ctx = c.ctx, W = c.W, H = c.H;
+    var r = 80;
+    var c1x = 150, c1y = H / 2;     // 左侧圆心
+    var c2x = W - 200, c2y = H / 2; // 右侧长方形中心
+
+    // ===== 左侧：分割的圆 =====
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.textAlign = 'center';
+    ctx.fillText('① 把圆切成 ' + n + ' 等份', c1x, 24);
+
+    // 每份圆心角
+    var step = 2 * PI / n;
+    for (var i = 0; i < n; i++) {
+      var a0 = i * step;
+      var a1 = (i + 1) * step;
+      ctx.beginPath();
+      ctx.moveTo(c1x, c1y);
+      ctx.arc(c1x, c1y, r, a0, a1);
+      ctx.closePath();
+      ctx.fillStyle = i % 2 === 0 ? 'rgba(155,89,182,0.35)' : 'rgba(155,89,182,0.12)';
+      ctx.fill();
+      ctx.strokeStyle = '#9B59B6';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    // 圆外框
+    ctx.beginPath();
+    ctx.arc(c1x, c1y, r, 0, 2 * PI);
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // 半径标注
+    ctx.beginPath();
+    ctx.moveTo(c1x, c1y);
+    ctx.lineTo(c1x + r, c1y);
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('r', c1x + r / 2, c1y - 8);
+
+    // ===== 右侧：拼成的近似长方形 =====
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.textAlign = 'center';
+    ctx.fillText('② 上下交错拼成"长方形"', c2x, 24);
+
+    // 把 n 个扇形分成两组：上半部分 n/2 个朝上，下半部分 n/2 个朝下（翻转）
+    // 拼接后：长 ≈ πr（半圆周长），宽 ≈ r
+    var halfN = n / 2;
+    // 每个扇形宽度（沿长方形长度方向）≈ r * sin(PI/n) * 2（弦长近似）
+    // 但更直观：直接把扇形按顺序排成一行，奇数朝上、偶数朝下
+    var tileW = (PI * r) / halfN; // 每个扇形占的宽度
+    var totalW = tileW * halfN;
+    var startX = c2x - totalW / 2;
+    var baseY = c2y;
+
+    for (var j = 0; j < halfN; j++) {
+      var tx = startX + j * tileW;
+      var flip = j % 2 === 0 ? 1 : -1;  // 上下交错
+      // 画一个小扇形：圆心在 (tx + tileW/2, baseY - flip * r)
+      // 扇形从一条直边到另一条直边，跨度 = step
+      var ccx = tx + tileW / 2;
+      var ccy = baseY - flip * r;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(ccx, ccy);
+      // 扇形向下展开（朝向长方形内部）
+      var startAng = flip === 1 ? PI / 2 - step / 2 : -PI / 2 - step / 2;
+      var endAng = flip === 1 ? PI / 2 + step / 2 : -PI / 2 + step / 2;
+      ctx.arc(ccx, ccy, r, startAng, endAng);
+      ctx.closePath();
+      ctx.fillStyle = j % 2 === 0 ? 'rgba(155,89,182,0.35)' : 'rgba(155,89,182,0.12)';
+      ctx.fill();
+      ctx.strokeStyle = '#9B59B6';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 长方形外框（参考）
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.strokeRect(startX, baseY - r, totalW, 2 * r);
+    ctx.setLineDash([]);
+
+    // 标注：长 ≈ πr，宽 ≈ r
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('长 ≈ πr', c2x, baseY + r + 22);
+    ctx.save();
+    ctx.translate(startX - 16, baseY);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('宽 ≈ r', 0, 0);
+    ctx.restore();
+
+    // 箭头：圆 → 长方形
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(c1x + r + 20, c1y);
+    ctx.lineTo(startX - 30, c2y);
+    ctx.stroke();
+    // 箭头头
+    ctx.beginPath();
+    ctx.moveTo(startX - 30, c2y);
+    ctx.lineTo(startX - 38, c2y - 5);
+    ctx.lineTo(startX - 38, c2y + 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // 公式
+    ctx.fillStyle = '#9B59B6';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('S = 长 × 宽 = πr × r = πr²', c2x, H - 16);
+
+    // 更新读数
+    $id('aLen').textContent = '≈ πr';
+    $id('aWid').textContent = '≈ r';
+    $id('aArea').textContent = '≈ πr²';
+  }
+  $id('sliderN').addEventListener('input', drawArea);
+  drawArea();
+
+  // 窗口缩放重绘
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      drawArea();
+    }, 120);
+  });
+
+  // ===== 练习题 =====
+  initQuiz('quiz1', {
+    correct: 0,
+    explain: '由圆周角定理：圆周角 = 圆心角的一半 = 80°/2 = 40°。',
+    hint: '用圆周角定理 ∠ACB = ½ ∠AOB，注意 C 必须在 AB 弧的优弧上。'
+  });
+  initQuiz('quiz2', {
+    correct: 0,
+    explain: 'l = nπr/180 = 120×π×6/180 = 4π ≈ 12.57。选 A。',
+    hint: '代入弧长公式 l = nπr/180，n 是角度数。'
+  });
+  initQuiz('quiz3', {
+    correct: 1,
+    explain: 'PA ⊥ OA（切线性质），△OAP 是直角三角形。PA = √(OP² − r²) = √(25 − 9) = √16 = 4。',
+    hint: '切线与半径垂直，用勾股定理：PA = √(d² − r²)。'
+  });
+})();
+</script>
+</body>
+</html>

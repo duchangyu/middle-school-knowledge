@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮力 · 八年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 72px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.8;
+    }
+    .formula-box .sub {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 引入卡片 */
+    .phenomenon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .phenomenon-card {
+      padding: 20px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border-top: 4px solid var(--primary);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .phenomenon-card:hover { transform: translateY(-3px); }
+    .phenomenon-card .icon { font-size: 38px; }
+    .phenomenon-card h4 {
+      margin: 10px 0 6px;
+      color: var(--primary-dark);
+      font-size: 16px;
+    }
+    .phenomenon-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* 沉浮状态徽章 */
+    .state-badge {
+      display: inline-block;
+      padding: 4px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 16px;
+      color: #fff;
+      margin: 4px 0;
+    }
+    .state-badge.s-float { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+    .state-badge.s-suspend { background: linear-gradient(135deg, #4A90D9, #3498DB); }
+    .state-badge.s-sink { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+
+    /* 力对比条 */
+    .force-bars { margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .force-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .force-bar .fb-label { min-width: 96px; font-weight: 700; text-align: left; }
+    .force-bar .fb-track {
+      flex: 1;
+      height: 16px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .force-bar .fb-fill {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.3s ease;
+      min-width: 4px;
+    }
+    .fb-fill.fb-g { background: linear-gradient(90deg, #F5A623, #F39C12); }
+    .fb-fill.fb-f { background: linear-gradient(90deg, #4A90D9, #7BB0E8); }
+    .fb-fill.fb-n { background: linear-gradient(90deg, #27AE60, #7EDBA2); }
+    .force-bar .fb-value { min-width: 96px; text-align: right; font-weight: 600; color: var(--text-secondary); }
+
+    .exp-tip {
+      background: rgba(74,144,217,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--primary-dark);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .phenomenon-grid { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; max-width: none; }
+      .force-bar { flex-wrap: wrap; }
+      .force-bar .fb-value { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🌊 浮力</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../九年级/index.html">物理九年级</a></li>
+    <li><a href="../../数学/九年级/index.html">📐 数学九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">物理</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <span>浮力</span>
+  </div>
+
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🌊 浮力</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从轮船到热气球，认识那个把我们"托起来"的神秘力量</p>
+
+  <!-- ===== 第一部分：引入 ===== -->
+  <div class="card">
+    <div class="section-header">🤔 1. 生活中的浮力</div>
+
+    <p>先来想三个问题：</p>
+
+    <div class="phenomenon-grid">
+      <div class="phenomenon-card">
+        <div class="icon">🚢</div>
+        <h4>轮船为什么能浮起来？</h4>
+        <p>万吨巨轮是钢铁造的，却能在海上载着几千吨货物漂洋过海，稳稳地浮在水面上。</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">📌</div>
+        <h4>铁块为什么沉下去？</h4>
+        <p>同样是钢铁，实心的铁块、铁钉一放进水里就"扑通"沉到了水底，怎么也浮不起来。</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🎈</div>
+        <h4>热气球为什么能升空？</h4>
+        <p>给气球灌满热空气，它竟然能载着人飞上天空——原来<strong>空气</strong>也能产生浮力！</p>
+      </div>
+    </div>
+
+    <p>生活里这样的现象还有很多：游泳时你会觉得身体变"轻"了；煮饺子时，生饺子沉在锅底，熟了以后却会自己浮上来；在盐分极高的死海里，人即使不会游泳也能平躺漂浮；潜水艇能够自由地上浮和下潜……</p>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 什么是浮力？</div>
+      浸在液体（或气体）中的物体，受到液体（或气体）对它<strong>竖直向上</strong>的托力，这个力叫做<strong>浮力</strong>，用 F<sub>浮</sub> 表示。浮力的方向始终是<strong>竖直向上</strong>的。
+    </div>
+
+    <p>这些看似各不相同的现象背后，都隐藏着同一个物理量——<strong>浮力</strong>。这一章，我们就来揭开它的真面目。</p>
+  </div>
+
+  <!-- ===== 第二部分：浮力产生的原因 ===== -->
+  <div class="card">
+    <div class="section-header">🔍 2. 浮力产生的原因</div>
+
+    <p>液体内部存在压强，且压强随深度增加而增大（P = ρgh）。当一块长方体浸没在水中时，它的<strong>六个面都受到水的压力</strong>：</p>
+
+    <ul class="property-list">
+      <li>上表面：深度小 → 压强小 → 受到向下的压力 <strong>F<sub>上</sub> 较小</strong></li>
+      <li>下表面：深度大 → 压强大 → 受到向上的压力 <strong>F<sub>下</sub> 较大</strong></li>
+      <li>左右、前后四个侧面：深度相同 → 压力大小相等、方向相反 → 互相抵消</li>
+    </ul>
+
+    <p style="margin: 12px 0;">所以，物体上下表面受到了一个<strong>向上的压力差</strong>，这个压力差就是浮力！</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 360" width="480" height="360">
+        <defs>
+          <marker id="mo4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="mb4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <linearGradient id="waterGrad4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.20)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.45)"/>
+          </linearGradient>
+          <linearGradient id="deepGrad4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.10)"/>
+            <stop offset="100%" stop-color="rgba(30,95,158,0.55)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 烧杯 -->
+        <path d="M80 40 L80 320 L400 320 L400 40" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <!-- 水 -->
+        <rect x="83" y="80" width="314" height="240" fill="url(#waterGrad4)"/>
+        <line x1="80" y1="80" x2="400" y2="80" stroke="rgba(74,144,217,0.7)" stroke-width="2"/>
+        <text x="86" y="74" font-size="12" fill="#2E6BA8" font-weight="600">水面</text>
+
+        <!-- 深度标注 h1、h2 -->
+        <line x1="170" y1="80" x2="170" y2="140" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="164" y="118" text-anchor="end" font-size="13" fill="#7F8C8D">h₁</text>
+        <line x1="170" y1="80" x2="170" y2="260" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="164" y="180" text-anchor="end" font-size="13" fill="#7F8C8D">h₂</text>
+
+        <!-- 长方体（浸没在水中）-->
+        <rect x="180" y="140" width="100" height="120" fill="#E6B84B" stroke="#B08A22" stroke-width="2"/>
+        <!-- 水下渐变（深度越大越蓝越深）-->
+        <rect x="180" y="140" width="100" height="120" fill="url(#deepGrad4)"/>
+        <text x="230" y="205" text-anchor="middle" font-size="13" fill="#FFFFFF" stroke="rgba(122,94,20,0.85)" stroke-width="2.5" paint-order="stroke" font-weight="700">F浮 = F下 − F上</text>
+
+        <!-- F上：上表面压力向下（较小）-->
+        <line x1="230" y1="105" x2="230" y2="140" stroke="#F5A623" stroke-width="3" marker-end="url(#mo4)"/>
+        <text x="238" y="118" font-size="13" fill="#F5A623" font-weight="700">F上 ↓</text>
+
+        <!-- F下：下表面压力向上（较大）-->
+        <line x1="230" y1="310" x2="230" y2="260" stroke="#4A90D9" stroke-width="6" marker-end="url(#mb4)"/>
+        <text x="238" y="292" font-size="14" fill="#4A90D9" font-weight="700">F下 ↑</text>
+
+        <!-- 右侧说明 -->
+        <text x="320" y="125" font-size="12" fill="#F5A623" font-weight="600">上表面：深度小 → 压强小 → 压力小</text>
+        <text x="320" y="250" font-size="12" fill="#4A90D9" font-weight="600">下表面：深度大 → 压强大 → 压力大</text>
+        <text x="320" y="275" font-size="12" fill="#2E6BA8" font-weight="700">F下 > F上</text>
+
+        <text x="240" y="345" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">
+          浮力 = 上下表面的压力差
+        </text>
+      </svg>
+    </div>
+
+    <div class="formula-box">
+      F浮 = F下 − F上 = ρ水 g（h₂ − h₁）S = ρ水 g V排
+      <div class="sub">其中 S 是受力面积（上、下表面面积相等），V排 是物体排开液体的体积</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 两个特殊情况</div>
+      • 物体底面紧贴在容器底部（如吸盘），水无法进入底面 → 下表面没有受到水向上的压力 → <strong>不受浮力</strong>。<br>
+      • 浮力只取决于上、下表面的压力差，与物体的形状、密度无关（前提是完全浸没）。
+    </div>
+  </div>
+
+  <!-- ===== 第三部分：阿基米德原理 ===== -->
+  <div class="card">
+    <div class="section-header">⚖️ 3. 阿基米德原理</div>
+
+    <p>公元前三世纪，古希腊科学家阿基米德在洗澡时发现了浮力的规律。传说他兴奋得连衣服都没穿就跑上了街，大喊"尤里卡！（我找到了！）"。这个规律就是大名鼎鼎的<strong>阿基米德原理</strong>：</p>
+
+    <div class="formula-box">
+      阿基米德原理：F浮 = G排 = ρ液 g V排
+      <div class="sub">物体所受浮力，等于它<strong>排开的液体</strong>所受的重力。<br>
+      ρ液 —— 液体密度（kg/m³），g —— 取 10 N/kg，V排 —— 物体排开液体的体积（m³）</div>
+    </div>
+
+    <p style="margin: 12px 0;"><strong>动手试一试：</strong>拖动下方滑块，把悬挂在弹簧测力计下的物体（体积 V = 1 L）逐渐浸入水中，观察它浸入越深时排开的水和浮力的变化：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 440 350" width="440" height="350">
+        <defs>
+          <marker id="mo1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="mb1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <linearGradient id="waterGrad1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.20)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.45)"/>
+          </linearGradient>
+          <linearGradient id="deepGrad1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.12)"/>
+            <stop offset="100%" stop-color="rgba(30,95,158,0.60)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 横梁与支架 -->
+        <rect x="150" y="12" width="140" height="6" rx="2" fill="#B0BEC5"/>
+        <polygon points="220,18 208,6 232,6" fill="#90A4AE"/>
+
+        <!-- 弹簧测力计 -->
+        <path id="arch-spring" d="M 220 24 L 220 44" fill="none" stroke="#90A4AE" stroke-width="2.5"/>
+        <line id="arch-string" x1="220" y1="44" x2="220" y2="36" stroke="#B0BEC5" stroke-width="1.5"/>
+        <circle id="arch-hook" cx="220" cy="36" r="3.5" fill="#90A4AE"/>
+
+        <!-- 烧杯 -->
+        <path d="M60 40 L60 320 L380 320 L380 40" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <!-- 水 -->
+        <rect x="63" y="110" width="314" height="210" fill="url(#waterGrad1)"/>
+        <line x1="60" y1="110" x2="380" y2="110" stroke="rgba(74,144,217,0.7)" stroke-width="2"/>
+        <text x="66" y="104" font-size="12" fill="#2E6BA8" font-weight="600">水面</text>
+
+        <!-- 排开的水（V排）虚线框 -->
+        <rect id="arch-vpai-box" x="185" y="110" width="70" height="0" fill="rgba(30,95,158,0.10)" stroke="#1E5F9E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text id="arch-vpai-tag" x="260" y="120" font-size="12" fill="#1E5F9E" font-weight="700" opacity="0">V排</text>
+
+        <!-- 物体（立方体 1L）-->
+        <rect id="arch-outline" x="185" y="40" width="70" height="70" fill="none" stroke="#8A6A18" stroke-width="2"/>
+        <rect id="arch-above" x="185" y="40" width="70" height="0" fill="#E6B84B"/>
+        <rect id="arch-sub" x="185" y="110" width="70" height="0" fill="#D9A441"/>
+        <rect id="arch-deep" x="185" y="110" width="70" height="0" fill="url(#deepGrad1)"/>
+        <text id="arch-label" x="220" y="58" text-anchor="middle" font-size="13" fill="#FFFFFF" stroke="rgba(122,94,20,0.85)" stroke-width="2.5" paint-order="stroke" font-weight="700">物体 V=1L</text>
+
+        <!-- 重力 G 箭头（恒定 10 N）-->
+        <line id="arch-g-arrow" x1="172" y1="40" x2="172" y2="110" stroke="#F5A623" stroke-width="4" marker-end="url(#mo1)"/>
+        <text id="arch-g-label" x="172" y="130" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="700">G=10N</text>
+
+        <!-- 浮力 F浮 箭头（随浸入深度变化）-->
+        <line id="arch-f-arrow" x1="268" y1="110" x2="268" y2="110" stroke="#4A90D9" stroke-width="4" marker-end="url(#mb1)" opacity="0"/>
+        <text id="arch-f-label" x="268" y="102" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700" opacity="0">F浮=0N</text>
+
+        <text x="220" y="345" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">
+          弹簧测力计示数 T = G − F浮：物体浸入越深，浮力越大，测力计读数越小
+        </text>
+      </svg>
+
+      <div class="slider-row">
+        <label>浸入比例</label>
+        <input type="range" id="arch-slider" min="0" max="100" value="40" step="1">
+        <span class="value-display"><span id="arch-ratio">40</span>%</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">V排 =</span>
+          <span class="value"><span id="arch-vpai-l">0.40</span> L（<span id="arch-vpai-m">0.0004</span> m³）</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">F浮 = ρ水 g V排 =</span>
+          <span class="value"><span id="arch-f">4.0</span> N</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">测力计 T = G − F浮 =</span>
+          <span class="value"><span id="arch-t">6.0</span> N</span>
+        </div>
+      </div>
+
+      <div class="exp-tip" id="arch-tip">物体部分浸没，浸入越深 V排 越大，浮力越大。</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 阿基米德原理的关键</div>
+      • 浮力的大小只与<strong>液体的密度 ρ液</strong> 和 <strong>排开液体的体积 V排</strong> 有关，与物体本身的材料、密度、形状、所处的深度都无关。<br>
+      • 物体<strong>完全浸没</strong>后，V排 = V物 不再变化，此时再往深处放，浮力<strong>不变</strong>（ρ液 不变）。<br>
+      • 把铁块从水中取出再放入酒精中（ρ酒精 < ρ水），V排 虽然相同，但浮力会变小。
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：交互探索 · 沉浮条件 ===== -->
+  <div class="card">
+    <div class="section-header">🎛️ 4. 交互探索：物体的沉浮条件</div>
+
+    <p>同一个物体放进水里，什么时候浮、什么时候沉？关键看物体的<strong>密度</strong>与<strong>液体密度</strong>的大小关系：</p>
+
+    <div class="formula-box">
+      ρ物 &lt; ρ液 → 物体<strong>上浮</strong>，最后<strong>漂浮</strong>在水面<br>
+      ρ物 = ρ液 → 物体<strong>悬浮</strong>，可以停留在水中任何位置<br>
+      ρ物 &gt; ρ液 → 物体<strong>下沉</strong>，最终<strong>沉底</strong>
+      <div class="sub">水的密度 ρ水 = 1.0 g/cm³ = 1.0×10³ kg/m³；物体体积 V = 1 L = 0.001 m³</div>
+    </div>
+
+    <p style="margin: 12px 0;"><strong>动手试一试：</strong>拖动滑块调节物体的密度（0.5 ~ 3.0 g/cm³），观察它在水中的状态、重力与浮力的大小关系：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 440 380" width="440" height="380">
+        <defs>
+          <marker id="mo2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="mb2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <marker id="mg2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#27AE60"/>
+          </marker>
+          <linearGradient id="waterGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.20)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.45)"/>
+          </linearGradient>
+          <linearGradient id="deepGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.12)"/>
+            <stop offset="100%" stop-color="rgba(30,95,158,0.60)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 烧杯 -->
+        <path d="M60 40 L60 330 L380 330 L380 40" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <!-- 水 -->
+        <rect x="63" y="90" width="314" height="240" fill="url(#waterGrad2)"/>
+        <!-- 水位线 -->
+        <line x1="60" y1="90" x2="380" y2="90" stroke="#2E6BA8" stroke-width="2" stroke-dasharray="8,5"/>
+        <text x="66" y="84" font-size="12" fill="#2E6BA8" font-weight="600">水位线</text>
+
+        <!-- 排开的水（V排）虚线框 -->
+        <rect id="sf-vpai-box" x="185" y="90" width="70" height="0" fill="rgba(30,95,158,0.10)" stroke="#1E5F9E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text id="sf-vpai-tag" x="260" y="100" font-size="12" fill="#1E5F9E" font-weight="700" opacity="0">V排</text>
+
+        <!-- 物体 -->
+        <rect id="sf-outline" x="185" y="175" width="70" height="70" fill="none" stroke="#8A6A18" stroke-width="2"/>
+        <rect id="sf-above" x="185" y="175" width="70" height="0" fill="#E6B84B"/>
+        <rect id="sf-sub" x="185" y="245" width="70" height="0" fill="#D9A441"/>
+        <rect id="sf-deep" x="185" y="245" width="70" height="0" fill="url(#deepGrad2)"/>
+        <text id="sf-label" x="220" y="196" text-anchor="middle" font-size="13" fill="#FFFFFF" stroke="rgba(122,94,20,0.85)" stroke-width="2.5" paint-order="stroke" font-weight="700">物体</text>
+
+        <!-- 力的箭头（在物体两侧）-->
+        <line id="sf-g" x1="172" y1="210" x2="172" y2="240" stroke="#F5A623" stroke-width="4" marker-end="url(#mo2)"/>
+        <text id="sf-g-label" x="172" y="252" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="700">G=0N</text>
+        <line id="sf-f" x1="268" y1="245" x2="268" y2="230" stroke="#4A90D9" stroke-width="4" marker-end="url(#mb2)"/>
+        <text id="sf-f-label" x="268" y="222" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700">F浮=0N</text>
+        <line id="sf-n" x1="290" y1="245" x2="290" y2="225" stroke="#27AE60" stroke-width="4" marker-end="url(#mg2)" style="display:none"/>
+        <text id="sf-n-label" x="290" y="217" text-anchor="middle" font-size="12" fill="#27AE60" font-weight="700" style="display:none">N=0N</text>
+
+        <!-- 状态标题 -->
+        <text x="220" y="30" text-anchor="middle" font-size="14" fill="#7F8C8D">物体密度 <tspan id="sf-rho-display" fill="#4A90D9" font-weight="700">1.00</tspan> g/cm³</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>物体密度 ρ物</label>
+        <input type="range" id="sf-slider" min="0.5" max="3.0" value="0.8" step="0.01">
+        <span class="value-display"><span id="sf-rho-val">0.80</span> g/cm³</span>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <span id="sf-badge" class="state-badge s-float">漂浮</span>
+      </div>
+
+      <div class="force-bars">
+        <div class="force-bar">
+          <span class="fb-label" style="color:#F5A623;">⬇ 重力 G</span>
+          <div class="fb-track"><div class="fb-fill fb-g" id="bar-g"></div></div>
+          <span class="fb-value" id="bar-g-val">G = 0.0 N</span>
+        </div>
+        <div class="force-bar">
+          <span class="fb-label" style="color:#4A90D9;">⬆ 浮力 F浮</span>
+          <div class="fb-track"><div class="fb-fill fb-f" id="bar-f"></div></div>
+          <span class="fb-value" id="bar-f-val">F浮 = 0.0 N</span>
+        </div>
+        <div class="force-bar" id="bar-n-row" style="display:none;">
+          <span class="fb-label" style="color:#27AE60;">⬆ 支持力 N</span>
+          <div class="fb-track"><div class="fb-fill fb-n" id="bar-n"></div></div>
+          <span class="fb-value" id="bar-n-val">N = 0.0 N</span>
+        </div>
+      </div>
+
+      <div class="exp-tip" id="sf-desc"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 沉浮条件的本质</div>
+      • 上浮、下沉是物体<strong>受力不平衡</strong>时表现出的运动状态：F浮 &gt; G 上浮，F浮 &lt; G 下沉。<br>
+      • <strong>漂浮</strong>（浮在水面）和<strong>悬浮</strong>（停在水中）都是平衡状态：F浮 = G。<br>
+      • 同一物体漂浮时，露出水面的部分越多，说明密度越小；V排 =（ρ物/ρ液）× V。<br>
+      • 船从淡水驶入海水（ρ海水 &gt; ρ淡水），船会<strong>上浮</strong>一些（V排 变小），但 F浮 始终等于船的重力。
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：船舶原理 ===== -->
+  <div class="card">
+    <div class="section-header">🚢 5. 船舶原理：钢铁船为什么能浮在水上？</div>
+
+    <p>前面学到：浮力 F浮 = ρ水 g V排。钢铁的密度是 7.9 g/cm³，远大于水（1.0 g/cm³），按"沉浮条件"，实心铁块一定会沉底。那万吨巨轮同样是钢铁造的，为什么能浮起来呢？</p>
+
+    <p>秘诀就在——<strong>把铁做成空心</strong>！下图对比了实心铁块和空心铁船：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 520 340" width="520" height="340">
+        <defs>
+          <marker id="mo3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="mb3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <linearGradient id="waterGrad3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.20)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.45)"/>
+          </linearGradient>
+          <linearGradient id="steelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8D9BA8"/>
+            <stop offset="100%" stop-color="#5A6B7C"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 左烧杯：实心铁块 -->
+        <path d="M30 70 L30 280 L250 280 L250 70" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <rect x="33" y="120" width="214" height="160" fill="url(#waterGrad3)"/>
+        <line x1="30" y1="120" x2="250" y2="120" stroke="rgba(74,144,217,0.7)" stroke-width="2"/>
+        <text x="38" y="114" font-size="12" fill="#2E6BA8" font-weight="600">水面</text>
+
+        <!-- 排开的水 -->
+        <rect x="125" y="220" width="60" height="60" fill="rgba(30,95,158,0.08)" stroke="#1E5F9E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="155" y="212" text-anchor="middle" font-size="11" fill="#1E5F9E" font-weight="700">V排=V铁（小）</text>
+
+        <!-- 实心铁块 -->
+        <rect x="125" y="220" width="60" height="60" fill="url(#steelGrad)" stroke="#3E4C59" stroke-width="2"/>
+
+        <!-- 力的箭头 -->
+        <line x1="110" y1="225" x2="110" y2="275" stroke="#F5A623" stroke-width="4" marker-end="url(#mo3)"/>
+        <text x="110" y="292" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="700">G（大）</text>
+        <line x1="185" y1="275" x2="185" y2="242" stroke="#4A90D9" stroke-width="4" marker-end="url(#mb3)"/>
+        <text x="185" y="234" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700">F浮（小）</text>
+
+        <text x="140" y="308" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">实心铁块</text>
+        <text x="140" y="326" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="700">F浮 &lt; G → 下沉</text>
+
+        <!-- 右烧杯：空心铁船 -->
+        <path d="M270 70 L270 280 L490 280 L490 70" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <rect x="273" y="120" width="214" height="160" fill="url(#waterGrad3)"/>
+        <line x1="270" y1="120" x2="490" y2="120" stroke="rgba(74,144,217,0.7)" stroke-width="2"/>
+        <text x="278" y="114" font-size="12" fill="#2E6BA8" font-weight="600">水面</text>
+
+        <!-- 排开的水（大）-->
+        <rect x="345" y="120" width="130" height="55" fill="rgba(30,95,158,0.10)" stroke="#1E5F9E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="410" y="152" text-anchor="middle" font-size="12" fill="#1E5F9E" font-weight="700">V排（很大）</text>
+
+        <!-- 空心铁船 -->
+        <rect x="345" y="86" width="130" height="8" fill="url(#steelGrad)" stroke="#3E4C59" stroke-width="1.5"/>
+        <path d="M345 94 L475 94 L462 162 Q 450 175 410 175 Q 370 175 358 162 Z" fill="rgba(90,107,124,0.55)" stroke="#3E4C59" stroke-width="2"/>
+        <!-- 内部空心 -->
+        <path d="M352 98 L468 98 L458 158 Q 448 168 410 168 Q 372 168 362 158 Z" fill="#EAF2F9"/>
+        <text x="410" y="130" text-anchor="middle" font-size="11" fill="#7F8C8D">空心（空气）</text>
+
+        <!-- 力的箭头 -->
+        <line x1="355" y1="92" x2="355" y2="142" stroke="#F5A623" stroke-width="4" marker-end="url(#mo3)"/>
+        <text x="348" y="156" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="700">G</text>
+        <line x1="455" y1="170" x2="455" y2="120" stroke="#4A90D9" stroke-width="4" marker-end="url(#mb3)"/>
+        <text x="462" y="150" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700">F浮</text>
+
+        <text x="380" y="308" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">空心铁船</text>
+        <text x="380" y="326" text-anchor="middle" font-size="12" fill="#27AE60" font-weight="700">F浮 = G → 漂浮</text>
+
+        <text x="260" y="340" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="700">
+          同样多的钢铁：做成实心就沉，做成空心就能浮——关键是增大排开水的体积 V排！
+        </text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🚢 船舶的"空心"设计</div>
+      船体是空心的，内部体积（船舱）很大，所以虽然钢铁的密度比水大，但<strong>整艘船的平均密度</strong>（总质量 ÷ 总体积）却可以做到比水小，从而漂浮起来。船排开水的体积越大，获得的浮力就越大，能装的货物也就越多。潜水艇则是通过往水箱里<strong>注水/排水</strong>来改变自身重力，实现下潜和上浮。
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 6. 练习题</div>
+    <p>检验一下你对浮力知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 将一个体积为 200 cm³ 的物体完全浸没在水中（ρ水 = 1.0×10³ kg/m³，g = 10 N/kg），它受到的浮力为（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 0.2 N</div>
+      <div class="quiz-option" data-idx="1">B. 2 N</div>
+      <div class="quiz-option" data-idx="2">C. 20 N</div>
+      <div class="quiz-option" data-idx="3">D. 200 N</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 把一个密度为 0.8 g/cm³ 的物体轻轻放入密度为 1.0 g/cm³ 的水中，它将（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 沉入水底</div>
+      <div class="quiz-option" data-idx="1">B. 悬浮在水中</div>
+      <div class="quiz-option" data-idx="2">C. 漂浮在水面上</div>
+      <div class="quiz-option" data-idx="3">D. 先沉底再上浮</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于阿基米德原理，下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 物体受到的浮力等于物体本身的重量</div>
+      <div class="quiz-option" data-idx="1">B. 物体浸入液体越深，浮力越大</div>
+      <div class="quiz-option" data-idx="2">C. 浮力大小与物体在液体中所处的位置有关</div>
+      <div class="quiz-option" data-idx="3">D. 浸在液体中的物体受到向上的浮力，大小等于它排开的液体所受的重力，即 F浮 = G排 = ρ液gV排</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 阿基米德原理 F浮 = ρ液gV排：ρ液 与 V排 的乘积关系 ↔ <a href="../../数学/九年级/06-反比例函数.html">数学 · 反比例函数</a>（ρ液、V排 此消彼长）</p>
+    <p>· 浮力产生原因中的深度差（h₂ − h₁）与压力差计算 ↔ <a href="../../数学/八年级/08-勾股定理.html">数学 · 勾股定理</a>（浮力计算中的几何关系与数量计算）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="09-压强.html" class="btn btn-outline">← 上一章：压强</a>
+    <a href="11-功和机械能.html" class="btn btn-primary">下一章：功和机械能 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+// ===== 工具函数 =====
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+function springPath(bottom) {
+  // 弹簧：从 y=24 到 bottom 的折线
+  var y1 = 24, y2 = bottom;
+  var n = 8, pts = [];
+  for (var i = 0; i <= n; i++) {
+    var y = y1 + (y2 - y1) * (i / n);
+    var x;
+    if (i === 0 || i === n) x = 220;
+    else x = 220 + (i % 2 === 1 ? 6 : -6);
+    pts.push(x + ',' + y.toFixed(1));
+  }
+  return 'M ' + pts.join(' L ');
+}
+
+// ===== 阿基米德原理实验 =====
+var ARCH = {
+  V: 0.001,       // 物体体积 1 L
+  rho: 1000,      // 水密度 kg/m³
+  g: 10,          // N/kg
+  G: 10           // 物体重力 10 N
+};
+
+function updateArchimedes(p) {
+  var W = 70;               // 物体边长（像素）
+  var waterY = 110;         // 水面 y
+  var cx = 220;
+  var ty = 40 + (p / 100) * W;          // 物体上边 y：0% 时底边刚好接触水面
+  var bottom = ty + W;
+  var submergedH = clamp(bottom - waterY, 0, W);
+  var ratio = submergedH / W;           // 浸入比例
+  var Vpai = ARCH.V * ratio;            // 排开体积 m³
+  var F = ARCH.rho * ARCH.g * Vpai;     // 浮力 N
+  var T = Math.max(0, ARCH.G - F);      // 测力计示数
+
+  var subY = Math.max(waterY, ty);
+  var aboveH = subY - ty;
+
+  // 物体
+  document.getElementById('arch-above').setAttribute('y', ty);
+  document.getElementById('arch-above').setAttribute('height', aboveH);
+  document.getElementById('arch-sub').setAttribute('y', subY);
+  document.getElementById('arch-sub').setAttribute('height', submergedH);
+  document.getElementById('arch-deep').setAttribute('y', subY);
+  document.getElementById('arch-deep').setAttribute('height', submergedH);
+  document.getElementById('arch-outline').setAttribute('y', ty);
+  document.getElementById('arch-label').setAttribute('y', ty + 18);
+
+  // V排 虚线框
+  var vpBox = document.getElementById('arch-vpai-box');
+  vpBox.setAttribute('height', submergedH);
+  vpBox.style.opacity = submergedH > 1 ? 1 : 0;
+  var vpTag = document.getElementById('arch-vpai-tag');
+  vpTag.style.opacity = submergedH > 1 ? 1 : 0;
+  vpTag.setAttribute('y', waterY + Math.max(14, submergedH / 2) + 4);
+
+  // 弹簧测力计
+  var springBottom = 24 + (T / ARCH.G) * 20;
+  document.getElementById('arch-spring').setAttribute('d', springPath(springBottom));
+  document.getElementById('arch-string').setAttribute('y1', springBottom);
+  document.getElementById('arch-string').setAttribute('y2', ty - 4);
+  document.getElementById('arch-hook').setAttribute('cy', ty - 4);
+
+  // 重力箭头（恒定）
+  var gArrow = document.getElementById('arch-g-arrow');
+  gArrow.setAttribute('y1', ty);
+  gArrow.setAttribute('y2', ty + 70);
+  document.getElementById('arch-g-label').setAttribute('y', ty + 90);
+
+  // 浮力箭头
+  var fLen = (F / ARCH.G) * 70;
+  var fArrow = document.getElementById('arch-f-arrow');
+  fArrow.setAttribute('y1', bottom);
+  fArrow.setAttribute('y2', bottom - fLen);
+  fArrow.style.opacity = F > 0.01 ? 1 : 0;
+  var fLabel = document.getElementById('arch-f-label');
+  fLabel.style.opacity = F > 0.01 ? 1 : 0;
+  fLabel.setAttribute('y', bottom - fLen - 8);
+  fLabel.textContent = 'F浮=' + F.toFixed(1) + 'N';
+
+  // 读数
+  document.getElementById('arch-ratio').textContent = Math.round(ratio * 100);
+  document.getElementById('arch-vpai-l').textContent = (Vpai * 1000).toFixed(2);
+  document.getElementById('arch-vpai-m').textContent = Vpai.toFixed(4);
+  document.getElementById('arch-f').textContent = F.toFixed(1);
+  document.getElementById('arch-t').textContent = T.toFixed(1);
+
+  // 说明
+  document.getElementById('arch-tip').textContent =
+    ratio >= 0.999
+      ? '物体完全浸没，V排 达到最大值（1 L），浮力不再随深度增加而增大——这就是"完全浸没后浮力与深度无关"的原因！'
+      : '物体部分浸没，浸入越深，V排 越大，浮力越大（F浮 = ρ水gV排）。';
+}
+
+// ===== 沉浮条件交互 =====
+function updateSinkFloat(rho) {
+  var W = 70;
+  var waterY = 90, bottomY = 330;
+  var rhoW = 1.0;            // 水的密度 g/cm³
+  var G = rho * 10;          // N，G = ρ物gV = ρ(g/cm³)×1000×10×0.001 = ρ×10
+  var state, top, F, N = 0;
+
+  if (Math.abs(rho - rhoW) < 0.005) {
+    // 悬浮：物体停在水中央
+    state = '悬浮';
+    top = (waterY + bottomY) / 2 - W / 2;
+    F = G;
+  } else if (rho < rhoW) {
+    // 漂浮：露出水面一部分
+    state = '漂浮';
+    top = waterY + (rho / rhoW) * W - W;
+    F = G;
+  } else {
+    // 沉底：停在容器底部
+    state = '沉底';
+    top = bottomY - W;
+    F = 10;                  // ρ水gV排 = 1000×10×0.001
+    N = G - F;
+  }
+
+  var subY = Math.max(waterY, top);
+  var subH = clamp(top + W - waterY, 0, W);
+  var aboveH = subY - top;
+
+  // 物体
+  document.getElementById('sf-above').setAttribute('y', top);
+  document.getElementById('sf-above').setAttribute('height', aboveH);
+  document.getElementById('sf-sub').setAttribute('y', subY);
+  document.getElementById('sf-sub').setAttribute('height', subH);
+  document.getElementById('sf-deep').setAttribute('y', subY);
+  document.getElementById('sf-deep').setAttribute('height', subH);
+  document.getElementById('sf-outline').setAttribute('y', top);
+  document.getElementById('sf-label').setAttribute('y', top + 16);
+
+  // V排 虚线框
+  var vpBox = document.getElementById('sf-vpai-box');
+  vpBox.setAttribute('height', subH);
+  vpBox.style.opacity = subH > 1 ? 1 : 0;
+  var vpTag = document.getElementById('sf-vpai-tag');
+  vpTag.style.opacity = subH > 1 ? 1 : 0;
+  vpTag.setAttribute('y', waterY + Math.max(14, subH / 2) + 4);
+
+  // 力的箭头
+  var cy = top + W / 2;
+  var lenG = clamp(G * 3, 8, 42);
+  var lenF = clamp(F * 3, 8, 42);
+  document.getElementById('sf-g').setAttribute('y1', top);
+  document.getElementById('sf-g').setAttribute('y2', top + lenG);
+  document.getElementById('sf-g-label').setAttribute('y', top + lenG + 14);
+  document.getElementById('sf-g-label').textContent = 'G=' + G.toFixed(1) + 'N';
+
+  document.getElementById('sf-f').setAttribute('y1', top + W);
+  document.getElementById('sf-f').setAttribute('y2', top + W - lenF);
+  document.getElementById('sf-f-label').setAttribute('y', top + W - lenF - 8);
+  document.getElementById('sf-f-label').textContent = 'F浮=' + F.toFixed(1) + 'N';
+
+  var nLine = document.getElementById('sf-n');
+  var nLabel = document.getElementById('sf-n-label');
+  if (state === '沉底') {
+    var lenN = clamp(N * 3, 6, 42);
+    nLine.style.display = 'block';
+    nLabel.style.display = 'block';
+    nLine.setAttribute('y1', top + W);
+    nLine.setAttribute('y2', top + W - lenN);
+    nLabel.setAttribute('y', top + W - lenN - 8);
+    nLabel.textContent = 'N=' + N.toFixed(1) + 'N';
+  } else {
+    nLine.style.display = 'none';
+    nLabel.style.display = 'none';
+  }
+
+  // 状态徽章
+  var badge = document.getElementById('sf-badge');
+  badge.textContent = state;
+  badge.className = 'state-badge ' + (state === '漂浮' ? 's-float' : state === '悬浮' ? 's-suspend' : 's-sink');
+
+  // 状态说明
+  var desc = '';
+  if (state === '漂浮') {
+    desc = 'ρ物（' + rho.toFixed(2) + ' g/cm³）&lt; ρ水（1.00），物体上浮，最终漂浮在水面。' +
+      '<br>漂浮时：F浮 = G = <strong>' + G.toFixed(1) + ' N</strong>，V排 = ρ物/ρ水 × V = ' + rho.toFixed(2) + ' × 1 L = <strong>' + (rho * 1000).toFixed(0) + ' mL</strong>（露出水面 ' + ((1 - rho) * 100).toFixed(0) + '%）';
+  } else if (state === '悬浮') {
+    desc = 'ρ物 = ρ水（1.00），物体悬浮在水中，可以停留在任意位置。' +
+      '<br>悬浮时：F浮 = G = <strong>' + G.toFixed(1) + ' N</strong>，V排 = V = 1 L（完全浸没）';
+  } else {
+    desc = 'ρ物（' + rho.toFixed(2) + ' g/cm³）&gt; ρ水（1.00），物体下沉到底。' +
+      '<br>沉底时：F浮 = ρ水gV排 = <strong>' + F.toFixed(1) + ' N</strong>（V排 = V 已达最大，不再增大），G = ' + G.toFixed(1) + ' N，容器底支持力 N = G − F浮 = <strong>' + N.toFixed(1) + ' N</strong>';
+  }
+  document.getElementById('sf-desc').innerHTML = desc;
+
+  // 力对比条
+  document.getElementById('bar-g').style.width = (G / 30 * 100) + '%';
+  document.getElementById('bar-f').style.width = (F / 30 * 100) + '%';
+  document.getElementById('bar-g-val').textContent = 'G = ' + G.toFixed(1) + ' N';
+  document.getElementById('bar-f-val').textContent = 'F浮 = ' + F.toFixed(1) + ' N';
+  var nRow = document.getElementById('bar-n-row');
+  if (state === '沉底') {
+    nRow.style.display = 'flex';
+    document.getElementById('bar-n').style.width = (N / 30 * 100) + '%';
+    document.getElementById('bar-n-val').textContent = 'N = ' + N.toFixed(1) + ' N';
+  } else {
+    nRow.style.display = 'none';
+  }
+
+  // 密度显示
+  document.getElementById('sf-rho-display').textContent = rho.toFixed(2);
+  document.getElementById('sf-rho-val').textContent = rho.toFixed(2);
+}
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 阿基米德实验滑块
+  var archSlider = document.getElementById('arch-slider');
+  archSlider.addEventListener('input', function() {
+    updateArchimedes(parseInt(this.value));
+  });
+  updateArchimedes(parseInt(archSlider.value));
+
+  // 沉浮条件滑块
+  var sfSlider = document.getElementById('sf-slider');
+  sfSlider.addEventListener('input', function() {
+    updateSinkFloat(parseFloat(this.value));
+  });
+  updateSinkFloat(parseFloat(sfSlider.value));
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: 'V排 = V物 = 200 cm³ = 2.0×10⁻⁴ m³，F浮 = ρ水gV排 = 1.0×10³ × 10 × 2.0×10⁻⁴ = <strong>2 N</strong>。注意：完全浸没时，V排 = V物，与物体材料无关。',
+    hint: '先把体积换算成 m³：200 cm³ = 2.0×10⁻⁴ m³，再代入 F浮 = ρ水gV排。'
+  });
+
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: 'ρ物 = 0.8 g/cm³ &lt; ρ水 = 1.0 g/cm³，根据沉浮条件，物体<strong>上浮</strong>，最终<strong>漂浮</strong>在水面上。漂浮时 F浮 = G，V排 = 0.8 × V。',
+    hint: '比较物体密度和水的密度：0.8 &lt; 1.0，密度小于水的物体要浮起来。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 3,
+    explain: '阿基米德原理：F浮 = G排 = ρ液gV排。选项 B 和 C 错误——物体<strong>完全浸没后</strong> V排 不变，浮力不再随深度或位置改变；A 错误——漂浮、悬浮时才 F浮 = G，沉底时 F浮 &lt; G。',
+    hint: '阿基米德原理说的是"排开的液体"，与物体本身重量无关。回忆一下：完全浸没后浮力与深度无关。'
+  });
+});
+</script>
+
+</body>
+</html>

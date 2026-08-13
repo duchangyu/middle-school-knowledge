@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电功率 · 九年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本页专属样式 ===== */
+    .formula-box {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(74,144,217,0.08), rgba(74,144,217,0.02));
+      border-radius: var(--radius);
+      margin: 20px 0;
+      border: 1px solid rgba(74,144,217,0.2);
+    }
+    .formula-box .big-formula {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Times New Roman", serif;
+      letter-spacing: 2px;
+      margin: 8px 0;
+    }
+    .formula-box .formula-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .formula-box .unit-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .formula-box .unit-item {
+      background: white;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      font-size: 14px;
+    }
+    .formula-box .unit-item b { color: var(--primary); }
+
+    /* 控制面板 */
+    .control-panel {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-top: 16px;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .control-row:last-child { margin-bottom: 0; }
+    .control-row label {
+      min-width: 130px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+    .control-row .slider-wrap {
+      flex: 1;
+      min-width: 180px;
+    }
+    .control-row .value-badge {
+      min-width: 90px;
+      text-align: center;
+      padding: 4px 10px;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .control-row .value-badge.danger { background: var(--danger); }
+    .control-row .value-badge.warn { background: var(--warning); }
+    .control-row .value-badge.success { background: var(--success); }
+
+    .mode-switch {
+      display: inline-flex;
+      background: var(--bg-soft);
+      border-radius: 20px;
+      padding: 4px;
+      margin: 8px 0 16px;
+    }
+    .mode-switch button {
+      padding: 8px 18px;
+      border: none;
+      background: transparent;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .mode-switch button.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(74,144,217,0.4);
+    }
+
+    /* 计算器输入区 */
+    .calc-input-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .calc-input-item {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+    .calc-input-item.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74,144,217,0.15); }
+    .calc-input-item.disabled { opacity: 0.45; background: var(--bg-soft); }
+    .calc-input-item label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .calc-input-item input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Courier New", monospace;
+      text-align: center;
+    }
+    .calc-input-item .unit { font-size: 12px; color: var(--text-secondary); }
+
+    /* 读数卡片 */
+    .readout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .readout-card {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+      border: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .readout-card.highlight { border-color: var(--primary); background: rgba(74,144,217,0.05); }
+    .readout-card.danger { border-color: var(--danger); background: rgba(231,76,60,0.05); }
+    .readout-card .rd-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .readout-card .rd-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Courier New", monospace;
+    }
+    .readout-card.danger .rd-value { color: var(--danger); }
+    .readout-card .rd-unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* SVG / Canvas 容器 */
+    .circuit-box, .canvas-wrap, .lamp-box {
+      background: #FAFCFE;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    canvas { max-width: 100%; }
+
+    /* 状态标签 */
+    .status-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 6px 4px;
+    }
+    .status-tag.dim { background: rgba(127,140,141,0.2); color: var(--text-secondary); }
+    .status-tag.normal { background: rgba(39,174,96,0.15); color: var(--success); }
+    .status-tag.bright { background: rgba(243,156,18,0.2); color: var(--warning); }
+    .status-tag.danger { background: rgba(231,76,60,0.2); color: var(--danger); }
+
+    .quiz-feedback {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand">💡 电功率</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../八年级/index.html">🔌 物理八年级</a></li>
+    <li><a href="../../数学/九年级/index.html">📐 数学九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">物理</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>电功率</span>
+  </div>
+
+  <h1 style="font-size: 30px; margin-bottom: 8px;">💡 电功率</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">
+    电流做功的快慢——解读灯泡上的"220V 60W"，理解额定与实际的差别
+  </p>
+
+  <!-- ===== 1. 引入 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🔦 从灯泡铭牌说起</div>
+    <p>拆开家里的灯泡包装盒，或者在灯泡玻璃上，你一定会看到这样一行字：<b>"220V 60W"</b>。这是什么意思？</p>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 两个关键数字</div>
+      <p>· <b>220V</b>：灯泡的<b>额定电压</b>——它需要接在 220V 的家庭电路中才能正常工作</p>
+      <p>· <b>60W</b>：灯泡的<b>额定功率</b>——在 220V 下正常工作时，电流每秒做功 60 焦</p>
+    </div>
+
+    <p>再看看家里的电费单，上面写着"用电量 200 度"。1 度 = 1 千瓦时（kW·h）= 3.6×10⁶ J。电费的本质，就是你家用电器总共做了多少功。</p>
+
+    <p>不同用电器做功的<b>快慢</b>不同：电热水壶把水烧开只要几分钟，而台灯亮一小时也用不了多少电。物理学用<b>电功率</b>来描述电流做功的快慢。</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 680 200" width="100%" style="max-width:680px;">
+        <!-- 灯泡铭牌示意 -->
+        <text x="340" y="24" text-anchor="middle" font-size="15" font-weight="700" fill="#2E6BA8">常见用电器铭牌</text>
+        <!-- 灯泡1 -->
+        <circle cx="120" cy="90" r="30" fill="#FFF3D6" stroke="#F5A623" stroke-width="2"/>
+        <text x="120" y="98" text-anchor="middle" font-size="22">💡</text>
+        <rect x="75" y="130" width="90" height="44" fill="white" stroke="#4A90D9" stroke-width="2" rx="4"/>
+        <text x="120" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#E74C3C">220V 60W</text>
+        <text x="120" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">白炽灯</text>
+        <!-- 灯泡2 -->
+        <circle cx="340" cy="90" r="30" fill="#FFF3D6" stroke="#F5A623" stroke-width="2"/>
+        <text x="340" y="98" text-anchor="middle" font-size="22">💡</text>
+        <rect x="295" y="130" width="90" height="44" fill="white" stroke="#4A90D9" stroke-width="2" rx="4"/>
+        <text x="340" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#E74C3C">220V 100W</text>
+        <text x="340" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">白炽灯（更亮）</text>
+        <!-- 电热水壶 -->
+        <rect x="510" y="70" width="60" height="50" fill="#B3D4F0" stroke="#2E6BA8" stroke-width="2" rx="6"/>
+        <text x="540" y="100" text-anchor="middle" font-size="22">🍵</text>
+        <rect x="495" y="130" width="90" height="44" fill="white" stroke="#4A90D9" stroke-width="2" rx="4"/>
+        <text x="540" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">220V 1500W</text>
+        <text x="540" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">电热水壶</text>
+        <!-- 对比箭头 -->
+        <text x="230" y="92" text-anchor="middle" font-size="20" fill="#27AE60">→</text>
+        <text x="450" y="92" text-anchor="middle" font-size="20" fill="#27AE60">→</text>
+        <text x="230" y="112" text-anchor="middle" font-size="11" fill="#27AE60">功率更大</text>
+        <text x="450" y="112" text-anchor="middle" font-size="11" fill="#27AE60">做功更快</text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔍 生活实例</div>
+      <p>· 同样是 220V，<b>100W 的灯比 60W 的灯更亮</b>——功率大，单位时间内转化的光能多</p>
+      <p>· <b>1500W 的电水壶</b>比 60W 的灯做功快 25 倍，所以水烧开很快，电费也走得快</p>
+    </div>
+  </div>
+
+  <!-- ===== 2. 概念定义 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">📐 电功率：核心公式</div>
+    <p>电功率等于<b>电流做的功与所用时间之比</b>，也就是电流做功的快慢。</p>
+
+    <div class="formula-box">
+      <div class="big-formula">P = W / t = U · I</div>
+      <div class="formula-desc">电功率 = 电功 ÷ 时间 = 电压 × 电流</div>
+      <div class="unit-row">
+        <div class="unit-item"><b>P</b> — 电功率，单位：瓦特（W）</div>
+        <div class="unit-item"><b>W</b> — 电功，单位：焦耳（J）</div>
+        <div class="unit-item"><b>U</b> — 电压，单位：伏特（V）</div>
+        <div class="unit-item"><b>I</b> — 电流，单位：安培（A）</div>
+        <div class="unit-item"><b>t</b> — 时间，单位：秒（s）</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 推导公式（纯电阻电路）</div>
+      <p>对于纯电阻电路（电能全部转化为热能），结合欧姆定律 <b>U = I·R</b>，可得：</p>
+      <p style="margin-top:8px; font-size:16px;">
+        ① <b>P = I²·R</b> &nbsp;&nbsp;（已知电流和电阻时用）<br>
+        ② <b>P = U² / R</b> &nbsp;&nbsp;（已知电压和电阻时用）
+      </p>
+      <p style="margin-top:8px; font-size:13px; color:var(--text-secondary);">
+        推导：P = UI，代入 U = IR 得 P = I·I·R = I²R；代入 I = U/R 得 P = U·(U/R) = U²/R
+      </p>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color:var(--warning);">⚠️ 单位换算</div>
+      <p>· 1 kW = 1000 W &nbsp;&nbsp;· 1 度 = 1 kW·h = 3.6×10⁶ J</p>
+      <p>· 例如 60W 的灯工作 10 小时，消耗电能 W = P·t = 0.06kW × 10h = 0.6 度</p>
+    </div>
+  </div>
+
+  <!-- ===== 3. 交互探索1：电功率计算器 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🧮 交互探索 ①：电功率计算器</div>
+    <p>选择输入模式，输入任意两个量，自动计算第三个量和电功率 P。下方电路图中的灯泡亮度会随功率变化。</p>
+
+    <div class="mode-switch">
+      <button id="modeUI" class="active" onclick="setCalcMode('UI')">U + I</button>
+      <button id="modeUR" onclick="setCalcMode('UR')">U + R</button>
+      <button id="modeIR" onclick="setCalcMode('IR')">I + R</button>
+    </div>
+
+    <div class="calc-input-grid">
+      <div class="calc-input-item active" id="inputU">
+        <label>电压 U</label>
+        <input type="number" id="calcU" value="6" step="0.1" min="0" oninput="updateCalculator()">
+        <span class="unit">V</span>
+      </div>
+      <div class="calc-input-item active" id="inputI">
+        <label>电流 I</label>
+        <input type="number" id="calcI" value="0.5" step="0.01" min="0" oninput="updateCalculator()">
+        <span class="unit">A</span>
+      </div>
+      <div class="calc-input-item disabled" id="inputR">
+        <label>电阻 R</label>
+        <input type="number" id="calcR" value="12" step="0.1" min="0" disabled oninput="updateCalculator()">
+        <span class="unit">Ω</span>
+      </div>
+    </div>
+
+    <div class="circuit-box">
+      <svg id="calcCircuitSvg" viewBox="0 0 680 260" width="100%" style="max-width:680px;">
+        <!-- 由 JS 动态绘制 -->
+      </svg>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-card" id="rdCardU">
+        <div class="rd-label">电压 U</div>
+        <div class="rd-value"><span id="rdCalcU">6.00</span></div>
+        <div class="rd-unit">V</div>
+      </div>
+      <div class="readout-card" id="rdCardI">
+        <div class="rd-label">电流 I</div>
+        <div class="rd-value"><span id="rdCalcI">0.500</span></div>
+        <div class="rd-unit">A</div>
+      </div>
+      <div class="readout-card" id="rdCardR">
+        <div class="rd-label">电阻 R</div>
+        <div class="rd-value"><span id="rdCalcR">12.00</span></div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card highlight">
+        <div class="rd-label">电功率 P</div>
+        <div class="rd-value"><span id="rdCalcP">3.00</span></div>
+        <div class="rd-unit">W</div>
+      </div>
+    </div>
+
+    <div class="tip-box" id="calcTip">
+      <div class="tip-title">📌 当前公式</div>
+      <p>已知 U 和 I：<b>P = U·I</b>，<b>R = U/I</b></p>
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互探索2：额定功率 vs 实际功率 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🌟 交互探索 ②：额定功率 vs 实际功率</div>
+    <p>一只灯泡标"<b>220V 60W</b>"。把它接到不同电压的电路中，它的实际功率会怎样变化？</p>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 先算出灯泡电阻</div>
+      <p>由 P = U²/R 得：R = U额²/P额 = 220²/60 = 48400/60 ≈ <b>807 Ω</b></p>
+      <p>灯丝电阻近似不变，所以实际功率：<b>P实 = U实² / R = U实² / 807</b></p>
+    </div>
+
+    <div class="control-panel">
+      <div class="control-row">
+        <label>实际电压 U实</label>
+        <div class="slider-wrap">
+          <input type="range" id="actualUSlider" min="0" max="300" step="1" value="220">
+        </div>
+        <div class="value-badge" id="actualUBadge"><span id="actualUValue">220</span> V</div>
+      </div>
+    </div>
+
+    <div class="lamp-box">
+      <svg id="lampSvg" viewBox="0 0 680 260" width="100%" style="max-width:680px;">
+        <!-- 由 JS 动态绘制 -->
+      </svg>
+      <div id="lampStatus" style="margin-top:8px;">
+        <span class="status-tag normal">正常发光</span>
+      </div>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-card">
+        <div class="rd-label">额定电压</div>
+        <div class="rd-value">220</div>
+        <div class="rd-unit">V</div>
+      </div>
+      <div class="readout-card">
+        <div class="rd-label">额定功率</div>
+        <div class="rd-value">60</div>
+        <div class="rd-unit">W</div>
+      </div>
+      <div class="readout-card">
+        <div class="rd-label">灯丝电阻</div>
+        <div class="rd-value">807</div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card highlight" id="rdActualPCard">
+        <div class="rd-label">实际功率 P实</div>
+        <div class="rd-value"><span id="rdActualP">60.0</span></div>
+        <div class="rd-unit">W</div>
+      </div>
+    </div>
+
+    <div class="warning-box" id="lampWarning" style="display:none;">
+      <div class="tip-title" style="color:var(--danger);">⚠️ 危险！</div>
+      <p>实际电压超过额定电压的 120%（264V），灯丝电流过大，<b>可能烧毁！</b></p>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 规律总结</div>
+      <p>· U实 = U额 → P实 = P额，<b>正常发光</b></p>
+      <p>· U实 &lt; U额 → P实 &lt; P额，<b>偏暗</b>（P实 与 U实² 成正比）</p>
+      <p>· U实 &gt; U额 → P实 &gt; P额，<b>过亮</b>，长期使用会缩短寿命甚至烧毁</p>
+    </div>
+  </div>
+
+  <!-- ===== 5. 交互探索3：P=I²R 极值问题 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">📈 交互探索 ③：P = I²R 极值问题（二次函数应用）</div>
+    <p>电源 U = 12V，串联一个定值电阻 <b>R₀ = 2Ω</b> 和一个可变电阻 <b>R</b>。调节 R，可变电阻的功率如何变化？</p>
+
+    <div class="formula-box" style="margin:12px 0;">
+      <div style="font-size:20px; font-weight:700; color:var(--primary); font-family:'Times New Roman',serif;">
+        P_R = I²·R = ( U / (R₀ + R) )² × R = U²·R / (R₀ + R)²
+      </div>
+    </div>
+
+    <div class="control-panel">
+      <div class="control-row">
+        <label>可变电阻 R</label>
+        <div class="slider-wrap">
+          <input type="range" id="rSlider" min="0.1" max="20" step="0.1" value="2">
+        </div>
+        <div class="value-badge" id="rValueBadge"><span id="rValue">2.0</span> Ω</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="prCanvas" width="680" height="420"></canvas>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-card">
+        <div class="rd-label">电源电压</div>
+        <div class="rd-value">12</div>
+        <div class="rd-unit">V</div>
+      </div>
+      <div class="readout-card">
+        <div class="rd-label">定值电阻 R₀</div>
+        <div class="rd-value">2</div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card" id="rdCurrentRCard">
+        <div class="rd-label">可变电阻 R</div>
+        <div class="rd-value"><span id="rdR">2.0</span></div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card">
+        <div class="rd-label">电路电流 I</div>
+        <div class="rd-value"><span id="rdCurrentI">3.00</span></div>
+        <div class="rd-unit">A</div>
+      </div>
+      <div class="readout-card highlight" id="rdPRCard">
+        <div class="rd-label">R 的功率 P_R</div>
+        <div class="rd-value"><span id="rdPR">18.00</span></div>
+        <div class="rd-unit">W</div>
+      </div>
+    </div>
+
+    <div class="tip-box" id="prTip">
+      <div class="tip-title">🎯 极值分析</div>
+      <p>当 <b>R = R₀ = 2Ω</b> 时，可变电阻功率最大：<b>P_max = U²/(4R₀) = 144/8 = 18 W</b></p>
+      <p style="margin-top:6px; font-size:13px; color:var(--text-secondary);">
+        数学证明：对 P_R = U²R/(R₀+R)² 求导，令 dP/dR = 0，得 R = R₀
+      </p>
+    </div>
+
+    <div class="cross-ref-box">
+      <div class="ref-title">🔗 这就是二次函数的极值应用！</div>
+      <p>把 P_R 展开看：P_R = U²R/(R₀+R)²。令 x = R/R₀，则 P_R = U²·x/(1+x)² · 1/R₀</p>
+      <p>函数 y = x/(1+x)² 在 <b>x = 1</b>（即 R = R₀）处取最大值 1/4，所以 P_max = U²/(4R₀)。</p>
+      <p>这正是数学九年级<b>二次函数</b>求极值的思想——用配方法或求导找顶点。</p>
+      <p style="margin-top:8px;">👉 详见：<a href="../../数学/九年级/02-二次函数.html">📐 数学九年级 · 二次函数</a></p>
+    </div>
+  </div>
+
+  <!-- ===== 6. 焦耳定律 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🔥 焦耳定律：电流的热效应</div>
+    <p>电流通过导体时，电能会转化为<b>内能</b>（热能），这就是电流的热效应。英国物理学家焦耳通过实验总结出规律：</p>
+
+    <div class="formula-box">
+      <div class="big-formula">Q = I²·R·t</div>
+      <div class="formula-desc">热量 = 电流² × 电阻 × 时间</div>
+      <div class="unit-row">
+        <div class="unit-item"><b>Q</b> — 热量，单位：焦耳（J）</div>
+        <div class="unit-item"><b>I</b> — 电流，单位：安培（A）</div>
+        <div class="unit-item"><b>R</b> — 电阻，单位：欧姆（Ω）</div>
+        <div class="unit-item"><b>t</b> — 时间，单位：秒（s）</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 电热与电功率的关系</div>
+      <p>对于纯电阻电路，电能全部转化为热能：<b>Q = W = P·t = UIt = I²Rt</b></p>
+      <p>· 电饭煲、电熨斗、电热水壶：利用电流热效应，把电能转化为热能</p>
+      <p>· 电风扇、电视机：电热是有害的，要散热（否则会烧坏元件）</p>
+    </div>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 680 180" width="100%" style="max-width:680px;">
+        <!-- 电饭煲 -->
+        <rect x="40" y="50" width="120" height="80" fill="#B3D4F0" stroke="#2E6BA8" stroke-width="2" rx="8"/>
+        <rect x="55" y="65" width="90" height="50" fill="#E8EEF4" stroke="#2E6BA8" stroke-width="1" rx="4"/>
+        <text x="100" y="95" text-anchor="middle" font-size="28">🍚</text>
+        <text x="100" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">电饭煲</text>
+        <text x="100" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">电能 → 热能煮饭</text>
+        <!-- 电熨斗 -->
+        <path d="M 240 70 L 340 70 L 360 95 L 340 120 L 240 120 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+        <rect x="270" y="120" width="40" height="30" fill="#7F8C8D" rx="4"/>
+        <text x="300" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">电熨斗</text>
+        <text x="300" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">电能 → 热能熨衣</text>
+        <!-- 电热水壶 -->
+        <rect x="440" y="55" width="100" height="80" fill="#27AE60" stroke="#1E8449" stroke-width="2" rx="8"/>
+        <rect x="455" y="70" width="70" height="55" fill="#A9DFBF" rx="4"/>
+        <path d="M 540 70 L 560 60 L 560 130 L 540 120" fill="#27AE60" stroke="#1E8449" stroke-width="2"/>
+        <text x="490" y="105" text-anchor="middle" font-size="24">💧</text>
+        <text x="490" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">电热水壶</text>
+        <text x="490" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">电能 → 热能烧水</text>
+        <!-- 散热风扇 -->
+        <circle cx="630" cy="90" r="32" fill="#FFF3D6" stroke="#F5A623" stroke-width="2"/>
+        <text x="630" y="100" text-anchor="middle" font-size="28">🌀</text>
+        <text x="630" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">散热风扇</text>
+        <text x="630" y="166" text-anchor="middle" font-size="11" fill="#7F8C8D">电热有害需散热</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== 7. 练习题 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">✏️ 课堂练习</div>
+
+    <div class="quiz-question" id="quiz1">
+      <div class="question-text">1. 标有"220V 60W"的灯泡，正常工作时的电阻是</div>
+      <div class="quiz-option" data-idx="0">A. 约 36 Ω</div>
+      <div class="quiz-option" data-idx="1">B. 约 807 Ω</div>
+      <div class="quiz-option" data-idx="2">C. 约 13200 Ω</div>
+      <div class="quiz-option" data-idx="3">D. 约 3.67 Ω</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz2">
+      <div class="question-text">2. 标"220V 60W"的灯泡接在 110V 电路中（灯丝电阻不变），实际功率是</div>
+      <div class="quiz-option" data-idx="0">A. 60 W</div>
+      <div class="quiz-option" data-idx="1">B. 30 W</div>
+      <div class="quiz-option" data-idx="2">C. 15 W</div>
+      <div class="quiz-option" data-idx="3">D. 7.5 W</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz3">
+      <div class="question-text">3. （极值问题）电源 U = 12V，定值电阻 R₀ = 2Ω 与可变电阻 R 串联。当 R 为何值时，R 消耗的功率最大？最大功率是多少？</div>
+      <div class="quiz-option" data-idx="0">A. R = 1Ω，P = 16W</div>
+      <div class="quiz-option" data-idx="1">B. R = 2Ω，P = 18W</div>
+      <div class="quiz-option" data-idx="2">C. R = 4Ω，P = 16W</div>
+      <div class="quiz-option" data-idx="3">D. R = 20Ω，P = 6W</div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 8. 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉：电功率 ↔ 数学·二次函数</div>
+    <ul style="margin-left:20px; margin-top:8px;">
+      <li><b>P = I²R</b>（R 不变）是关于 I 的二次函数 y = kI²</li>
+      <li><b>P = U²/R</b>（U 不变）是关于 R 的反比例函数</li>
+      <li><b>P_R = U²R/(R₀+R)²</b> 的极值问题 ↔ 二次函数求顶点（R = R₀ 时取最大值）</li>
+      <li><b>Q = I²Rt</b>（t 不变）也是二次函数形式</li>
+    </ul>
+    <p style="margin-top:10px;">👉 相关链接：</p>
+    <p>· <a href="../../数学/九年级/02-二次函数.html">📐 数学九年级 · 二次函数</a>（极值应用）</p>
+    <p>· <a href="15-欧姆定律.html">⚡ 物理九年级 · 欧姆定律</a>（I = U/R 基础）</p>
+  </div>
+
+  <!-- ===== 底部步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="15-欧姆定律.html" class="btn btn-outline">← 上一章：欧姆定律</a>
+    <a href="index.html" class="btn btn-outline btn-sm">目录</a>
+    <a href="17-内能.html" class="btn btn-primary">下一章：内能 →</a>
+  </div>
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================
+ * 电功率交互逻辑
+ * ============================================ */
+
+/* ---------- 全局：电功率计算器 ---------- */
+let calcMode = 'UI';  // 'UI' | 'UR' | 'IR'
+
+function setCalcMode(mode) {
+  calcMode = mode;
+  document.getElementById('modeUI').classList.toggle('active', mode === 'UI');
+  document.getElementById('modeUR').classList.toggle('active', mode === 'UR');
+  document.getElementById('modeIR').classList.toggle('active', mode === 'IR');
+
+  // 启用/禁用输入框
+  const inpU = document.getElementById('inputU');
+  const inpI = document.getElementById('inputI');
+  const inpR = document.getElementById('inputR');
+  inpU.classList.toggle('active', mode === 'UI' || mode === 'UR');
+  inpU.classList.toggle('disabled', mode === 'IR');
+  inpI.classList.toggle('active', mode === 'UI' || mode === 'IR');
+  inpI.classList.toggle('disabled', mode === 'UR');
+  inpR.classList.toggle('active', mode === 'UR' || mode === 'IR');
+  inpR.classList.toggle('disabled', mode === 'UI');
+
+  document.getElementById('calcU').disabled = (mode === 'IR');
+  document.getElementById('calcI').disabled = (mode === 'UR');
+  document.getElementById('calcR').disabled = (mode === 'UI');
+
+  updateCalculator();
+}
+
+function updateCalculator() {
+  const uRaw = document.getElementById('calcU').value;
+  const iRaw = document.getElementById('calcI').value;
+  const rRaw = document.getElementById('calcR').value;
+  const u = parseFloat(uRaw);
+  const i = parseFloat(iRaw);
+  const r = parseFloat(rRaw);
+
+  let U, I, R, P;
+  let formulaText = '';
+
+  if (calcMode === 'UI') {
+    U = u; I = i;
+    if (!isFinite(U) || !isFinite(I) || U <= 0 || I <= 0) { P = 0; R = 0; }
+    else { P = U * I; R = U / I; }
+    formulaText = `已知 U = ${U}V, I = ${I}A： <b>P = U·I = ${U}×${I} = ${P.toFixed(2)} W</b>，<b>R = U/I = ${R.toFixed(2)} Ω</b>`;
+  } else if (calcMode === 'UR') {
+    U = u; R = r;
+    if (!isFinite(U) || !isFinite(R) || U <= 0 || R <= 0) { P = 0; I = 0; }
+    else { P = U * U / R; I = U / R; }
+    formulaText = `已知 U = ${U}V, R = ${R}Ω： <b>P = U²/R = ${U}²/${R} = ${P.toFixed(2)} W</b>，<b>I = U/R = ${I.toFixed(3)} A</b>`;
+  } else { // IR
+    I = i; R = r;
+    if (!isFinite(I) || !isFinite(R) || I <= 0 || R <= 0) { P = 0; U = 0; }
+    else { P = I * I * R; U = I * R; }
+    formulaText = `已知 I = ${I}A, R = ${R}Ω： <b>P = I²·R = ${I}²×${R} = ${P.toFixed(2)} W</b>，<b>U = I·R = ${U.toFixed(2)} V</b>`;
+  }
+
+  // 更新读数
+  document.getElementById('rdCalcU').textContent = isFinite(U) ? U.toFixed(2) : '0.00';
+  document.getElementById('rdCalcI').textContent = isFinite(I) ? I.toFixed(3) : '0.000';
+  document.getElementById('rdCalcR').textContent = isFinite(R) ? R.toFixed(2) : '0.00';
+  document.getElementById('rdCalcP').textContent = isFinite(P) ? P.toFixed(2) : '0.00';
+
+  // 高亮输入的卡片
+  document.getElementById('rdCardU').classList.toggle('highlight', (calcMode === 'UI' || calcMode === 'UR'));
+  document.getElementById('rdCardI').classList.toggle('highlight', (calcMode === 'UI' || calcMode === 'IR'));
+  document.getElementById('rdCardR').classList.toggle('highlight', (calcMode === 'UR' || calcMode === 'IR'));
+
+  // 更新提示
+  document.getElementById('calcTip').innerHTML =
+    `<div class="tip-title">📌 当前公式（${calcMode === 'UI' ? 'U+I 模式' : calcMode === 'UR' ? 'U+R 模式' : 'I+R 模式'}）</div>
+     <p>${formulaText}</p>`;
+
+  // 绘制电路
+  drawCalcCircuit(U || 0, I || 0, R || 0, P || 0);
+}
+
+function drawCalcCircuit(U, I, R, P) {
+  // 灯泡亮度：P 越大越亮（0~50W 映射）
+  const brightness = Math.min(P / 50, 1);
+  const glow = brightness;
+  // 灯泡颜色：暗→亮黄→白
+  const rC = 255;
+  const gC = Math.round(200 + 55 * glow);
+  const bC = Math.round(80 + 175 * glow);
+  const lampColor = `rgb(${rC},${gC},${bC})`;
+  const lampOpacity = 0.25 + brightness * 0.75;
+
+  // 光晕半径
+  const haloR = 22 + brightness * 20;
+  const haloOpacity = brightness * 0.5;
+
+  const svg = document.getElementById('calcCircuitSvg');
+  svg.innerHTML = `
+    <!-- 电池 -->
+    <rect x="80" y="130" width="24" height="60" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+    <line x1="74" y1="145" x2="110" y2="145" stroke="#2E6BA8" stroke-width="3"/>
+    <line x1="78" y1="175" x2="106" y2="175" stroke="#2E6BA8" stroke-width="1"/>
+    <text x="92" y="210" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700">U=${U.toFixed(2)}V</text>
+    <!-- 上方导线 -->
+    <path d="M 92 130 L 92 60 L 580 60 L 580 130" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+    <!-- 电流方向 -->
+    <text x="200" y="52" font-size="16" fill="#4A90D9">→</text>
+    <text x="340" y="52" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="600">I = ${I.toFixed(3)} A</text>
+    <!-- 灯泡光晕 -->
+    <circle cx="580" cy="155" r="${haloR}" fill="${lampColor}" fill-opacity="${haloOpacity}" filter="blur(2px)"/>
+    <!-- 灯泡 -->
+    <circle cx="580" cy="155" r="24" fill="${lampColor}" fill-opacity="${lampOpacity}" stroke="#F5A623" stroke-width="2"/>
+    <text x="580" y="163" text-anchor="middle" font-size="20">💡</text>
+    <text x="580" y="200" text-anchor="middle" font-size="12" fill="#7F8C8D">R=${R.toFixed(2)}Ω</text>
+    <text x="580" y="216" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700">P=${P.toFixed(2)}W</text>
+    <!-- 下方导线回到电池 -->
+    <path d="M 580 179 L 580 230 L 92 230 L 92 190" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+    <!-- 电流表 -->
+    <circle cx="340" cy="230" r="16" fill="white" stroke="#4A90D9" stroke-width="2"/>
+    <text x="340" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#4A90D9">A</text>
+    <!-- 电压表（并联在灯泡两端） -->
+    <circle cx="580" cy="90" r="16" fill="white" stroke="#E74C3C" stroke-width="2"/>
+    <text x="580" y="96" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">V</text>
+  `;
+}
+
+updateCalculator();
+
+/* ---------- 额定功率 vs 实际功率 ---------- */
+const RATED_U = 220;
+const RATED_P = 60;
+const LAMP_R = (RATED_U * RATED_U) / RATED_P; // ≈ 806.67
+const DANGER_U = RATED_U * 1.2; // 264V
+
+const actualUSlider = document.getElementById('actualUSlider');
+const actualUValueEl = document.getElementById('actualUValue');
+const actualUBadge = document.getElementById('actualUBadge');
+
+function updateActualLamp() {
+  const Uactual = parseFloat(actualUSlider.value);
+  actualUValueEl.textContent = Uactual;
+
+  const Pactual = (Uactual * Uactual) / LAMP_R;
+  document.getElementById('rdActualP').textContent = Pactual.toFixed(1);
+
+  // 灯泡亮度：以额定功率 60W 为基准
+  const brightness = Math.min(Pactual / 60, 1.5);
+  const b = Math.min(brightness, 1);
+  const rC = 255;
+  const gC = Math.round(180 + 75 * b);
+  const bC = Math.round(60 + 195 * b);
+  const lampColor = `rgb(${rC},${gC},${bC})`;
+  const lampOpacity = 0.2 + Math.min(brightness, 1) * 0.8;
+
+  // 状态判断
+  let statusHtml, statusClass, warningShow = false;
+  if (Uactual === 0) {
+    statusHtml = '<span class="status-tag dim">不发光</span>';
+    statusClass = 'dim';
+  } else if (Uactual < RATED_U * 0.9) {
+    statusHtml = '<span class="status-tag dim">偏暗</span> 实际电压低于额定，灯泡发暗';
+    statusClass = 'dim';
+  } else if (Uactual <= RATED_U * 1.1) {
+    statusHtml = '<span class="status-tag normal">正常发光</span> 实际电压≈额定电压';
+    statusClass = 'normal';
+  } else if (Uactual <= DANGER_U) {
+    statusHtml = '<span class="status-tag bright">过亮</span> 实际电压偏高，寿命缩短';
+    statusClass = 'bright';
+  } else {
+    statusHtml = '<span class="status-tag danger">危险！可能烧毁</span> 电压超过 120% 额定值';
+    statusClass = 'danger';
+    warningShow = true;
+  }
+  document.getElementById('lampStatus').innerHTML = statusHtml;
+  document.getElementById('lampWarning').style.display = warningShow ? 'block' : 'none';
+
+  // badge 颜色
+  actualUBadge.classList.remove('danger', 'warn', 'success');
+  if (statusClass === 'danger') actualUBadge.classList.add('danger');
+  else if (statusClass === 'bright') actualUBadge.classList.add('warn');
+  else if (statusClass === 'normal') actualUBadge.classList.add('success');
+
+  // 读数卡片样式
+  const rdCard = document.getElementById('rdActualPCard');
+  rdCard.classList.remove('danger');
+  if (statusClass === 'danger') rdCard.classList.add('danger');
+
+  // 绘制灯泡 SVG
+  const haloR = 26 + Math.min(brightness, 1.3) * 28;
+  const haloOpacity = Math.min(brightness, 1.3) * 0.55;
+
+  // 烧毁状态：灯丝断裂
+  const burned = Uactual > DANGER_U;
+
+  const svg = document.getElementById('lampSvg');
+  svg.innerHTML = `
+    <!-- 电源 -->
+    <rect x="60" y="110" width="24" height="60" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+    <line x1="54" y1="125" x2="90" y2="125" stroke="#2E6BA8" stroke-width="3"/>
+    <line x1="58" y1="155" x2="86" y2="155" stroke="#2E6BA8" stroke-width="1"/>
+    <text x="72" y="190" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700">U实=${Uactual}V</text>
+    <!-- 上方导线 -->
+    <path d="M 72 110 L 72 50 L 580 50 L 580 120" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+    <text x="325" y="42" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="600">导线</text>
+    <!-- 光晕 -->
+    ${!burned ? `<circle cx="580" cy="160" r="${haloR}" fill="${lampColor}" fill-opacity="${haloOpacity}" filter="blur(3px)"/>` : ''}
+    <!-- 灯泡外壳 -->
+    <circle cx="580" cy="160" r="36" fill="#FFF3D6" fill-opacity="0.3" stroke="#F5A623" stroke-width="2.5"/>
+    <!-- 灯丝 -->
+    ${burned
+      ? `<path d="M 565 150 L 570 165 L 580 145 L 590 165 L 595 150" fill="none" stroke="#7F8C8D" stroke-width="2"/>
+         <line x1="595" y1="150" x2="610" y2="135" stroke="#7F8C8D" stroke-width="1" stroke-dasharray="3,3"/>
+         <text x="580" y="170" text-anchor="middle" font-size="20">💥</text>`
+      : `<path d="M 565 150 L 570 170 L 580 145 L 590 170 L 595 150" fill="none" stroke="${lampColor}" stroke-width="2.5" opacity="${lampOpacity}"/>
+         <circle cx="580" cy="160" r="20" fill="${lampColor}" fill-opacity="${lampOpacity * 0.6}"/>`
+    }
+    <text x="580" y="215" text-anchor="middle" font-size="12" fill="#7F8C8D">220V 60W (R≈807Ω)</text>
+    <text x="580" y="232" text-anchor="middle" font-size="14" fill="#E74C3C" font-weight="700">P实 = ${Pactual.toFixed(1)}W</text>
+    <!-- 下方导线 -->
+    <path d="M 580 196 L 580 230 L 72 230 L 72 170" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+    <!-- 电压表 -->
+    <circle cx="325" cy="50" r="16" fill="white" stroke="#E74C3C" stroke-width="2"/>
+    <text x="325" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">V</text>
+  `;
+}
+
+actualUSlider.addEventListener('input', updateActualLamp);
+updateActualLamp();
+
+/* ---------- P-R 极值曲线 ---------- */
+const prCanvas = document.getElementById('prCanvas');
+const prCtx = prCanvas.getContext('2d');
+const rSlider = document.getElementById('rSlider');
+const rValueEl = document.getElementById('rValue');
+const rValueBadge = document.getElementById('rValueBadge');
+
+const PR_U = 12;      // 电源电压
+const PR_R0 = 2;      // 定值电阻
+const PR_R_MIN = 0.1;
+const PR_R_MAX = 20;
+// 极值：R = R0 时 P = U²/(4R0) = 144/8 = 18
+const PR_EXTREME_R = PR_R0;
+const PR_EXTREME_P = (PR_U * PR_U) / (4 * PR_R0); // 18
+
+function calcPR(R) {
+  // P_R = U² * R / (R0 + R)²
+  return (PR_U * PR_U * R) / ((PR_R0 + R) * (PR_R0 + R));
+}
+
+function drawPRCurve() {
+  const R = parseFloat(rSlider.value);
+  rValueEl.textContent = R.toFixed(1);
+
+  // 当前 R 是否接近极值点
+  const isExtreme = Math.abs(R - PR_EXTREME_R) < 0.05;
+  rValueBadge.classList.remove('success');
+  if (isExtreme) rValueBadge.classList.add('success');
+
+  const W = prCanvas.width;
+  const H = prCanvas.height;
+  const padL = 55, padB = 45, padT = 35, padR = 30;
+  const plotW = W - padL - padR;
+  const plotH = H - padB - padT;
+
+  // y 轴范围：0 ~ 20W（极值 18 留点余量）
+  const yMax = 20;
+  const xMax = PR_R_MAX;
+
+  prCtx.clearRect(0, 0, W, H);
+
+  // 背景网格
+  prCtx.strokeStyle = '#E8EEF4';
+  prCtx.lineWidth = 1;
+  for (let x = 2; x <= xMax; x += 2) {
+    const px = padL + (x / xMax) * plotW;
+    prCtx.beginPath(); prCtx.moveTo(px, padT); prCtx.lineTo(px, H - padB); prCtx.stroke();
+  }
+  for (let y = 2; y <= yMax; y += 2) {
+    const py = H - padB - (y / yMax) * plotH;
+    prCtx.beginPath(); prCtx.moveTo(padL, py); prCtx.lineTo(W - padR, py); prCtx.stroke();
+  }
+
+  // 坐标轴
+  prCtx.strokeStyle = '#2C3E50';
+  prCtx.lineWidth = 2;
+  prCtx.beginPath();
+  prCtx.moveTo(padL, padT);
+  prCtx.lineTo(padL, H - padB);
+  prCtx.lineTo(W - padR, H - padB);
+  prCtx.stroke();
+
+  // 箭头
+  prCtx.fillStyle = '#2C3E50';
+  prCtx.beginPath();
+  prCtx.moveTo(padL, padT);
+  prCtx.lineTo(padL - 5, padT + 10);
+  prCtx.lineTo(padL + 5, padT + 10);
+  prCtx.closePath(); prCtx.fill();
+  prCtx.beginPath();
+  prCtx.moveTo(W - padR, H - padB);
+  prCtx.lineTo(W - padR - 10, H - padB - 5);
+  prCtx.lineTo(W - padR - 10, H - padB + 5);
+  prCtx.closePath(); prCtx.fill();
+
+  // 轴标签
+  prCtx.fillStyle = '#2C3E50';
+  prCtx.font = 'bold 14px sans-serif';
+  prCtx.fillText('R / Ω', W - padR - 50, H - padB + 30);
+  prCtx.save();
+  prCtx.translate(18, padT + 80);
+  prCtx.rotate(-Math.PI / 2);
+  prCtx.fillText('P_R / W', 0, 0);
+  prCtx.restore();
+
+  // 刻度
+  prCtx.font = '11px sans-serif';
+  prCtx.fillStyle = '#7F8C8D';
+  prCtx.textAlign = 'center';
+  for (let x = 0; x <= xMax; x += 2) {
+    const px = padL + (x / xMax) * plotW;
+    prCtx.fillText(x, px, H - padB + 16);
+    prCtx.strokeStyle = '#2C3E50';
+    prCtx.beginPath(); prCtx.moveTo(px, H - padB); prCtx.lineTo(px, H - padB + 4); prCtx.stroke();
+  }
+  prCtx.textAlign = 'right';
+  for (let y = 0; y <= yMax; y += 2) {
+    const py = H - padB - (y / yMax) * plotH;
+    prCtx.fillText(y, padL - 6, py + 4);
+    prCtx.strokeStyle = '#2C3E50';
+    prCtx.beginPath(); prCtx.moveTo(padL - 4, py); prCtx.lineTo(padL, py); prCtx.stroke();
+  }
+  prCtx.textAlign = 'start';
+
+  // 绘制 P-R 曲线
+  prCtx.strokeStyle = '#4A90D9';
+  prCtx.lineWidth = 3;
+  prCtx.beginPath();
+  const steps = 400;
+  for (let i = 0; i <= steps; i++) {
+    const rVal = PR_R_MIN + (PR_R_MAX - PR_R_MIN) * (i / steps);
+    const pVal = calcPR(rVal);
+    const px = padL + (rVal / xMax) * plotW;
+    const py = H - padB - (Math.min(pVal, yMax) / yMax) * plotH;
+    if (i === 0) prCtx.moveTo(px, py);
+    else prCtx.lineTo(px, py);
+  }
+  prCtx.stroke();
+
+  // 极值点（红色圆点 + 虚线辅助）
+  const exX = padL + (PR_EXTREME_R / xMax) * plotW;
+  const exY = H - padB - (PR_EXTREME_P / yMax) * plotH;
+  // 虚线
+  prCtx.strokeStyle = '#E74C3C';
+  prCtx.lineWidth = 1.5;
+  prCtx.setLineDash([5, 4]);
+  prCtx.beginPath();
+  prCtx.moveTo(exX, H - padB); prCtx.lineTo(exX, exY);
+  prCtx.moveTo(padL, exY); prCtx.lineTo(exX, exY);
+  prCtx.stroke();
+  prCtx.setLineDash([]);
+  // 红点
+  prCtx.fillStyle = '#E74C3C';
+  prCtx.beginPath();
+  prCtx.arc(exX, exY, 7, 0, Math.PI * 2);
+  prCtx.fill();
+  prCtx.strokeStyle = 'white';
+  prCtx.lineWidth = 2;
+  prCtx.stroke();
+  // 极值点标注
+  prCtx.fillStyle = '#E74C3C';
+  prCtx.font = 'bold 13px sans-serif';
+  prCtx.fillText(`极值点 (${PR_EXTREME_R}, ${PR_EXTREME_P})`, exX + 12, exY - 8);
+
+  // 当前 R 对应的点（绿色）
+  const curP = calcPR(R);
+  const curX = padL + (R / xMax) * plotW;
+  const curY = H - padB - (Math.min(curP, yMax) / yMax) * plotH;
+  prCtx.fillStyle = '#27AE60';
+  prCtx.beginPath();
+  prCtx.arc(curX, curY, 6, 0, Math.PI * 2);
+  prCtx.fill();
+  prCtx.strokeStyle = 'white';
+  prCtx.lineWidth = 2;
+  prCtx.stroke();
+  // 当前点标注
+  prCtx.fillStyle = '#27AE60';
+  prCtx.font = 'bold 12px sans-serif';
+  prCtx.fillText(`当前 (${R.toFixed(1)}, ${curP.toFixed(2)})`, curX + 10, curY + 18);
+
+  // 公式与极值说明
+  prCtx.fillStyle = '#4A90D9';
+  prCtx.font = 'italic 14px serif';
+  prCtx.fillText('P_R = U²·R / (R₀+R)²，U=12V，R₀=2Ω', padL + 20, padT + 22);
+  prCtx.fillStyle = '#E74C3C';
+  prCtx.font = 'bold 14px sans-serif';
+  prCtx.fillText(`当 R = R₀ = 2Ω 时，P_max = U²/(4R₀) = 18W`, padL + 20, padT + 45);
+
+  // 原点 O
+  prCtx.fillStyle = '#2C3E50';
+  prCtx.font = '12px sans-serif';
+  prCtx.fillText('O', padL - 12, H - padB + 16);
+
+  // 更新读数
+  const I = PR_U / (PR_R0 + R);
+  document.getElementById('rdR').textContent = R.toFixed(1);
+  document.getElementById('rdCurrentI').textContent = I.toFixed(3);
+  document.getElementById('rdPR').textContent = curP.toFixed(2);
+
+  // 提示框
+  const tip = document.getElementById('prTip');
+  if (isExtreme) {
+    tip.innerHTML = `
+      <div class="tip-title" style="color:var(--success);">🎯 到达极值点！</div>
+      <p>当前 <b>R = R₀ = ${PR_EXTREME_R}Ω</b>，可变电阻功率最大：<b>P_max = ${PR_EXTREME_P} W</b></p>
+      <p style="margin-top:6px; font-size:13px; color:var(--text-secondary);">
+        公式：P_max = U²/(4R₀) = ${PR_U}²/(4×${PR_R0}) = ${PR_U*PR_U}/${4*PR_R0} = ${PR_EXTREME_P} W
+      </p>`;
+  } else {
+    tip.innerHTML = `
+      <div class="tip-title">🎯 极值分析</div>
+      <p>当前 R = ${R.toFixed(1)}Ω，P_R = ${curP.toFixed(2)} W ${R < PR_EXTREME_R ? '（继续增大 R 试试）' : '（再减小 R 试试）'}</p>
+      <p>极值在 <b>R = R₀ = ${PR_EXTREME_R}Ω</b> 时取最大值 <b>P_max = U²/(4R₀) = ${PR_EXTREME_P} W</b></p>
+      <p style="margin-top:6px; font-size:13px; color:var(--text-secondary);">
+        数学证明：对 P_R = U²R/(R₀+R)² 求导，令 dP/dR = 0，得 R = R₀
+      </p>`;
+  }
+}
+
+rSlider.addEventListener('input', drawPRCurve);
+drawPRCurve();
+
+/* ---------- 练习题 ---------- */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '由 P = U²/R 得 R = U²/P = 220²/60 = 48400/60 ≈ 807 Ω。这是由额定值算出的灯丝电阻。',
+  hint: '用 P = U²/R 变形：R = U²/P。代入额定电压和额定功率。'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '灯丝电阻不变 R ≈ 807Ω。P实 = U实²/R = 110²/807 = 12100/807 ≈ 15W。也可用比例：P实 = P额×(U实/U额)² = 60×(110/220)² = 60×(1/2)² = 60×1/4 = 15W。',
+  hint: '方法一：P实 = U实²/R。方法二：P实/P额 = (U实/U额)²，因为 R 不变。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: 'P_R = U²R/(R₀+R)²，对 R 求导令其为零，得 R = R₀ = 2Ω。此时 P_max = U²/(4R₀) = 12²/(4×2) = 144/8 = 18W。这就是二次函数极值在物理中的经典应用！',
+  hint: '极值在 R = R₀ 处取得。代入 P = U²R/(R₀+R)² 计算。'
+});
+</script>
+</body>
+</html>

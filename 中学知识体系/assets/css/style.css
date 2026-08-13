@@ -1,0 +1,419 @@
+/* ===== 全局变量 ===== */
+:root {
+  --primary: #4A90D9;
+  --primary-dark: #2E6BA8;
+  --primary-light: #7BB0E8;
+  --accent: #F5A623;
+  --success: #27AE60;
+  --danger: #E74C3C;
+  --warning: #F39C12;
+  --info: #3498DB;
+
+  --bg-main: #F0F4F8;
+  --bg-card: #FFFFFF;
+  --bg-soft: #E8EEF4;
+  --bg-dark: #1A2332;
+
+  --text-main: #2C3E50;
+  --text-secondary: #7F8C8D;
+  --text-light: #BDC3C7;
+  --text-white: #FFFFFF;
+
+  --border: #DDE4EB;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-hover: 0 4px 20px rgba(0,0,0,0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  --physics: #4A90D9;
+  --chemistry: #E74C3C;
+  --math: #9B59B6;
+}
+
+/* ===== 基础重置 ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--primary-dark); }
+
+/* ===== 导航栏 ===== */
+.navbar {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(46,107,168,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navbar-brand {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.navbar-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+.navbar-links a {
+  color: rgba(255,255,255,0.85);
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.navbar-links a:hover {
+  color: white;
+  background: rgba(255,255,255,0.15);
+}
+
+/* ===== 容器 ===== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== 学科卡片 ===== */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+.subject-card {
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+.subject-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: transform 0.5s;
+}
+.subject-card:hover::before {
+  transform: scale(1.5);
+}
+.subject-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+.subject-card .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.subject-card .name {
+  font-size: 22px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+.subject-card .desc {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 8px;
+  position: relative;
+  z-index: 1;
+}
+.subject-card.physics { background: linear-gradient(135deg, #4A90D9, #2E6BA8); }
+.subject-card.chemistry { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+.subject-card.math { background: linear-gradient(135deg, #9B59B6, #7D3C98); }
+
+/* ===== 章节列表 ===== */
+.chapter-list {
+  list-style: none;
+}
+.chapter-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--bg-soft);
+  transition: all 0.2s;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+}
+.chapter-item:hover {
+  background: #DCEAF5;
+  border-left-color: var(--primary);
+  transform: translateX(4px);
+}
+.chapter-item .num {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+.chapter-item .title {
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+}
+.chapter-item .badge {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--success);
+  color: white;
+}
+.chapter-item .badge.new { background: var(--accent); }
+.chapter-item .badge.locked { background: var(--text-light); }
+
+/* ===== 交互组件 ===== */
+.interactive-box {
+  background: var(--bg-soft);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 20px 0;
+  text-align: center;
+}
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+.btn-outline:hover { background: var(--primary); color: white; }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+
+/* ===== 知识标签 ===== */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px;
+}
+.tag-physics { background: rgba(74,144,217,0.15); color: var(--physics); }
+.tag-chemistry { background: rgba(231,76,60,0.15); color: var(--chemistry); }
+.tag-math { background: rgba(155,89,182,0.15); color: var(--math); }
+.tag-cross { background: rgba(243,156,18,0.15); color: var(--warning); }
+
+/* ===== 进度条 ===== */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  border-radius: 4px;
+  transition: width 0.5s;
+}
+
+/* ===== 步骤导航 ===== */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border);
+}
+.step-nav .btn { min-width: 120px; text-align: center; }
+
+/* ===== 提示框 ===== */
+.tip-box {
+  background: rgba(52,152,219,0.1);
+  border-left: 4px solid var(--info);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 16px 0;
+}
+.tip-box .tip-title {
+  font-weight: 600;
+  color: var(--info);
+  margin-bottom: 6px;
+}
+.warning-box {
+  background: rgba(243,156,18,0.1);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 16px 0;
+}
+.cross-ref-box {
+  background: rgba(243,156,18,0.08);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 16px 0;
+}
+.cross-ref-box .ref-title {
+  font-weight: 600;
+  color: var(--warning);
+  margin-bottom: 8px;
+}
+
+/* ===== 练习题 ===== */
+.quiz-question {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 2px solid var(--border);
+  transition: border-color 0.3s;
+}
+.quiz-question.correct { border-color: var(--success); }
+.quiz-question.wrong { border-color: var(--danger); }
+.quiz-question .question-text {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.quiz-option {
+  display: block;
+  padding: 10px 16px;
+  margin-bottom: 8px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.quiz-option:hover { background: #DCEAF5; }
+.quiz-option.selected { border-color: var(--primary); background: rgba(74,144,217,0.1); }
+.quiz-option.correct-answer { border-color: var(--success); background: rgba(39,174,96,0.1); }
+.quiz-option.wrong-answer { border-color: var(--danger); background: rgba(231,76,60,0.1); }
+
+/* ===== SVG 交互 ===== */
+svg .clickable { cursor: pointer; transition: opacity 0.3s; }
+svg .clickable:hover { opacity: 0.7; }
+
+/* ===== 面包屑 ===== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.breadcrumb a { color: var(--text-secondary); }
+.breadcrumb a:hover { color: var(--primary); }
+.breadcrumb .separator { color: var(--text-light); }
+
+/* ===== 滑块控件 ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-soft);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.4s ease; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.pulse { animation: pulse 1.5s infinite; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .subject-grid { grid-template-columns: 1fr; }
+  .navbar-links { display: none; }
+  .container, .container-wide { padding: 20px 16px; }
+}

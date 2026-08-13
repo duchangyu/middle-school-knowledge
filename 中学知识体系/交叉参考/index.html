@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学科交叉参考 · 理化数联动</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .cross-map {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .cross-map .node {
+      text-align: center;
+      padding: 20px;
+      border-radius: var(--radius);
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .cross-map .node.physics { background: linear-gradient(135deg, #4A90D9, #2E6BA8); }
+    .cross-map .node.chemistry { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+    .cross-map .node.math { background: linear-gradient(135deg, #9B59B6, #7D3C98); }
+    .link-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px;
+      margin-bottom: 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--warning);
+      transition: transform 0.2s;
+    }
+    .link-item:hover { transform: translateX(4px); }
+    .link-item .pair {
+      font-weight: 700;
+      min-width: 220px;
+      flex-shrink: 0;
+    }
+    .link-item .desc { color: var(--text-secondary); font-size: 14px; }
+    .link-item a { font-weight: 600; }
+    .link-item .arrow { color: var(--warning); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand">🔗 学科交叉参考</div>
+  <ul class="navbar-links">
+    <li><a href="../index.html">🏠 首页</a></li>
+    <li><a href="../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../化学/九年级/index.html">🧪 化学</a></li>
+    <li><a href="../数学/八年级/index.html">📐 数学</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../index.html">首页</a>
+    <span class="separator">/</span>
+    <span>交叉参考</span>
+  </div>
+
+  <h1 style="font-size: 28px; margin-bottom: 8px;">🔗 理化数知识联动图</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">
+    知识从来不是孤立的——数学是物理的语言，物理是化学的原理，化学是数学和物理的应用。<br>
+    下面的联动关系帮你找到知识之间的"桥梁"。
+  </p>
+
+  <!-- 三角关系图 -->
+  <div class="cross-map">
+    <div class="node math">📐 数学<br><small style="font-weight:400;font-size:13px;">语言与工具</small></div>
+    <div class="node physics">⚡ 物理<br><small style="font-weight:400;font-size:13px;">世界的规律</small></div>
+    <div class="node chemistry">🧪 化学<br><small style="font-weight:400;font-size:13px;">物质的变化</small></div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 使用说明</div>
+    每一条联动都给出了「本学科 → 另一学科」的跳转链接。点击即可在知识之间自由穿行，看看同一个概念在不同学科里长什么样。
+  </div>
+
+  <!-- 数学 → 物理 -->
+  <h2 style="margin: 32px 0 16px; font-size: 22px;">📐 数学 → 物理</h2>
+  <div class="link-item">
+    <div class="pair">一次函数 ⇄ 机械运动</div>
+    <div class="desc">
+      物理的 s-t 图像、v-t 图像本质就是一次函数图像。斜率 = 速度。<br>
+      <a href="../数学/八年级/10-一次函数.html">📐 一次函数</a>
+      <span class="arrow">⇄</span>
+      <a href="../物理/八年级/01-机械运动.html">⚡ 机械运动</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">反比例函数 ⇄ 欧姆定律</div>
+    <div class="desc">
+      I = U/R，电压 U 一定时，电流 I 与电阻 R 成反比——这就是反比例函数图像！<br>
+      <a href="../数学/九年级/06-反比例函数.html">📐 反比例函数</a>
+      <span class="arrow">⇄</span>
+      <a href="../物理/九年级/15-欧姆定律.html">⚡ 欧姆定律</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">二次函数 ⇄ 电功率极值</div>
+    <div class="desc">
+      电功率 P = I²R，在电路分析中会出现二次函数极值问题（何时功率最大）。<br>
+      <a href="../数学/九年级/02-二次函数.html">📐 二次函数</a>
+      <span class="arrow">⇄</span>
+      <a href="../物理/九年级/16-电功率.html">⚡ 电功率</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">勾股定理 ⇄ 力的合成</div>
+    <div class="desc">
+      两个互相垂直的力 F₁、F₂，合力 F = √(F₁² + F₂²)，方向用平行四边形定则。<br>
+      <a href="../数学/八年级/08-勾股定理.html">📐 勾股定理</a>
+      <span class="arrow">⇄</span>
+      <a href="../物理/八年级/07-力.html">⚡ 力</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">锐角三角函数 ⇄ 斜面与力的分解</div>
+    <div class="desc">
+      物体在斜面上的重力分解、光的折射计算，都要用到 sin、cos、tan。<br>
+      <a href="../数学/九年级/08-锐角三角函数.html">📐 锐角三角函数</a>
+      <span class="arrow">⇄</span>
+      <a href="../物理/八年级/09-压强.html">⚡ 压强</a>
+    </div>
+  </div>
+
+  <!-- 数学 → 化学 -->
+  <h2 style="margin: 32px 0 16px; font-size: 22px;">📐 数学 → 化学</h2>
+  <div class="link-item">
+    <div class="pair">等式性质 ⇄ 配平化学方程式</div>
+    <div class="desc">
+      配平的本质是在等式两边调整系数，保证每个原子数量守恒——和数学等式变形是同一个道理。<br>
+      <a href="../数学/八年级/05-因式分解.html">📐 等式与变形</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/九年级/05-化学方程式.html">🧪 化学方程式</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">分式 ⇄ 溶液浓度</div>
+    <div class="desc">
+      溶质质量分数 = 溶质质量 ÷ 溶液质量，本质就是分式的运算与化简。<br>
+      <a href="../数学/八年级/06-分式.html">📐 分式</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/九年级/09-溶液.html">🧪 溶液</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">数据的分析 ⇄ 化学实验</div>
+    <div class="desc">
+      实验数据的平均值、误差分析、图表处理，都需要统计学工具。<br>
+      <a href="../数学/八年级/11-数据的分析.html">📐 数据的分析</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/八年级/03-身边的化学物质.html">🧪 化学实验</a>
+    </div>
+  </div>
+
+  <!-- 物理 → 化学 -->
+  <h2 style="margin: 32px 0 16px; font-size: 22px;">⚡ 物理 → 化学</h2>
+  <div class="link-item">
+    <div class="pair">物态变化 ⇄ 物质三态</div>
+    <div class="desc">
+      熔化、凝固、汽化、液化是物理变化，但背后是分子间距和分子间作用力的变化——物理和化学在这里交汇。<br>
+      <a href="../物理/八年级/03-物态变化.html">⚡ 物态变化</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/八年级/02-物质的三态.html">🧪 物质的三态</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">内能 ⇄ 燃料燃烧</div>
+    <div class="desc">
+      燃烧是化学变化（放热），物理上用热值 Q = mq 计算放出的热量。<br>
+      <a href="../物理/九年级/17-内能.html">⚡ 内能</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/九年级/07-燃料及其利用.html">🧪 燃料及其利用</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">质量与密度 ⇄ 物质鉴别</div>
+    <div class="desc">
+      密度 ρ = m/V 是物质的重要物理属性，化学上用密度和溶解性等综合鉴别物质。<br>
+      <a href="../物理/八年级/06-质量与密度.html">⚡ 质量与密度</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/九年级/08-金属和金属材料.html">🧪 金属材料</a>
+    </div>
+  </div>
+  <div class="link-item">
+    <div class="pair">导电性 ⇄ 金属与电解质</div>
+    <div class="desc">
+      金属靠自由电子导电，溶液靠自由移动的离子导电——导体性质的微观解释。<br>
+      <a href="../物理/九年级/13-电流和电路.html">⚡ 电流和电路</a>
+      <span class="arrow">⇄</span>
+      <a href="../化学/九年级/10-酸和碱.html">🧪 酸和碱</a>
+    </div>
+  </div>
+
+  <!-- 综合应用 -->
+  <h2 style="margin: 32px 0 16px; font-size: 22px;">🌟 三科联动综合应用</h2>
+  <div class="card">
+    <div class="card-title">💧 案例：一杯盐水的科学</div>
+    <p>把一勺盐放进水里，这一件小事背后藏着三门学科：</p>
+    <ol style="margin: 12px 0 12px 20px;">
+      <li><strong>化学</strong>：食盐（NaCl）在水中电离成 Na⁺ 和 Cl⁻，形成溶液，这是化学变化中的「溶解」过程。</li>
+      <li><strong>物理</strong>：溶解后溶液密度增大（ρ=m/V），用密度计可以测量浓度；盐水导电性增强（自由离子移动），欧姆定律适用。</li>
+      <li><strong>数学</strong>：要配一杯 10% 的盐水，需要计算溶质质量分数 = 溶质 ÷ 溶液，这是分式运算。</li>
+    </ol>
+    <div class="tip-box">
+      <div class="tip-title">🎓 联动学习建议</div>
+      学习建议路径：先掌握数学工具（分式、函数），再用它分析物理公式，最后用物理和数学的视角去理解化学。工具 → 原理 → 应用，层层递进。
+    </div>
+  </div>
+
+</div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

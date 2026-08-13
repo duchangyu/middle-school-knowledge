@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>光现象 · 八年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* 页面专用样式 */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 56px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+    .source-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .source-card {
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      text-align: center;
+      border-top: 4px solid var(--primary);
+      transition: transform 0.2s;
+    }
+    .source-card:hover { transform: translateY(-2px); }
+    .source-card h4 {
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    .source-card .examples {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .source-card .icon { font-size: 32px; margin-bottom: 8px; }
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 17px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+    .direction-toggle {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-left: 8px;
+    }
+    .direction-toggle button {
+      padding: 6px 14px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .direction-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .tir-warning {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-top: 14px;
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+      font-size: 14px;
+    }
+    .tir-warning.show { display: block; animation: pulse 1.5s infinite; }
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+    .rainbow-text {
+      font-weight: 700;
+      background: linear-gradient(90deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    @media (max-width: 600px) {
+      .source-grid { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔦 光现象</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../九年级/index.html">物理九年级</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">物理</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <span>光现象</span>
+  </div>
+
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🔦 光现象</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从光源到色散，探索光的直线传播、反射、折射与成像规律</p>
+
+  <!-- ===== 第一部分：光源与光的直线传播 ===== -->
+  <div class="card">
+    <div class="section-header">☀️ 1. 光从哪里来？——光源与光的直线传播</div>
+
+    <p>我们能看见五彩缤纷的世界，是因为有光进入眼睛。那么，光是从哪里来的呢？</p>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">光源的分类</h3>
+    <p>能够本身发光的物体叫做<strong>光源</strong>。光源可分为两大类：</p>
+
+    <div class="source-grid">
+      <div class="source-card">
+        <div class="icon">🌌</div>
+        <h4>自然光源</h4>
+        <div class="examples">太阳、星星、萤火虫、水母、闪电</div>
+      </div>
+      <div class="source-card">
+        <div class="icon">💡</div>
+        <h4>人造光源</h4>
+        <div class="examples">电灯、蜡烛、火把、霓虹灯、LED灯</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 注意</div>
+      月亮不是光源！月亮本身不发光，它只是反射太阳的光。同样，宝石、镜子也不是光源。
+    </div>
+
+    <h3 style="margin: 20px 0 8px; color: var(--primary-dark);">光的直线传播</h3>
+    <p>光在<strong>同种均匀介质</strong>中沿<strong>直线</strong>传播。我们用一根带箭头的直线来表示光的传播路径和方向，称为<strong>光线</strong>。</p>
+    <p>光的直线传播可以解释很多现象：影子的形成、日食和月食、小孔成像等。</p>
+
+    <h3 style="margin: 20px 0 8px; color: var(--primary-dark);">小孔成像</h3>
+    <p>把一支点燃的蜡烛放在带小孔的挡板前，在挡板后的光屏上会出现蜡烛<strong>倒立</strong>的像。这就是小孔成像——光沿直线传播的经典证明。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 500 240" width="500" height="240">
+        <defs>
+          <marker id="arrow-sun" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="arrow-light" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <radialGradient id="flameGrad" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#FFD700"/>
+            <stop offset="100%" stop-color="#FF6600"/>
+          </radialGradient>
+        </defs>
+
+        <!-- 蜡烛（物体）-->
+        <g>
+          <rect x="48" y="100" width="16" height="50" rx="3" fill="#E8D4B8" stroke="#C0A080" stroke-width="1"/>
+          <line x1="56" y1="100" x2="56" y2="88" stroke="#666" stroke-width="1.5"/>
+          <path d="M 56 90 Q 52 80 56 70 Q 60 80 56 90 Z" fill="url(#flameGrad)"/>
+          <text x="56" y="170" text-anchor="middle" font-size="12" fill="#666">物体（蜡烛）</text>
+          <text x="56" y="78" text-anchor="end" font-size="11" fill="#666">A点</text>
+          <text x="56" y="152" text-anchor="end" font-size="11" fill="#666">B点</text>
+        </g>
+
+        <!-- 光线从A点（火焰顶部）经小孔到光屏下方 -->
+        <line x1="56" y1="74" x2="250" y2="120" stroke="#F5A623" stroke-width="1.5" marker-end="url(#arrow-sun)"/>
+        <line x1="250" y1="120" x2="440" y2="166" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arrow-light)"/>
+
+        <!-- 光线从B点（蜡烛底部）经小孔到光屏上方 -->
+        <line x1="56" y1="148" x2="250" y2="120" stroke="#F5A623" stroke-width="1.5"/>
+        <line x1="250" y1="120" x2="440" y2="74" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arrow-light)"/>
+
+        <!-- 挡板（小孔）-->
+        <rect x="235" y="60" width="10" height="48" fill="#555"/>
+        <rect x="235" y="128" width="10" height="60" fill="#555"/>
+        <circle cx="240" cy="120" r="4" fill="#1A2332"/>
+        <text x="240" y="50" text-anchor="middle" font-size="12" fill="#666">挡板（小孔）</text>
+
+        <!-- 光屏 -->
+        <rect x="430" y="56" width="6" height="128" fill="#8B7355"/>
+        <text x="433" y="48" text-anchor="middle" font-size="12" fill="#666">光屏</text>
+
+        <!-- 像标注 -->
+        <text x="445" y="74" text-anchor="start" font-size="11" fill="#4A90D9">像的B'</text>
+        <text x="445" y="166" text-anchor="start" font-size="11" fill="#4A90D9">像的A'</text>
+
+        <!-- 说明 -->
+        <text x="250" y="210" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">
+          光从A点直线传播经小孔到光屏下方 → 形成倒立的像
+        </text>
+        <text x="250" y="228" text-anchor="middle" font-size="12" fill="#7F8C8D">
+          像是倒立的实像，像的形状与物体相似
+        </text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📝 小孔成像的特点</div>
+      • 成的是<strong>倒立的实像</strong>（能被光屏承接）<br>
+      • 像的形状只与物体形状有关，<strong>与小孔形状无关</strong><br>
+      • 物体越近、光屏越远，像越大
+    </div>
+  </div>
+
+  <!-- ===== 第二部分：光的反射定律 ===== -->
+  <div class="card">
+    <div class="section-header">🔄 2. 光的反射定律</div>
+
+    <p>光遇到物体表面时会被反射回来，这种现象叫做<strong>光的反射</strong>。反射时遵循以下规律：</p>
+
+    <div class="formula-box">
+      反射定律：入射角 = 反射角　（∠i = ∠r）<br>
+      <span style="font-size: 14px; font-weight: 400;">入射光线、反射光线和法线在同一平面内，反射光线和入射光线分居法线两侧</span>
+    </div>
+
+    <p style="margin: 12px 0;">说明：<strong>入射角</strong>是入射光线与法线的夹角，<strong>反射角</strong>是反射光线与法线的夹角。注意：角度是与法线（不是镜面）的夹角！</p>
+
+    <p style="margin: 12px 0;">拖动下方滑块，调节入射角的大小，观察入射光线和反射光线的变化：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 420 280" width="420" height="280">
+        <defs>
+          <marker id="arrow-incident" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="arrow-reflected" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <!-- 镜面（底部水平线）-->
+        <rect x="40" y="200" width="340" height="16" fill="#BDC3C7" stroke="#95A5A6" stroke-width="1"/>
+        <line x1="40" y1="200" x2="380" y2="200" stroke="#7F8C8D" stroke-width="2"/>
+        <!-- 镜面斜线纹理 -->
+        <g stroke="#95A5A6" stroke-width="0.5">
+          <line x1="55" y1="216" x2="50" y2="222"/>
+          <line x1="75" y1="216" x2="70" y2="222"/>
+          <line x1="95" y1="216" x2="90" y2="222"/>
+          <line x1="115" y1="216" x2="110" y2="222"/>
+          <line x1="135" y1="216" x2="130" y2="222"/>
+          <line x1="155" y1="216" x2="150" y2="222"/>
+          <line x1="175" y1="216" x2="170" y2="222"/>
+          <line x1="195" y1="216" x2="190" y2="222"/>
+          <line x1="215" y1="216" x2="210" y2="222"/>
+          <line x1="235" y1="216" x2="230" y2="222"/>
+          <line x1="255" y1="216" x2="250" y2="222"/>
+          <line x1="275" y1="216" x2="270" y2="222"/>
+          <line x1="295" y1="216" x2="290" y2="222"/>
+          <line x1="315" y1="216" x2="310" y2="222"/>
+          <line x1="335" y1="216" x2="330" y2="222"/>
+          <line x1="355" y1="216" x2="350" y2="222"/>
+        </g>
+        <text x="210" y="245" text-anchor="middle" font-size="13" fill="#7F8C8D">平面镜（反射面）</text>
+
+        <!-- 法线（虚线，垂直）-->
+        <line id="reflection-normal" x1="210" y1="200" x2="210" y2="40" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="220" y="50" font-size="12" fill="#95A5A6">法线</text>
+
+        <!-- 入射点 -->
+        <circle cx="210" cy="200" r="3.5" fill="#2C3E50"/>
+
+        <!-- 入射光线（动态）-->
+        <line id="incident-ray" x1="120" y1="70" x2="210" y2="200" stroke="#F5A623" stroke-width="3" marker-end="url(#arrow-incident)"/>
+        <text id="incident-label" x="130" y="115" font-size="14" fill="#F5A623" font-weight="600">入射光线</text>
+
+        <!-- 反射光线（动态）-->
+        <line id="reflected-ray" x1="210" y1="200" x2="300" y2="70" stroke="#4A90D9" stroke-width="3" marker-end="url(#arrow-reflected)"/>
+        <text id="reflected-label" x="270" y="115" font-size="14" fill="#4A90D9" font-weight="600">反射光线</text>
+
+        <!-- 入射角标注 -->
+        <path id="incident-angle-arc" d="" fill="none" stroke="#F5A623" stroke-width="1.5"/>
+        <text id="incident-angle-text" x="190" y="185" font-size="13" fill="#F5A623" font-weight="700">∠i</text>
+
+        <!-- 反射角标注 -->
+        <path id="reflected-angle-arc" d="" fill="none" stroke="#4A90D9" stroke-width="1.5"/>
+        <text id="reflected-angle-text" x="225" y="185" font-size="13" fill="#4A90D9" font-weight="700">∠r</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>入射角 ∠i</label>
+        <input type="range" id="reflection-slider" min="0" max="80" value="35" step="1">
+        <span class="value-display"><span id="reflection-angle">35</span>°</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">入射角 ∠i =</span>
+          <span class="value"><span id="info-incident-angle">35</span>°</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">反射角 ∠r =</span>
+          <span class="value"><span id="info-reflected-angle">35</span>°</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">入射角 + 反射角 =</span>
+          <span class="value"><span id="info-sum-angle">70</span>°</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔍 关键理解</div>
+      • 当入射角减小时，反射角也同步减小（始终相等）<br>
+      • 当入射角为 0° 时，光线沿原路返回（垂直入射）<br>
+      • 反射光线与入射光线的夹角 = 2 × 入射角
+    </div>
+  </div>
+
+  <!-- ===== 第三部分：镜面反射 vs 漫反射 ===== -->
+  <div class="card">
+    <div class="section-header">🌟 3. 镜面反射 vs 漫反射</div>
+
+    <p>光射到不同表面上，反射情况不同。反射分为两种类型：</p>
+
+    <ul class="property-list">
+      <li><strong>镜面反射</strong>：光线射到<strong>光滑表面</strong>上，反射光线向同一方向射出。反射面光滑：镜子、平静水面、抛光金属。</li>
+      <li><strong>漫反射</strong>：光线射到<strong>粗糙表面</strong>上，反射光线向各个方向散射。反射面粗糙：纸张、墙壁、黑板。</li>
+    </ul>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 500 260" width="500" height="260">
+        <defs>
+          <marker id="arrow-spec" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <marker id="arrow-diff" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#27AE60"/>
+          </marker>
+        </defs>
+
+        <!-- 左图：镜面反射 -->
+        <text x="125" y="25" text-anchor="middle" font-size="15" fill="#4A90D9" font-weight="700">镜面反射</text>
+        <!-- 光滑表面 -->
+        <line x1="30" y1="190" x2="220" y2="190" stroke="#4A90D9" stroke-width="3"/>
+        <!-- 法线 -->
+        <line x1="80" y1="190" x2="80" y2="110" stroke="#95A5A6" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="125" y1="190" x2="125" y2="110" stroke="#95A5A6" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="170" y1="190" x2="170" y2="110" stroke="#95A5A6" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- 入射光线（平行）-->
+        <line x1="50" y1="120" x2="80" y2="190" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <line x1="95" y1="120" x2="125" y2="190" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <line x1="140" y1="120" x2="170" y2="190" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <!-- 反射光线（平行，方向一致）-->
+        <line x1="80" y1="190" x2="110" y2="120" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <line x1="125" y1="190" x2="155" y2="120" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <line x1="170" y1="190" x2="200" y2="120" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow-spec)"/>
+        <!-- 标注 -->
+        <text x="60" y="155" font-size="11" fill="#F5A623">入射</text>
+        <text x="185" y="155" font-size="11" fill="#4A90D9">反射</text>
+        <text x="125" y="220" text-anchor="middle" font-size="12" fill="#7F8C8D">光滑表面（镜子）</text>
+        <text x="125" y="240" text-anchor="middle" font-size="11" fill="#27AE60">反射光线方向一致</text>
+
+        <!-- 分隔线 -->
+        <line x1="250" y1="30" x2="250" y2="240" stroke="#DDE4EB" stroke-width="2" stroke-dasharray="4,4"/>
+
+        <!-- 右图：漫反射 -->
+        <text x="375" y="25" text-anchor="middle" font-size="15" fill="#27AE60" font-weight="700">漫反射</text>
+        <!-- 粗糙表面（锯齿形）-->
+        <path d="M 290 190 L 305 195 L 320 185 L 335 195 L 350 183 L 365 193 L 380 186 L 395 196 L 410 184 L 425 194 L 440 188 L 455 195" stroke="#27AE60" stroke-width="3" fill="none"/>
+        <!-- 入射光线（平行）-->
+        <line x1="310" y1="120" x2="325" y2="193" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <line x1="355" y1="120" x2="365" y2="193" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <line x1="400" y1="120" x2="408" y2="187" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <!-- 反射光线（向各个方向散射）-->
+        <line x1="325" y1="193" x2="295" y2="115" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <line x1="365" y1="193" x2="395" y2="110" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <line x1="408" y1="187" x2="445" y2="125" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow-diff)"/>
+        <!-- 法线示意 -->
+        <text x="320" y="155" font-size="11" fill="#F5A623">入射</text>
+        <text x="430" y="115" font-size="11" fill="#27AE60">反射</text>
+        <text x="375" y="220" text-anchor="middle" font-size="12" fill="#7F8C8D">粗糙表面（墙壁）</text>
+        <text x="375" y="240" text-anchor="middle" font-size="11" fill="#27AE60">反射光线四散</text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 重要结论</div>
+      • <strong>镜面反射和漫反射都遵循反射定律</strong>（每条光线都满足入射角=反射角）<br>
+      • 我们能从不同方向看到不发光的物体，正是因为发生了<strong>漫反射</strong><br>
+      • 漫反射让光向各方向散射，使物体从任何角度都能被看见
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：平面镜成像 ===== -->
+  <div class="card">
+    <div class="section-header">🪞 4. 平面镜成像</div>
+
+    <p>平面镜成像是光的反射现象的重要应用。平面镜成像有以下特点：</p>
+
+    <ul class="property-list">
+      <li><strong>等大</strong>：像和物体大小相等</li>
+      <li><strong>等距</strong>：像到镜面的距离 = 物到镜面的距离（关于镜面对称）</li>
+      <li><strong>垂直</strong>：像和物的连线垂直于镜面</li>
+      <li><strong>虚像</strong>：由反射光线的反向延长线相交而成，不能用光屏承接</li>
+      <li><strong>左右相反</strong>：像与物左右颠倒（横向翻转）</li>
+    </ul>
+
+    <p>拖动滑块改变蜡烛到镜面的距离，观察虚像位置的变化（像距始终等于物距）：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 520 360" width="520" height="360">
+        <defs>
+          <marker id="arrow-mirror-ray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <radialGradient id="flameGrad2" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#FFD700"/>
+            <stop offset="100%" stop-color="#FF6600"/>
+          </radialGradient>
+          <linearGradient id="mirrorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#B0C4DE"/>
+            <stop offset="50%" stop-color="#E0E8F0"/>
+            <stop offset="100%" stop-color="#B0C4DE"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 镜面（垂直线）-->
+        <rect x="248" y="30" width="4" height="290" fill="url(#mirrorGrad)"/>
+        <!-- 镜面背面斜线 -->
+        <g stroke="#95A5A6" stroke-width="0.8">
+          <line x1="252" y1="45" x2="262" y2="55"/>
+          <line x1="252" y1="65" x2="262" y2="75"/>
+          <line x1="252" y1="85" x2="262" y2="95"/>
+          <line x1="252" y1="105" x2="262" y2="115"/>
+          <line x1="252" y1="125" x2="262" y2="135"/>
+          <line x1="252" y1="145" x2="262" y2="155"/>
+          <line x1="252" y1="165" x2="262" y2="175"/>
+          <line x1="252" y1="185" x2="262" y2="195"/>
+          <line x1="252" y1="205" x2="262" y2="215"/>
+          <line x1="252" y1="225" x2="262" y2="235"/>
+          <line x1="252" y1="245" x2="262" y2="255"/>
+          <line x1="252" y1="265" x2="262" y2="275"/>
+          <line x1="252" y1="285" x2="262" y2="295"/>
+          <line x1="252" y1="305" x2="262" y2="315"/>
+        </g>
+        <text x="250" y="345" text-anchor="middle" font-size="13" fill="#7F8C8D">平面镜</text>
+
+        <!-- 物距标注线 -->
+        <line id="object-distance-line" x1="190" y1="100" x2="250" y2="100" stroke="#F5A623" stroke-width="1" stroke-dasharray="3,3"/>
+        <text id="object-distance-label" x="220" y="95" text-anchor="middle" font-size="11" fill="#F5A623">物距</text>
+
+        <!-- 像距标注线 -->
+        <line id="image-distance-line" x1="250" y1="100" x2="310" y2="100" stroke="#4A90D9" stroke-width="1" stroke-dasharray="3,3"/>
+        <text id="image-distance-label" x="280" y="95" text-anchor="middle" font-size="11" fill="#4A90D9">像距</text>
+
+        <!-- 蜡烛（物体）— 动态移动 -->
+        <g id="candle-object">
+          <rect id="candle-body" x="182" y="120" width="16" height="80" rx="3" fill="#E8D4B8" stroke="#C0A080" stroke-width="1"/>
+          <line id="candle-wick" x1="190" y1="120" x2="190" y2="112" stroke="#666" stroke-width="1.5"/>
+          <path id="candle-flame" d="M 190 114 Q 186 104 190 94 Q 194 104 190 114 Z" fill="url(#flameGrad2)"/>
+          <text x="190" y="220" text-anchor="middle" font-size="12" fill="#666">物体（蜡烛）</text>
+        </g>
+
+        <!-- 虚像（虚线表示，动态移动）— 关于镜面对称 -->
+        <g id="candle-image" opacity="0.55">
+          <rect id="image-body" x="302" y="120" width="16" height="80" rx="3" fill="#E8D4B8" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line id="image-wick" x1="310" y1="120" x2="310" y2="112" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <path id="image-flame" d="M 310 114 Q 306 104 310 94 Q 314 104 310 114 Z" fill="url(#flameGrad2)" stroke="#4A90D9" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="310" y="220" text-anchor="middle" font-size="12" fill="#4A90D9">虚像（关于镜面对称）</text>
+        </g>
+
+        <!-- 光线1：火焰顶 → 镜面 → 眼睛 -->
+        <line id="ray1-incident" x1="190" y1="100" x2="250" y2="170" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-mirror-ray)"/>
+        <line id="ray1-reflected" x1="250" y1="170" x2="90" y2="300" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow-mirror-ray)"/>
+        <line id="ray1-extension" x1="250" y1="170" x2="310" y2="100" stroke="#4A90D9" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- 光线2：蜡烛底部 → 镜面 → 眼睛 -->
+        <line id="ray2-incident" x1="190" y1="190" x2="250" y2="240" stroke="#F5A623" stroke-width="2" marker-end="url(#arrow-mirror-ray)"/>
+        <line id="ray2-reflected" x1="250" y1="240" x2="90" y2="300" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow-mirror-ray)"/>
+        <line id="ray2-extension" x1="250" y1="240" x2="310" y2="190" stroke="#4A90D9" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- 眼睛（观察者）-->
+        <g>
+          <ellipse cx="80" cy="305" rx="16" ry="10" fill="#FFF" stroke="#2C3E50" stroke-width="1.5"/>
+          <circle cx="80" cy="305" r="5" fill="#2C3E50"/>
+          <circle cx="82" cy="303" r="1.5" fill="#FFF"/>
+          <text x="80" y="330" text-anchor="middle" font-size="12" fill="#666">观察者</text>
+        </g>
+
+        <!-- 对称连线（虚线） -->
+        <line id="symmetry-line" x1="190" y1="100" x2="310" y2="100" stroke="#27AE60" stroke-width="1" stroke-dasharray="2,3" opacity="0.5"/>
+      </svg>
+
+      <div class="slider-row">
+        <label>蜡烛到镜面距离</label>
+        <input type="range" id="mirror-slider" min="20" max="120" value="60" step="1">
+        <span class="value-display"><span id="mirror-distance">60</span>px</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">物距 =</span>
+          <span class="value"><span id="info-object-dist">60</span>px</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像距 =</span>
+          <span class="value"><span id="info-image-dist">60</span>px</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像的大小 =</span>
+          <span class="value">与物体相等</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 成像原理</div>
+      虚像是反射光线的<strong>反向延长线</strong>（虚线）相交形成的。虚像不能用光屏承接，但可以用眼睛看到。
+      物体远离镜面时，像也同步远离镜面，像距始终等于物距，像的大小始终不变。
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：光的折射 ===== -->
+  <div class="card">
+    <div class="section-header">🌊 5. 光的折射</div>
+
+    <p>光从一种介质斜射入另一种介质时，传播方向会发生偏折，这种现象叫做<strong>光的折射</strong>。</p>
+
+    <div class="formula-box">
+      斯涅尔定律（折射定律）：n₁ sin θ₁ = n₂ sin θ₂<br>
+      <span style="font-size: 14px; font-weight: 400;">
+        θ₁ = 入射角，θ₂ = 折射角，n₁ = 入射介质折射率，n₂ = 折射介质折射率<br>
+        n<sub>空气</sub> = 1.0，n<sub>水</sub> = 1.33，n<sub>玻璃</sub> ≈ 1.5
+      </span>
+    </div>
+
+    <p style="margin: 12px 0;">由公式可得折射角：<strong>θ₂ = arcsin( sin θ₁ × n₁ / n₂ )</strong></p>
+
+    <p style="margin: 12px 0;">规律总结：</p>
+    <ul class="property-list">
+      <li>光从空气射入水（光疏→光密）：折射角 < 入射角，光线<strong>靠近法线</strong></li>
+      <li>光从水射入空气（光密→光疏）：折射角 > 入射角，光线<strong>远离法线</strong></li>
+      <li>当光从光密介质射向光疏介质且入射角足够大时，会发生<strong>全反射</strong></li>
+    </ul>
+
+    <p style="margin: 16px 0 8px;">调节入射角，观察折射现象。可切换光线的传播方向：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 420 320" width="420" height="320">
+        <defs>
+          <marker id="arrow-refr-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="arrow-refr-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <marker id="arrow-refr-tir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/>
+          </marker>
+        </defs>
+
+        <!-- 介质区域标注（动态更新）-->
+        <rect id="medium-top" x="20" y="20" width="380" height="130" fill="rgba(135,206,235,0.12)" stroke="none"/>
+        <rect id="medium-bottom" x="20" y="150" width="380" height="150" fill="rgba(74,144,217,0.15)" stroke="none"/>
+        <text id="medium-top-label" x="40" y="40" font-size="14" fill="#3498DB" font-weight="600">空气 (n=1.00)</text>
+        <text id="medium-bottom-label" x="40" y="175" font-size="14" fill="#2E6BA8" font-weight="600">水 (n=1.33)</text>
+
+        <!-- 界面 -->
+        <line x1="20" y1="150" x2="400" y2="150" stroke="#2C3E50" stroke-width="2"/>
+        <text x="380" y="145" text-anchor="end" font-size="12" fill="#7F8C8D">界面</text>
+
+        <!-- 法线（虚线，垂直）-->
+        <line x1="200" y1="30" x2="200" y2="280" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="210" y="35" font-size="12" fill="#95A5A6">法线</text>
+
+        <!-- 入射点 -->
+        <circle cx="200" cy="150" r="3.5" fill="#2C3E50"/>
+
+        <!-- 入射光线（动态）-->
+        <line id="refraction-incident" x1="100" y1="50" x2="200" y2="150" stroke="#F5A623" stroke-width="3" marker-end="url(#arrow-refr-in)"/>
+        <text id="refraction-incident-label" x="110" y="100" font-size="14" fill="#F5A623" font-weight="600">入射光线</text>
+
+        <!-- 折射光线（动态）-->
+        <line id="refraction-refracted" x1="200" y1="150" x2="270" y2="250" stroke="#4A90D9" stroke-width="3" marker-end="url(#arrow-refr-out)"/>
+        <text id="refraction-refracted-label" x="240" y="220" font-size="14" fill="#4A90D9" font-weight="600">折射光线</text>
+
+        <!-- 全反射时的反射光线（隐藏）-->
+        <line id="refraction-tir-ray" x1="200" y1="150" x2="300" y2="250" stroke="#E74C3C" stroke-width="3" stroke-dasharray="6,3" marker-end="url(#arrow-refr-tir)" style="display:none;"/>
+        <text id="refraction-tir-label" x="260" y="220" font-size="14" fill="#E74C3C" font-weight="600" style="display:none;">反射光线（全反射）</text>
+
+        <!-- 角度弧线和标注 -->
+        <path id="refraction-incident-arc" d="" fill="none" stroke="#F5A623" stroke-width="1.5"/>
+        <text id="refraction-incident-angle" x="175" y="140" font-size="13" fill="#F5A623" font-weight="700">θ₁</text>
+
+        <path id="refraction-refracted-arc" d="" fill="none" stroke="#4A90D9" stroke-width="1.5"/>
+        <text id="refraction-refracted-angle" x="215" y="165" font-size="13" fill="#4A90D9" font-weight="700">θ₂</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>入射角 θ₁</label>
+        <input type="range" id="refraction-slider" min="0" max="85" value="30" step="1">
+        <span class="value-display"><span id="refraction-angle">30</span>°</span>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <span style="font-size: 14px; color: var(--text-secondary);">光线方向：</span>
+        <div class="direction-toggle" id="direction-toggle">
+          <button class="active" data-dir="air-to-water">空气 → 水</button>
+          <button data-dir="water-to-air">水 → 空气</button>
+        </div>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">入射角 θ₁ =</span>
+          <span class="value"><span id="info-refr-incident">30</span>°</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">折射角 θ₂ =</span>
+          <span class="value"><span id="info-refr-refracted">22.1</span>°</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">n₁ sinθ₁ =</span>
+          <span class="value"><span id="info-refr-product">0.500</span></span>
+        </div>
+      </div>
+
+      <div class="tir-warning" id="tir-warning">
+        ⚠️ 全反射！入射角超过临界角（约 48.8°），光线无法进入空气，全部被反射回水中。
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔬 全反射与临界角</div>
+      当光从光密介质（如水 n=1.33）射向光疏介质（如空气 n=1.00）时，存在一个临界角 θ<sub>c</sub>：<br>
+      <span style="font-family: 'Cambria', serif; font-weight: 600;">sin θ<sub>c</sub> = n₂ / n₁ = 1.00 / 1.33 ≈ 0.752 → θ<sub>c</sub> ≈ 48.8°</span><br>
+      当入射角 ≥ 临界角时，光线全部被反射回原介质，这就是<strong>全反射</strong>。光导纤维（光纤）就是利用全反射原理传光的。
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：光的色散 ===== -->
+  <div class="card">
+    <div class="section-header">🌈 6. 光的色散</div>
+
+    <p>让一束白光通过三棱镜，白光会被分解成红、橙、黄、绿、蓝、靛、紫七种颜色，这种现象叫做<strong>光的色散</strong>。</p>
+
+    <p style="margin: 12px 0;">英国物理学家<strong>牛顿</strong>首先用三棱镜实验发现了光的色散现象，证明了白光是由各种色光混合而成的。</p>
+
+    <div class="formula-box" style="font-family: inherit;">
+      白光 = <span class="rainbow-text">红 橙 黄 绿 蓝 靛 紫</span>
+    </div>
+
+    <p style="margin: 12px 0;">色散的原因：不同颜色的光在棱镜中的折射率不同——红光折射率最小（偏折最少），紫光折射率最大（偏折最多）。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 520 340" width="520" height="340">
+        <defs>
+          <marker id="arrow-white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#888"/>
+          </marker>
+        </defs>
+
+        <!-- 白光入射 -->
+        <line x1="30" y1="150" x2="210" y2="150" stroke="#333" stroke-width="4" marker-end="url(#arrow-white)"/>
+        <text x="80" y="138" font-size="13" fill="#555" font-weight="600">白光</text>
+
+        <!-- 三棱镜 -->
+        <polygon points="210,80 210,220 300,150" fill="rgba(200,220,255,0.4)" stroke="#4A90D9" stroke-width="2.5"/>
+        <text x="240" y="100" font-size="12" fill="#4A90D9">三棱镜</text>
+
+        <!-- 七色光带从棱镜右侧射出 -->
+        <!-- 红 -->
+        <line x1="300" y1="150" x2="490" y2="90" stroke="#FF0000" stroke-width="3"/>
+        <text x="495" y="93" font-size="13" fill="#FF0000" font-weight="600">红</text>
+
+        <!-- 橙 -->
+        <line x1="300" y1="150" x2="490" y2="105" stroke="#FF7F00" stroke-width="3"/>
+        <text x="495" y="108" font-size="13" fill="#FF7F00" font-weight="600">橙</text>
+
+        <!-- 黄 -->
+        <line x1="300" y1="150" x2="490" y2="120" stroke="#FFFF00" stroke-width="3"/>
+        <text x="495" y="123" font-size="13" fill="#CCCC00" font-weight="600">黄</text>
+
+        <!-- 绿 -->
+        <line x1="300" y1="150" x2="490" y2="135" stroke="#00CC00" stroke-width="3"/>
+        <text x="495" y="138" font-size="13" fill="#00CC00" font-weight="600">绿</text>
+
+        <!-- 蓝 -->
+        <line x1="300" y1="150" x2="490" y2="150" stroke="#0000FF" stroke-width="3"/>
+        <text x="495" y="153" font-size="13" fill="#0000FF" font-weight="600">蓝</text>
+
+        <!-- 靛 -->
+        <line x1="300" y1="150" x2="490" y2="165" stroke="#4B0082" stroke-width="3"/>
+        <text x="495" y="168" font-size="13" fill="#4B0082" font-weight="600">靛</text>
+
+        <!-- 紫 -->
+        <line x1="300" y1="150" x2="490" y2="180" stroke="#9400D3" stroke-width="3"/>
+        <text x="495" y="183" font-size="13" fill="#9400D3" font-weight="600">紫</text>
+
+        <!-- 标注：偏折程度 -->
+        <text x="400" y="225" text-anchor="middle" font-size="12" fill="#7F8C8D">↑ 红光偏折最少 | 紫光偏折最多 ↓</text>
+
+        <!-- 光屏 -->
+        <rect x="488" y="75" width="4" height="120" fill="#666"/>
+        <text x="490" y="220" text-anchor="middle" font-size="12" fill="#666">光屏</text>
+
+        <!-- 彩虹展示 -->
+        <g transform="translate(0, 250)">
+          <path d="M 50 80 A 210 210 0 0 1 470 80" fill="none" stroke="#FF0000" stroke-width="6"/>
+          <path d="M 58 80 A 202 202 0 0 1 462 80" fill="none" stroke="#FF7F00" stroke-width="6"/>
+          <path d="M 66 80 A 194 194 0 0 1 454 80" fill="none" stroke="#FFFF00" stroke-width="6"/>
+          <path d="M 74 80 A 186 186 0 0 1 446 80" fill="none" stroke="#00CC00" stroke-width="6"/>
+          <path d="M 82 80 A 178 178 0 0 1 438 80" fill="none" stroke="#0000FF" stroke-width="6"/>
+          <path d="M 90 80 A 170 170 0 0 1 430 80" fill="none" stroke="#4B0082" stroke-width="6"/>
+          <path d="M 98 80 A 162 162 0 0 1 422 80" fill="none" stroke="#9400D3" stroke-width="6"/>
+          <text x="260" y="78" text-anchor="middle" font-size="13" fill="#7F8C8D">彩虹 · 雨后空气中的水珠对阳光的折射和反射</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🌈 生活中的色散</div>
+      • <strong>彩虹</strong>：雨后空气中有大量小水珠，阳光经水珠折射和反射形成七色光带<br>
+      • <strong>色散的本质</strong>：白光不是单色光，而是由多种色光组成的复色光<br>
+      • <strong>三原色</strong>：红、绿、蓝三种色光按不同比例混合可得到各种色光
+    </div>
+  </div>
+
+  <!-- ===== 第七部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 7. 练习题</div>
+    <p>检验一下你对光现象知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 光线以 30° 角（与镜面夹角）射到平面镜上，则反射角为：</div>
+      <div class="quiz-option" data-idx="0">A. 30°</div>
+      <div class="quiz-option" data-idx="1">B. 60°</div>
+      <div class="quiz-option" data-idx="2">C. 15°</div>
+      <div class="quiz-option" data-idx="3">D. 90°</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 关于平面镜成像，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 像比物体小，物体离镜面越远像越小</div>
+      <div class="quiz-option" data-idx="1">B. 平面镜成的是倒立的实像</div>
+      <div class="quiz-option" data-idx="2">C. 像和物体关于镜面对称，像距等于物距</div>
+      <div class="quiz-option" data-idx="3">D. 平面镜所成的像可以用光屏承接</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 光从空气斜射入水中时，折射光线与入射光线相比，偏折方向是：</div>
+      <div class="quiz-option" data-idx="0">A. 远离法线（折射角 > 入射角）</div>
+      <div class="quiz-option" data-idx="1">B. 靠近法线（折射角 < 入射角）</div>
+      <div class="quiz-option" data-idx="2">C. 方向不变（折射角 = 入射角）</div>
+      <div class="quiz-option" data-idx="3">D. 沿原路返回</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 光的折射计算中的角度关系 ↔ <a href="../../数学/九年级/index.html">数学 · 锐角三角函数</a>（正弦函数 sin 在折射定律中的应用）</p>
+    <p>· 小孔成像中的相似三角形 ↔ <a href="../../数学/八年级/08-勾股定理.html">数学 · 勾股定理</a>（几何关系与距离计算）</p>
+    <p>· 光的反射中的角度计算 ↔ <a href="../../数学/八年级/index.html">数学 · 八年级几何</a>（等角关系与对称性）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="03-物态变化.html" class="btn btn-outline">← 上一章：物态变化</a>
+    <a href="05-透镜及其应用.html" class="btn btn-primary">下一章：透镜及其应用 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+// ===== 光的反射交互 =====
+function updateReflection(angle) {
+  var rad = angle * Math.PI / 180;
+  var cx = 210, cy = 200; // 入射点
+  var L = 150; // 光线长度
+
+  // 入射光线：从左上方射向入射点
+  var startX = cx - L * Math.sin(rad);
+  var startY = cy - L * Math.cos(rad);
+  // 反射光线：从入射点射向右上方
+  var endX = cx + L * Math.sin(rad);
+  var endY = cy - L * Math.cos(rad);
+
+  document.getElementById('incident-ray').setAttribute('x1', startX);
+  document.getElementById('incident-ray').setAttribute('y1', startY);
+
+  document.getElementById('reflected-ray').setAttribute('x2', endX);
+  document.getElementById('reflected-ray').setAttribute('y2', endY);
+
+  // 更新标签位置
+  var labelOffsetX = -30 * Math.cos(rad) - 20;
+  var labelOffsetY = -50 * Math.sin(rad) + 40;
+  document.getElementById('incident-label').setAttribute('x', startX + 10);
+  document.getElementById('incident-label').setAttribute('y', startY + 35);
+  document.getElementById('reflected-label').setAttribute('x', endX - 70);
+  document.getElementById('reflected-label').setAttribute('y', endY + 35);
+
+  // 角度弧线（入射角）
+  var arcR = 35;
+  var incidentArc = 'M ' + cx + ' ' + (cy - arcR) +
+    ' A ' + arcR + ' ' + arcR + ' 0 0 0 ' +
+    (cx - arcR * Math.sin(rad)) + ' ' + (cy - arcR * Math.cos(rad));
+  document.getElementById('incident-angle-arc').setAttribute('d', incidentArc);
+
+  // 角度弧线（反射角）
+  var reflectedArc = 'M ' + cx + ' ' + (cy - arcR) +
+    ' A ' + arcR + ' ' + arcR + ' 0 0 1 ' +
+    (cx + arcR * Math.sin(rad)) + ' ' + (cy - arcR * Math.cos(rad));
+  document.getElementById('reflected-angle-arc').setAttribute('d', reflectedArc);
+
+  // 角度文字位置
+  var textR = 22;
+  document.getElementById('incident-angle-text').setAttribute('x', cx - textR * Math.sin(rad / 2) - 8);
+  document.getElementById('incident-angle-text').setAttribute('y', cy - textR * Math.cos(rad / 2) + 5);
+  document.getElementById('reflected-angle-text').setAttribute('x', cx + textR * Math.sin(rad / 2) + 2);
+  document.getElementById('reflected-angle-text').setAttribute('y', cy - textR * Math.cos(rad / 2) + 5);
+
+  // 信息面板
+  document.getElementById('reflection-angle').textContent = angle;
+  document.getElementById('info-incident-angle').textContent = angle;
+  document.getElementById('info-reflected-angle').textContent = angle;
+  document.getElementById('info-sum-angle').textContent = angle * 2;
+}
+
+// ===== 平面镜成像交互 =====
+function updateMirror(d) {
+  var mirrorX = 250;
+  var obsX = 80, obsY = 300;
+  var flameTipY = 100;   // 火焰尖端的y坐标
+  var candleMidY = 190;  // 蜡烛中部的y坐标
+  var dist = mirrorX - obsX; // 170
+
+  // 计算满足反射定律的镜面反射点
+  // my = (obsY * d + fy * dist) / (d + dist)
+  var m1y = (obsY * d + flameTipY * dist) / (d + dist);
+  var m2y = (obsY * d + candleMidY * dist) / (d + dist);
+
+  // 物体位置
+  var objX = mirrorX - d;
+  // 虚像位置
+  var imgX = mirrorX + d;
+
+  // 更新蜡烛位置
+  document.getElementById('candle-body').setAttribute('x', objX - 8);
+  document.getElementById('candle-wick').setAttribute('x1', objX);
+  document.getElementById('candle-wick').setAttribute('x2', objX);
+  var flame = document.getElementById('candle-flame');
+  flame.setAttribute('d', 'M ' + objX + ' 114 Q ' + (objX - 4) + ' 104 ' + objX + ' 94 Q ' + (objX + 4) + ' 104 ' + objX + ' 114 Z');
+
+  // 更新蜡烛文字
+  // 更新虚像位置（镜像翻转）
+  document.getElementById('image-body').setAttribute('x', imgX - 8);
+  document.getElementById('image-wick').setAttribute('x1', imgX);
+  document.getElementById('image-wick').setAttribute('x2', imgX);
+  var imgFlame = document.getElementById('image-flame');
+  imgFlame.setAttribute('d', 'M ' + imgX + ' 114 Q ' + (imgX - 4) + ' 104 ' + imgX + ' 94 Q ' + (imgX + 4) + ' 104 ' + imgX + ' 114 Z');
+
+  // 更新物距/像距标注
+  document.getElementById('object-distance-line').setAttribute('x1', objX);
+  document.getElementById('object-distance-label').setAttribute('x', (objX + mirrorX) / 2);
+
+  document.getElementById('image-distance-line').setAttribute('x2', imgX);
+  document.getElementById('image-distance-label').setAttribute('x', (mirrorX + imgX) / 2);
+
+  // 更新对称连线
+  document.getElementById('symmetry-line').setAttribute('x1', objX);
+  document.getElementById('symmetry-line').setAttribute('x2', imgX);
+
+  // 更新光线1（火焰尖端 → 镜面 → 眼睛）
+  document.getElementById('ray1-incident').setAttribute('x1', objX);
+  document.getElementById('ray1-incident').setAttribute('y1', flameTipY);
+  document.getElementById('ray1-incident').setAttribute('x2', mirrorX);
+  document.getElementById('ray1-incident').setAttribute('y2', m1y);
+
+  document.getElementById('ray1-reflected').setAttribute('x1', mirrorX);
+  document.getElementById('ray1-reflected').setAttribute('y1', m1y);
+
+  document.getElementById('ray1-extension').setAttribute('x1', mirrorX);
+  document.getElementById('ray1-extension').setAttribute('y1', m1y);
+  document.getElementById('ray1-extension').setAttribute('x2', imgX);
+  document.getElementById('ray1-extension').setAttribute('y2', flameTipY);
+
+  // 更新光线2（蜡烛中部 → 镜面 → 眼睛）
+  document.getElementById('ray2-incident').setAttribute('x1', objX);
+  document.getElementById('ray2-incident').setAttribute('y1', candleMidY);
+  document.getElementById('ray2-incident').setAttribute('x2', mirrorX);
+  document.getElementById('ray2-incident').setAttribute('y2', m2y);
+
+  document.getElementById('ray2-reflected').setAttribute('x1', mirrorX);
+  document.getElementById('ray2-reflected').setAttribute('y1', m2y);
+
+  document.getElementById('ray2-extension').setAttribute('x1', mirrorX);
+  document.getElementById('ray2-extension').setAttribute('y1', m2y);
+  document.getElementById('ray2-extension').setAttribute('x2', imgX);
+  document.getElementById('ray2-extension').setAttribute('y2', candleMidY);
+
+  // 信息面板
+  document.getElementById('mirror-distance').textContent = d;
+  document.getElementById('info-object-dist').textContent = d;
+  document.getElementById('info-image-dist').textContent = d;
+}
+
+// ===== 光的折射交互 =====
+var refractionDirection = 'air-to-water';
+
+function updateRefraction(angle) {
+  var cx = 200, cy = 150; // 入射点（界面上的点）
+  var L = 120; // 光线长度
+  var rad = angle * Math.PI / 180;
+
+  var n1, n2;
+  var incidentStartX, incidentStartY;
+  var refractedEndX, refractedEndY;
+  var isTIR = false;
+  var theta2Deg = 0;
+
+  if (refractionDirection === 'air-to-water') {
+    n1 = 1.0; n2 = 1.33;
+    // 入射光线从左上方射向入射点
+    incidentStartX = cx - L * Math.sin(rad);
+    incidentStartY = cy - L * Math.cos(rad);
+    // 折射光线射向右下方（进入水）
+    var sinTheta2 = Math.sin(rad) * n1 / n2;
+    theta2Deg = Math.asin(sinTheta2) * 180 / Math.PI;
+    var theta2Rad = Math.asin(sinTheta2);
+    refractedEndX = cx + L * Math.sin(theta2Rad);
+    refractedEndY = cy + L * Math.cos(theta2Rad);
+    isTIR = false;
+  } else {
+    n1 = 1.33; n2 = 1.0;
+    // 入射光线从左下方射向入射点（水中射向空气）
+    incidentStartX = cx - L * Math.sin(rad);
+    incidentStartY = cy + L * Math.cos(rad);
+    var sinTheta2 = Math.sin(rad) * n1 / n2;
+    if (Math.abs(sinTheta2) > 1) {
+      // 全反射
+      isTIR = true;
+      // 反射光线射向右下方（回到水中）
+      refractedEndX = cx + L * Math.sin(rad);
+      refractedEndY = cy + L * Math.cos(rad);
+    } else {
+      isTIR = false;
+      theta2Deg = Math.asin(sinTheta2) * 180 / Math.PI;
+      var theta2Rad = Math.asin(sinTheta2);
+      // 折射光线射向右上方（进入空气）
+      refractedEndX = cx + L * Math.sin(theta2Rad);
+      refractedEndY = cy - L * Math.cos(theta2Rad);
+    }
+  }
+
+  // 更新入射光线
+  document.getElementById('refraction-incident').setAttribute('x1', incidentStartX);
+  document.getElementById('refraction-incident').setAttribute('y1', incidentStartY);
+
+  // 更新入射光线标签位置
+  var labelX = incidentStartX + 8;
+  var labelY = incidentStartY + (refractionDirection === 'air-to-water' ? 35 : -30);
+  document.getElementById('refraction-incident-label').setAttribute('x', labelX);
+  document.getElementById('refraction-incident-label').setAttribute('y', labelY);
+
+  if (isTIR) {
+    // 全反射：显示反射光线，隐藏折射光线
+    document.getElementById('refraction-refracted').style.display = 'none';
+    document.getElementById('refraction-refracted-label').style.display = 'none';
+    document.getElementById('refraction-tir-ray').style.display = 'block';
+    document.getElementById('refraction-tir-label').style.display = 'block';
+    document.getElementById('refraction-tir-ray').setAttribute('x2', refractedEndX);
+    document.getElementById('refraction-tir-ray').setAttribute('y2', refractedEndY);
+    document.getElementById('refraction-tir-label').setAttribute('x', refractedEndX - 80);
+    document.getElementById('refraction-tir-label').setAttribute('y', refractedEndY - 10);
+    // 折射角弧线和标注隐藏
+    document.getElementById('refraction-refracted-arc').style.display = 'none';
+    document.getElementById('refraction-refracted-angle').style.display = 'none';
+    document.getElementById('tir-warning').classList.add('show');
+    document.getElementById('info-refr-refracted').textContent = '—';
+    document.getElementById('info-refr-product').textContent = '>1.000';
+  } else {
+    // 正常折射
+    document.getElementById('refraction-refracted').style.display = 'block';
+    document.getElementById('refraction-refracted-label').style.display = 'block';
+    document.getElementById('refraction-refracted').setAttribute('x2', refractedEndX);
+    document.getElementById('refraction-refracted').setAttribute('y2', refractedEndY);
+
+    // 折射光线标签
+    var rLabelX = refractedEndX - 80;
+    var rLabelY = refractedEndY + (refractionDirection === 'air-to-water' ? -30 : 35);
+    document.getElementById('refraction-refracted-label').setAttribute('x', rLabelX);
+    document.getElementById('refraction-refracted-label').setAttribute('y', rLabelY);
+
+    document.getElementById('refraction-tir-ray').style.display = 'none';
+    document.getElementById('refraction-tir-label').style.display = 'none';
+    document.getElementById('refraction-refracted-arc').style.display = 'block';
+    document.getElementById('refraction-refracted-angle').style.display = 'block';
+
+    // 折射角弧线
+    var arcR = 30;
+    var theta2Rad = theta2Deg * Math.PI / 180;
+    if (refractionDirection === 'air-to-water') {
+      // 折射角在法线右下方
+      var arc2 = 'M ' + cx + ' ' + (cy + arcR) +
+        ' A ' + arcR + ' ' + arcR + ' 0 0 0 ' +
+        (cx + arcR * Math.sin(theta2Rad)) + ' ' + (cy + arcR * Math.cos(theta2Rad));
+      document.getElementById('refraction-refracted-arc').setAttribute('d', arc2);
+      document.getElementById('refraction-refracted-angle').setAttribute('x', cx + 15);
+      document.getElementById('refraction-refracted-angle').setAttribute('y', cy + 25);
+    } else {
+      // 折射角在法线右上方
+      var arc2 = 'M ' + cx + ' ' + (cy - arcR) +
+        ' A ' + arcR + ' ' + arcR + ' 0 0 1 ' +
+        (cx + arcR * Math.sin(theta2Rad)) + ' ' + (cy - arcR * Math.cos(theta2Rad));
+      document.getElementById('refraction-refracted-arc').setAttribute('d', arc2);
+      document.getElementById('refraction-refracted-angle').setAttribute('x', cx + 15);
+      document.getElementById('refraction-refracted-angle').setAttribute('y', cy - 15);
+    }
+
+    document.getElementById('tir-warning').classList.remove('show');
+    document.getElementById('info-refr-refracted').textContent = theta2Deg.toFixed(1);
+    var product = Math.sin(rad) * n1;
+    document.getElementById('info-refr-product').textContent = product.toFixed(3);
+  }
+
+  // 入射角弧线
+  var arcR1 = 30;
+  if (refractionDirection === 'air-to-water') {
+    // 入射角在法线左上方
+    var arc1 = 'M ' + cx + ' ' + (cy - arcR1) +
+      ' A ' + arcR1 + ' ' + arcR1 + ' 0 0 0 ' +
+      (cx - arcR1 * Math.sin(rad)) + ' ' + (cy - arcR1 * Math.cos(rad));
+    document.getElementById('refraction-incident-arc').setAttribute('d', arc1);
+    document.getElementById('refraction-incident-angle').setAttribute('x', cx - 22);
+    document.getElementById('refraction-incident-angle').setAttribute('y', cy - 15);
+  } else {
+    // 入射角在法线左下方
+    var arc1 = 'M ' + cx + ' ' + (cy + arcR1) +
+      ' A ' + arcR1 + ' ' + arcR1 + ' 0 0 1 ' +
+      (cx - arcR1 * Math.sin(rad)) + ' ' + (cy + arcR1 * Math.cos(rad));
+    document.getElementById('refraction-incident-arc').setAttribute('d', arc1);
+    document.getElementById('refraction-incident-angle').setAttribute('x', cx - 22);
+    document.getElementById('refraction-incident-angle').setAttribute('y', cy + 25);
+  }
+
+  // 更新数值显示
+  document.getElementById('refraction-angle').textContent = angle;
+  document.getElementById('info-refr-incident').textContent = angle;
+
+  // 更新介质标签
+  if (refractionDirection === 'air-to-water') {
+    document.getElementById('medium-top-label').textContent = '空气 (n=1.00)';
+    document.getElementById('medium-bottom-label').textContent = '水 (n=1.33)';
+    document.getElementById('medium-top-label').setAttribute('fill', '#3498DB');
+    document.getElementById('medium-bottom-label').setAttribute('fill', '#2E6BA8');
+  } else {
+    document.getElementById('medium-top-label').textContent = '空气 (n=1.00)';
+    document.getElementById('medium-bottom-label').textContent = '水 (n=1.33)';
+    document.getElementById('medium-top-label').setAttribute('fill', '#3498DB');
+    document.getElementById('medium-bottom-label').setAttribute('fill', '#2E6BA8');
+  }
+}
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 反射演示滑块
+  var refSlider = document.getElementById('reflection-slider');
+  refSlider.addEventListener('input', function() {
+    updateReflection(parseInt(this.value));
+  });
+  updateReflection(35);
+
+  // 平面镜成像滑块
+  var mirrorSlider = document.getElementById('mirror-slider');
+  mirrorSlider.addEventListener('input', function() {
+    updateMirror(parseInt(this.value));
+  });
+  updateMirror(60);
+
+  // 折射演示滑块
+  var refrSlider = document.getElementById('refraction-slider');
+  refrSlider.addEventListener('input', function() {
+    updateRefraction(parseInt(this.value));
+  });
+  updateRefraction(30);
+
+  // 方向切换按钮
+  var toggleButtons = document.querySelectorAll('#direction-toggle button');
+  toggleButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      toggleButtons.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      refractionDirection = this.dataset.dir;
+      updateRefraction(parseInt(refrSlider.value));
+    });
+  });
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: '入射角是入射光线与<strong>法线</strong>的夹角，不是与镜面的夹角。题目中30°是与镜面的夹角，所以入射角 = 90° - 30° = 60°。根据反射定律，反射角 = 入射角 = 60°。',
+    hint: '入射角是光线与法线的夹角，而题目说的是与镜面的夹角。入射角 = 90° - 与镜面的夹角。'
+  });
+
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: '平面镜成像的特点：像与物大小相等（等大）、像距等于物距（等距）、像和物关于镜面对称、成的是正立虚像（不能用光屏承接）。所以C正确。',
+    hint: '逐个排除：A说像变小——错误，像始终与物等大；B说实像——错误，是虚像；D说可用光屏承接——错误，虚像不能承接。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 1,
+    explain: '光从空气（光疏介质，n=1.0）射入水（光密介质，n=1.33）时，折射角小于入射角，折射光线靠近法线。根据斯涅尔定律 n₁sinθ₁ = n₂sinθ₂，sinθ₂ = sinθ₁ × n₁/n₂ = sinθ₁ × 1/1.33 < sinθ₁，所以 θ₂ < θ₁。',
+    hint: '空气 n=1.0 < 水 n=1.33，从光疏到光密介质时，折射角小于入射角，光线靠近法线。'
+  });
+});
+</script>
+
+</body>
+</html>

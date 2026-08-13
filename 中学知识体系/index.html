@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中学理化数知识体系 · 交互学习平台</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, #1A2332 0%, #2C3E50 50%, #1A2332 100%);
+      color: white;
+      border-radius: 0 0 30px 30px;
+      margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 36px; margin-bottom: 12px; }
+    .hero p { font-size: 18px; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+    .hero .badges { margin-top: 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .hero .badge-item {
+      background: rgba(255,255,255,0.15);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    .grade-section { margin-bottom: 48px; }
+    .grade-header {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .grade-header .grade-tag {
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 16px;
+    }
+    .grade-desc { color: var(--text-secondary); font-size: 15px; margin-bottom: 20px; }
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .feature-item {
+      text-align: center;
+      padding: 24px 16px;
+    }
+    .feature-item .emoji { font-size: 36px; margin-bottom: 10px; }
+    .feature-item .ftitle { font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+    .feature-item .fdesc { font-size: 13px; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 理化数知识体系</div>
+  <ul class="navbar-links">
+    <li><a href="#grade8">八年级</a></li>
+    <li><a href="#grade9">九年级</a></li>
+    <li><a href="交叉参考/index.html">交叉参考</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <h1>中学物理 · 化学 · 数学</h1>
+  <p>可视化、可交互、循序渐进的学科知识体系<br>在动手实践中掌握每一个知识点</p>
+  <div class="badges">
+    <span class="badge-item">📐 数学</span>
+    <span class="badge-item">⚡ 物理</span>
+    <span class="badge-item">🧪 化学</span>
+    <span class="badge-item">🔗 学科交叉</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 特色介绍 -->
+  <div class="feature-row">
+    <div class="card feature-item">
+      <div class="emoji">🎯</div>
+      <div class="ftitle">循序渐进</div>
+      <div class="fdesc">知识由浅入深，每步都有铺垫</div>
+    </div>
+    <div class="card feature-item">
+      <div class="emoji">👆</div>
+      <div class="ftitle">可交互</div>
+      <div class="fdesc">拖拽、调节参数，动手理解概念</div>
+    </div>
+    <div class="card feature-item">
+      <div class="emoji">📊</div>
+      <div class="ftitle">可视化</div>
+      <div class="fdesc">抽象概念用图形动画呈现</div>
+    </div>
+    <div class="card feature-item">
+      <div class="emoji">🔗</div>
+      <div class="ftitle">学科联动</div>
+      <div class="fdesc">理化数知识互相参照，融会贯通</div>
+    </div>
+  </div>
+
+  <!-- 八年级 -->
+  <div class="grade-section" id="grade8">
+    <div class="grade-header">
+      <span class="grade-tag">八年级</span>
+      <span>筑基阶段</span>
+    </div>
+    <p class="grade-desc">建立学科基础认知，培养科学思维与数学工具能力</p>
+    <div class="subject-grid">
+      <a href="物理/八年级/index.html" class="subject-card physics">
+        <div class="icon">⚡</div>
+        <div class="name">物理</div>
+        <div class="desc">声光热力 · 走进物理世界</div>
+      </a>
+      <a href="数学/八年级/index.html" class="subject-card math">
+        <div class="icon">📐</div>
+        <div class="name">数学</div>
+        <div class="desc">几何与代数 · 逻辑的基石</div>
+      </a>
+      <a href="化学/八年级/index.html" class="subject-card chemistry">
+        <div class="icon">🧪</div>
+        <div class="name">化学</div>
+        <div class="desc">趣味化学 · 物质世界初探</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 九年级 -->
+  <div class="grade-section" id="grade9">
+    <div class="grade-header">
+      <span class="grade-tag">九年级</span>
+      <span>深化阶段</span>
+    </div>
+    <p class="grade-desc">深入核心知识，强化综合应用与中考备考</p>
+    <div class="subject-grid">
+      <a href="物理/九年级/index.html" class="subject-card physics">
+        <div class="icon">🔌</div>
+        <div class="name">物理</div>
+        <div class="desc">电与磁 · 能量守恒 · 中考核心</div>
+      </a>
+      <a href="数学/九年级/index.html" class="subject-card math">
+        <div class="icon">📊</div>
+        <div class="name">数学</div>
+        <div class="desc">函数与圆 · 概率统计 · 综合提升</div>
+      </a>
+      <a href="化学/九年级/index.html" class="subject-card chemistry">
+        <div class="icon">⚗️</div>
+        <div class="name">化学</div>
+        <div class="desc">方程式 · 酸碱盐 · 系统化学</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 交叉参考入口 -->
+  <div class="card" style="text-align: center; padding: 32px; background: linear-gradient(135deg, rgba(243,156,18,0.08), rgba(155,89,182,0.08));">
+    <h2 style="margin-bottom: 12px;">🔗 学科交叉参考</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 20px;">
+      物理中的数学工具、化学中的物理变化、数学建模的实际应用——<br>
+      知识不是孤岛，交叉参考帮你打通任督二脉
+    </p>
+    <a href="交叉参考/index.html" class="btn btn-outline">查看交叉参考 →</a>
+  </div>
+
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一次函数 · 八年级数学</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .formula-box .formula {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 2px;
+    }
+    .formula-box .formula-note {
+      margin-top: 10px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--math);
+      font-size: 17px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      background: var(--math);
+    }
+    .slider-row .value-badge {
+      min-width: 56px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== Canvas 容器 ===== */
+    .canvas-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .canvas-wrap canvas {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .data-cell {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .data-cell.math-color { border-color: rgba(155,89,182,0.3); }
+    .data-cell.math-color .num { color: var(--math); }
+
+    /* ===== 增减标签 ===== */
+    .trend-tag {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+    .trend-tag.increasing { background: rgba(39,174,96,0.15); color: var(--success); }
+    .trend-tag.decreasing { background: rgba(231,76,60,0.15); color: var(--danger); }
+    .trend-tag.constant { background: rgba(243,156,18,0.15); color: var(--warning); }
+
+    /* ===== 步骤展示 ===== */
+    .step-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 16px 0;
+    }
+    .step-flow-item {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      position: relative;
+    }
+    .step-flow-item .step-num {
+      display: inline-block;
+      background: var(--math);
+      color: #fff;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+    .step-flow-item .step-content {
+      display: inline;
+    }
+    .step-flow-item .calc {
+      font-family: Georgia, serif;
+      margin-top: 8px;
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    /* ===== 对比表格 ===== */
+    .compare-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .compare-tab {
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid transparent;
+      background: var(--bg-soft);
+      transition: all 0.2s;
+    }
+    .compare-tab.active {
+      background: var(--math);
+      color: #fff;
+    }
+    .compare-panel { display: none; }
+    .compare-panel.active { display: block; }
+
+    /* ===== 物理应用 ===== */
+    .physics-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .physics-panel { grid-template-columns: 1fr; }
+    }
+
+    /* ===== 生活实例卡片 ===== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+    }
+    .example-card h4 { color: var(--math); margin-bottom: 8px; font-size: 17px; }
+    .example-card p { font-size: 14px; color: var(--text-secondary); }
+    .example-card .formula-inline {
+      font-family: Georgia, serif;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--math);
+    }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">📈 一次函数</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理八年级</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>📈 一次函数</h1>
+  <p>描述生活中"均匀变化"的数学工具——直线里的智慧</p>
+</div>
+
+<div class="container">
+
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <span>一次函数</span>
+  </div>
+
+  <!-- ===== 引入 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：生活中的变化关系</h2>
+  <div class="card">
+    <p>生活中有很多现象，都是<strong>"一个量变化，另一个量随之变化"</strong>。看看这几个例子：</p>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>🚕 出租车计费</h4>
+        <p>起步价 13 元（3 公里内），之后每公里 2.5 元。行驶里程 x（公里）越大，车费 y（元）越多。</p>
+        <div class="formula-inline">y = 2.5(x − 3) + 13 = 2.5x + 5.5</div>
+      </div>
+      <div class="example-card">
+        <h4>🔓 弹簧伸长与拉力</h4>
+        <p>弹簧原长 10cm，每增加 1N 拉力，伸长 0.5cm。拉力 F 越大，弹簧长度 L 越长。</p>
+        <div class="formula-inline">L = 0.5F + 10</div>
+      </div>
+      <div class="example-card">
+        <h4>🚰 水龙头放水</h4>
+        <p>水龙头每秒放水 0.2 升，水桶中原有 3 升水。放水时间 t 越长，总水量 V 越多。</p>
+        <div class="formula-inline">V = 0.2t + 3</div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 发现规律</div>
+      这些例子都有一个共同特点：<strong>因变量 = 常数 × 自变量 + 常数</strong>。这种关系就是<strong class="math-accent">一次函数</strong>。
+    </div>
+  </div>
+
+  <!-- ===== 概念定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 概念定义</h2>
+  <div class="card">
+    <p>一般地，形如 <strong class="math-accent">y = kx + b</strong>（k、b 为常数，且 k ≠ 0）的函数，叫做<strong class="math-accent">一次函数</strong>。</p>
+    <div class="formula-box">
+      <div class="formula">y = kx + b &nbsp;&nbsp;(k ≠ 0)</div>
+      <div class="formula-note">k 是<strong>斜率</strong>（变化率），决定直线的倾斜方向和陡缓程度；b 是<strong>截距</strong>（y 轴交点纵坐标）</div>
+    </div>
+    <div class="data-panel">
+      <div class="data-cell math-color">
+        <div class="label">斜率 k</div>
+        <div class="num" style="font-size:16px;">变化率</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">截距 b</div>
+        <div class="num" style="font-size:16px;">y 轴交点</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">b = 0 时</div>
+        <div class="num" style="font-size:16px;">正比例函数</div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">📐 特别注意</div>
+      <p style="margin-top:4px;"><strong>k ≠ 0</strong> 是必要条件。如果 k = 0，则 y = b（常数函数），不再是"一次"函数。当 b = 0 时，y = kx 叫做<strong>正比例函数</strong>，是一次函数的特殊情况。</p>
+    </div>
+  </div>
+
+  <!-- ===== 交互探索1：k 和 b 的作用 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互探索①：k 和 b 的作用</h2>
+  <div class="card">
+    <p>拖动下方滑块调节 <strong class="math-accent">k</strong>（斜率）和 <strong class="math-accent">b</strong>（截距），观察直线的变化。注意直线的倾斜方向、陡缓程度以及与 y 轴的交点位置。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>斜率 k</label>
+        <input type="range" id="slider-k" min="-5" max="5" value="1" step="0.5">
+        <span class="value-badge" id="display-k">1</span>
+      </div>
+      <div class="slider-row">
+        <label>截距 b</label>
+        <input type="range" id="slider-b" min="-5" max="5" value="0" step="0.5">
+        <span class="value-badge" id="display-b">0</span>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-kb" width="560" height="400"></canvas>
+    </div>
+
+    <div style="text-align:center;">
+      <div id="trend-tag" class="trend-tag increasing">k = 1 &gt; 0，函数递增 ↗</div>
+      <div id="func-label" style="margin-top:8px; font-size:20px; font-weight:700; font-family:Georgia,serif; color:var(--math);">y = 1x + 0</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 观察要点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>k &gt; 0</strong>：直线向右上方倾斜，函数<strong>递增</strong> ↗</li>
+        <li><strong>k &lt; 0</strong>：直线向右下方倾斜，函数<strong>递减</strong> ↘</li>
+        <li><strong>|k| 越大</strong>：直线越<strong>陡</strong></li>
+        <li><strong>b &gt; 0</strong>：直线与 y 轴交于<strong>正半轴</strong></li>
+        <li><strong>b &lt; 0</strong>：直线与 y 轴交于<strong>负半轴</strong></li>
+        <li><strong>b = 0</strong>：直线<strong>过原点</strong>，此时为正比例函数 y = kx</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 交互探索2：两点确定一条直线 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 交互探索②：两点确定一条直线</h2>
+  <div class="card">
+    <p>调节滑块选择两个点 A(x₁, y₁) 和 B(x₂, y₂)，或直接<strong>点击画布</strong>选点，系统会自动画出经过两点的直线，并计算斜率。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>x₁</label>
+        <input type="range" id="slider-x1" min="-5" max="5" value="-3" step="1">
+        <span class="value-badge" id="display-x1">-3</span>
+        <label style="min-width:30px;">y₁</label>
+        <input type="range" id="slider-y1" min="-5" max="5" value="-2" step="1">
+        <span class="value-badge" id="display-y1">-2</span>
+      </div>
+      <div class="slider-row">
+        <label>x₂</label>
+        <input type="range" id="slider-x2" min="-5" max="5" value="4" step="1">
+        <span class="value-badge" id="display-x2">4</span>
+        <label style="min-width:30px;">y₂</label>
+        <input type="range" id="slider-y2" min="-5" max="5" value="3" step="1">
+        <span class="value-badge" id="display-y2">3</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px; text-align:center;">
+      <span class="btn btn-sm btn-outline" style="border-color:var(--math); color:var(--math);" id="btn-click-mode">🖱️ 点击画布选点模式：关闭</span>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-two-points" width="560" height="400"></canvas>
+    </div>
+
+    <div id="slope-calc" style="text-align:center; font-size:18px; font-family:Georgia,serif; padding:16px; background:rgba(155,89,182,0.1); border-radius:var(--radius-sm); margin-top:12px; color:var(--math);">
+      <!-- 斜率计算过程由 JS 动态生成 -->
+    </div>
+
+    <div class="warning-box" id="slope-warning" style="display:none;">
+      <strong>⚠️ 注意</strong>：两点的 x 坐标相同（x₁ = x₂），此时直线是<strong>竖直线</strong>，斜率不存在（分母为 0）。
+    </div>
+  </div>
+
+  <!-- ===== 待定系数法 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 待定系数法：由两点求函数解析式</h2>
+  <div class="card">
+    <p>已知一次函数图象上的两个点，就可以确定这个一次函数的解析式。这个方法叫做<strong class="math-accent">待定系数法</strong>。</p>
+
+    <p style="margin:16px 0 8px;">以探索②中的两点 <strong id="demo-points-label">A(−3, −2)、B(4, 3)</strong> 为例，求 y = kx + b：</p>
+
+    <div class="step-flow" id="step-flow">
+      <div class="step-flow-item">
+        <span class="step-num">1</span><span class="step-content"><strong>设</strong>一次函数解析式为 y = kx + b</span>
+      </div>
+      <div class="step-flow-item">
+        <span class="step-num">2</span><span class="step-content"><strong>代</strong>入两个已知点，得到方程组：</span>
+        <div class="calc" id="step2-calc"></div>
+      </div>
+      <div class="step-flow-item">
+        <span class="step-num">3</span><span class="step-content"><strong>求</strong>出 k 和 b：</span>
+        <div class="calc" id="step3-calc"></div>
+      </div>
+      <div class="step-flow-item">
+        <span class="step-num">4</span><span class="step-content"><strong>写</strong>出函数解析式：</span>
+        <div class="calc" id="step4-calc"></div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📝 口诀：设 → 代 → 求 → 写</div>
+      <p style="margin-top:4px;">先设 y = kx + b，再代入两点列方程组，解出 k 和 b，最后写出解析式。关键公式：<strong>k = (y₂ − y₁) / (x₂ − x₁)</strong></p>
+    </div>
+  </div>
+
+  <!-- ===== 物理应用：s-t 图像 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 物理应用：s-t 图像与 v-t 图像</h2>
+  <div class="card">
+    <p>在物理中，<strong>匀速直线运动</strong>的<strong>位置-时间（s-t）图像</strong>就是一条直线——这正是<strong class="math-accent">一次函数</strong>在物理中的体现！</p>
+
+    <div class="formula-box">
+      <div class="formula">s = vt + s₀</div>
+      <div class="formula-note">v = 速度（斜率），s₀ = 初始位置（截距），t = 时间</div>
+    </div>
+
+    <p>调节速度 v 和初始位置 s₀，观察 s-t 图像和小车的运动。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>速度 v (m/s)</label>
+        <input type="range" id="slider-v" min="1" max="10" value="3" step="1">
+        <span class="value-badge" id="display-v">3</span>
+      </div>
+      <div class="slider-row">
+        <label>初始位置 s₀ (m)</label>
+        <input type="range" id="slider-s0" min="0" max="50" value="10" step="5">
+        <span class="value-badge" id="display-s0">10</span>
+      </div>
+      <div class="slider-row">
+        <label>时间 t (s)</label>
+        <input type="range" id="slider-t" min="0" max="10" value="0" step="0.5">
+        <span class="value-badge" id="display-t">0</span>
+      </div>
+    </div>
+
+    <div class="physics-panel">
+      <div>
+        <div class="canvas-wrap">
+          <canvas id="canvas-st" width="420" height="360"></canvas>
+        </div>
+      </div>
+      <div>
+        <div class="data-panel">
+          <div class="data-cell math-color">
+            <div class="label">速度 v</div>
+            <div class="num" id="st-val-v">3</div>
+          </div>
+          <div class="data-cell math-color">
+            <div class="label">初始位置 s₀</div>
+            <div class="num" id="st-val-s0">10</div>
+          </div>
+        </div>
+        <div style="text-align:center; font-size:20px; font-weight:700; font-family:Georgia,serif; color:var(--math); padding:12px; background:rgba(155,89,182,0.1); border-radius:var(--radius-sm);">
+          s = <span id="st-v">3</span>t + <span id="st-s0">10</span>
+        </div>
+        <div style="text-align:center; margin-top:12px; font-size:18px;">
+          <p>当 t = <span id="st-t-val" style="font-weight:700;color:var(--math);">0</span> s 时</p>
+          <p style="font-size:24px; font-weight:700; color:var(--success); margin-top:6px;">
+            s = <span id="st-s-val">10</span> m
+          </p>
+        </div>
+        <div style="text-align:center; margin-top:16px;">
+          <button class="btn btn-primary btn-sm" id="btn-play" style="background:var(--math);">▶️ 播放运动</button>
+          <button class="btn btn-outline btn-sm" id="btn-reset" style="border-color:var(--math);color:var(--math);">⏹️ 重置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">⚡ 物理与数学的桥梁</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>s-t 图像的斜率 = 速度</strong>：斜率越大，速度越快</li>
+        <li><strong>截距 s₀ = 初始位置</strong>：t = 0 时物体的位置</li>
+        <li><strong>斜率为正</strong>：物体向正方向运动；<strong>斜率为负</strong>：反方向运动</li>
+        <li><strong>v-t 图像</strong>：匀速运动时速度不变，v-t 图是一条水平线（常数函数）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 三种函数对比 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 一次函数 vs 正比例函数 vs 常数函数</h2>
+  <div class="card">
+    <p>点击下方标签，对比三种函数的图象和特点。</p>
+
+    <div class="compare-tabs">
+      <div class="compare-tab active" data-tab="linear">y = kx + b（一次函数）</div>
+      <div class="compare-tab" data-tab="proportional">y = kx（正比例函数）</div>
+      <div class="compare-tab" data-tab="constant">y = b（常数函数）</div>
+    </div>
+
+    <div class="compare-panel active" id="tab-linear">
+      <div class="canvas-wrap">
+        <canvas id="canvas-compare-linear" width="560" height="320"></canvas>
+      </div>
+      <div class="data-panel">
+        <div class="data-cell math-color">
+          <div class="label">一般形式</div>
+          <div class="num" style="font-size:18px;">y = kx + b</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">条件</div>
+          <div class="num" style="font-size:16px;">k ≠ 0</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">图象</div>
+          <div class="num" style="font-size:16px;">不过原点的直线</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">截距</div>
+          <div class="num" style="font-size:16px;">b ≠ 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-panel" id="tab-proportional">
+      <div class="canvas-wrap">
+        <canvas id="canvas-compare-proportional" width="560" height="320"></canvas>
+      </div>
+      <div class="data-panel">
+        <div class="data-cell math-color">
+          <div class="label">一般形式</div>
+          <div class="num" style="font-size:18px;">y = kx</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">条件</div>
+          <div class="num" style="font-size:16px;">k ≠ 0, b = 0</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">图象</div>
+          <div class="num" style="font-size:16px;">过原点的直线</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">特殊关系</div>
+          <div class="num" style="font-size:16px;">y 与 x 成正比</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-panel" id="tab-constant">
+      <div class="canvas-wrap">
+        <canvas id="canvas-compare-constant" width="560" height="320"></canvas>
+      </div>
+      <div class="data-panel">
+        <div class="data-cell math-color">
+          <div class="label">一般形式</div>
+          <div class="num" style="font-size:18px;">y = b</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">条件</div>
+          <div class="num" style="font-size:16px;">k = 0</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">图象</div>
+          <div class="num" style="font-size:16px;">水平线</div>
+        </div>
+        <div class="data-cell math-color">
+          <div class="label">是否为一次函数</div>
+          <div class="num" style="font-size:16px;">否</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔗 包含关系</div>
+      <p style="margin-top:4px;">正比例函数 y = kx 是一次函数 y = kx + b 当 b = 0 时的<strong>特殊情况</strong>。常数函数 y = b（k = 0）<strong>不是</strong>一次函数。三者关系：正比例函数 ⊂ 一次函数，常数函数 ∉ 一次函数。</p>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 一次函数 y = −2x + 3 的图象不经过（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 第一象限</div>
+    <div class="quiz-option" data-idx="1">B. 第二象限</div>
+    <div class="quiz-option" data-idx="2">C. 第三象限</div>
+    <div class="quiz-option" data-idx="3">D. 第四象限</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 已知一次函数图象过点 (1, 3) 和 (−1, −1)，则该函数的解析式为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. y = 2x + 1</div>
+    <div class="quiz-option" data-idx="1">B. y = x + 2</div>
+    <div class="quiz-option" data-idx="2">C. y = 2x − 1</div>
+    <div class="quiz-option" data-idx="3">D. y = −2x + 5</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 🚕 某出租车收费标准：起步价 10 元（3 公里内），超过 3 公里的部分每公里 2 元。行驶 x（x &gt; 3）公里的车费 y（元）的函数关系式为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. y = 2x + 10</div>
+    <div class="quiz-option" data-idx="1">B. y = 2x + 4</div>
+    <div class="quiz-option" data-idx="2">C. y = 2(x − 3) + 10 = 2x + 4</div>
+    <div class="quiz-option" data-idx="3">D. y = 2(x + 3) + 10</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 一次函数在其他学科中的应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/01-机械运动.html"><strong>物理·机械运动（s-t 图像）</strong></a>——
+        匀速直线运动中，路程 s = vt + s₀ 是标准的一次函数。s-t 图像的斜率就是速度，截距就是初始位置。一次函数是理解运动学的数学基础。
+        <span class="tag tag-cross">s-t 图像</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/01-机械运动.html"><strong>物理·速度与时间（v-t 图像）</strong></a>——
+        匀速运动的 v-t 图像是一条水平线（常数函数 y = b），而匀变速运动的 v-t 图像才是一次函数（v = at + v₀）。
+        <span class="tag tag-cross">v-t 图像</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="09-平行四边形.html" class="btn btn-outline">← 上一章：平行四边形</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="11-数据的分析.html" class="btn btn-primary" style="background: var(--math);">下一章：数据的分析 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 全局辅助：坐标轴绘制
+ * ======================================== */
+function drawAxes(ctx, w, h, range, options) {
+  options = options || {};
+  const padding = options.padding || 40;
+  const showLabels = options.showLabels !== false;
+  const xLabel = options.xLabel || 'x';
+  const yLabel = options.yLabel || 'y';
+
+  const originX = w / 2;
+  const originY = h / 2;
+  const scale = (Math.min(w, h) - 2 * padding) / (2 * range);
+
+  // 背景网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  for (let i = -range; i <= range; i++) {
+    if (i === 0) continue;
+    // 竖线
+    ctx.beginPath();
+    ctx.moveTo(originX + i * scale, padding);
+    ctx.lineTo(originX + i * scale, h - padding);
+    ctx.stroke();
+    // 横线
+    ctx.beginPath();
+    ctx.moveTo(padding, originY + i * scale);
+    ctx.lineTo(w - padding, originY + i * scale);
+    ctx.stroke();
+  }
+
+  // 坐标轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  // x 轴
+  ctx.beginPath();
+  ctx.moveTo(padding, originY);
+  ctx.lineTo(w - padding, originY);
+  ctx.stroke();
+  // y 轴
+  ctx.beginPath();
+  ctx.moveTo(originX, padding);
+  ctx.lineTo(originX, h - padding);
+  ctx.stroke();
+
+  // 箭头
+  ctx.fillStyle = '#7F8C8D';
+  // x 轴箭头
+  ctx.beginPath();
+  ctx.moveTo(w - padding, originY);
+  ctx.lineTo(w - padding - 8, originY - 4);
+  ctx.lineTo(w - padding - 8, originY + 4);
+  ctx.fill();
+  // y 轴箭头
+  ctx.beginPath();
+  ctx.moveTo(originX, padding);
+  ctx.lineTo(originX - 4, padding + 8);
+  ctx.lineTo(originX + 4, padding + 8);
+  ctx.fill();
+
+  // 刻度标签
+  if (showLabels) {
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '12px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let i = -range; i <= range; i++) {
+      if (i === 0) continue;
+      // x 轴标签
+      ctx.fillText(i, originX + i * scale, originY + 6);
+      // y 轴标签
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(i, originX - 8, originY - i * scale);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+    }
+    // 原点
+    ctx.fillText('O', originX - 12, originY + 6);
+
+    // 轴标签
+    ctx.fillStyle = '#5D6D7E';
+    ctx.font = 'italic 15px Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(xLabel, w - padding + 4, originY);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(yLabel, originX, padding - 6);
+  }
+
+  return { originX, originY, scale };
+}
+
+/* ========================================
+ * 交互探索1：k 和 b 的作用
+ * ======================================== */
+function drawLinearFunction() {
+  const canvas = document.getElementById('canvas-kb');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const range = 6;
+
+  ctx.clearRect(0, 0, w, h);
+  const { originX, originY, scale } = drawAxes(ctx, w, h, range, {});
+
+  const k = parseFloat(document.getElementById('slider-k').value);
+  const b = parseFloat(document.getElementById('slider-b').value);
+
+  // 计算直线两端点
+  const x1 = -range, x2 = range;
+  const y1 = k * x1 + b;
+  const y2 = k * x2 + b;
+
+  // 转换为 Canvas 坐标
+  const px1 = originX + x1 * scale;
+  const py1 = originY - y1 * scale;
+  const px2 = originX + x2 * scale;
+  const py2 = originY - y2 * scale;
+
+  // 画直线
+  ctx.strokeStyle = '#9B59B6';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(px1, py1);
+  ctx.lineTo(px2, py2);
+  ctx.stroke();
+
+  // 画与 y 轴的交点 (0, b)
+  const yIntersectX = originX;
+  const yIntersectY = originY - b * scale;
+  if (Math.abs(b * scale) < h / 2 - 20) {
+    ctx.fillStyle = '#27AE60';
+    ctx.beginPath();
+    ctx.arc(yIntersectX, yIntersectY, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#27AE60';
+    ctx.font = 'bold 14px Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('(0, ' + b + ')', yIntersectX + 10, yIntersectY - 6);
+  }
+
+  // 函数解析式标注
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'bold 18px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  const kStr = k === 1 ? '' : (k === -1 ? '−' : k);
+  const bStr = b >= 0 ? ' + ' + b : ' − ' + Math.abs(b);
+  ctx.fillText('y = ' + kStr + 'x' + bStr, w - 50, 50);
+
+  // 更新趋势标签
+  const trendTag = document.getElementById('trend-tag');
+  const funcLabel = document.getElementById('func-label');
+  if (k > 0) {
+    trendTag.className = 'trend-tag increasing';
+    trendTag.textContent = 'k = ' + k + ' > 0，函数递增 ↗';
+  } else if (k < 0) {
+    trendTag.className = 'trend-tag decreasing';
+    trendTag.textContent = 'k = ' + k + ' < 0，函数递减 ↘';
+  } else {
+    trendTag.className = 'trend-tag constant';
+    trendTag.textContent = 'k = 0，函数为常数函数（非一次函数）';
+  }
+  funcLabel.textContent = 'y = ' + kStr + 'x' + bStr;
+}
+
+document.getElementById('slider-k').addEventListener('input', function() {
+  document.getElementById('display-k').textContent = parseFloat(this.value);
+  drawLinearFunction();
+});
+document.getElementById('slider-b').addEventListener('input', function() {
+  document.getElementById('display-b').textContent = parseFloat(this.value);
+  drawLinearFunction();
+});
+drawLinearFunction();
+
+/* ========================================
+ * 交互探索2：两点确定一条直线
+ * ======================================== */
+var clickMode = false;
+
+function drawTwoPointsLine() {
+  const canvas = document.getElementById('canvas-two-points');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const range = 6;
+
+  ctx.clearRect(0, 0, w, h);
+  const { originX, originY, scale } = drawAxes(ctx, w, h, range, {});
+
+  const x1 = parseFloat(document.getElementById('slider-x1').value);
+  const y1 = parseFloat(document.getElementById('slider-y1').value);
+  const x2 = parseFloat(document.getElementById('slider-x2').value);
+  const y2 = parseFloat(document.getElementById('slider-y2').value);
+
+  const p1x = originX + x1 * scale;
+  const p1y = originY - y1 * scale;
+  const p2x = originX + x2 * scale;
+  const p2y = originY - y2 * scale;
+
+  // 判断斜率是否存在
+  if (x1 === x2) {
+    // 竖直线
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 4]);
+    ctx.beginPath();
+    ctx.moveTo(p1x, 20);
+    ctx.lineTo(p1x, h - 20);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    document.getElementById('slope-warning').style.display = 'block';
+    document.getElementById('slope-calc').innerHTML =
+      'x₁ = x₂ = ' + x1 + '，斜率 k = (y₂ − y₁) / (x₂ − x₁) <br>' +
+      'k = (' + y2 + ' − ' + y1 + ') / (' + x2 + ' − ' + x1 + ') = ' + (y2 - y1) + ' / 0 <br>' +
+      '<strong style="color:#E74C3C;">斜率不存在！</strong>（竖直线）';
+  } else {
+    // 画直线
+    const k = (y2 - y1) / (x2 - x1);
+    const b = y1 - k * x1;
+    const xa = -range, xb = range;
+    const ya = k * xa + b;
+    const yb = k * xb + b;
+
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(originX + xa * scale, originY - ya * scale);
+    ctx.lineTo(originX + xb * scale, originY - yb * scale);
+    ctx.stroke();
+
+    document.getElementById('slope-warning').style.display = 'none';
+    document.getElementById('slope-calc').innerHTML =
+      '斜率公式：k = (y₂ − y₁) / (x₂ − x₁) <br>' +
+      'k = (' + y2 + ' − ' + y1 + ') / (' + x2 + ' − ' + x1 + ') = ' + (y2 - y1) + ' / ' + (x2 - x1) + ' = <strong style="color:#27AE60;">' + k.toFixed(2) + '</strong><br>' +
+      '截距：b = y₁ − k·x₁ = ' + y1 + ' − ' + k.toFixed(2) + ' × ' + x1 + ' = <strong style="color:#27AE60;">' + b.toFixed(2) + '</strong><br>' +
+      '函数解析式：<strong style="color:#9B59B6;font-size:20px;">y = ' + (k === 1 ? '' : k === -1 ? '−' : k.toFixed(2)) + 'x' + (b >= 0 ? ' + ' + b.toFixed(2) : ' − ' + Math.abs(b).toFixed(2)) + '</strong>';
+
+    // 更新待定系数法步骤
+    updateStepFlow(x1, y1, x2, y2, k, b);
+  }
+
+  // 画两个点
+  // 点 A
+  ctx.fillStyle = '#E74C3C';
+  ctx.beginPath();
+  ctx.arc(p1x, p1y, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(p1x, p1y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#E74C3C';
+  ctx.font = 'bold 14px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('A(' + x1 + ', ' + y1 + ')', p1x + 10, p1y - 8);
+
+  // 点 B
+  ctx.fillStyle = '#3498DB';
+  ctx.beginPath();
+  ctx.arc(p2x, p2y, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(p2x, p2y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#3498DB';
+  ctx.font = 'bold 14px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('B(' + x2 + ', ' + y2 + ')', p2x + 10, p2y - 8);
+}
+
+function updateStepFlow(x1, y1, x2, y2, k, b) {
+  document.getElementById('demo-points-label').textContent =
+    'A(' + x1 + ', ' + y1 + ')、B(' + x2 + ', ' + y2 + ')';
+
+  document.getElementById('step2-calc').innerHTML =
+    '代入 A(' + x1 + ', ' + y1 + ')：' + y1 + ' = ' + x1 + 'k + b ……①<br>' +
+    '代入 B(' + x2 + ', ' + y2 + ')：' + y2 + ' = ' + x2 + 'k + b ……②';
+
+  // 解方程组：②-① 得 k
+  var kStr = '② − ①：' + (y2 - y1) + ' = ' + (x2 - x1) + 'k<br>';
+  kStr += 'k = ' + (y2 - y1) + ' / ' + (x2 - x1) + ' = ' + k.toFixed(2) + '<br>';
+  kStr += '代入①：' + y1 + ' = ' + x1 + ' × ' + k.toFixed(2) + ' + b<br>';
+  kStr += 'b = ' + y1 + ' − ' + (x1 * k).toFixed(2) + ' = ' + b.toFixed(2);
+  document.getElementById('step3-calc').innerHTML = kStr;
+
+  var kDisp = k === 1 ? '' : k === -1 ? '−' : k.toFixed(2);
+  var bDisp = b >= 0 ? ' + ' + b.toFixed(2) : ' − ' + Math.abs(b).toFixed(2);
+  document.getElementById('step4-calc').innerHTML =
+    'y = <strong style="color:#9B59B6;font-size:20px;">' + kDisp + 'x' + bDisp + '</strong>';
+}
+
+// 绑定滑块
+['slider-x1', 'slider-y1', 'slider-x2', 'slider-y2'].forEach(function(id) {
+  var displayId = id.replace('slider', 'display');
+  document.getElementById(id).addEventListener('input', function() {
+    document.getElementById(displayId).textContent = this.value;
+    drawTwoPointsLine();
+  });
+});
+drawTwoPointsLine();
+
+// 点击画布选点
+var clickPointTarget = 1; // 1 for A, 2 for B
+document.getElementById('btn-click-mode').addEventListener('click', function() {
+  clickMode = !clickMode;
+  if (clickMode) {
+    this.textContent = '🖱️ 点击画布选点模式：开启（点击设置 A，再次点击设置 B）';
+    this.style.background = 'var(--math)';
+    this.style.color = '#fff';
+  } else {
+    this.textContent = '🖱️ 点击画布选点模式：关闭';
+    this.style.background = '';
+    this.style.color = 'var(--math)';
+  }
+});
+
+document.getElementById('canvas-two-points').addEventListener('click', function(e) {
+  if (!clickMode) return;
+  var rect = this.getBoundingClientRect();
+  var scaleX = this.width / rect.width;
+  var scaleY = this.height / rect.height;
+  var mx = (e.clientX - rect.left) * scaleX;
+  var my = (e.clientY - rect.top) * scaleY;
+
+  var range = 6;
+  var originX = this.width / 2;
+  var originY = this.height / 2;
+  var scale = (Math.min(this.width, this.height) - 80) / (2 * range);
+
+  var gx = Math.round((mx - originX) / scale);
+  var gy = Math.round((originY - my) / scale);
+  gx = Math.max(-5, Math.min(5, gx));
+  gy = Math.max(-5, Math.min(5, gy));
+
+  if (clickPointTarget === 1) {
+    document.getElementById('slider-x1').value = gx;
+    document.getElementById('slider-y1').value = gy;
+    document.getElementById('display-x1').textContent = gx;
+    document.getElementById('display-y1').textContent = gy;
+    clickPointTarget = 2;
+  } else {
+    document.getElementById('slider-x2').value = gx;
+    document.getElementById('slider-y2').value = gy;
+    document.getElementById('display-x2').textContent = gx;
+    document.getElementById('display-y2').textContent = gy;
+    clickPointTarget = 1;
+  }
+  drawTwoPointsLine();
+});
+
+/* ========================================
+ * 物理应用：s-t 图像
+ * ======================================== */
+var stAnimationId = null;
+
+function drawSTGraph() {
+  const canvas = document.getElementById('canvas-st');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const padding = 45;
+  const tMax = 10; // 时间 0~10s
+  const v = parseFloat(document.getElementById('slider-v').value);
+  const s0 = parseFloat(document.getElementById('slider-s0').value);
+  const t = parseFloat(document.getElementById('slider-t').value);
+  const sMax = v * tMax + s0; // 最大位置
+
+  // 动态计算位置范围
+  var sRange = Math.max(sMax + 5, 50);
+
+  ctx.clearRect(0, 0, w, h);
+
+  // 画坐标轴（原点在左下角）
+  var originX = padding;
+  var originY = h - padding;
+  var scaleX = (w - padding - 20) / tMax;
+  var scaleY = (h - 2 * padding) / sRange;
+
+  // 网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  for (var i = 0; i <= tMax; i++) {
+    ctx.beginPath();
+    ctx.moveTo(originX + i * scaleX, padding);
+    ctx.lineTo(originX + i * scaleX, originY);
+    ctx.stroke();
+  }
+  var sStep = Math.ceil(sRange / 8);
+  for (var j = 0; j <= sRange; j += sStep) {
+    ctx.beginPath();
+    ctx.moveTo(originX, originY - j * scaleY);
+    ctx.lineTo(w - 20, originY - j * scaleY);
+    ctx.stroke();
+  }
+
+  // 坐标轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  // x 轴
+  ctx.beginPath();
+  ctx.moveTo(originX, originY);
+  ctx.lineTo(w - 20, originY);
+  ctx.stroke();
+  // y 轴
+  ctx.beginPath();
+  ctx.moveTo(originX, padding);
+  ctx.lineTo(originX, originY);
+  ctx.stroke();
+
+  // 箭头
+  ctx.fillStyle = '#7F8C8D';
+  ctx.beginPath();
+  ctx.moveTo(w - 20, originY);
+  ctx.lineTo(w - 28, originY - 4);
+  ctx.lineTo(w - 28, originY + 4);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(originX, padding);
+  ctx.lineTo(originX - 4, padding + 8);
+  ctx.lineTo(originX + 4, padding + 8);
+  ctx.fill();
+
+  // 刻度标签
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '11px Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (var i = 0; i <= tMax; i++) {
+    ctx.fillText(i + 's', originX + i * scaleX, originY + 4);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (var j = 0; j <= sRange; j += sStep) {
+    ctx.fillText(j, originX - 6, originY - j * scaleY);
+  }
+
+  // 轴标签
+  ctx.fillStyle = '#5D6D7E';
+  ctx.font = 'italic 14px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('t (s)', w - 20, originY + 20);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('s (m)', originX, padding - 8);
+
+  // 画 s = vt + s0 直线
+  ctx.strokeStyle = '#9B59B6';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(originX, originY - s0 * scaleY);
+  ctx.lineTo(originX + tMax * scaleX, originY - (v * tMax + s0) * scaleY);
+  ctx.stroke();
+
+  // 函数解析式标注
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'bold 16px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('s = ' + v + 't + ' + s0, w - 25, padding + 5);
+
+  // 当前时刻的小车和位置点
+  var currentS = v * t + s0;
+  var carX = originX + t * scaleX;
+  var carY = originY - currentS * scaleY;
+
+  // 竖直虚线
+  ctx.strokeStyle = 'rgba(243,156,18,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(carX, originY);
+  ctx.lineTo(carX, carY);
+  ctx.stroke();
+  // 水平虚线
+  ctx.beginPath();
+  ctx.moveTo(originX, carY);
+  ctx.lineTo(carX, carY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 当前位置点
+  ctx.fillStyle = '#E67E22';
+  ctx.beginPath();
+  ctx.arc(carX, carY, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(carX, carY, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 画小车（在画布右上方区域）
+  var carDrawY = carY - 30;
+  ctx.save();
+  // 车身
+  ctx.fillStyle = '#F39C12';
+  ctx.strokeStyle = '#E67E22';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.rect(carX - 20, carDrawY - 10, 40, 16);
+  ctx.fill();
+  ctx.stroke();
+  // 车顶
+  ctx.beginPath();
+  ctx.moveTo(carX - 12, carDrawY - 10);
+  ctx.lineTo(carX - 8, carDrawY - 18);
+  ctx.lineTo(carX + 8, carDrawY - 18);
+  ctx.lineTo(carX + 12, carDrawY - 10);
+  ctx.fill();
+  ctx.stroke();
+  // 车轮
+  ctx.fillStyle = '#2C3E50';
+  ctx.beginPath();
+  ctx.arc(carX - 12, carDrawY + 6, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(carX + 12, carDrawY + 6, 5, 0, Math.PI * 2);
+  ctx.fill();
+  // 速度箭头
+  if (v > 0) {
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(carX + 22, carDrawY);
+    ctx.lineTo(carX + 34, carDrawY);
+    ctx.moveTo(carX + 30, carDrawY - 4);
+    ctx.lineTo(carX + 34, carDrawY);
+    ctx.lineTo(carX + 30, carDrawY + 4);
+    ctx.stroke();
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('v=' + v, carX + 36, carDrawY + 3);
+  }
+  ctx.restore();
+
+  // 更新数据显示
+  document.getElementById('st-val-v').textContent = v;
+  document.getElementById('st-val-s0').textContent = s0;
+  document.getElementById('st-v').textContent = v;
+  document.getElementById('st-s0').textContent = s0;
+  document.getElementById('st-t-val').textContent = t;
+  document.getElementById('st-s-val').textContent = currentS.toFixed(1);
+}
+
+document.getElementById('slider-v').addEventListener('input', function() {
+  document.getElementById('display-v').textContent = this.value;
+  drawSTGraph();
+});
+document.getElementById('slider-s0').addEventListener('input', function() {
+  document.getElementById('display-s0').textContent = this.value;
+  drawSTGraph();
+});
+document.getElementById('slider-t').addEventListener('input', function() {
+  document.getElementById('display-t').textContent = parseFloat(this.value).toFixed(1);
+  drawSTGraph();
+});
+drawSTGraph();
+
+// 播放/重置按钮
+document.getElementById('btn-play').addEventListener('click', function() {
+  if (stAnimationId) {
+    cancelAnimationFrame(stAnimationId);
+    stAnimationId = null;
+    this.textContent = '▶️ 播放运动';
+    return;
+  }
+  this.textContent = '⏸️ 暂停';
+  var slider = document.getElementById('slider-t');
+  var t = parseFloat(slider.value);
+  function animate() {
+    t += 0.1;
+    if (t > 10) {
+      t = 0;
+    }
+    slider.value = t;
+    document.getElementById('display-t').textContent = t.toFixed(1);
+    drawSTGraph();
+    stAnimationId = requestAnimationFrame(animate);
+  }
+  stAnimationId = requestAnimationFrame(animate);
+});
+
+document.getElementById('btn-reset').addEventListener('click', function() {
+  if (stAnimationId) {
+    cancelAnimationFrame(stAnimationId);
+    stAnimationId = null;
+    document.getElementById('btn-play').textContent = '▶️ 播放运动';
+  }
+  document.getElementById('slider-t').value = 0;
+  document.getElementById('display-t').textContent = '0.0';
+  drawSTGraph();
+});
+
+/* ========================================
+ * 三种函数对比
+ * ======================================== */
+function drawCompare(type, canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const range = 5;
+
+  ctx.clearRect(0, 0, w, h);
+  const { originX, originY, scale } = drawAxes(ctx, w, h, range, {});
+
+  ctx.lineWidth = 3;
+
+  if (type === 'linear') {
+    // y = 2x + 1, y = -x + 3, y = 0.5x - 2
+    var lines = [
+      { k: 2, b: 1, color: '#9B59B6', label: 'y = 2x + 1' },
+      { k: -1, b: 3, color: '#E74C3C', label: 'y = −x + 3' },
+      { k: 0.5, b: -2, color: '#3498DB', label: 'y = 0.5x − 2' }
+    ];
+    lines.forEach(function(line) {
+      var xa = -range, xb = range;
+      ctx.strokeStyle = line.color;
+      ctx.beginPath();
+      ctx.moveTo(originX + xa * scale, originY - (line.k * xa + line.b) * scale);
+      ctx.lineTo(originX + xb * scale, originY - (line.k * xb + line.b) * scale);
+      ctx.stroke();
+      // 标签
+      ctx.fillStyle = line.color;
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      var labelX = originX + xb * scale - 80;
+      var labelY = originY - (line.k * xb + line.b) * scale;
+      labelY = Math.max(padding_min(20), Math.min(h - 20, labelY));
+      ctx.fillText(line.label, originX + 3.2 * scale, originY - (line.k * 3.2 + line.b) * scale);
+    });
+  } else if (type === 'proportional') {
+    var props = [
+      { k: 2, color: '#9B59B6', label: 'y = 2x' },
+      { k: -1, color: '#E74C3C', label: 'y = −x' },
+      { k: 0.5, color: '#3498DB', label: 'y = 0.5x' }
+    ];
+    props.forEach(function(p) {
+      ctx.strokeStyle = p.color;
+      ctx.beginPath();
+      ctx.moveTo(originX - range * scale, originY - p.k * (-range) * scale);
+      ctx.lineTo(originX + range * scale, originY - p.k * range * scale);
+      ctx.stroke();
+      ctx.fillStyle = p.color;
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(p.label, originX + 3.2 * scale, originY - p.k * 3.2 * scale);
+    });
+    // 标注原点
+    ctx.fillStyle = '#27AE60';
+    ctx.beginPath();
+    ctx.arc(originX, originY, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText('都过原点', originX + 10, originY + 16);
+  } else if (type === 'constant') {
+    var consts = [
+      { b: 3, color: '#9B59B6', label: 'y = 3' },
+      { b: 0, color: '#E74C3C', label: 'y = 0 (x轴)' },
+      { b: -2, color: '#3498DB', label: 'y = −2' }
+    ];
+    consts.forEach(function(c) {
+      ctx.strokeStyle = c.color;
+      ctx.beginPath();
+      ctx.moveTo(originX - range * scale, originY - c.b * scale);
+      ctx.lineTo(originX + range * scale, originY - c.b * scale);
+      ctx.stroke();
+      ctx.fillStyle = c.color;
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(c.label, originX + 3.2 * scale, originY - c.b * scale - 8);
+    });
+  }
+}
+
+function padding_min(n) { return n; }
+
+// 初始绘制
+drawCompare('linear', 'canvas-compare-linear');
+
+// 标签切换
+document.querySelectorAll('.compare-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.compare-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.compare-panel').forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+    var target = this.dataset.tab;
+    document.getElementById('tab-' + target).classList.add('active');
+    // 延迟绘制以确保 canvas 可见
+    setTimeout(function() {
+      if (target === 'linear') drawCompare('linear', 'canvas-compare-linear');
+      else if (target === 'proportional') drawCompare('proportional', 'canvas-compare-proportional');
+      else if (target === 'constant') drawCompare('constant', 'canvas-compare-constant');
+    }, 50);
+  });
+});
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: 'k = −2 < 0，b = 3 > 0，直线过第一、二、四象限，不过第三象限。',
+  hint: 'k < 0 递减，b > 0 交 y 轴正半轴，画图看看经过哪些象限。'
+});
+initQuiz('quiz2', {
+  correct: 0,
+  explain: 'k = (3−(−1))/(1−(−1)) = 4/2 = 2，b = 3 − 2×1 = 1，所以 y = 2x + 1。',
+  hint: '用待定系数法：k = (y₂−y₁)/(x₂−x₁)，再求 b。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '超过 3 公里的部分为 (x−3) 公里，每公里 2 元，加上起步价 10 元：y = 2(x−3) + 10 = 2x + 4。',
+  hint: '注意"起步价内 3 公里"已经包含在 10 元中，超过部分才按 2 元/公里计算。'
+});
+</script>
+</body>
+</html>

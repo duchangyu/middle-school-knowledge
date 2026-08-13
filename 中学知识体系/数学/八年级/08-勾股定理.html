@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>勾股定理 · 八年级数学</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .formula-box .formula {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 2px;
+    }
+    .formula-box .formula sup { font-size: 0.6em; }
+    .formula-box .formula-note {
+      margin-top: 10px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 70px;
+      color: var(--math);
+      font-size: 17px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      background: var(--math);
+    }
+    .slider-row .value-badge {
+      min-width: 56px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .data-cell {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .data-cell.a-color { border-color: rgba(231,76,60,0.3); }
+    .data-cell.a-color .num { color: #E74C3C; }
+    .data-cell.b-color { border-color: rgba(52,152,219,0.3); }
+    .data-cell.b-color .num { color: #3498DB; }
+    .data-cell.c-color { border-color: rgba(39,174,96,0.3); }
+    .data-cell.c-color .num { color: #27AE60; }
+
+    .verify-line {
+      text-align: center;
+      font-size: 19px;
+      font-weight: 600;
+      padding: 14px;
+      background: rgba(39,174,96,0.12);
+      border-radius: var(--radius-sm);
+      margin-top: 14px;
+      color: var(--success);
+      font-family: Georgia, serif;
+    }
+    .verify-line sup { font-size: 0.6em; }
+
+    /* ===== SVG 容器 ===== */
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0 4px;
+      font-size: 14px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 勾股数卡片 ===== */
+    .triple-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .triple-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+    .triple-card.highlight {
+      border-color: var(--math);
+      background: rgba(155,89,182,0.1);
+      transform: scale(1.04);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.25);
+    }
+    .triple-card .nums {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--math);
+      margin-bottom: 8px;
+      font-family: Georgia, serif;
+    }
+    .triple-card .verify {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: Georgia, serif;
+    }
+    .triple-card.highlight .verify { color: var(--success); font-weight: 600; }
+
+    /* ===== 应用卡片 ===== */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 16px 0;
+    }
+    .app-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+    }
+    .app-card h4 { color: var(--math); margin-bottom: 10px; font-size: 17px; }
+    .app-card .calc {
+      font-family: Georgia, serif;
+      background: #fff;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.9;
+    }
+    .app-card .calc .ans { color: var(--success); font-weight: 700; }
+
+    /* ===== 赵爽弦图说明 ===== */
+    .zhao-area-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .zhao-area-box {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      text-align: center;
+      min-width: 130px;
+    }
+    .zhao-area-box .ttl { font-size: 13px; color: var(--text-secondary); }
+    .zhao-area-box .val { font-size: 20px; font-weight: 700; font-family: Georgia, serif; }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">📐 勾股定理</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理八年级</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>📐 勾股定理</h1>
+  <p>直角三角形三边之间的永恒关系——几何学的明珠</p>
+</div>
+
+<div class="container">
+
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">数学</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <span>勾股定理</span>
+  </div>
+
+  <!-- ===== 引入 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：直角三角形的三边关系</h2>
+  <div class="card">
+    <p>在一个<strong>直角三角形</strong>中，两条直角边分别记为 <strong class="math-accent">a</strong> 和 <strong class="math-accent">b</strong>，斜边（直角所对的边）记为 <strong class="math-accent">c</strong>。</p>
+    <p>早在公元前 11 世纪，中国古代数学家就发现了一个奇妙的规律：直角三角形两条直角边的平方和，等于斜边的平方。这个结论被称为<strong class="math-accent">勾股定理</strong>（西方称为毕达哥拉斯定理）。</p>
+    <div class="formula-box">
+      <div class="formula">a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup></div>
+      <div class="formula-note">直角边 a、b 的平方和 = 斜边 c 的平方</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 小知识</div>
+      古称直角三角形短直角边为「勾」，长直角边为「股」，斜边为「弦」，故得名「勾股定理」。三国时期数学家赵爽用「弦图」给出了优美的证明。
+    </div>
+  </div>
+
+  <!-- ===== 交互探索1：直角三角形演示器 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 交互探索：直角三角形演示器</h2>
+  <div class="card">
+    <p>拖动下方滑块调节两条直角边 <strong class="math-accent">a</strong>、<strong class="math-accent">b</strong> 的长度，观察三角形和三个正方形的变化。注意：<strong>无论怎么调节，a² + b² 恒等于 c²</strong>。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>直角边 a</label>
+        <input type="range" id="slider-a" min="3" max="12" value="3" step="1">
+        <span class="value-badge" id="display-a">3</span>
+      </div>
+      <div class="slider-row">
+        <label>直角边 b</label>
+        <input type="range" id="slider-b" min="3" max="12" value="4" step="1">
+        <span class="value-badge" id="display-b">4</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(231,76,60,0.25);border-color:#E74C3C;"></span> a 的正方形（面积 a²）</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(52,152,219,0.25);border-color:#3498DB;"></span> b 的正方形（面积 b²）</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(39,174,96,0.25);border-color:#27AE60;"></span> c 的正方形（面积 c²）</div>
+    </div>
+
+    <div class="svg-wrap" id="demo-svg-wrap">
+      <!-- SVG 由 JS 动态绘制 -->
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell a-color">
+        <div class="label">直角边 a</div>
+        <div class="num" id="val-a">3</div>
+      </div>
+      <div class="data-cell b-color">
+        <div class="label">直角边 b</div>
+        <div class="num" id="val-b">4</div>
+      </div>
+      <div class="data-cell c-color">
+        <div class="label">斜边 c = √(a²+b²)</div>
+        <div class="num" id="val-c">5.00</div>
+      </div>
+      <div class="data-cell a-color">
+        <div class="label">a²</div>
+        <div class="num" id="val-a2">9</div>
+      </div>
+      <div class="data-cell b-color">
+        <div class="label">b²</div>
+        <div class="num" id="val-b2">16</div>
+      </div>
+      <div class="data-cell c-color">
+        <div class="label">c²</div>
+        <div class="num" id="val-c2">25.0</div>
+      </div>
+    </div>
+
+    <div class="verify-line" id="verify-line">
+      a<sup>2</sup> + b<sup>2</sup> = 9 + 16 = 25 = c<sup>2</sup> ✓
+    </div>
+  </div>
+
+  <!-- ===== 交互探索2：赵爽弦图 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互探索：赵爽弦图（拼图证明）</h2>
+  <div class="card">
+    <p>三国时期数学家<strong class="math-accent">赵爽</strong>用四个全等的直角三角形拼成一个大正方形，中间自然形成一个小正方形——这就是著名的「<strong>弦图</strong>」。通过面积关系，可以优美地证明勾股定理。</p>
+
+    <div class="svg-wrap" id="zhao-svg-wrap">
+      <!-- SVG 由 JS 绘制 -->
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 面积关系（以 a=3, b=4, c=5 为例）</div>
+      <p style="margin-top:6px;">大正方形面积 = (a+b)<sup>2</sup> = 4 个三角形面积 + 小正方形面积</p>
+      <p>即 (a+b)<sup>2</sup> = 4 × (½ab) + c<sup>2</sup></p>
+      <p>展开：a<sup>2</sup> + 2ab + b<sup>2</sup> = 2ab + c<sup>2</sup></p>
+      <p>两边减去 2ab，得到：<strong class="math-accent" style="font-size:18px;">a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup></strong> ∎</p>
+    </div>
+
+    <div class="zhao-area-row">
+      <div class="zhao-area-box">
+        <div class="ttl">大正方形 (a+b)²</div>
+        <div class="val" style="color:#9B59B6;">49</div>
+      </div>
+      <div class="zhao-area-box">
+        <div class="ttl">4 × 三角形 (4×½ab)</div>
+        <div class="val" style="color:#E67E22;">24</div>
+      </div>
+      <div class="zhao-area-box">
+        <div class="ttl">小正方形 c²</div>
+        <div class="val" style="color:#27AE60;">25</div>
+      </div>
+      <div class="zhao-area-box">
+        <div class="ttl">验证 24 + 25</div>
+        <div class="val" style="color:var(--success);">= 49 ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 勾股数 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 勾股数</h2>
+  <div class="card">
+    <p>满足 a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> 的三个正整数 (a, b, c) 称为<strong class="math-accent">勾股数</strong>。点击「随机验证」按钮，随机抽取一组勾股数进行验证。</p>
+
+    <div style="text-align:center; margin: 16px 0;">
+      <button class="btn btn-primary" id="btn-random-triple" style="background: var(--math);">🎲 随机验证勾股数</button>
+    </div>
+
+    <div class="triple-grid" id="triple-grid">
+      <div class="triple-card" data-a="3" data-b="4" data-c="5">
+        <div class="nums">3, 4, 5</div>
+        <div class="verify">3² + 4² = 9 + 16 = 25 = 5²</div>
+      </div>
+      <div class="triple-card" data-a="5" data-b="12" data-c="13">
+        <div class="nums">5, 12, 13</div>
+        <div class="verify">5² + 12² = 25 + 144 = 169 = 13²</div>
+      </div>
+      <div class="triple-card" data-a="8" data-b="15" data-c="17">
+        <div class="nums">8, 15, 17</div>
+        <div class="verify">8² + 15² = 64 + 225 = 289 = 17²</div>
+      </div>
+      <div class="triple-card" data-a="7" data-b="24" data-c="25">
+        <div class="nums">7, 24, 25</div>
+        <div class="verify">7² + 24² = 49 + 576 = 625 = 25²</div>
+      </div>
+    </div>
+
+    <div id="triple-result" style="display:none; text-align:center; font-size:17px; padding:16px; background:rgba(39,174,96,0.12); border-radius:var(--radius-sm); margin-top:12px; color:var(--success); font-family:Georgia,serif; font-weight:600;"></div>
+
+    <div class="tip-box" style="margin-top:16px;">
+      <div class="tip-title">💡 规律发现</div>
+      勾股数有一个重要性质：把一组勾股数同时乘以同一个正整数 k，得到的 (ka, kb, kc) 仍然是勾股数。例如由 (3,4,5) 可得 (6,8,10)、(9,12,15) 等。
+    </div>
+  </div>
+
+  <!-- ===== 实际应用 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 实际应用</h2>
+  <div class="card">
+    <p>勾股定理在生活中有广泛应用——只要涉及直角三角形，就可以用它来求未知边长。</p>
+
+    <div class="app-grid">
+      <!-- 梯子靠墙 -->
+      <div class="app-card">
+        <h4>🪜 梯子靠墙问题</h4>
+        <p style="font-size:14px; color:var(--text-secondary);">一架 5 米长的梯子斜靠在墙上，梯脚距墙根 3 米，梯顶距地面多高？</p>
+        <div class="svg-wrap" style="margin:12px 0; padding:8px;">
+          <svg viewBox="0 0 240 200" style="max-width:240px;">
+            <!-- 地面 -->
+            <line x1="20" y1="170" x2="220" y2="170" stroke="#BDC3C7" stroke-width="3"/>
+            <!-- 墙 -->
+            <line x1="60" y1="170" x2="60" y2="20" stroke="#BDC3C7" stroke-width="3"/>
+            <!-- 梯子 (斜边 c=5) -->
+            <line x1="60" y1="50" x2="180" y2="170" stroke="#9B59B6" stroke-width="4"/>
+            <!-- 直角标记 -->
+            <path d="M 60 160 L 70 160 L 70 170" fill="none" stroke="#7F8C8D" stroke-width="1.5"/>
+            <!-- 标注 -->
+            <text x="115" y="190" fill="#E74C3C" font-size="13" font-weight="bold" text-anchor="middle">a = 3m</text>
+            <text x="38" y="115" fill="#3498DB" font-size="13" font-weight="bold" text-anchor="middle">b = ?</text>
+            <text x="135" y="100" fill="#27AE60" font-size="13" font-weight="bold" transform="rotate(-45 135 100)">c = 5m</text>
+          </svg>
+        </div>
+        <div class="calc">
+          b = √(c<sup>2</sup> - a<sup>2</sup>) = √(5<sup>2</sup> - 3<sup>2</sup>)<br>
+          &nbsp;&nbsp;= √(25 - 9) = √16<br>
+          &nbsp;&nbsp;= <span class="ans">4 米</span>
+        </div>
+      </div>
+
+      <!-- 风筝线 -->
+      <div class="app-card">
+        <h4>🪁 风筝线问题</h4>
+        <p style="font-size:14px; color:var(--text-secondary);">风筝在空中高度 12 米，放出风筝线的水汗距离 5 米，风筝线有多长？</p>
+        <div class="svg-wrap" style="margin:12px 0; padding:8px;">
+          <svg viewBox="0 0 240 200" style="max-width:240px;">
+            <!-- 地面 -->
+            <line x1="20" y1="170" x2="220" y2="170" stroke="#BDC3C7" stroke-width="3"/>
+            <!-- 人 -->
+            <circle cx="70" cy="160" r="5" fill="#7F8C8D"/>
+            <line x1="70" y1="165" x2="70" y2="170" stroke="#7F8C8D" stroke-width="2"/>
+            <!-- 风筝线 (斜边) -->
+            <line x1="70" y1="165" x2="190" y2="50" stroke="#9B59B6" stroke-width="2.5"/>
+            <!-- 风筝 -->
+            <polygon points="190,40 198,50 190,60 182,50" fill="#F39C12" stroke="#E67E22" stroke-width="1.5"/>
+            <!-- 垂直虚线 -->
+            <line x1="190" y1="50" x2="190" y2="170" stroke="#3498DB" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <!-- 直角标记 -->
+            <path d="M 180 170 L 180 160 L 190 160" fill="none" stroke="#7F8C8D" stroke-width="1.5"/>
+            <!-- 标注 -->
+            <text x="205" y="115" fill="#3498DB" font-size="13" font-weight="bold">b = 12m</text>
+            <text x="120" y="185" fill="#E74C3C" font-size="13" font-weight="bold">a = 5m</text>
+            <text x="100" y="100" fill="#27AE60" font-size="13" font-weight="bold" transform="rotate(-41 100 100)">c = ?</text>
+          </svg>
+        </div>
+        <div class="calc">
+          c = √(a<sup>2</sup> + b<sup>2</sup>) = √(5<sup>2</sup> + 12<sup>2</sup>)<br>
+          &nbsp;&nbsp;= √(25 + 144) = √169<br>
+          &nbsp;&nbsp;= <span class="ans">13 米</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 已知直角三角形的两条直角边分别为 6 和 8，则斜边长为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 10</div>
+    <div class="quiz-option" data-idx="1">B. 12</div>
+    <div class="quiz-option" data-idx="2">C. 14</div>
+    <div class="quiz-option" data-idx="3">D. 100</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 直角三角形斜边长为 13，一条直角边长为 5，则另一条直角边长为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 8</div>
+    <div class="quiz-option" data-idx="1">B. 12</div>
+    <div class="quiz-option" data-idx="2">C. 15</div>
+    <div class="quiz-option" data-idx="3">D. 144</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 下列各组数中，是勾股数的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 1, 2, 3</div>
+    <div class="quiz-option" data-idx="1">B. 2, 3, 4</div>
+    <div class="quiz-option" data-idx="2">C. 8, 15, 17</div>
+    <div class="quiz-option" data-idx="3">D. 4, 5, 6</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 勾股定理在其他学科中的应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/07-力.html"><strong>物理·力的合成</strong></a>——
+        两个互相垂直的分力 F₁、F₂ 的合力 F 的大小满足 F = √(F₁² + F₂²)，这正是勾股定理在矢量合成中的应用。力的平行四边形定则中，垂直分力构成的直角三角形，斜边就是合力。
+        <span class="tag tag-cross">矢量三角形</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/10-浮力.html"><strong>物理·浮力</strong></a>——
+        浮力问题中常涉及物体在液体中的几何计算，如斜面上物体的位移分解、浮力与重力的合力分析，都需要用勾股定理计算矢量分量。
+        <span class="tag tag-cross">力的分解</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="07-二次根式.html" class="btn btn-outline">← 上一章：二次根式</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="09-平行四边形.html" class="btn btn-primary" style="background: var(--math);">下一章：平行四边形 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+/* ===== 交互探索1：直角三角形演示器 ===== */
+function drawTriangleDemo() {
+  const a = parseFloat(document.getElementById('slider-a').value);
+  const b = parseFloat(document.getElementById('slider-b').value);
+  const c = Math.sqrt(a * a + b * b);
+  const s = 14; // 缩放比例
+
+  // 直角顶点 O（左下角），a 为底（水平向右），b 为高（垂直向上）
+  const ox = 195, oy = 375;
+  const O = [ox, oy];                         // 直角顶点
+  const A = [ox + a * s, oy];                 // a 边端点（右下）
+  const B = [ox, oy - b * s];                 // b 边端点（左上）
+
+  // a 上的正方形（向下延伸）
+  const sqA = [O, A, [A[0], A[1] + a * s], [O[0], O[1] + a * s]];
+  // b 上的正方形（向左延伸）
+  const sqB = [O, B, [B[0] - b * s, B[1]], [O[0] - b * s, O[1]]];
+  // c 上的正方形（向右上延伸，远离 O）
+  const perp = [b * s, -a * s];
+  const sqC = [A, B, [B[0] + perp[0], B[1] + perp[1]], [A[0] + perp[0], A[1] + perp[1]]];
+
+  const pts = arr => arr.map(p => p.join(',')).join(' ');
+
+  // 各正方形中心
+  const cA = [(sqA[0][0] + sqA[2][0]) / 2, (sqA[0][1] + sqA[2][1]) / 2];
+  const cB = [(sqB[0][0] + sqB[2][0]) / 2, (sqB[0][1] + sqB[2][1]) / 2];
+  const cC = [(sqC[0][0] + sqC[2][0]) / 2, (sqC[0][1] + sqC[2][1]) / 2];
+
+  // 直角标记
+  const ra = 11;
+  const rightAngle = `M ${ox} ${oy - ra} L ${ox + ra} ${oy - ra} L ${ox + ra} ${oy}`;
+
+  // 边长标注中点
+  const midA = [(O[0] + A[0]) / 2, (O[1] + A[1]) / 2 + 18];
+  const midB = [(O[0] + B[0]) / 2 - 18, (O[1] + B[1]) / 2];
+  const midC = [(A[0] + B[0]) / 2 + 12, (A[1] + B[1]) / 2 - 8];
+
+  const c2 = c * c;
+  const svg = `
+    <svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">
+      <!-- a 的正方形 -->
+      <polygon points="${pts(sqA)}" fill="rgba(231,76,60,0.18)" stroke="#E74C3C" stroke-width="2.5"/>
+      <text x="${cA[0]}" y="${cA[1] - 6}" text-anchor="middle" fill="#C0392B" font-size="14" font-weight="600">面积</text>
+      <text x="${cA[0]}" y="${cA[1] + 16}" text-anchor="middle" fill="#C0392B" font-size="22" font-weight="700" font-family="Georgia,serif">a²=${a * a}</text>
+
+      <!-- b 的正方形 -->
+      <polygon points="${pts(sqB)}" fill="rgba(52,152,219,0.18)" stroke="#3498DB" stroke-width="2.5"/>
+      <text x="${cB[0]}" y="${cB[1] - 6}" text-anchor="middle" fill="#2874A6" font-size="14" font-weight="600">面积</text>
+      <text x="${cB[0]}" y="${cB[1] + 16}" text-anchor="middle" fill="#2874A6" font-size="22" font-weight="700" font-family="Georgia,serif">b²=${b * b}</text>
+
+      <!-- c 的正方形 -->
+      <polygon points="${pts(sqC)}" fill="rgba(39,174,96,0.18)" stroke="#27AE60" stroke-width="2.5"/>
+      <text x="${cC[0]}" y="${cC[1] - 6}" text-anchor="middle" fill="#1E8449" font-size="14" font-weight="600">面积</text>
+      <text x="${cC[0]}" y="${cC[1] + 16}" text-anchor="middle" fill="#1E8449" font-size="22" font-weight="700" font-family="Georgia,serif">c²=${c2.toFixed(1)}</text>
+
+      <!-- 直角三角形 -->
+      <polygon points="${pts([O, A, B])}" fill="rgba(155,89,182,0.12)" stroke="#9B59B6" stroke-width="3"/>
+
+      <!-- 直角标记 -->
+      <path d="${rightAngle}" fill="none" stroke="#9B59B6" stroke-width="2"/>
+
+      <!-- 边长标注 -->
+      <text x="${midA[0]}" y="${midA[1]}" text-anchor="middle" fill="#E74C3C" font-size="17" font-weight="700" font-family="Georgia,serif">a=${a}</text>
+      <text x="${midB[0]}" y="${midB[1]}" text-anchor="middle" fill="#3498DB" font-size="17" font-weight="700" font-family="Georgia,serif">b=${b}</text>
+      <text x="${midC[0]}" y="${midC[1]}" text-anchor="middle" fill="#27AE60" font-size="17" font-weight="700" font-family="Georgia,serif" transform="rotate(${Math.atan2(B[1]-A[1], B[0]-A[0]) * 180 / Math.PI} ${midC[0]} ${midC[1]})">c=${c.toFixed(2)}</text>
+
+      <!-- 顶点标注 -->
+      <text x="${O[0] - 12}" y="${O[1] + 18}" fill="#7F8C8D" font-size="12">直角</text>
+    </svg>
+  `;
+  document.getElementById('demo-svg-wrap').innerHTML = svg;
+
+  // 更新数据面板
+  document.getElementById('val-a').textContent = a;
+  document.getElementById('val-b').textContent = b;
+  document.getElementById('val-c').textContent = c.toFixed(2);
+  document.getElementById('val-a2').textContent = a * a;
+  document.getElementById('val-b2').textContent = b * b;
+  document.getElementById('val-c2').textContent = c2.toFixed(1);
+
+  // 更新验证行
+  const sum = a * a + b * b;
+  document.getElementById('verify-line').innerHTML =
+    `a<sup>2</sup> + b<sup>2</sup> = ${a * a} + ${b * b} = ${sum} = c<sup>2</sup> = ${c2.toFixed(1)} ✓`;
+}
+
+// 绑定滑块
+document.getElementById('slider-a').addEventListener('input', function() {
+  document.getElementById('display-a').textContent = this.value;
+  drawTriangleDemo();
+});
+document.getElementById('slider-b').addEventListener('input', function() {
+  document.getElementById('display-b').textContent = this.value;
+  drawTriangleDemo();
+});
+drawTriangleDemo();
+
+/* ===== 交互探索2：赵爽弦图 ===== */
+function drawZhaoShuang() {
+  const a = 3, b = 4, c = 5;
+  const s = 30;
+  const L = a + b;
+  const x0 = 30, y0 = 30;
+
+  const TL = [x0, y0];
+  const TR = [x0 + L * s, y0];
+  const BR = [x0 + L * s, y0 + L * s];
+  const BL = [x0, y0 + L * s];
+
+  // 四条边上的分点
+  const P1 = [x0 + a * s, y0 + L * s]; // 底边
+  const P2 = [x0 + L * s, y0 + b * s]; // 右边
+  const P3 = [x0 + b * s, y0];         // 顶边
+  const P4 = [x0, y0 + a * s];         // 左边
+
+  const pts = arr => arr.map(p => p.join(',')).join(' ');
+
+  // 四个三角形
+  const tri1 = [BL, P1, P4]; // 左下
+  const tri2 = [BR, P2, P1]; // 右下
+  const tri3 = [TR, P3, P2]; // 右上
+  const tri4 = [TL, P4, P3]; // 左上
+  // 内部小正方形
+  const innerSq = [P1, P2, P3, P4];
+
+  // 标注位置
+  const center = [x0 + L * s / 2, y0 + L * s / 2];
+
+  const svg = `
+    <svg viewBox="0 0 270 270" xmlns="http://www.w3.org/2000/svg" style="max-width:360px;">
+      <!-- 大正方形 -->
+      <polygon points="${pts([TL, TR, BR, BL])}" fill="none" stroke="#7D3C98" stroke-width="2.5"/>
+
+      <!-- 四个直角三角形 -->
+      <polygon points="${pts(tri1)}" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2"/>
+      <polygon points="${pts(tri2)}" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2"/>
+      <polygon points="${pts(tri3)}" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2"/>
+      <polygon points="${pts(tri4)}" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2"/>
+
+      <!-- 中间小正方形 (c²) -->
+      <polygon points="${pts(innerSq)}" fill="rgba(243,156,18,0.3)" stroke="#E67E22" stroke-width="2.5"/>
+
+      <!-- 直角标记 (左下三角形) -->
+      <path d="M ${BL[0]+9} ${BL[1]} L ${BL[0]+9} ${BL[1]-9} L ${BL[0]} ${BL[1]-9}" fill="none" stroke="#7D3C98" stroke-width="1.5"/>
+
+      <!-- 边长标注 -->
+      <text x="${x0 + a * s / 2}" y="${BL[1] + 16}" text-anchor="middle" fill="#E74C3C" font-size="14" font-weight="700" font-family="Georgia,serif">a=${a}</text>
+      <text x="${x0 + a * s + b * s / 2}" y="${BL[1] + 16}" text-anchor="middle" fill="#E67E22" font-size="14" font-weight="700" font-family="Georgia,serif">b=${b}</text>
+      <text x="${x0 - 14}" y="${y0 + a * s / 2 + 5}" text-anchor="middle" fill="#E67E22" font-size="14" font-weight="700" font-family="Georgia,serif">a</text>
+      <text x="${x0 - 14}" y="${y0 + a * s + b * s / 2 + 5}" text-anchor="middle" fill="#E74C3C" font-size="14" font-weight="700" font-family="Georgia,serif">b</text>
+
+      <!-- 内部小正方形标注 -->
+      <text x="${center[0]}" y="${center[1] - 4}" text-anchor="middle" fill="#B9770E" font-size="13" font-weight="600">小正方形</text>
+      <text x="${center[0]}" y="${center[1] + 16}" text-anchor="middle" fill="#B9770E" font-size="18" font-weight="700" font-family="Georgia,serif">c²=${c * c}</text>
+
+      <!-- 三角形面积标注（左下三角形中心） -->
+      <text x="${(BL[0]+P1[0]+P4[0])/3}" y="${(BL[1]+P1[1]+P4[1])/3 + 4}" text-anchor="middle" fill="#6C3483" font-size="11" font-weight="600">½ab=${(a*b/2)}</text>
+      <text x="${(BR[0]+P2[0]+P1[0])/3}" y="${(BR[1]+P2[1]+P1[1])/3 + 4}" text-anchor="middle" fill="#6C3483" font-size="11" font-weight="600">½ab=${(a*b/2)}</text>
+      <text x="${(TR[0]+P3[0]+P2[0])/3}" y="${(TR[1]+P3[1]+P2[1])/3 + 4}" text-anchor="middle" fill="#6C3483" font-size="11" font-weight="600">½ab=${(a*b/2)}</text>
+      <text x="${(TL[0]+P4[0]+P3[0])/3}" y="${(TL[1]+P4[1]+P3[1])/3 + 4}" text-anchor="middle" fill="#6C3483" font-size="11" font-weight="600">½ab=${(a*b/2)}</text>
+
+      <!-- 大正方形标注 -->
+      <text x="${x0 + L * s / 2}" y="${y0 - 10}" text-anchor="middle" fill="#7D3C98" font-size="14" font-weight="700" font-family="Georgia,serif">大正方形边长 = a+b = ${L}，面积 = ${L * L}</text>
+    </svg>
+  `;
+  document.getElementById('zhao-svg-wrap').innerHTML = svg;
+}
+drawZhaoShuang();
+
+/* ===== 勾股数随机验证 ===== */
+document.getElementById('btn-random-triple').addEventListener('click', function() {
+  const cards = document.querySelectorAll('#triple-grid .triple-card');
+  cards.forEach(c => c.classList.remove('highlight'));
+
+  const idx = Math.floor(Math.random() * cards.length);
+  const card = cards[idx];
+  card.classList.add('highlight');
+
+  const a = parseInt(card.dataset.a);
+  const b = parseInt(card.dataset.b);
+  const c = parseInt(card.dataset.c);
+
+  const result = document.getElementById('triple-result');
+  result.style.display = 'block';
+  result.innerHTML = `随机选中 (${a}, ${b}, ${c})：<br>a² + b² = ${a*a} + ${b*b} = ${a*a + b*b} = c² = ${c*c} ✓`;
+});
+
+/* ===== 练习题初始化 ===== */
+initQuiz('quiz1', {
+  correct: 0,
+  explain: '斜边 c = √(a²+b²) = √(6²+8²) = √(36+64) = √100 = 10。',
+  hint: '用公式 c = √(a²+b²) 计算，注意求的是斜边。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '另一直角边 = √(c²-a²) = √(13²-5²) = √(169-25) = √144 = 12。',
+  hint: '已知斜边和一条直角边，用 b = √(c²-a²) 求另一直角边。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '8²+15² = 64+225 = 289 = 17²，满足 a²+b²=c²，且 8、15、17 都是正整数，所以是勾股数。其他选项均不满足。',
+  hint: '逐项验证 a²+b² 是否等于 c²。注意勾股数要求三个数都是正整数。'
+});
+</script>
+</body>
+</html>

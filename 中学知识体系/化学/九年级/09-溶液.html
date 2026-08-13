@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>溶液 · 九年级化学</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本页专属样式（化学红 + 水蓝点缀） ===== */
+    .navbar {
+      background: linear-gradient(135deg, #C0392B, #E74C3C);
+      box-shadow: 0 2px 12px rgba(192,57,43,0.3);
+    }
+    .navbar-links a:hover { background: rgba(255,255,255,0.15); }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 12px;
+      padding-left: 14px;
+      border-left: 5px solid var(--chemistry);
+      line-height: 1.3;
+    }
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin-bottom: 18px;
+      padding-left: 19px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      text-align: center;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(231,76,60,0.08), rgba(52,152,219,0.05));
+      border-radius: var(--radius);
+      margin: 20px 0;
+      border: 1px solid rgba(231,76,60,0.2);
+    }
+    .formula-box .big-formula {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--chemistry);
+      font-family: "Times New Roman", serif;
+      letter-spacing: 1px;
+      margin: 6px 0;
+    }
+    .formula-box .formula-desc { color: var(--text-secondary); font-size: 14px; }
+
+    /* 三要素卡片 */
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .three-card {
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      text-align: center;
+      border: 2px solid var(--border);
+      background: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .three-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .three-card.solute { border-top: 5px solid #F39C12; }
+    .three-card.solvent { border-top: 5px solid #3498DB; }
+    .three-card.solution { border-top: 5px solid var(--chemistry); }
+    .three-card .t-icon { font-size: 34px; margin-bottom: 6px; }
+    .three-card .t-name { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .three-card.solute .t-name { color: #F39C12; }
+    .three-card.solvent .t-name { color: #3498DB; }
+    .three-card.solution .t-name { color: var(--chemistry); }
+    .three-card .t-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    @media (max-width: 700px) { .three-grid { grid-template-columns: 1fr; } }
+
+    /* SVG 示意图容器 */
+    .figure-box {
+      background: #FFFDFA;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin: 18px 0;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .figure-box .fig-caption {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* 溶解动画 */
+    .dissolve-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .dissolve-status {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      min-height: 24px;
+      margin-top: 10px;
+    }
+    .dissolve-status.running { color: #3498DB; }
+    .dissolve-status.done { color: var(--success); }
+    .btn-chem { background: var(--chemistry); color: white; }
+    .btn-chem:hover { background: #C0392B; transform: translateY(-1px); }
+    .btn-blue { background: #3498DB; color: white; }
+    .btn-blue:hover { background: #2E6BA8; transform: translateY(-1px); }
+
+    /* 溶解度曲线 */
+    .sol-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .sol-controls label { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .sol-controls input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--chemistry); cursor: pointer; }
+    .canvas-wrap {
+      position: relative;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 8px;
+      overflow-x: auto;
+    }
+    .canvas-wrap canvas { display: block; max-width: 100%; height: auto; cursor: crosshair; }
+    .sol-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(28,38,50,0.92);
+      color: white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      display: none;
+      z-index: 10;
+    }
+    .sol-tooltip .tt-title { font-weight: 700; margin-bottom: 2px; }
+    .sol-tooltip .row-kno3 { color: #8FE3A8; }
+    .sol-tooltip .row-nacl { color: #9ED4FF; }
+    .sol-tooltip .row-caoh2 { color: #FFD38A; }
+
+    /* 质量分数计算器 */
+    .calc-box {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 800px) { .calc-grid { grid-template-columns: 1fr; } }
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .mode-pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .mode-pill.active { border-color: #3498DB; background: rgba(52,152,219,0.12); color: #2E6BA8; }
+    .calc-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .calc-row label { font-weight: 600; min-width: 130px; font-size: 14px; }
+    .calc-row input[type="number"] {
+      width: 110px;
+      padding: 8px 10px;
+      font-size: 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+    }
+    .calc-row input[type="number"]:focus { outline: none; border-color: #3498DB; }
+    .calc-row .unit { color: var(--text-secondary); font-size: 13px; }
+    .calc-row .calc-warning { color: var(--danger); font-size: 13px; font-weight: 600; display: none; }
+    .w-result {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border-top: 5px solid var(--chemistry);
+    }
+    .w-result .w-formula {
+      font-size: 15px;
+      color: var(--text-secondary);
+      font-family: "Times New Roman", serif;
+      margin-bottom: 8px;
+    }
+    .w-result .w-value {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--chemistry);
+      font-family: "Times New Roman", serif;
+    }
+    .w-result .w-bar-track {
+      height: 12px;
+      background: var(--bg-soft);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 14px 0 8px;
+    }
+    .w-result .w-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3498DB, #E74C3C);
+      border-radius: 6px;
+      transition: width 0.25s;
+    }
+    .w-result .w-bar-label { font-size: 12px; color: var(--text-secondary); }
+    .w-result .w-detail { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.7; }
+    .w-result .w-detail b { color: var(--text-main); }
+    /* 饱和判断 */
+    .sat-panel {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-top: 5px solid #3498DB;
+    }
+    .sat-panel h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #2E6BA8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sat-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+    .sat-row label { font-weight: 600; min-width: 92px; }
+    .sat-row select {
+      padding: 6px 10px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      background: white;
+    }
+    .sat-row input[type="range"] { flex: 1; min-width: 140px; }
+    .sat-verdict {
+      background: rgba(52,152,219,0.08);
+      border-left: 4px solid #3498DB;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 8px;
+      min-height: 66px;
+    }
+    .sat-verdict.saturated { background: rgba(231,76,60,0.08); border-left-color: var(--danger); }
+    .sat-verdict.exact { background: rgba(243,156,18,0.1); border-left-color: var(--warning); }
+    .sat-verdict.unsat { background: rgba(52,152,219,0.08); border-left-color: #3498DB; }
+
+    /* 饱和对比 */
+    .rel-list { font-size: 14px; line-height: 1.9; margin: 10px 0; padding-left: 4px; }
+    .rel-list b { color: #2E6BA8; }
+
+    /* 结晶对比卡片 */
+    .crystal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 20px 0;
+    }
+    @media (max-width: 700px) { .crystal-grid { grid-template-columns: 1fr; } }
+    .crystal-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      border-top: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .crystal-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .crystal-card.blue { border-top-color: #3498DB; }
+    .crystal-card .c-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .crystal-card.red .c-title { color: var(--chemistry); }
+    .crystal-card.blue .c-title { color: #2E6BA8; }
+    .crystal-card .c-suit {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    .crystal-card.red .c-suit { background: rgba(231,76,60,0.12); color: var(--chemistry); }
+    .crystal-card.blue .c-suit { background: rgba(52,152,219,0.12); color: #2E6BA8; }
+    .crystal-card .c-row { font-size: 14px; margin: 6px 0; }
+    .crystal-card .c-row b { color: var(--text-main); }
+    .crystal-card .c-example {
+      font-size: 13px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 12px;
+      line-height: 1.7;
+    }
+    .cross-ref-box p { margin: 6px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand">💧 溶液</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
+    <li><a href="../八年级/index.html">🧪 化学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">化学</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>溶液</span>
+  </div>
+
+  <h1 style="font-size: 28px; margin-bottom: 8px;">💧 溶液</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">一杯糖水里的化学——溶质、溶剂、溶解度与浓度的完整世界</p>
+
+  <!-- ===== 1. 引入 ===== -->
+  <h2 class="section-title">一、什么是溶液？</h2>
+  <p class="section-subtitle">从糖水出发，认识分散在生活中的溶液</p>
+
+  <div class="card">
+    <p>生活中，我们喝过<b>糖水</b>、做过<b>盐水</b>、用过<b>碘酒</b>（碘溶解在酒精中）……这些都叫<b>溶液</b>。当你把一勺白糖放进水中，糖"不见了"——其实它并没有消失，而是以极小的颗粒（分子或离子）均匀地分散在水中。</p>
+    <p style="margin-top: 10px;"><b>溶液</b>：一种或几种物质<b>分散</b>到另一种物质里，形成的<b>均一</b>、<b>稳定</b>的<b>混合物</b>。</p>
+    <ul style="margin: 12px 0 0 22px; line-height: 2; font-size: 15px;">
+      <li>🟡 <b>均一</b>：溶液中任意一部分的组成和性质都完全相同（每一口糖水都一样甜）。</li>
+      <li>🔵 <b>稳定</b>：只要条件不变，溶质不会沉降，也不会从溶液中分离出来（糖水放多久都不会分层）。</li>
+      <li>🧪 <b>混合物</b>：溶液由溶质和溶剂两种或多种物质组成。</li>
+    </ul>
+
+    <div class="figure-box">
+      <svg viewBox="0 0 680 320" width="100%" style="max-width: 680px; display: block; margin: 0 auto;">
+        <!-- 玻璃杯 -->
+        <path d="M200 70 L200 265 L480 265 L480 70" fill="none" stroke="#7F8C8D" stroke-width="4" stroke-linecap="round"/>
+        <line x1="192" y1="70" x2="488" y2="70" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+        <!-- 糖水 -->
+        <rect x="206" y="110" width="268" height="150" rx="4" fill="#F5C97B" opacity="0.55"/>
+        <!-- 水面 -->
+        <path d="M206 110 Q 240 104, 274 110 T 342 110 T 410 110 T 474 110" fill="none" stroke="#E67E22" stroke-width="3" opacity="0.7"/>
+        <!-- 糖分子颗粒（溶质） -->
+        <circle cx="280" cy="170" r="11" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+        <circle cx="340" cy="200" r="11" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+        <circle cx="390" cy="160" r="11" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+        <circle cx="320" cy="230" r="11" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+        <circle cx="430" cy="220" r="11" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+        <!-- 水分子颗粒（溶剂） -->
+        <circle cx="250" cy="150" r="8" fill="#3498DB" opacity="0.7"/>
+        <circle cx="420" cy="140" r="8" fill="#3498DB" opacity="0.7"/>
+        <circle cx="300" cy="130" r="8" fill="#3498DB" opacity="0.7"/>
+        <circle cx="360" cy="150" r="8" fill="#3498DB" opacity="0.7"/>
+        <circle cx="450" cy="185" r="8" fill="#3498DB" opacity="0.7"/>
+        <!-- 底部未溶解糖粒 -->
+        <rect x="240" y="252" width="16" height="10" rx="2" fill="#E67E22"/>
+        <rect x="280" y="254" width="14" height="9" rx="2" fill="#E67E22"/>
+        <rect x="330" y="252" width="16" height="10" rx="2" fill="#E67E22"/>
+        <rect x="380" y="255" width="12" height="8" rx="2" fill="#E67E22"/>
+        <rect x="420" y="252" width="15" height="10" rx="2" fill="#E67E22"/>
+
+        <!-- 标注线 -->
+        <line x1="315" y1="110" x2="210" y2="60" stroke="#F39C12" stroke-width="2"/>
+        <text x="128" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#E67E22">溶液</text>
+        <text x="128" y="76" text-anchor="middle" font-size="12" fill="#7F8C8D">糖+水</text>
+
+        <line x1="280" y1="170" x2="200" y2="150" stroke="#F39C12" stroke-width="2"/>
+        <text x="150" y="140" text-anchor="middle" font-size="15" font-weight="700" fill="#E67E22">溶质</text>
+        <text x="152" y="158" text-anchor="middle" font-size="12" fill="#7F8C8D">糖分子</text>
+
+        <line x1="360" y1="150" x2="520" y2="100" stroke="#3498DB" stroke-width="2"/>
+        <text x="540" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#2E6BA8">溶剂</text>
+        <text x="542" y="110" text-anchor="middle" font-size="12" fill="#7F8C8D">水分子</text>
+
+        <!-- 底部提示 -->
+        <text x="340" y="300" text-anchor="middle" font-size="12" fill="#7F8C8D">搅拌使糖加速溶解；若加入太多糖，杯底会留下无法再溶解的糖粒（后面会学——这叫"饱和"）</text>
+      </svg>
+      <div class="fig-caption">图 1｜一杯糖水：溶质（糖）均匀分散在溶剂（水）中，整体就是溶液</div>
+    </div>
+
+    <div class="three-grid">
+      <div class="three-card solute">
+        <div class="t-icon">🍬</div>
+        <div class="t-name">溶质</div>
+        <div class="t-desc"><b>被溶解</b>的物质。<br>可以是固体（糖、盐）、液体（酒精）或气体（CO₂）。</div>
+      </div>
+      <div class="three-card solvent">
+        <div class="t-icon">💧</div>
+        <div class="t-name">溶剂</div>
+        <div class="t-desc"><b>能溶解</b>其他物质的物质。<br>最常见的溶剂是<b>水</b>；碘酒中溶剂是<b>酒精</b>。</div>
+      </div>
+      <div class="three-card solution">
+        <div class="t-icon">🥤</div>
+        <div class="t-name">溶液</div>
+        <div class="t-desc"><b>溶质 + 溶剂</b>混合后的均一、稳定混合物。<br>m<sub>溶液</sub> = m<sub>溶质</sub> + m<sub>溶剂</sub></div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 三个易错点</div>
+      ① 溶液<b>不一定无色</b>：CuSO₄ 溶液是蓝色的，KMnO₄ 溶液是紫红色的。<br>
+      ② 均一、稳定的<b>液体不一定是溶液</b>：纯水也是均一、稳定的，但它不是混合物，不算溶液。<br>
+      ③ 溶剂<b>不一定是水</b>：碘酒（碘 + 酒精）、汽油溶解油漆，溶剂都不是水。
+    </div>
+  </div>
+
+  <!-- ===== 2. 溶解过程微观模拟 ===== -->
+  <h2 class="section-title">二、溶解过程的微观模拟</h2>
+  <p class="section-subtitle">NaCl 晶体在水中怎样"消失"？——点击开始，观察离子逐个脱离晶格</p>
+
+  <div class="card">
+    <p>食盐（NaCl）由<b>Na⁺</b>（钠离子）和 <b>Cl⁻</b>（氯离子）按 1:1 交替排列成晶体。放入水中后，水分子不断"撞击"晶体表面，把表面的离子一个个"拉"出来，包围在离子周围形成<b>水合离子</b>。这些离子均匀分散在水中，就成了我们肉眼看不见的溶液。</p>
+
+    <div class="figure-box">
+      <svg id="dissolveSvg" viewBox="0 0 680 400" width="100%" style="max-width: 680px; display: block; margin: 0 auto;">
+        <defs>
+          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9BD1F5" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#5FA8E0" stop-opacity="0.45"/>
+          </linearGradient>
+        </defs>
+        <!-- 烧杯 -->
+        <line x1="32" y1="60" x2="32" y2="372" stroke="#5D6D7E" stroke-width="5" stroke-linecap="round"/>
+        <line x1="648" y1="60" x2="648" y2="372" stroke="#5D6D7E" stroke-width="5" stroke-linecap="round"/>
+        <line x1="32" y1="372" x2="648" y2="372" stroke="#5D6D7E" stroke-width="5" stroke-linecap="round"/>
+        <!-- 水 -->
+        <rect x="44" y="90" width="592" height="270" rx="4" fill="url(#waterGrad)"/>
+        <!-- 水面 -->
+        <path d="M44 90 Q 100 84, 156 90 T 268 90 T 380 90 T 492 90 T 604 90 T 636 90" fill="none" stroke="#2E6BA8" stroke-width="3" opacity="0.8"/>
+        <!-- 水分子组（JS 动态填充） -->
+        <g id="waterLayer"></g>
+        <!-- 晶格虚线框 -->
+        <rect id="latticeBox" x="78" y="300" width="126" height="128" rx="6" fill="rgba(255,255,255,0.25)" stroke="#AAB7B8" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="141" y="292" text-anchor="middle" font-size="12" fill="#7F8C8D">NaCl 晶体</text>
+        <!-- 离子组（JS 动态填充） -->
+        <g id="ionLayer"></g>
+        <!-- 溶解后离子扩散区域提示 -->
+        <text id="dissolveHint" x="340" y="388" text-anchor="middle" font-size="12" fill="#7F8C8D" opacity="0">离子均匀扩散到水分子之间</text>
+      </svg>
+      <div class="dissolve-controls">
+        <button id="dissolveBtn" class="btn btn-chem">▶ 开始溶解</button>
+        <button id="dissolveReset" class="btn btn-outline" style="border-color:#3498DB; color:#2E6BA8;">↻ 重置</button>
+      </div>
+      <div class="dissolve-status" id="dissolveStatus">点击"开始溶解"，观察 NaCl 晶体中的离子如何进入水中</div>
+      <div class="fig-caption">图 2｜NaCl 溶解微观模拟（绿色圆 = Na⁺，紫色圆 = Cl⁻，蓝色小点 = H₂O 分子）</div>
+    </div>
+  </div>
+
+  <!-- ===== 3. 溶解度曲线 ===== -->
+  <h2 class="section-title">三、交互探索：溶解度曲线</h2>
+  <p class="section-subtitle">同一温度下，不同物质能溶解的量不同——用曲线"读出"溶解能力</p>
+
+  <div class="card">
+    <p><b>溶解度</b>：在<b>一定温度</b>下，某固态物质在 <b>100 g 溶剂</b>（通常指水）里达到<b>饱和状态</b>时所溶解的<b>质量</b>，单位是 <b>g</b>。溶解度受温度影响，把不同温度下的溶解度连成曲线，就是<b>溶解度曲线</b>。</p>
+
+    <div class="sol-controls">
+      <label><input type="checkbox" id="showKNO3" checked> <span style="color:#27AE60;">KNO₃ 硝酸钾</span></label>
+      <label><input type="checkbox" id="showNaCl" checked> <span style="color:#3498DB;">NaCl 氯化钠</span></label>
+      <label><input type="checkbox" id="showCaOH2" checked> <span style="color:#F39C12;">Ca(OH)₂ 氢氧化钙</span></label>
+    </div>
+
+    <div class="canvas-wrap" id="solCanvasWrap">
+      <canvas id="solubilityCanvas" width="760" height="540"></canvas>
+      <div class="sol-tooltip" id="solTooltip"></div>
+    </div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">
+      💡 鼠标在图上移动：查看该温度下各物质的溶解度；勾选/取消复选框可切换显示哪些曲线。
+      Ca(OH)₂ 的溶解度很小（不到 0.2 g），在主图上几乎贴近 0 刻度，右上角提供了放大图。
+    </p>
+
+    <div class="warning-box">
+      <b>🔍 观察结论：</b>KNO₃ 曲线<b>陡峭上升</b>——溶解度随温度升高急剧增大；NaCl 曲线<b>几乎水平</b>——溶解度受温度影响很小；Ca(OH)₂ 曲线<b>缓慢下降</b>——它的溶解度随温度升高反而<b>减小</b>。三条曲线形态完全不同，这正是"具体问题具体分析"的体现。
+    </div>
+  </div>
+
+  <!-- ===== 4. 溶质质量分数 ===== -->
+  <h2 class="section-title">四、溶质质量分数</h2>
+  <p class="section-subtitle">溶液的"浓稀"如何定量描述？——交互计算器</p>
+
+  <div class="card">
+    <p><b>溶质的质量分数</b>：溶液中溶质质量与<b>溶液质量</b>之比。它是<b>浓度</b>的一种表示方法，无量纲（用百分数表示）。</p>
+    <div class="formula-box">
+      <div class="big-formula">w = m<sub>溶质</sub> / m<sub>溶液</sub> × 100%</div>
+      <div class="formula-desc">其中 m<sub>溶液</sub> = m<sub>溶质</sub> + m<sub>溶剂</sub>（质量可以直接相加）</div>
+    </div>
+
+    <div class="calc-box">
+      <div class="calc-grid">
+        <div>
+          <div class="mode-switch">
+            <button class="mode-pill active" data-mode="both" onclick="setMode('both')">模式一：溶质 + 溶剂</button>
+            <button class="mode-pill" data-mode="solution" onclick="setMode('solution')">模式二：溶质 + 溶液</button>
+          </div>
+
+          <div class="calc-row">
+            <label>🧂 溶质质量：</label>
+            <input type="number" id="mSolute" min="0" step="0.1" value="10">
+            <span class="unit">g</span>
+            <span class="calc-warning" id="warnSolute">⚠️ 溶质质量不能超过溶液质量</span>
+          </div>
+
+          <div class="calc-row" id="rowSolvent">
+            <label>💧 溶剂质量：</label>
+            <input type="number" id="mSolvent" min="0" step="0.1" value="90">
+            <span class="unit">g</span>
+          </div>
+
+          <div class="calc-row" id="rowSolution">
+            <label>🥤 溶液质量：</label>
+            <input type="number" id="mSolution" min="0" step="0.1" value="100">
+            <span class="unit">g</span>
+          </div>
+
+          <div class="tip-box" style="margin: 12px 0 0 0;">
+            <div class="tip-title">📐 例题</div>
+            把 20 g 食盐溶于 80 g 水中：溶液质量 = 20 + 80 = 100 g，质量分数 = 20/100 × 100% = <b>20%</b>。试试在输入框里输入这些数字验证！
+          </div>
+        </div>
+
+        <div class="w-result">
+          <div class="w-formula">w = m<sub>溶质</sub> / m<sub>溶液</sub> × 100%</div>
+          <div class="w-value" id="wValue">10.0%</div>
+          <div class="w-bar-track"><div class="w-bar-fill" id="wBar" style="width:10%"></div></div>
+          <div class="w-bar-label" id="wBarLabel">浓度较低，尝起来很淡</div>
+          <div class="w-detail" id="wDetail">
+            溶质 10 g，溶剂 90 g，溶液 100 g
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 饱和判断（可选） -->
+    <div class="calc-grid" style="grid-template-columns: 1fr;">
+      <div class="sat-panel">
+        <h4>🔬 拓展：这个溶液饱和了吗？（对比溶解度）</h4>
+        <div class="sat-row">
+          <label>溶质种类：</label>
+          <select id="satSolute">
+            <option value="NaCl">NaCl 氯化钠</option>
+            <option value="KNO3" selected>KNO₃ 硝酸钾</option>
+            <option value="CaOH2">Ca(OH)₂ 氢氧化钙</option>
+          </select>
+        </div>
+        <div class="sat-row">
+          <label>温度：<span id="satTempShow">20</span>°C</label>
+          <input type="range" id="satTemp" min="0" max="80" step="5" value="20">
+        </div>
+        <div class="sat-verdict unsat" id="satVerdict">
+          正在计算……
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5. 饱和溶液 vs 不饱和溶液 ===== -->
+  <h2 class="section-title">五、饱和溶液 vs 不饱和溶液</h2>
+  <p class="section-subtitle">"还能不能溶"——一瓶溶液的极限状态</p>
+
+  <div class="card">
+    <div class="figure-box">
+      <svg viewBox="0 0 680 330" width="100%" style="max-width: 680px; display: block; margin: 0 auto;">
+        <!-- 左：不饱和溶液 -->
+        <g>
+          <path d="M90 60 L90 250 L280 250 L280 60" fill="none" stroke="#7F8C8D" stroke-width="4" stroke-linecap="round"/>
+          <line x1="83" y1="60" x2="287" y2="60" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+          <rect x="95" y="95" width="180" height="150" rx="4" fill="#A9CCE3" opacity="0.6"/>
+          <path d="M95 95 Q 130 89, 165 95 T 235 95 T 275 95" fill="none" stroke="#2E6BA8" stroke-width="2.5" opacity="0.8"/>
+          <!-- 已溶解的颗粒 -->
+          <circle cx="140" cy="150" r="10" fill="#E74C3C" opacity="0.85"/>
+          <circle cx="200" cy="180" r="10" fill="#F39C12" opacity="0.85"/>
+          <circle cx="170" cy="215" r="10" fill="#27AE60" opacity="0.85"/>
+          <circle cx="230" cy="140" r="10" fill="#9B59B6" opacity="0.85"/>
+          <!-- 水面漂浮提示 -->
+          <text x="185" y="130" text-anchor="middle" font-size="11" fill="#2E6BA8">再加一点还能溶解</text>
+          <text x="185" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#27AE60">不饱和溶液</text>
+          <text x="185" y="306" text-anchor="middle" font-size="12" fill="#7F8C8D">溶质还能继续溶解</text>
+        </g>
+
+        <!-- 中间箭头 -->
+        <line x1="305" y1="150" x2="375" y2="150" stroke="#E74C3C" stroke-width="3" marker-end="url(#arrS)" marker-start="url(#arrS2)"/>
+        <text x="340" y="138" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="600">加溶质 / 降温 / 蒸发溶剂</text>
+        <text x="340" y="172" text-anchor="middle" font-size="11" fill="#7F8C8D">↔ 加水 / 升温</text>
+        <defs>
+          <marker id="arrS" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrS2" markerWidth="10" markerHeight="10" refX="2" refY="5" orient="auto">
+            <path d="M10,0 L0,5 L10,10 z" fill="#E74C3C"/>
+          </marker>
+        </defs>
+
+        <!-- 右：饱和溶液 -->
+        <g>
+          <path d="M400 60 L400 250 L590 250 L590 60" fill="none" stroke="#7F8C8D" stroke-width="4" stroke-linecap="round"/>
+          <line x1="393" y1="60" x2="597" y2="60" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+          <rect x="405" y="95" width="180" height="150" rx="4" fill="#A9CCE3" opacity="0.6"/>
+          <path d="M405 95 Q 440 89, 475 95 T 545 95 T 585 95" fill="none" stroke="#2E6BA8" stroke-width="2.5" opacity="0.8"/>
+          <circle cx="450" cy="150" r="10" fill="#E74C3C" opacity="0.85"/>
+          <circle cx="520" cy="180" r="10" fill="#F39C12" opacity="0.85"/>
+          <circle cx="470" cy="200" r="10" fill="#27AE60" opacity="0.85"/>
+          <circle cx="540" cy="140" r="10" fill="#9B59B6" opacity="0.85"/>
+          <!-- 底部沉淀 -->
+          <circle cx="430" cy="235" r="10" fill="#C0392B" stroke="#A93226" stroke-width="1.5"/>
+          <circle cx="455" cy="238" r="10" fill="#D68910" stroke="#B9770E" stroke-width="1.5"/>
+          <circle cx="490" cy="236" r="10" fill="#1E8449" stroke="#186A3B" stroke-width="1.5"/>
+          <circle cx="525" cy="237" r="10" fill="#7D3C98" stroke="#6C3483" stroke-width="1.5"/>
+          <circle cx="555" cy="234" r="10" fill="#C0392B" stroke="#A93226" stroke-width="1.5"/>
+          <text x="495" y="130" text-anchor="middle" font-size="11" fill="#C0392B">加入溶质不再溶解，沉在杯底</text>
+          <text x="495" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#E74C3C">饱和溶液</text>
+          <text x="495" y="306" text-anchor="middle" font-size="12" fill="#7F8C8D">杯底有不再溶解的固体</text>
+        </g>
+      </svg>
+      <div class="fig-caption">图 3｜不饱和溶液与饱和溶液对比</div>
+    </div>
+
+    <p><b>定义：</b>在一定温度下，向一定量溶剂里加入某种溶质，当溶质<b>不能继续溶解</b>时，所得到的溶液叫作这种溶质的<b>饱和溶液</b>；还能<b>继续溶解</b>的，叫作这种溶质的<b>不饱和溶液</b>。</p>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 "饱和"是相对的，要看三个条件</div>
+      <div class="rel-list">
+        ① <b>相对某一温度</b>：升温可让饱和的 KNO₃ 溶液变不饱和（溶解能力变大）；<br>
+        ② <b>相对某一溶质</b>：对 NaCl 饱和的溶液，加入蔗糖仍能继续溶解（溶解度只针对特定溶质）；<br>
+        ③ <b>相对一定量溶剂</b>：往饱和溶液中<b>加水</b>，它又变不饱和了。
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <b>⚠️ 易混淆：</b>"浓溶液"≠"饱和溶液"。浓与稀是浓度的相对比较；饱和与否则取决于<b>能否继续溶解</b>。浓溶液可能不饱和（如浓蔗糖水未到极限），稀溶液也可能已饱和（如 Ca(OH)₂ 溶液本来就很稀）。
+    </div>
+  </div>
+
+  <!-- ===== 6. 结晶方法 ===== -->
+  <h2 class="section-title">六、结晶方法</h2>
+  <p class="section-subtitle">把溶质"变回来"——蒸发结晶与降温结晶</p>
+
+  <div class="card">
+    <p>让溶质从溶液中析出（变成固体晶体）的过程叫<b>结晶</b>。选择哪种方法，要看溶解度曲线：<b>受温度影响大 → 降温结晶；受温度影响小 → 蒸发结晶。</b></p>
+
+    <div class="crystal-grid">
+      <div class="crystal-card red">
+        <div class="c-title">🔥 蒸发结晶</div>
+        <span class="c-suit">适合：溶解度受温度影响小的物质（曲线平缓）</span>
+        <div class="c-row"><b>原理：</b>加热蒸发溶剂，使溶液饱和 → 继续蒸发 → 溶质析出。</div>
+        <div class="c-row"><b>典型物质：</b>NaCl（氯化钠）</div>
+        <div class="c-row"><b>生活实例：</b>海水晒盐。</div>
+        <div class="c-example">⚗️ 海水 → 蒸发水 → 水分减少，盐达到饱和而析出，得到食盐晶体。</div>
+      </div>
+      <div class="crystal-card blue">
+        <div class="c-title">❄️ 降温结晶（冷却热饱和溶液）</div>
+        <span class="c-suit">适合：溶解度随温度升高明显增大的物质（曲线陡峭）</span>
+        <div class="c-row"><b>原理：</b>先配成较高温度下的饱和溶液，再冷却——溶解度骤降，溶质大量析出。</div>
+        <div class="c-row"><b>典型物质：</b>KNO₃（硝酸钾）</div>
+        <div class="c-row"><b>应用：</b>从含 NaCl 的 KNO₃ 中提纯 KNO₃。</div>
+        <div class="c-example">⚗️ KNO₃ 热饱和溶液冷却后，KNO₃ 晶体大量析出；而 NaCl 溶解度几乎不变，仍留在溶液中，从而分离。</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 判断技巧</div>
+      给出溶解度曲线时：曲线<b>陡</b>的物质用<b>降温结晶</b>提纯；曲线<b>平</b>的物质（如 NaCl）用<b>蒸发结晶</b>。中考常考"如何从两种物质的混合溶液中获得晶体"——关键是让溶解度随温度变化大的那一种先析出。
+    </div>
+  </div>
+
+  <!-- ===== 7. 练习题 ===== -->
+  <h2 class="section-title">七、练习题</h2>
+  <p class="section-subtitle">检验你对溶液的掌握程度</p>
+
+  <div id="quizContainer">
+    <div class="quiz-question" data-correct="c">
+      <div class="question-text">1. 下列关于溶液的说法，正确的是？</div>
+      <div class="quiz-option" data-key="a">A. 溶液一定是无色透明的液体</div>
+      <div class="quiz-option" data-key="b">B. 均一、稳定的液体一定是溶液</div>
+      <div class="quiz-option" data-key="c">C. 溶液是均一、稳定的混合物</div>
+      <div class="quiz-option" data-key="d">D. 溶质只能是固体物质</div>
+    </div>
+
+    <div class="quiz-question" data-correct="a">
+      <div class="question-text">2. 已知 60°C 时 KNO₃ 的溶解度为 110 g。将 120 g KNO₃ 放入 100 g 60°C 的水中，充分溶解后，所得溶液为？</div>
+      <div class="quiz-option" data-key="a">A. 饱和溶液，剩余 10 g KNO₃ 未溶解</div>
+      <div class="quiz-option" data-key="b">B. 饱和溶液，恰好完全溶解</div>
+      <div class="quiz-option" data-key="c">C. 不饱和溶液</div>
+      <div class="quiz-option" data-key="d">D. 无法判断是否饱和</div>
+    </div>
+
+    <div class="quiz-question" data-correct="a">
+      <div class="question-text">3. 将 20 g 食盐完全溶解在 80 g 水中，所得溶液中溶质的质量分数是？</div>
+      <div class="quiz-option" data-key="a">A. 20%</div>
+      <div class="quiz-option" data-key="b">B. 25%</div>
+      <div class="quiz-option" data-key="c">C. 16.7%</div>
+      <div class="quiz-option" data-key="d">D. 10%</div>
+    </div>
+  </div>
+
+  <!-- ===== 8. 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 溶质质量分数 w = m<sub>溶质</sub> / m<sub>溶液</sub> ↔ <a href="../../数学/八年级/06-分式.html">数学八年级·分式</a>（溶质质量分数本质就是一个<b>分式</b>——分子分母都是质量，学会化简与运算）</p>
+    <p>· 配制溶液的体积与质量 ↔ <a href="../../物理/八年级/06-质量与密度.html">物理八年级·质量与密度</a>（ρ = m / V，量筒量的是体积，天平称的是质量，换算需要密度）</p>
+    <p>· 溶解度曲线读图 ↔ <a href="../../数学/八年级/08-勾股定理.html">数学八年级·平面几何</a>（坐标系中描点连线、分析曲线走向，是图像分析的通用方法）</p>
+  </div>
+
+  <!-- ===== step-nav ===== -->
+  <div class="step-nav">
+    <a href="08-金属和金属材料.html" class="btn btn-outline">← 上一章：金属和金属材料</a>
+    <a href="index.html" class="btn btn-outline btn-sm">返回目录</a>
+    <a href="10-酸和碱.html" class="btn btn-chem">下一章：酸和碱 →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   ① NaCl 溶解过程微观模拟
+   ================================================================ */
+(function () {
+  const svg = document.getElementById('dissolveSvg');
+  const waterLayer = document.getElementById('waterLayer');
+  const ionLayer = document.getElementById('ionLayer');
+  const btn = document.getElementById('dissolveBtn');
+  const resetBtn = document.getElementById('dissolveReset');
+  const statusEl = document.getElementById('dissolveStatus');
+  const hintEl = document.getElementById('dissolveHint');
+  const latticeBox = document.getElementById('latticeBox');
+  const NS = 'http://www.w3.org/2000/svg';
+
+  // 晶格位置：3x3，中心约 (141, 364)（y 稍向上，因为底部 y=372）
+  const ROW = 3, COL = 3, GAP = 26, ION_R = 13;
+  const crystalCx = 141, crystalCy = 352;
+
+  // 水分子（蓝色小点）
+  const waters = [];
+  for (let i = 0; i < 34; i++) {
+    waters.push({
+      x: 58 + Math.random() * 564,
+      y: 102 + Math.random() * 246,
+      r: 3 + Math.random() * 1.5,
+      phase: Math.random() * Math.PI * 2,
+      label: i < 4 // 少量水分子标上 H₂O
+    });
+  }
+
+  waters.forEach(w => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', w.x); c.setAttribute('cy', w.y);
+    c.setAttribute('r', w.r);
+    c.setAttribute('fill', '#2E6BA8'); c.setAttribute('opacity', '0.45');
+    w.elem = c;
+    waterLayer.appendChild(c);
+    if (w.label) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', w.x); t.setAttribute('y', w.y - 8);
+      t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', '9');
+      t.setAttribute('fill', '#1A5276'); t.setAttribute('font-weight', '700');
+      t.textContent = 'H₂O';
+      w.labelElem = t;
+      waterLayer.appendChild(t);
+    }
+  });
+
+  // 离子（晶体状态）
+  let ions = [];
+  function buildIons() {
+    ions = [];
+    ionLayer.innerHTML = '';
+    let idx = 0;
+    for (let r = 0; r < ROW; r++) {
+      for (let c = 0; c < COL; c++) {
+        const isNa = (r + c) % 2 === 0;
+        const g = document.createElementNS(NS, 'g');
+        const circle = document.createElementNS(NS, 'circle');
+        circle.setAttribute('cx', crystalCx + (c - 1) * GAP);
+        circle.setAttribute('cy', crystalCy + (r - 1) * GAP);
+        circle.setAttribute('r', ION_R);
+        circle.setAttribute('fill', isNa ? '#2ECC71' : '#9B59B6');
+        circle.setAttribute('stroke', isNa ? '#1E8449' : '#7D3C98');
+        circle.setAttribute('stroke-width', '2');
+        const text = document.createElementNS(NS, 'text');
+        text.setAttribute('x', crystalCx + (c - 1) * GAP);
+        text.setAttribute('y', crystalCy + (r - 1) * GAP + 4);
+        text.setAttribute('text-anchor', 'middle'); text.setAttribute('font-size', '10');
+        text.setAttribute('font-weight', '700'); text.setAttribute('fill', '#fff');
+        text.textContent = isNa ? 'Na⁺' : 'Cl⁻';
+        g.appendChild(circle); g.appendChild(text);
+        ionLayer.appendChild(g);
+        ions.push({
+          elem: g, circle, text,
+          x: crystalCx + (c - 1) * GAP, y: crystalCy + (r - 1) * GAP,
+          targetX: 0, targetY: 0,
+          moving: false, done: false, released: false
+        });
+        idx++;
+      }
+    }
+  }
+  buildIons();
+
+  // 预生成 9 个水中目标位置（避免重叠）
+  function genTargets() {
+    const pts = [];
+    let guard = 0;
+    while (pts.length < ions.length && guard < 2000) {
+      guard++;
+      const x = 220 + Math.random() * 380;
+      const y = 108 + Math.random() * 215;
+      if (pts.every(p => Math.hypot(p.x - x, p.y - y) > 48)) pts.push({ x, y });
+    }
+    return pts;
+  }
+  let targets = genTargets();
+
+  // 动画循环
+  let rafId = null;
+  let lastTime = 0;
+  let dissolving = false;
+  let releaseQueue = [];
+  let releaseTimer = null;
+  let allDone = false;
+
+  function frame(now) {
+    const dt = Math.min((now - lastTime) / 16.7, 3) || 1;
+    lastTime = now;
+
+    // 水分子漂浮
+    const t = now * 0.001;
+    waters.forEach(w => {
+      const dy = Math.sin(t + w.phase) * 2.2;
+      w.elem.setAttribute('cy', w.y + dy);
+      if (w.labelElem) w.labelElem.setAttribute('y', w.y - 8 + dy);
+    });
+
+    // 离子移动
+    if (dissolving) {
+      let active = 0;
+      ions.forEach(ion => {
+        if (ion.moving) {
+          active++;
+          const dx = ion.targetX - ion.x, dy = ion.targetY - ion.y;
+          const dist = Math.hypot(dx, dy);
+          const step = 2.2 * dt;
+          if (dist <= step) {
+            ion.x = ion.targetX; ion.y = ion.targetY;
+            ion.moving = false; ion.done = true;
+          } else {
+            ion.x += dx / dist * step;
+            ion.y += dy / dist * step;
+          }
+          ion.circle.setAttribute('cx', ion.x);
+          ion.circle.setAttribute('cy', ion.y);
+          ion.text.setAttribute('x', ion.x);
+          ion.text.setAttribute('y', ion.y + 4);
+        }
+      });
+      if (active === 0 && releaseQueue.length === 0 && allDone) {
+        dissolving = false;
+        statusEl.textContent = '✓ 溶解完成：Na⁺ 和 Cl⁻ 已均匀分散在水分子之间，形成均一、稳定的溶液';
+        statusEl.className = 'dissolve-status done';
+        hintEl.setAttribute('opacity', '1');
+        btn.textContent = '▶ 再来一次';
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+
+  function releaseNext() {
+    if (releaseQueue.length === 0) return;
+    const ion = releaseQueue.shift();
+    ion.released = true;
+    // 目标点不足时兜底生成（不再强制防重叠）
+    let tp = targets.shift();
+    if (!tp) tp = { x: 240 + Math.random() * 360, y: 110 + Math.random() * 200 };
+    ion.targetX = tp.x; ion.targetY = tp.y;
+    ion.moving = true;
+    // 晶格中剩余离子变淡
+    ions.forEach(o => {
+      if (!o.released) {
+        o.circle.setAttribute('opacity', '0.45');
+        o.text.setAttribute('opacity', '0.45');
+      }
+    });
+    if (releaseQueue.length === 0) {
+      clearInterval(releaseTimer);
+      releaseTimer = null;
+    }
+  }
+
+  function startDissolve() {
+    if (dissolving) return;
+    if (allDone) resetSim();
+    targets = genTargets();
+    releaseQueue = ions.slice();
+    allDone = false;
+    dissolving = true;
+    hintEl.setAttribute('opacity', '0');
+    statusEl.textContent = '🔬 正在溶解：水分子逐个"拉走"晶体表面的离子……';
+    statusEl.className = 'dissolve-status running';
+    btn.textContent = '⏳ 溶解中';
+    releaseTimer = setInterval(releaseNext, 420);
+    // 立即释放第一个
+    releaseNext();
+  }
+
+  function resetSim() {
+    clearInterval(releaseTimer); releaseTimer = null;
+    dissolving = false; allDone = false; releaseQueue = [];
+    targets = genTargets();
+    buildIons();
+    latticeBox.setAttribute('fill', 'rgba(255,255,255,0.25)');
+    latticeBox.setAttribute('stroke', '#AAB7B8');
+    hintEl.setAttribute('opacity', '0');
+    statusEl.textContent = '点击"开始溶解"，观察 NaCl 晶体中的离子如何进入水中';
+    statusEl.className = 'dissolve-status';
+    btn.textContent = '▶ 开始溶解';
+  }
+
+  btn.addEventListener('click', startDissolve);
+  resetBtn.addEventListener('click', resetSim);
+})();
+
+/* ================================================================
+   ② 溶解度曲线（Canvas）
+   ================================================================ */
+(function () {
+  const canvas = document.getElementById('solubilityCanvas');
+  const wrap = document.getElementById('solCanvasWrap');
+  const tooltip = document.getElementById('solTooltip');
+  const W = 760, H = 540;
+  const DPR = window.devicePixelRatio || 1;
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+
+  // 溶解度数据（g/100g 水，温度 ℃）——必须准确
+  const SOL_DATA = {
+    KNO3: { color: '#27AE60', label: 'KNO₃', name: '硝酸钾', points: [[0,13.3],[20,31.6],[40,63.9],[60,110],[80,169]] },
+    NaCl: { color: '#3498DB', label: 'NaCl', name: '氯化钠', points: [[0,35.7],[20,36.0],[40,36.6],[60,37.3],[80,38.4]] },
+    CaOH2:{ color: '#F39C12', label: 'Ca(OH)₂', name: '氢氧化钙', points: [[0,0.185],[20,0.165],[40,0.141],[60,0.116],[80,0.094]] }
+  };
+  const KEYS = ['KNO3', 'NaCl', 'CaOH2'];
+
+  const M = { left: 64, right: 36, top: 40, bottom: 56 };
+  const plotW = W - M.left - M.right;
+  const plotH = H - M.top - M.bottom;
+  const T_MIN = 0, T_MAX = 80, S_MAX = 180;
+
+  // 插值
+  function interp(points, t) {
+    if (t <= points[0][0]) return points[0][1];
+    for (let i = 0; i < points.length - 1; i++) {
+      const [t1, s1] = points[i], [t2, s2] = points[i + 1];
+      if (t >= t1 && t <= t2) return s1 + (s2 - s1) * (t - t1) / (t2 - t1);
+    }
+    return points[points.length - 1][1];
+  }
+  const xPos = t => M.left + (t - T_MIN) / (T_MAX - T_MIN) * plotW;
+  const yPos = s => M.top + plotH - s / S_MAX * plotH;
+
+  function visible(key) {
+    return document.getElementById('show' + key).checked;
+  }
+
+  function drawAxes() {
+    // 网格与坐标轴
+    ctx.strokeStyle = '#E5EAEF';
+    ctx.lineWidth = 1;
+    for (let t = T_MIN; t <= T_MAX; t += 10) {
+      const x = xPos(t);
+      ctx.beginPath(); ctx.moveTo(x, M.top); ctx.lineTo(x, M.top + plotH); ctx.stroke();
+    }
+    for (let s = 0; s <= S_MAX; s += 20) {
+      const y = yPos(s);
+      ctx.beginPath(); ctx.moveTo(M.left, y); ctx.lineTo(M.left + plotW, y); ctx.stroke();
+    }
+    // 坐标轴实线
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(M.left, M.top); ctx.lineTo(M.left, M.top + plotH); ctx.lineTo(M.left + plotW, M.top + plotH);
+    ctx.stroke();
+
+    // 刻度文字
+    ctx.fillStyle = '#5D6D7E';
+    ctx.font = '12px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.textAlign = 'center';
+    for (let t = T_MIN; t <= T_MAX; t += 10) {
+      ctx.fillText(t, xPos(t), M.top + plotH + 20);
+    }
+    ctx.textAlign = 'right';
+    for (let s = 0; s <= S_MAX; s += 20) {
+      ctx.fillText(s, M.left - 8, yPos(s) + 4);
+    }
+    // 轴标题
+    ctx.fillStyle = '#34495E';
+    ctx.font = 'bold 13px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('温度 / ℃', M.left + plotW / 2, H - 14);
+    ctx.save();
+    ctx.translate(16, M.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('溶解度 / g（每 100 g 水）', 0, 0);
+    ctx.restore();
+  }
+
+  function drawCurves(hoverT) {
+    KEYS.forEach(key => {
+      if (!visible(key)) return;
+      const d = SOL_DATA[key];
+      // 折线
+      ctx.strokeStyle = d.color;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.beginPath();
+      d.points.forEach((p, i) => {
+        const x = xPos(p[0]), y = yPos(p[1]);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      // 数据点
+      d.points.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(xPos(p[0]), yPos(p[1]), 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = d.color;
+        ctx.stroke();
+      });
+      // 悬停标记
+      if (hoverT !== null && hoverT >= T_MIN && hoverT <= T_MAX) {
+        const s = interp(d.points, hoverT);
+        const x = xPos(hoverT), y = yPos(s);
+        ctx.strokeStyle = d.color;
+        ctx.setLineDash([4, 3]);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(x, M.top); ctx.lineTo(x, y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(M.left, y); ctx.lineTo(x, y); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = d.color; ctx.fill();
+        ctx.lineWidth = 1.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+      }
+      // 末端名称标签
+      const last = d.points[d.points.length - 1];
+      ctx.font = 'bold 13px "PingFang SC", "Microsoft YaHei", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = d.color;
+      ctx.fillText(d.label, xPos(last[0]) + 8, yPos(last[1]) + 4);
+    });
+
+    // 悬停温度参考线
+    if (hoverT !== null && hoverT >= T_MIN && hoverT <= T_MAX) {
+      const x = xPos(hoverT);
+      ctx.strokeStyle = 'rgba(52,73,94,0.5)';
+      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x, M.top); ctx.lineTo(x, M.top + plotH); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Ca(OH)₂ 放大图（右上角）
+  function drawInset() {
+    if (!visible('CaOH2')) return;
+    const d = SOL_DATA.CaOH2;
+    const ix = 470, iy = 38, iw = 262, ih = 168;
+    // 背景与边框
+    ctx.fillStyle = 'rgba(253,246,227,0.85)';
+    ctx.fillRect(ix, iy, iw, ih);
+    ctx.strokeStyle = '#F39C12';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.strokeRect(ix, iy, iw, ih);
+    ctx.setLineDash([]);
+
+    // inset 内网格
+    const isMax = 0.20;
+    const px = t => ix + (t - T_MIN) / (T_MAX - T_MIN) * iw;
+    const py = s => iy + ih - s / isMax * ih;
+    ctx.strokeStyle = '#F5E3C3'; ctx.lineWidth = 1;
+    for (let t = T_MIN; t <= T_MAX; t += 20) {
+      ctx.beginPath(); ctx.moveTo(px(t), iy); ctx.lineTo(px(t), iy + ih); ctx.stroke();
+    }
+    for (let s = 0; s <= isMax; s += 0.05) {
+      ctx.beginPath(); ctx.moveTo(ix, py(s)); ctx.lineTo(ix + iw, py(s)); ctx.stroke();
+    }
+    // inset y 轴刻度
+    ctx.fillStyle = '#B9770E';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    for (let n = 0; n <= 4; n++) {
+      const s = n * 0.05;
+      ctx.fillText(s.toFixed(2), ix - 5, py(s) + 3);
+    }
+    // 曲线
+    ctx.strokeStyle = d.color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    d.points.forEach((p, i) => {
+      const x = px(p[0]), y = py(p[1]);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    d.points.forEach(p => {
+      ctx.beginPath(); ctx.arc(px(p[0]), py(p[1]), 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = d.color; ctx.fill();
+    });
+    // 标题
+    ctx.fillStyle = '#B9770E';
+    ctx.font = 'bold 11px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Ca(OH)₂ 放大（溶解度 ≤ 0.20 g）', ix + iw / 2, iy + 14);
+    ctx.textAlign = 'left';
+    ctx.font = '9px sans-serif';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.fillText('0.05', ix + iw - 18, py(0.05) + 3);
+  }
+
+  function drawAll(hoverT) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+    drawAxes();
+    drawCurves(hoverT);
+    drawInset();
+  }
+
+  let hoverT = null;
+  drawAll(hoverT);
+
+  // 复选框切换
+  ['KNO3', 'NaCl', 'CaOH2'].forEach(key => {
+    document.getElementById('show' + key).addEventListener('change', () => drawAll(hoverT));
+  });
+
+  // 鼠标悬停
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (W / rect.width);
+    hoverT = T_MIN + (mx - M.left) / plotW * (T_MAX - T_MIN);
+    hoverT = Math.max(T_MIN, Math.min(T_MAX, hoverT));
+    drawAll(hoverT);
+
+    // tooltip 内容
+    const rounded = Math.round(hoverT * 10) / 10;
+    let html = `<div class="tt-title">温度 ${rounded}°C</div>`;
+    KEYS.forEach(key => {
+      if (!visible(key)) return;
+      const d = SOL_DATA[key];
+      const s = interp(d.points, hoverT);
+      html += `<div class="row-${key.toLowerCase().replace(/[^a-z0-9]/g, '')}">${d.label}：${s.toFixed(s < 1 ? 3 : 1)} g</div>`;
+    });
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+    // tooltip 定位
+    let tx = mx + 16, ty = (e.clientY - rect.top) * (H / rect.height) - 20;
+    if (tx > W - 220) tx = mx - 200;
+    if (ty < 4) ty = 4;
+    tooltip.style.left = tx + 'px';
+    tooltip.style.top = ty + 'px';
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoverT = null;
+    tooltip.style.display = 'none';
+    drawAll(null);
+  });
+})();
+
+/* ================================================================
+   ③ 溶质质量分数计算器 + 饱和判断
+   ================================================================ */
+(function () {
+  // 计算模式
+  let mode = 'both'; // both: 溶质+溶剂；solution: 溶质+溶液
+  const mSolute = document.getElementById('mSolute');
+  const mSolvent = document.getElementById('mSolvent');
+  const mSolution = document.getElementById('mSolution');
+  const warnSolute = document.getElementById('warnSolute');
+  const rowSolvent = document.getElementById('rowSolvent');
+  const rowSolution = document.getElementById('rowSolution');
+  const wValue = document.getElementById('wValue');
+  const wBar = document.getElementById('wBar');
+  const wBarLabel = document.getElementById('wBarLabel');
+  const wDetail = document.getElementById('wDetail');
+
+  // 溶解度数据（与曲线一致）
+  const SOL = {
+    NaCl: { points: [[0,35.7],[20,36.0],[40,36.6],[60,37.3],[80,38.4]], label: 'NaCl', name: '氯化钠' },
+    KNO3: { points: [[0,13.3],[20,31.6],[40,63.9],[60,110],[80,169]], label: 'KNO₃', name: '硝酸钾' },
+    CaOH2:{ points: [[0,0.185],[20,0.165],[40,0.141],[60,0.116],[80,0.094]], label: 'Ca(OH)₂', name: '氢氧化钙' }
+  };
+
+  function interp(points, t) {
+    if (t <= points[0][0]) return points[0][1];
+    for (let i = 0; i < points.length - 1; i++) {
+      const [t1, s1] = points[i], [t2, s2] = points[i + 1];
+      if (t >= t1 && t <= t2) return s1 + (s2 - s1) * (t - t1) / (t2 - t1);
+    }
+    return points[points.length - 1][1];
+  }
+
+  function num(el) {
+    const v = parseFloat(el.value);
+    return isNaN(v) || v < 0 ? 0 : v;
+  }
+
+  function calc() {
+    const a = num(mSolute);            // 溶质
+    let solv, soln;                    // 溶剂、溶液
+    if (mode === 'both') {
+      solv = num(mSolvent);
+      soln = a + solv;
+    } else {
+      soln = num(mSolution);
+      solv = soln - a;
+    }
+
+    // 校验
+    let invalid = false;
+    if (a > soln && soln > 0) {
+      invalid = true;
+      warnSolute.style.display = 'inline';
+    } else {
+      warnSolute.style.display = 'none';
+    }
+    if (solv < 0) {
+      warnSolute.style.display = 'inline';
+      invalid = true;
+    }
+
+    if (soln <= 0) {
+      wValue.textContent = '—';
+      wBar.style.width = '0%';
+      wBarLabel.textContent = '请输入溶液质量';
+      wDetail.innerHTML = '溶质 ' + a.toFixed(1) + ' g，溶剂 ' + Math.max(solv, 0).toFixed(1) + ' g，溶液质量不能为 0';
+      return;
+    }
+
+    const w = a / soln * 100;
+    wValue.textContent = w.toFixed(1) + '%';
+    wBar.style.width = Math.min(w, 100) + '%';
+    if (w < 25) wBarLabel.textContent = '浓度较低';
+    else if (w < 50) wBarLabel.textContent = '浓度适中';
+    else if (w < 75) wBarLabel.textContent = '浓度较高';
+    else wBarLabel.textContent = '接近饱和极限（浓溶液）';
+    wDetail.innerHTML = `溶质 <b>${a.toFixed(1)}</b> g，溶剂 <b>${Math.max(solv, 0).toFixed(1)}</b> g，溶液 <b>${soln.toFixed(1)}</b> g<br>质量分数 = ${a.toFixed(1)} / ${soln.toFixed(1)} × 100% = <b>${w.toFixed(1)}%</b>`;
+
+    // 更新饱和判断
+    updateSaturation(a, solv);
+  }
+
+  // 饱和判断
+  function updateSaturation(soluteMass, solventMass) {
+    const key = document.getElementById('satSolute').value;
+    const temp = parseFloat(document.getElementById('satTemp').value);
+    const d = SOL[key];
+    const s = interp(d.points, temp); // 该温度下 100g 水的溶解度
+    const verdict = document.getElementById('satVerdict');
+    verdict.className = 'sat-verdict';
+
+    if (solventMass <= 0) {
+      verdict.className = 'sat-verdict unsat';
+      verdict.innerHTML = '请输入溶剂质量，才能与溶解度对比判断是否饱和。';
+      return;
+    }
+    // 折合到每 100g 溶剂能溶解的溶质
+    const per100 = soluteMass / solventMass * 100;
+    let text = `在 ${temp}°C 时，${d.label}（${d.name}）的溶解度为 <b>${s.toFixed(s < 1 ? 3 : 1)} g</b>，即每 100 g 水最多能溶解 ${s.toFixed(s < 1 ? 3 : 1)} g。`;
+    const diff = per100 - s;
+    if (diff > 1e-9) {
+      verdict.className = 'sat-verdict saturated';
+      text += ` 你配的溶液相当于每 100 g 水含 ${per100.toFixed(1)} g 溶质，<b>超过了溶解极限</b>，是<b style="color:#E74C3C;">饱和溶液</b>，多余 ${(diff).toFixed(1)} g（折合每 100 g 水）不会溶解。`;
+    } else if (Math.abs(diff) < 1e-9) {
+      verdict.className = 'sat-verdict exact';
+      text += ` 你配的溶液正好达到溶解极限，是<b style="color:#E67E22;">恰好饱和的溶液</b>。`;
+    } else {
+      verdict.className = 'sat-verdict unsat';
+      text += ` 你配的溶液相当于每 100 g 水含 ${per100.toFixed(1)} g 溶质，<b>还能再溶解</b>（最多还能溶 ${(-diff).toFixed(1)} g），是<b style="color:#2E6BA8;">不饱和溶液</b>。`;
+    }
+    verdict.innerHTML = text;
+  }
+
+  window.setMode = function (m) {
+    mode = m;
+    document.querySelectorAll('.mode-pill').forEach(p =>
+      p.classList.toggle('active', p.dataset.mode === m));
+    rowSolvent.style.display = m === 'both' ? '' : 'none';
+    rowSolution.style.display = m === 'solution' ? '' : 'none';
+    calc();
+  };
+
+  [mSolute, mSolvent, mSolution].forEach(el => el.addEventListener('input', calc));
+
+  // 饱和面板事件
+  document.getElementById('satSolute').addEventListener('change', () => calc());
+  const satTemp = document.getElementById('satTemp');
+  const satTempShow = document.getElementById('satTempShow');
+  satTemp.addEventListener('input', () => {
+    satTempShow.textContent = satTemp.value;
+    calc();
+  });
+
+  setMode('both');
+})();
+
+/* ================================================================
+   ④ 练习题
+   ================================================================ */
+(function () {
+  document.querySelectorAll('.quiz-question').forEach(q => {
+    const correct = q.dataset.correct;
+    q.querySelectorAll('.quiz-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (q.classList.contains('correct') || q.classList.contains('wrong')) return;
+        const key = opt.dataset.key;
+        q.querySelectorAll('.quiz-option').forEach(o =>
+          o.classList.remove('selected', 'correct-answer', 'wrong-answer'));
+        opt.classList.add('selected');
+        if (key === correct) {
+          q.classList.add('correct');
+          opt.classList.add('correct-answer');
+        } else {
+          q.classList.add('wrong');
+          opt.classList.add('wrong-answer');
+          q.querySelectorAll('.quiz-option').forEach(o => {
+            if (o.dataset.key === correct) o.classList.add('correct-answer');
+          });
+        }
+      });
+    });
+  });
+})();
+</script>
+<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>酸和碱 · 九年级化学</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本页专属样式（化学红 + 指示剂多色） ===== */
+    .navbar {
+      background: linear-gradient(135deg, #C0392B, #E74C3C);
+      box-shadow: 0 2px 12px rgba(192,57,43,0.3);
+    }
+    .navbar-links a:hover { background: rgba(255,255,255,0.15); }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 12px;
+      padding-left: 14px;
+      border-left: 5px solid var(--chemistry);
+      line-height: 1.3;
+    }
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin-bottom: 18px;
+      padding-left: 19px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      text-align: center;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(231,76,60,0.08), rgba(52,152,219,0.05));
+      border-radius: var(--radius);
+      margin: 20px 0;
+      border: 1px solid rgba(231,76,60,0.2);
+    }
+    .formula-box .big-formula {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--chemistry);
+      font-family: "Times New Roman", serif;
+      letter-spacing: 1px;
+      margin: 6px 0;
+    }
+    .formula-box .formula-desc { color: var(--text-secondary); font-size: 14px; }
+
+    /* 生活卡片网格 */
+    .life-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .life-card {
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      background: white;
+      border: 2px solid var(--border);
+      border-top: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .life-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .life-card.base { border-top-color: #3498DB; }
+    .life-card .l-icon { font-size: 38px; margin-bottom: 8px; }
+    .life-card .l-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--chemistry); }
+    .life-card.base .l-name { color: #2E6BA8; }
+    .life-card .l-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .life-card .l-formula {
+      display: inline-block;
+      font-size: 13px;
+      font-family: "Times New Roman", serif;
+      background: var(--bg-soft);
+      padding: 3px 10px;
+      border-radius: 10px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .life-card.base .l-formula { background: rgba(52,152,219,0.1); color: #2E6BA8; }
+    .life-card .l-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      margin-top: 6px;
+      background: rgba(231,76,60,0.1);
+      color: var(--chemistry);
+      font-weight: 600;
+    }
+    .life-card.base .l-tag { background: rgba(52,152,219,0.12); color: #2E6BA8; }
+
+    /* SVG 示意图容器 */
+    .figure-box {
+      background: #FFFDFA;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin: 18px 0;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .figure-box .fig-caption {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .btn-chem { background: var(--chemistry); color: white; }
+    .btn-chem:hover { background: #C0392B; transform: translateY(-1px); }
+    .btn-blue { background: #3498DB; color: white; }
+    .btn-blue:hover { background: #2E6BA8; transform: translateY(-1px); }
+
+    /* ===== 实验台样式 ===== */
+    .lab-area {
+      background: linear-gradient(180deg, #F8F9FA 0%, #EAECEE 100%);
+      border-radius: var(--radius);
+      padding: 24px 18px;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    .lab-shelf {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 600px) { .lab-shelf { grid-template-columns: repeat(2, 1fr); } }
+    .reagent-bottle {
+      position: relative;
+      cursor: pointer;
+      text-align: center;
+      padding: 12px 8px 8px;
+      border-radius: var(--radius-sm);
+      background: white;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+    }
+    .reagent-bottle:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+    .reagent-bottle.selected { border-color: var(--chemistry); background: rgba(231,76,60,0.05); }
+    .reagent-bottle.poured { opacity: 0.45; pointer-events: none; }
+    .reagent-bottle svg { display: block; margin: 0 auto; }
+    .reagent-bottle .b-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 4px;
+      color: var(--text-main);
+    }
+    .reagent-bottle .b-formula {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: "Times New Roman", serif;
+    }
+    .lab-beaker-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .indicator-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 14px 0 6px;
+    }
+    .indicator-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .indicator-btn:hover { border-color: var(--primary); }
+    .indicator-btn.active { border-color: var(--chemistry); background: rgba(231,76,60,0.08); color: var(--chemistry); }
+    .lab-status {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      min-height: 20px;
+    }
+    .lab-controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== pH 滑块 ===== */
+    .ph-wrap {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      align-items: center;
+      margin: 20px 0;
+    }
+    @media (max-width: 800px) { .ph-wrap { grid-template-columns: 1fr; } }
+    .ph-slider-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+    .ph-display-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .ph-value-box {
+      width: 92px;
+      height: 92px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 800;
+      color: white;
+      font-family: "Times New Roman", serif;
+      transition: background 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .ph-info { flex: 1; }
+    .ph-info .ph-label {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .ph-info .ph-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .ph-range-wrap {
+      position: relative;
+      margin-top: 12px;
+    }
+    .ph-range-wrap input[type="range"] {
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg,
+        #8B0000 0%, #E74C3C 14%, #E67E22 28%, #F1C40F 42%,
+        #2ECC71 50%, #3498DB 64%, #2980B9 78%, #5B2C6F 100%);
+      outline: none;
+    }
+    .ph-range-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #2C3E50;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    .ph-tick {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      padding: 0 4px;
+    }
+    .ph-paper-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border-top: 5px solid var(--chemistry);
+    }
+    .ph-paper {
+      width: 100%;
+      height: 70px;
+      border-radius: 8px;
+      margin: 8px 0 14px;
+      transition: background 0.3s;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: inset 0 -8px 14px rgba(0,0,0,0.08);
+    }
+    .ph-paper-label { font-size: 13px; color: var(--text-secondary); }
+
+    /* pH 对照表 */
+    .ph-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .ph-table th, .ph-table td {
+      padding: 8px 10px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .ph-table th { background: var(--bg-soft); font-weight: 700; color: var(--text-main); }
+    .ph-table .swatch {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-right: 6px;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+    .ph-table tr.strong-acid { background: rgba(231,76,60,0.06); }
+    .ph-table tr.weak-acid { background: rgba(230,126,34,0.06); }
+    .ph-table tr.neutral { background: rgba(46,204,113,0.06); }
+    .ph-table tr.weak-base { background: rgba(52,152,219,0.06); }
+    .ph-table tr.strong-base { background: rgba(91,44,111,0.06); }
+
+    /* ===== 中和反应动画 ===== */
+    .neutral-wrap {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    .neutral-status {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      margin: 10px 0;
+      min-height: 24px;
+      color: var(--text-secondary);
+    }
+    .neutral-status.running { color: #3498DB; }
+    .neutral-status.done { color: var(--success); }
+    .neutral-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .neutral-options {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 10px 0;
+      flex-wrap: wrap;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .neutral-options label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 16px;
+      background: white;
+      border: 2px solid var(--border);
+    }
+    .neutral-options input { accent-color: var(--chemistry); }
+    .thermo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .thermo-bar-track {
+      flex: 1;
+      max-width: 200px;
+      height: 10px;
+      background: var(--bg-soft);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .thermo-bar-fill {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #3498DB, #E74C3C);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    .thermo-value { font-weight: 700; color: var(--chemistry); font-family: "Times New Roman", serif; }
+
+    /* ===== 酸碱性质对比表 ===== */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .compare-table th, .compare-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table thead th {
+      background: var(--chemistry);
+      color: white;
+      font-weight: 700;
+      text-align: center;
+    }
+    .compare-table thead th.base-head { background: #2E6BA8; }
+    .compare-table tbody tr:hover { background: var(--bg-soft); }
+    .compare-table .row-label {
+      font-weight: 700;
+      background: var(--bg-soft);
+      width: 110px;
+    }
+    .compare-table td { color: var(--text-main); }
+    .compare-table .formula-cell {
+      font-family: "Times New Roman", serif;
+      font-weight: 600;
+      text-align: center;
+      font-size: 15px;
+    }
+    .compare-table .name-cell { text-align: center; font-weight: 600; }
+    .compare-table .name-cell.acid-name { color: var(--chemistry); }
+    .compare-table .name-cell.base-name { color: #2E6BA8; }
+
+    .cross-ref-box p { margin: 6px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand">🧪 酸和碱</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../数学/九年级/index.html">📐 数学九年级</a></li>
+    <li><a href="../八年级/index.html">🧪 化学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">化学</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>酸和碱</span>
+  </div>
+
+  <h1 style="font-size: 28px; margin-bottom: 8px;">🧪 酸和碱</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从厨房里的醋到清洁剂里的碱——认识两类最常见也是最重要的化合物</p>
+
+  <!-- ===== 1. 引入：生活中的酸和碱 ===== -->
+  <h2 class="section-title">一、生活中的酸和碱</h2>
+  <p class="section-subtitle">酸和碱无处不在——厨房、身体、清洁用品里都能找到它们</p>
+
+  <div class="card">
+    <p>你品尝过<b>醋的酸味</b>、闻过<b>柠檬的清香</b>，胃里翻腾时感到的"烧心"是<b>胃酸</b>在作怪；你用<b>肥皂</b>洗手、用<b>清洁剂</b>擦地，里面都藏着另一类物质——<b>碱</b>。酸和碱是化学中两类最常见、最重要的化合物，它们性质迥异却又密不可分。</p>
+
+    <div class="life-grid">
+      <div class="life-card">
+        <div class="l-icon">🫗</div>
+        <div class="l-name">醋酸</div>
+        <div class="l-sub">食醋的主要成分</div>
+        <div class="l-formula">CH₃COOH</div>
+        <div class="l-tag">酸</div>
+      </div>
+      <div class="life-card">
+        <div class="l-icon">🍋</div>
+        <div class="l-name">柠檬酸</div>
+        <div class="l-sub">柠檬、柑橘中的有机酸</div>
+        <div class="l-formula">C₆H₈O₇</div>
+        <div class="l-tag">酸</div>
+      </div>
+      <div class="life-card">
+        <div class="l-icon">🫃</div>
+        <div class="l-name">盐酸</div>
+        <div class="l-sub">胃酸的主要成分</div>
+        <div class="l-formula">HCl</div>
+        <div class="l-tag">酸</div>
+      </div>
+      <div class="life-card base">
+        <div class="l-icon">🧼</div>
+        <div class="l-name">氢氧化钠</div>
+        <div class="l-sub">肥皂、清洁剂原料</div>
+        <div class="l-formula">NaOH</div>
+        <div class="l-tag">碱</div>
+      </div>
+      <div class="life-card base">
+        <div class="l-icon">🧱</div>
+        <div class="l-name">氢氧化钙</div>
+        <div class="l-sub">建筑材料、改良土壤</div>
+        <div class="l-formula">Ca(OH)₂</div>
+        <div class="l-tag">碱</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 一个简单的判断</div>
+      凡是<b>水溶液电离出的阳离子全部是 H⁺</b>的化合物，是<b>酸</b>；凡是<b>电离出的阴离子全部是 OH⁻</b>的化合物，是<b>碱</b>。下面我们就来仔细看看这个定义。
+    </div>
+  </div>
+
+  <!-- ===== 2. 概念定义 ===== -->
+  <h2 class="section-title">二、什么是酸？什么是碱？</h2>
+  <p class="section-subtitle">从电离的角度定义酸和碱——H⁺ 与 OH⁻ 的故事</p>
+
+  <div class="card">
+    <p>把酸或碱溶于水后，它们会<b>电离</b>（在水分子作用下解离成自由移动的离子）。正是这些离子，决定了它们是酸还是碱。</p>
+
+    <div class="formula-box">
+      <div style="font-size: 16px; color: var(--text-main); margin-bottom: 8px; font-weight: 600;">📌 酸和碱的定义</div>
+      <div class="big-formula" style="font-size: 22px;">酸 ⟶ H⁺ + 酸根离子 &nbsp;&nbsp;|&nbsp;&nbsp; 碱 ⟶ 金属离子 + OH⁻</div>
+      <div class="formula-desc">
+        <b style="color: var(--chemistry);">酸</b>：电离时生成的阳离子<b>全部是 H⁺</b>的化合物<br>
+        <b style="color: #2E6BA8;">碱</b>：电离时生成的阴离子<b>全部是 OH⁻</b>的化合物
+      </div>
+    </div>
+
+    <div class="figure-box">
+      <svg viewBox="0 0 680 340" width="100%" style="max-width: 680px; display: block; margin: 0 auto;">
+        <defs>
+          <linearGradient id="waterGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A9CCE3" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#5FA8E0" stop-opacity="0.35"/>
+          </linearGradient>
+        </defs>
+        <!-- ===== 左：HCl 电离 ===== -->
+        <text x="170" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#E74C3C">盐酸 HCl 在水中电离</text>
+        <!-- 烧杯左 -->
+        <path d="M40 70 L40 270 L300 270 L300 70" fill="none" stroke="#7F8C8D" stroke-width="4" stroke-linecap="round"/>
+        <line x1="33" y1="70" x2="307" y2="70" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+        <rect x="46" y="105" width="248" height="160" rx="4" fill="url(#waterGrad2)"/>
+        <path d="M46 105 Q 80 99, 114 105 T 182 105 T 250 105 T 294 105" fill="none" stroke="#2E6BA8" stroke-width="2.5" opacity="0.8"/>
+
+        <!-- HCl 分子（未电离） -->
+        <g>
+          <circle cx="100" cy="160" r="22" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+          <text x="100" y="165" text-anchor="middle" font-size="14" font-weight="700" fill="white">H</text>
+          <circle cx="138" cy="160" r="26" fill="#F39C12" stroke="#D68910" stroke-width="2"/>
+          <text x="138" y="166" text-anchor="middle" font-size="13" font-weight="700" fill="white">Cl</text>
+          <text x="119" y="200" text-anchor="middle" font-size="11" fill="#7F8C8D">HCl 分子</text>
+        </g>
+
+        <!-- 箭头 -->
+        <path d="M180 160 Q 220 130, 250 160" fill="none" stroke="#E74C3C" stroke-width="2" marker-end="url(#arrHcl)"/>
+        <defs>
+          <marker id="arrHcl" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#E74C3C"/>
+          </marker>
+        </defs>
+        <text x="215" y="125" text-anchor="middle" font-size="11" fill="#E74C3C" font-weight="600">电离</text>
+
+        <!-- 电离后的离子 -->
+        <circle cx="210" cy="215" r="16" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+        <text x="210" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="white">H⁺</text>
+
+        <circle cx="260" cy="230" r="20" fill="#F39C12" stroke="#D68910" stroke-width="2"/>
+        <text x="260" y="236" text-anchor="middle" font-size="12" font-weight="700" fill="white">Cl⁻</text>
+
+        <!-- 标注 -->
+        <line x1="210" y1="215" x2="170" y2="295" stroke="#E74C3C" stroke-width="1.5"/>
+        <text x="155" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#E74C3C">阳离子全部是 H⁺</text>
+        <text x="155" y="328" text-anchor="middle" font-size="11" fill="#7F8C8D">所以 HCl 是酸</text>
+
+        <!-- ===== 右：NaOH 电离 ===== -->
+        <text x="510" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#2E6BA8">氢氧化钠 NaOH 在水中电离</text>
+        <!-- 烧杯右 -->
+        <path d="M380 70 L380 270 L640 270 L640 70" fill="none" stroke="#7F8C8D" stroke-width="4" stroke-linecap="round"/>
+        <line x1="373" y1="70" x2="647" y2="70" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+        <rect x="386" y="105" width="248" height="160" rx="4" fill="url(#waterGrad2)"/>
+        <path d="M386 105 Q 420 99, 454 105 T 522 105 T 590 105 T 634 105" fill="none" stroke="#2E6BA8" stroke-width="2.5" opacity="0.8"/>
+
+        <!-- NaOH 分子 -->
+        <g>
+          <circle cx="440" cy="160" r="22" fill="#9B59B6" stroke="#7D3C98" stroke-width="2"/>
+          <text x="440" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="white">Na</text>
+          <circle cx="478" cy="160" r="18" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+          <text x="478" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="white">O</text>
+          <circle cx="504" cy="160" r="14" fill="#3498DB" stroke="#2E6BA8" stroke-width="2"/>
+          <text x="504" y="165" text-anchor="middle" font-size="10" font-weight="700" fill="white">H</text>
+          <text x="472" y="200" text-anchor="middle" font-size="11" fill="#7F8C8D">NaOH</text>
+        </g>
+
+        <!-- 箭头 -->
+        <path d="M540 160 Q 575 130, 595 160" fill="none" stroke="#2E6BA8" stroke-width="2" marker-end="url(#arrNaoh)"/>
+        <defs>
+          <marker id="arrNaoh" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#2E6BA8"/>
+          </marker>
+        </defs>
+        <text x="572" y="125" text-anchor="middle" font-size="11" fill="#2E6BA8" font-weight="600">电离</text>
+
+        <!-- 电离后的离子 -->
+        <circle cx="555" cy="215" r="18" fill="#9B59B6" stroke="#7D3C98" stroke-width="2"/>
+        <text x="555" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="white">Na⁺</text>
+
+        <circle cx="600" cy="230" r="20" fill="#3498DB" stroke="#2E6BA8" stroke-width="2"/>
+        <text x="600" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="white">OH⁻</text>
+
+        <!-- 标注 -->
+        <line x1="600" y1="230" x2="555" y2="295" stroke="#2E6BA8" stroke-width="1.5"/>
+        <text x="525" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#2E6BA8">阴离子全部是 OH⁻</text>
+        <text x="525" y="328" text-anchor="middle" font-size="11" fill="#7F8C8D">所以 NaOH 是碱</text>
+      </svg>
+      <div class="fig-caption">图 1｜HCl 电离出 H⁺ 和 Cl⁻（阳离子全部是 H⁺，是酸）；NaOH 电离出 Na⁺ 和 OH⁻（阴离子全部是 OH⁻，是碱）</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 "全部"二字很关键</div>
+      酸的定义强调"阳离子<b>全部</b>是 H⁺"——比如 NaHSO₄ 电离会得到 Na⁺ 和 H⁺，阳离子不全是 H⁺，<b>不是酸</b>而是盐；同理碱要求阴离子<b>全部</b>是 OH⁻，Cu₂(OH)₂CO₃ 电离得到的阴离子有 OH⁻ 和 CO₃²⁻，不全是 OH⁻，<b>不是碱</b>而是盐。
+    </div>
+  </div>
+
+  <!-- ===== 3. 交互探索1：酸碱指示剂 ===== -->
+  <h2 class="section-title">三、交互探索①：酸碱指示剂</h2>
+  <p class="section-subtitle">紫色石蕊和无色酚酞——能用颜色"告诉"你酸碱的魔法试剂</p>
+
+  <div class="card">
+    <p><b>酸碱指示剂</b>是能在酸或碱溶液中显示<b>不同颜色</b>的物质。最常用的两种是：</p>
+    <ul style="margin: 10px 0 10px 22px; line-height: 2; font-size: 15px;">
+      <li>🟣 <b>紫色石蕊试液</b>：遇酸变<b style="color:#E74C3C;">红</b>色，遇碱变<b style="color:#2E6BA8;">蓝</b>色</li>
+      <li>⚪ <b>无色酚酞试液</b>：遇酸<b>不变色</b>（仍为无色），遇碱变<b style="color:#E91E63;">红</b>色</li>
+    </ul>
+    <p style="font-size: 14px; color: var(--text-secondary);">下面是虚拟实验台——点击试剂瓶把试剂倒入烧杯，然后选择指示剂滴入，观察颜色变化。</p>
+
+    <div class="lab-area">
+      <div style="text-align:center; font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">
+        👆 点击下方试剂瓶，将试剂倒入烧杯
+      </div>
+      <div class="lab-shelf" id="reagentShelf">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div class="lab-beaker-wrap">
+        <svg id="labBeaker" viewBox="0 0 320 280" width="260" style="max-width: 260px;">
+          <!-- 烧杯 -->
+          <path d="M40 40 L40 240 L280 240 L280 40" fill="none" stroke="#5D6D7E" stroke-width="5" stroke-linecap="round"/>
+          <line x1="32" y1="40" x2="288" y2="40" stroke="#5D6D7E" stroke-width="4" stroke-linecap="round"/>
+          <!-- 烧杯口 -->
+          <path d="M40 40 L30 25 L60 25 L50 40" fill="#D5DBDB" stroke="#5D6D7E" stroke-width="2"/>
+          <!-- 刻度 -->
+          <line x1="40" y1="100" x2="55" y2="100" stroke="#7F8C8D" stroke-width="1.5"/>
+          <text x="62" y="104" font-size="10" fill="#7F8C8D">100</text>
+          <line x1="40" y1="150" x2="55" y2="150" stroke="#7F8C8D" stroke-width="1.5"/>
+          <text x="62" y="154" font-size="10" fill="#7F8C8D">50</text>
+          <!-- 液体 -->
+          <rect id="beakerLiquid" x="48" y="80" width="224" height="156" rx="3" fill="#E8EEF4" opacity="0.6"/>
+          <!-- 水面波纹 -->
+          <path id="beakerSurface" d="M48 80 Q 80 74, 112 80 T 176 80 T 240 80 T 272 80" fill="none" stroke="#5D6D7E" stroke-width="2" opacity="0.5"/>
+          <!-- 烧杯标签 -->
+          <text x="160" y="265" text-anchor="middle" font-size="13" fill="#5D6D7E" font-weight="600">烧杯</text>
+        </svg>
+      </div>
+
+      <div class="indicator-bar">
+        <button class="indicator-btn" data-indicator="litmus">🟣 滴入紫色石蕊</button>
+        <button class="indicator-btn" data-indicator="phenol">⚪ 滴入无色酚酞</button>
+      </div>
+
+      <div class="lab-status" id="labStatus">👆 请先选择一种试剂倒入烧杯</div>
+
+      <div class="lab-controls">
+        <button class="btn btn-outline btn-sm" id="labReset">↻ 清空烧杯</button>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <b>🔍 实验规律总结：</b>
+      <ul style="margin: 6px 0 0 18px; line-height: 1.9; font-size: 14px;">
+        <li>紫色石蕊：酸→<b style="color:#E74C3C;">红</b>、中→紫、碱→<b style="color:#2E6BA8;">蓝</b></li>
+        <li>无色酚酞：酸→<b>无色</b>、中→无色、碱→<b style="color:#E91E63;">红</b></li>
+        <li>因此酚酞<b>不能区分酸性还是中性</b>溶液；要全面判断，需要配合石蕊或测 pH。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互探索2：pH 试纸 ===== -->
+  <h2 class="section-title">四、交互探索②：pH 试纸</h2>
+  <p class="section-subtitle">用 0~14 的数字精确描述酸碱强弱</p>
+
+  <div class="card">
+    <p><b>pH</b> 是用来衡量溶液酸碱性强弱的一个量，范围是 <b>0~14</b>。pH 越小，酸性越强；pH 越大，碱性越强。测定 pH 最简便的方法是用 <b>pH 试纸</b>——把待测液滴在试纸上，试纸会显示不同颜色，与标准比色卡对照即可读出 pH。</p>
+
+    <div class="ph-wrap">
+      <div class="ph-slider-card">
+        <div class="ph-display-row">
+          <div class="ph-value-box" id="phValueBox">7</div>
+          <div class="ph-info">
+            <div class="ph-label" id="phLabel">中性</div>
+            <div class="ph-desc" id="phDesc">溶液呈中性，H⁺ 浓度 = OH⁻ 浓度</div>
+          </div>
+        </div>
+        <div class="ph-range-wrap">
+          <input type="range" id="phSlider" min="0" max="14" step="0.1" value="7">
+          <div class="ph-tick">
+            <span>0 强酸</span><span>2</span><span>4</span><span>6</span><span>7</span><span>8</span><span>10</span><span>12</span><span>14 强碱</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ph-paper-card">
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">📄 pH 试纸颜色</div>
+        <div class="ph-paper" id="phPaper"></div>
+        <div class="ph-paper-label" id="phPaperLabel">中性 · 绿色</div>
+      </div>
+    </div>
+
+    <h3 style="font-size: 16px; margin: 18px 0 8px; color: var(--text-main);">📋 常见物质的 pH 对照表</h3>
+    <table class="ph-table">
+      <thead>
+        <tr><th>pH 范围</th><th>等级</th><th>试纸颜色</th><th>常见物质</th></tr>
+      </thead>
+      <tbody>
+        <tr class="strong-acid">
+          <td>0 ~ 2</td><td>强酸</td>
+          <td><span class="swatch" style="background:#8B0000;"></span>深红</td>
+          <td>胃液 (≈1.5)、蓄电池酸 (≈1)、柠檬汁 (≈2)</td>
+        </tr>
+        <tr class="weak-acid">
+          <td>3 ~ 5</td><td>弱酸</td>
+          <td><span class="swatch" style="background:#E67E22;"></span>橙</td>
+          <td>食醋 (≈3)、番茄汁 (≈4)、咖啡 (≈5)</td>
+        </tr>
+        <tr class="weak-acid">
+          <td>6</td><td>弱酸</td>
+          <td><span class="swatch" style="background:#F1C40F;"></span>淡黄</td>
+          <td>牛奶 (≈6.5)、雨水 (≈5.6)</td>
+        </tr>
+        <tr class="neutral">
+          <td>7</td><td>中性</td>
+          <td><span class="swatch" style="background:#2ECC71;"></span>绿</td>
+          <td>纯水 (7)、人体血液 (≈7.4)、唾液 (≈7)</td>
+        </tr>
+        <tr class="weak-base">
+          <td>8 ~ 9</td><td>弱碱</td>
+          <td><span class="swatch" style="background:#3498DB;"></span>淡蓝</td>
+          <td>海水 (≈8)、小苏打溶液 (≈8.3)、牙膏 (≈9)</td>
+        </tr>
+        <tr class="weak-base">
+          <td>10 ~ 11</td><td>中强碱</td>
+          <td><span class="swatch" style="background:#2980B9;"></span>蓝</td>
+          <td>肥皂水 (≈10)、纯碱溶液 (≈11)</td>
+        </tr>
+        <tr class="strong-base">
+          <td>12 ~ 14</td><td>强碱</td>
+          <td><span class="swatch" style="background:#5B2C6F;"></span>紫</td>
+          <td>家用清洁剂 (≈12)、NaOH 溶液 (≈13~14)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip-box" style="margin-top: 14px;">
+      <div class="tip-title">💡 三个关键点</div>
+      ① pH 每相差 1，H⁺ 浓度相差 <b>10 倍</b>——pH=2 的酸比 pH=4 的酸 H⁺ 浓度高 100 倍！<br>
+      ② pH=7 不一定是中性，<b>只有在 25°C 时</b> pH=7 才是中性（温度升高，水的电离增大，中性 pH 会小于 7）。<br>
+      ③ 测 pH 时 pH 试纸<b>不能直接浸入</b>待测液——用玻璃棒蘸取待测液滴在试纸上，以免污染试剂。
+    </div>
+  </div>
+
+  <!-- ===== 5. 酸碱中和反应 ===== -->
+  <h2 class="section-title">五、酸碱中和反应</h2>
+  <p class="section-subtitle">H⁺ 和 OH⁻ "握手言和"——生成水和盐的奇妙反应</p>
+
+  <div class="card">
+    <p><b>中和反应</b>：酸和碱作用生成<b>盐</b>和<b>水</b>的反应。本质是 H⁺ 和 OH⁻ 结合成水（H₂O）。</p>
+
+    <div class="formula-box">
+      <div class="big-formula">HCl + NaOH ⟶ NaCl + H₂O</div>
+      <div class="formula-desc">盐酸 + 氢氧化钠 → 氯化钠（盐）+ 水 &nbsp;|&nbsp; 本质：H⁺ + OH⁻ ⟶ H₂O</div>
+    </div>
+
+    <p>中和反应<b>放热</b>（升温），是<b>复分解反应</b>的一种特殊情况。它在生活中应用广泛：用<b>胃舒平</b>（含 Al(OH)₃）中和过多胃酸、用<b>熟石灰</b>改良酸性土壤、用<b>食醋</b>中和被蚊虫叮咬处（蚊虫分泌蚁酸）。</p>
+
+    <div class="neutral-wrap">
+      <div class="neutral-options">
+        <label><input type="checkbox" id="addIndicator" checked> 加入紫色石蕊（酸红/碱蓝）</label>
+        <label><input type="checkbox" id="showHeat" checked> 显示温度变化</label>
+      </div>
+
+      <svg id="neutralSvg" viewBox="0 0 680 320" width="100%" style="max-width: 680px; display: block; margin: 0 auto;">
+        <defs>
+          <linearGradient id="acidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F5B7B1" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#E74C3C" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#AED6F1" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#3498DB" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="neutralGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D5DBDB" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#85929E" stop-opacity="0.45"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 左烧杯（酸） -->
+        <g id="acidBeaker">
+          <path d="M40 60 L40 270 L160 270 L160 60" fill="none" stroke="#5D6D7E" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="60" x2="168" y2="60" stroke="#5D6D7E" stroke-width="3" stroke-linecap="round"/>
+          <rect id="acidLiquid" x="46" y="100" width="108" height="166" rx="3" fill="url(#acidGrad)"/>
+          <path d="M46 100 Q 73 95, 100 100 T 154 100" fill="none" stroke="#C0392B" stroke-width="2" opacity="0.6"/>
+          <text x="100" y="290" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">HCl（酸）</text>
+          <text x="100" y="306" text-anchor="middle" font-size="11" fill="#7F8C8D">含 H⁺</text>
+        </g>
+
+        <!-- 右烧杯（碱） -->
+        <g id="baseBeaker">
+          <path d="M520 60 L520 270 L640 270 L640 60" fill="none" stroke="#5D6D7E" stroke-width="4" stroke-linecap="round"/>
+          <line x1="512" y1="60" x2="648" y2="60" stroke="#5D6D7E" stroke-width="3" stroke-linecap="round"/>
+          <rect id="baseLiquid" x="526" y="100" width="108" height="166" rx="3" fill="url(#baseGrad)"/>
+          <path d="M526 100 Q 553 95, 580 100 T 634 100" fill="none" stroke="#2E6BA8" stroke-width="2" opacity="0.6"/>
+          <text x="580" y="290" text-anchor="middle" font-size="13" font-weight="700" fill="#2E6BA8">NaOH（碱）</text>
+          <text x="580" y="306" text-anchor="middle" font-size="11" fill="#7F8C8D">含 OH⁻</text>
+        </g>
+
+        <!-- 中间反应区 -->
+        <g id="reactionZone">
+          <text x="340" y="38" text-anchor="middle" font-size="13" fill="#7F8C8D">混合反应区</text>
+          <!-- 动态粒子层 -->
+          <g id="particleLayer"></g>
+          <!-- 生成的水分子层 -->
+          <g id="waterLayer"></g>
+        </g>
+
+        <!-- 提示文字 -->
+        <text id="neutralHint" x="340" y="160" text-anchor="middle" font-size="13" fill="#7F8C8D">点击"混合"按钮，让 H⁺ 和 OH⁻ 相遇</text>
+      </svg>
+
+      <div class="neutral-status" id="neutralStatus">点击下方按钮，开始反应</div>
+
+      <div class="thermo-box" id="thermoBox" style="display:none;">
+        <span style="color: var(--text-secondary);">🌡️ 温度：</span>
+        <div class="thermo-bar-track"><div class="thermo-bar-fill" id="thermoFill"></div></div>
+        <span class="thermo-value" id="thermoValue">25°C</span>
+        <span style="color: var(--danger); font-size: 12px;">↑ 放热！</span>
+      </div>
+
+      <div class="neutral-controls">
+        <button class="btn btn-chem" id="neutralStart">▶ 混合</button>
+        <button class="btn btn-outline" id="neutralReset">↻ 重置</button>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 中和反应的"三看"</div>
+      ① 看现象：加石蕊的酸（红）+ 碱（蓝）→ 中和后变<b>紫</b>（中性）；加酚酞的碱（红）+ 酸 → 中和后变<b>无色</b>。<br>
+      ② 看能量：中和反应<b>放热</b>，溶液温度会升高几度。<br>
+      ③ 看方程式：产物一定是<b>盐 + 水</b>——记住这个模式即可快速识别中和反应。
+    </div>
+  </div>
+
+  <!-- ===== 6. 常见酸和碱的性质对比 ===== -->
+  <h2 class="section-title">六、常见酸和碱的性质对比</h2>
+  <p class="section-subtitle">三大强酸 vs 三大强碱——一目了然</p>
+
+  <div class="card">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>类别</th>
+          <th colspan="3">酸（电离出 H⁺）</th>
+          <th colspan="3 base-head">碱（电离出 OH⁻）</th>
+        </tr>
+        <tr>
+          <th>物质</th>
+          <th>盐酸</th>
+          <th>硫酸</th>
+          <th>硝酸</th>
+          <th class="base-head">氢氧化钠</th>
+          <th class="base-head">氢氧化钙</th>
+          <th class="base-head">氨水</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">化学式</td>
+          <td class="formula-cell">HCl</td>
+          <td class="formula-cell">H₂SO₄</td>
+          <td class="formula-cell">HNO₃</td>
+          <td class="formula-cell">NaOH</td>
+          <td class="formula-cell">Ca(OH)₂</td>
+          <td class="formula-cell">NH₃·H₂O</td>
+        </tr>
+        <tr>
+          <td class="row-label">俗称</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="name-cell base-name">烧碱 / 火碱</td>
+          <td class="name-cell base-name">熟石灰 / 消石灰</td>
+          <td class="name-cell base-name">—</td>
+        </tr>
+        <tr>
+          <td class="row-label">颜色状态</td>
+          <td>无色液体</td>
+          <td>无色油状液体</td>
+          <td>无色液体</td>
+          <td>白色固体</td>
+          <td>白色粉末</td>
+          <td>无色液体</td>
+        </tr>
+        <tr>
+          <td class="row-label">气味</td>
+          <td>刺激性</td>
+          <td>无</td>
+          <td>刺激性</td>
+          <td>无</td>
+          <td>无</td>
+          <td>刺激性（氨臭）</td>
+        </tr>
+        <tr>
+          <td class="row-label">挥发性</td>
+          <td>易挥发</td>
+          <td>难挥发</td>
+          <td>易挥发</td>
+          <td>不挥发</td>
+          <td>不挥发</td>
+          <td>易挥发（NH₃↑）</td>
+        </tr>
+        <tr>
+          <td class="row-label">溶解性</td>
+          <td>—</td>
+          <td>溶于水放大量热</td>
+          <td>—</td>
+          <td>极易溶于水，<b>剧烈放热</b></td>
+          <td>微溶于水</td>
+          <td>可溶于水</td>
+        </tr>
+        <tr>
+          <td class="row-label">腐蚀性</td>
+          <td>较强腐蚀</td>
+          <td>强脱水性、强腐蚀</td>
+          <td>强腐蚀</td>
+          <td>极强腐蚀</td>
+          <td>较强腐蚀</td>
+          <td>弱腐蚀</td>
+        </tr>
+        <tr>
+          <td class="row-label">用途举例</td>
+          <td>除锈、制胃药、化工原料</td>
+          <td>生产化肥、精炼石油、蓄电池</td>
+          <td>生产化肥、炸药、染料</td>
+          <td>造纸、制肥皂、纺织印染</td>
+          <td>建筑材料、改良酸性土壤</td>
+          <td>制化肥、清洁剂</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning-box">
+      <b>⚠️ 安全提示：</b>浓硫酸和氢氧化钠都有强腐蚀性，使用时要佩戴护目镜和手套；浓硫酸<b>稀释时必须"酸入水"</b>——把浓硫酸沿器壁慢慢注入水中，并用玻璃棒搅拌散热，<b>绝不能把水倒入浓硫酸中</b>，否则水会瞬间沸腾导致酸液飞溅。
+    </div>
+  </div>
+
+  <!-- ===== 7. 练习题 ===== -->
+  <h2 class="section-title">七、练习题</h2>
+  <p class="section-subtitle">检验你对酸和碱的掌握程度</p>
+
+  <div id="quizContainer">
+    <div class="quiz-question" data-correct="b">
+      <div class="question-text">1. 把紫色石蕊试液滴入下列溶液中，能使其变红的是？</div>
+      <div class="quiz-option" data-key="a">A. 食盐水</div>
+      <div class="quiz-option" data-key="b">B. 白醋</div>
+      <div class="quiz-option" data-key="c">C. 肥皂水</div>
+      <div class="quiz-option" data-key="d">D. 石灰水</div>
+    </div>
+
+    <div class="quiz-question" data-correct="c">
+      <div class="question-text">2. 下列说法正确的是？</div>
+      <div class="quiz-option" data-key="a">A. pH=0 的溶液呈中性</div>
+      <div class="quiz-option" data-key="b">B. pH 试纸可以直接浸入待测液中测定</div>
+      <div class="quiz-option" data-key="c">C. pH 越小，酸性越强；pH 越大，碱性越强</div>
+      <div class="quiz-option" data-key="d">D. 无色酚酞遇酸变红，遇碱不变色</div>
+    </div>
+
+    <div class="quiz-question" data-correct="a">
+      <div class="question-text">3. 盐酸与氢氧化钠溶液反应生成氯化钠和水，该反应属于？</div>
+      <div class="quiz-option" data-key="a">A. 中和反应（复分解反应）</div>
+      <div class="quiz-option" data-key="b">B. 化合反应</div>
+      <div class="quiz-option" data-key="c">C. 分解反应</div>
+      <div class="quiz-option" data-key="d">D. 置换反应</div>
+    </div>
+  </div>
+
+  <!-- ===== 8. 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 中和反应<b>放热</b> ↔ <a href="../../物理/九年级/index.html">物理九年级·内能</a>（化学反应的能量变化对应<b>内能</b>的变化——温度升高说明反应释放了内能，可结合比热容估算放出的热量）</p>
+    <p>· pH 数值分析（0~14 的标度、对数关系）↔ <a href="../../数学/九年级/index.html">数学九年级</a>（pH 是以 10 为底的<b>对数</b>——pH 每差 1，H⁺ 浓度差 10 倍；用<b>数据分析</b>方法可绘制溶液 pH 分布图）</p>
+    <p>· 酸碱指示剂的颜色变化 ↔ <a href="../../物理/八年级/04-光现象.html">物理八年级·光现象</a>（不同颜色的物体反射不同波长的光；指示剂的颜色变化本质是其分子结构改变导致吸收/反射光波长改变）</p>
+  </div>
+
+  <!-- ===== step-nav ===== -->
+  <div class="step-nav">
+    <a href="09-溶液.html" class="btn btn-outline">← 上一章：溶液</a>
+    <a href="index.html" class="btn btn-outline btn-sm">返回目录</a>
+    <a href="11-盐化肥.html" class="btn btn-chem">下一章：盐 化肥 →</a>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   ① 酸碱指示剂虚拟实验
+   ================================================================ */
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+
+  // 试剂数据：name / formula / type(acid/base/neutral) / pH
+  const REAGENTS = [
+    { id: 'hcl',    name: '盐酸',       formula: 'HCl',         type: 'acid',    ph: 1, color: '#FADBD8' },
+    { id: 'h2so4',  name: '硫酸',       formula: 'H₂SO₄',       type: 'acid',    ph: 1, color: '#FADBD8' },
+    { id: 'naoh',   name: '氢氧化钠',   formula: 'NaOH',         type: 'base',    ph: 13, color: '#D6EAF8' },
+    { id: 'caoh2',  name: '氢氧化钙',   formula: 'Ca(OH)₂',     type: 'base',    ph: 12, color: '#D6EAF8' },
+    { id: 'vinegar',name: '食醋',       formula: 'CH₃COOH',     type: 'acid',    ph: 3, color: '#FADBD8' },
+    { id: 'soap',   name: '肥皂水',     formula: '—',            type: 'base',    ph: 10, color: '#D6EAF8' }
+  ];
+
+  // 试剂瓶液体颜色（按酸碱分类）
+  const shelf = document.getElementById('reagentShelf');
+  const liquidEl = document.getElementById('beakerLiquid');
+  const surfaceEl = document.getElementById('beakerSurface');
+  const statusEl = document.getElementById('labStatus');
+  const resetBtn = document.getElementById('labReset');
+  const indicatorBtns = document.querySelectorAll('.indicator-btn');
+
+  let currentReagent = null;
+  let currentIndicator = null;
+
+  // 生成试剂瓶 SVG
+  REAGENTS.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'reagent-bottle';
+    div.dataset.id = r.id;
+    div.dataset.type = r.type;
+    const bottleColor = r.type === 'acid' ? '#E74C3C' : '#3498DB';
+    const liquidColor = r.type === 'acid' ? '#F1948A' : '#85C1E9';
+    div.innerHTML = `
+      <svg width="64" height="80" viewBox="0 0 64 80">
+        <!-- 瓶塞 -->
+        <rect x="24" y="2" width="16" height="10" rx="2" fill="#7F8C8D"/>
+        <!-- 瓶颈 -->
+        <rect x="22" y="12" width="20" height="8" fill="#BDC3C7"/>
+        <!-- 瓶身 -->
+        <path d="M14 22 Q 14 20, 16 20 L 48 20 Q 50 20, 50 22 L 50 72 Q 50 76, 46 76 L 18 76 Q 14 76, 14 72 Z"
+              fill="rgba(255,255,255,0.5)" stroke="${bottleColor}" stroke-width="2"/>
+        <!-- 液体 -->
+        <path d="M18 38 L 46 38 L 46 72 Q 46 74, 44 74 L 20 74 Q 18 74, 18 72 Z" fill="${liquidColor}" opacity="0.85"/>
+        <!-- 标签 -->
+        <rect x="18" y="44" width="28" height="18" fill="white" stroke="${bottleColor}" stroke-width="1"/>
+        <text x="32" y="55" text-anchor="middle" font-size="9" font-weight="700" fill="${bottleColor}">${r.formula}</text>
+      </svg>
+      <div class="b-name">${r.name}</div>
+      <div class="b-formula">${r.formula}</div>
+    `;
+    div.addEventListener('click', () => pourReagent(r, div));
+    shelf.appendChild(div);
+  });
+
+  function pourReagent(r, el) {
+    // 标记其他瓶子已倒过
+    document.querySelectorAll('.reagent-bottle').forEach(b => {
+      b.classList.remove('selected', 'poured');
+    });
+    el.classList.add('selected');
+    currentReagent = r;
+    currentIndicator = null;
+    indicatorBtns.forEach(b => b.classList.remove('active'));
+    // 烧杯液体颜色变成试剂色（未加指示剂）
+    liquidEl.setAttribute('fill', r.color);
+    liquidEl.setAttribute('opacity', '0.85');
+    surfaceEl.setAttribute('stroke', r.type === 'acid' ? '#C0392B' : '#2E6BA8');
+    statusEl.innerHTML = `已倒入 <b style="color:${r.type==='acid'?'#E74C3C':'#2E6BA8'}">${r.name}</b>（${r.formula}）—— pH ≈ ${r.ph}（${r.type==='acid'?'酸':'碱'}）。<br>👆 选择一种指示剂滴入观察颜色变化`;
+  }
+
+  // 指示剂按钮
+  indicatorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!currentReagent) {
+        statusEl.innerHTML = '⚠️ 请先点击试剂瓶倒入试剂';
+        return;
+      }
+      indicatorBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentIndicator = btn.dataset.indicator;
+      applyIndicator();
+    });
+  });
+
+  function applyIndicator() {
+    if (!currentReagent || !currentIndicator) return;
+    const r = currentReagent;
+    const ind = currentIndicator;
+    let color, text;
+    if (ind === 'litmus') { // 紫色石蕊
+      if (r.type === 'acid')      { color = '#E74C3C'; text = '紫色石蕊遇<b style="color:#E74C3C;">酸变红</b>'; }
+      else if (r.type === 'base') { color = '#2E6BA8'; text = '紫色石蕊遇<b style="color:#2E6BA8;">碱变蓝</b>'; }
+      else                        { color = '#9B59B6'; text = '紫色石蕊遇中性<b>不变色（紫）</b>'; }
+    } else { // 酚酞
+      if (r.type === 'acid')      { color = '#FADBD8'; text = '无色酚酞遇酸<b>不变色（仍为无色）</b>'; }
+      else if (r.type === 'base') { color = '#E91E63'; text = '无色酚酞遇<b style="color:#E91E63;">碱变红</b>'; }
+      else                        { color = '#FFFFFF'; text = '无色酚酞遇中性<b>不变色（仍为无色）</b>'; }
+    }
+    liquidEl.setAttribute('fill', color);
+    liquidEl.setAttribute('opacity', '0.85');
+    statusEl.innerHTML = `烧杯内是 <b>${r.name}</b>（pH ≈ ${r.ph}），滴入 ${ind==='litmus'?'🟣 紫色石蕊':'⚪ 无色酚酞'}：${text}`;
+  }
+
+  resetBtn.addEventListener('click', () => {
+    currentReagent = null;
+    currentIndicator = null;
+    document.querySelectorAll('.reagent-bottle').forEach(b => b.classList.remove('selected', 'poured'));
+    indicatorBtns.forEach(b => b.classList.remove('active'));
+    liquidEl.setAttribute('fill', '#E8EEF4');
+    liquidEl.setAttribute('opacity', '0.6');
+    surfaceEl.setAttribute('stroke', '#5D6D7E');
+    statusEl.innerHTML = '👆 请先选择一种试剂倒入烧杯';
+  });
+})();
+
+/* ================================================================
+   ② pH 滑块
+   ================================================================ */
+(function () {
+  const slider = document.getElementById('phSlider');
+  const valueBox = document.getElementById('phValueBox');
+  const labelEl = document.getElementById('phLabel');
+  const descEl = document.getElementById('phDesc');
+  const paperEl = document.getElementById('phPaper');
+  const paperLabelEl = document.getElementById('phPaperLabel');
+
+  // pH → 颜色映射（试纸色）
+  function phToColor(ph) {
+    // 关键节点：0=深红 2=红 4=橙 6=淡黄 7=绿 8=淡蓝 10=蓝 12=深蓝 14=紫
+    const stops = [
+      { p: 0,  c: [139, 0, 0] },     // 深红
+      { p: 2,  c: [231, 76, 60] },   // 红
+      { p: 4,  c: [230, 126, 34] },  // 橙
+      { p: 6,  c: [241, 196, 15] },  // 淡黄
+      { p: 7,  c: [46, 204, 113] },  // 绿
+      { p: 8,  c: [52, 152, 219] },  // 淡蓝
+      { p: 10, c: [41, 128, 185] },  // 蓝
+      { p: 12, c: [40, 60, 130] },   // 深蓝
+      { p: 14, c: [91, 44, 111] }    // 紫
+    ];
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (ph >= stops[i].p && ph <= stops[i + 1].p) {
+        const t = (ph - stops[i].p) / (stops[i + 1].p - stops[i].p);
+        const r = Math.round(stops[i].c[0] + (stops[i + 1].c[0] - stops[i].c[0]) * t);
+        const g = Math.round(stops[i].c[1] + (stops[i + 1].c[1] - stops[i].c[1]) * t);
+        const b = Math.round(stops[i].c[2] + (stops[i + 1].c[2] - stops[i].c[2]) * t);
+        return `rgb(${r},${g},${b})`;
+      }
+    }
+    return 'rgb(91,44,111)';
+  }
+
+  // pH 等级文字
+  function phInfo(ph) {
+    if (ph < 2)  return { label: '强酸', desc: '强酸性：H⁺ 浓度远大于 OH⁻，腐蚀性强', paper: '深红' };
+    if (ph < 5)  return { label: '弱酸', desc: '弱酸性：H⁺ 浓度 > OH⁻ 浓度', paper: '橙' };
+    if (ph < 6.5)return { label: '弱酸', desc: '微酸性：略偏酸（如雨水、牛奶）', paper: '淡黄' };
+    if (ph < 7.5)return { label: '中性', desc: '中性：H⁺ 浓度 = OH⁻ 浓度（25°C 时 pH=7）', paper: '绿' };
+    if (ph < 9)  return { label: '弱碱', desc: '弱碱性：OH⁻ 浓度 > H⁺ 浓度', paper: '淡蓝' };
+    if (ph < 12) return { label: '中强碱', desc: '中强碱性：OH⁻ 浓度较大', paper: '蓝' };
+    return { label: '强碱', desc: '强碱性：OH⁻ 浓度远大于 H⁺，腐蚀性强', paper: '紫' };
+  }
+
+  function update() {
+    const ph = parseFloat(slider.value);
+    const info = phInfo(ph);
+    const color = phToColor(ph);
+    valueBox.textContent = ph.toFixed(1);
+    valueBox.style.background = color;
+    // 文字颜色：深色背景用白字，浅色用深字
+    const lum = parseInt(color.match(/\d+/g)[0]) * 0.299 +
+                parseInt(color.match(/\d+/g)[1]) * 0.587 +
+                parseInt(color.match(/\d+/g)[2]) * 0.114;
+    valueBox.style.color = lum > 150 ? '#2C3E50' : '#FFFFFF';
+    labelEl.textContent = info.label;
+    descEl.textContent = info.desc;
+    paperEl.style.background = color;
+    paperLabelEl.textContent = `${info.label} · ${info.paper}`;
+  }
+
+  slider.addEventListener('input', update);
+  update();
+})();
+
+/* ================================================================
+   ③ 酸碱中和反应动画
+   ================================================================ */
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('neutralSvg');
+  const particleLayer = document.getElementById('particleLayer');
+  const waterLayer = document.getElementById('waterLayer');
+  const acidLiquid = document.getElementById('acidLiquid');
+  const baseLiquid = document.getElementById('baseLiquid');
+  const hintEl = document.getElementById('neutralHint');
+  const statusEl = document.getElementById('neutralStatus');
+  const startBtn = document.getElementById('neutralStart');
+  const resetBtn = document.getElementById('neutralReset');
+  const addIndicatorChk = document.getElementById('addIndicator');
+  const showHeatChk = document.getElementById('showHeat');
+  const thermoBox = document.getElementById('thermoBox');
+  const thermoFill = document.getElementById('thermoFill');
+  const thermoValue = document.getElementById('thermoValue');
+
+  // 粒子：H+ 和 OH-
+  let particles = [];
+  let waters = [];
+  let running = false;
+  let mixed = false; // 是否已混合（左右烧杯液体褪去）
+  let rafId = null;
+  let lastTime = 0;
+  let tempStart = 25;
+  let tempTarget = 25;
+
+  // 初始指示剂颜色（加石蕊时：酸红、碱蓝）
+  function refreshIndicatorColors() {
+    const ind = addIndicatorChk.checked;
+    if (!mixed) {
+      acidLiquid.setAttribute('fill', ind ? '#E74C3C' : 'url(#acidGrad)');
+      baseLiquid.setAttribute('fill', ind ? '#3498DB' : 'url(#baseGrad)');
+      acidLiquid.setAttribute('opacity', ind ? '0.75' : '1');
+      baseLiquid.setAttribute('opacity', ind ? '0.75' : '1');
+    } else {
+      // 中和后：加石蕊变紫，不加则透明灰
+      acidLiquid.setAttribute('fill', ind ? '#9B59B6' : '#D5DBDB');
+      acidLiquid.setAttribute('opacity', ind ? '0.6' : '0.5');
+    }
+  }
+  addIndicatorChk.addEventListener('change', refreshIndicatorColors);
+
+  function makeParticle(type) {
+    const isH = type === 'H';
+    // H+ 从左侧烧杯出发，OH- 从右侧烧杯出发
+    const startX = isH ? 100 + Math.random() * 50 : 530 + Math.random() * 50;
+    const startY = 110 + Math.random() * 150;
+    const g = document.createElementNS(NS, 'g');
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', startX);
+    c.setAttribute('cy', startY);
+    c.setAttribute('r', isH ? 12 : 14);
+    c.setAttribute('fill', isH ? '#2ECC71' : '#3498DB');
+    c.setAttribute('stroke', isH ? '#1E8449' : '#2E6BA8');
+    c.setAttribute('stroke-width', '2');
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', startX);
+    t.setAttribute('y', startY + 4);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '10');
+    t.setAttribute('font-weight', '700');
+    t.setAttribute('fill', '#fff');
+    t.textContent = isH ? 'H⁺' : 'OH⁻';
+    g.appendChild(c); g.appendChild(t);
+    particleLayer.appendChild(g);
+    return {
+      elem: g, circle: c, text: t,
+      x: startX, y: startY,
+      vx: isH ? (1.5 + Math.random() * 0.5) : -(1.5 + Math.random() * 0.5),
+      vy: (Math.random() - 0.5) * 0.8,
+      type,
+      matched: false,
+      bobPhase: Math.random() * Math.PI * 2
+    };
+  }
+
+  function makeWater(x, y) {
+    const g = document.createElementNS(NS, 'g');
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y);
+    c.setAttribute('r', 16);
+    c.setAttribute('fill', '#7F8C8D');
+    c.setAttribute('stroke', '#5D6D7E');
+    c.setAttribute('stroke-width', '2');
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', x); t.setAttribute('y', y + 4);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '10');
+    t.setAttribute('font-weight', '700');
+    t.setAttribute('fill', '#fff');
+    t.textContent = 'H₂O';
+    g.appendChild(c); g.appendChild(t);
+    g.setAttribute('opacity', '0');
+    waterLayer.appendChild(g);
+    return {
+      elem: g, circle: c, text: t,
+      x, y, born: performance.now(),
+      bobPhase: Math.random() * Math.PI * 2
+    };
+  }
+
+  function spawnBatch() {
+    // 生成 6 对 H+ 和 OH-
+    for (let i = 0; i < 6; i++) {
+      setTimeout(() => {
+        if (!running) return;
+        particles.push(makeParticle('H'));
+        particles.push(makeParticle('OH'));
+      }, i * 250);
+    }
+  }
+
+  function frame(now) {
+    const dt = Math.min((now - lastTime) / 16.7, 3) || 1;
+    lastTime = now;
+
+    if (running) {
+      // 移动粒子
+      particles.forEach(p => {
+        if (p.matched) return;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt + Math.sin(now * 0.003 + p.bobPhase) * 0.3;
+        // 限制 y 范围
+        if (p.y < 100) p.y = 100;
+        if (p.y > 260) p.y = 260;
+        p.circle.setAttribute('cx', p.x);
+        p.circle.setAttribute('cy', p.y);
+        p.text.setAttribute('x', p.x);
+        p.text.setAttribute('y', p.y + 4);
+      });
+
+      // 检测碰撞：H+ 和 OH- 相遇变 H2O
+      for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
+        if (a.matched) continue;
+        for (let j = i + 1; j < particles.length; j++) {
+          const b = particles[j];
+          if (b.matched) continue;
+          if (a.type !== b.type) {
+            const d = Math.hypot(a.x - b.x, a.y - b.y);
+            if (d < 22) {
+              // 反应！生成水
+              const mx = (a.x + b.x) / 2;
+              const my = (a.y + b.y) / 2;
+              a.matched = true; b.matched = true;
+              a.elem.style.display = 'none';
+              b.elem.style.display = 'none';
+              const w = makeWater(mx, my);
+              waters.push(w);
+              // 显示生成动画
+              const opTarget = 0.9;
+              const startTime = performance.now();
+              const fade = (t) => {
+                const elapsed = t - startTime;
+                const p = Math.min(elapsed / 400, 1);
+                w.elem.setAttribute('opacity', (p * opTarget).toFixed(2));
+                if (p < 1) requestAnimationFrame(fade);
+              };
+              requestAnimationFrame(fade);
+            }
+          }
+        }
+      }
+
+      // 检查是否所有粒子都反应完
+      const active = particles.filter(p => !p.matched).length;
+      if (active === 0 && particles.length > 0) {
+        running = false;
+        mixed = true;
+        // 烧杯液体颜色变化
+        const ind = addIndicatorChk.checked;
+        // 烧杯里的液体（酸+碱中和）合并显示在中间偏下区域：让酸碱液体高度降低
+        acidLiquid.setAttribute('height', '90');
+        baseLiquid.setAttribute('height', '90');
+        acidLiquid.setAttribute('fill', ind ? '#9B59B6' : '#D5DBDB');
+        acidLiquid.setAttribute('opacity', ind ? '0.6' : '0.5');
+        baseLiquid.setAttribute('fill', ind ? '#9B59B6' : '#D5DBDB');
+        baseLiquid.setAttribute('opacity', ind ? '0.6' : '0.5');
+        hintEl.textContent = '✓ 反应完成：H⁺ + OH⁻ → H₂O，溶液变为中性';
+        statusEl.textContent = '✓ 中和反应完成：生成了 NaCl 和 H₂O，溶液呈中性';
+        statusEl.className = 'neutral-status done';
+        startBtn.textContent = '▶ 再来一次';
+
+        // 温度上升动画
+        if (showHeatChk.checked) {
+          thermoBox.style.display = 'flex';
+          const t0 = performance.now();
+          const duration = 1200;
+          const startT = 25;
+          const endT = 38;
+          const heatAnim = (t) => {
+            const p = Math.min((t - t0) / duration, 1);
+            const cur = startT + (endT - startT) * p;
+            thermoValue.textContent = cur.toFixed(1) + '°C';
+            thermoFill.style.width = (30 + p * 40) + '%';
+            if (p < 1) requestAnimationFrame(heatAnim);
+          };
+          requestAnimationFrame(heatAnim);
+        }
+      }
+    }
+
+    // 水分子漂浮
+    waters.forEach(w => {
+      const dy = Math.sin(now * 0.002 + w.bobPhase) * 2;
+      w.circle.setAttribute('cy', w.y + dy);
+      w.text.setAttribute('y', w.y + dy + 4);
+    });
+
+    rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+
+  function startReaction() {
+    if (running) return;
+    if (mixed) resetReaction();
+    running = true;
+    hintEl.textContent = '';
+    statusEl.textContent = '⏳ 正在混合：H⁺ 和 OH⁻ 相遇结合成 H₂O...';
+    statusEl.className = 'neutral-status running';
+    startBtn.textContent = '⏳ 反应中';
+    if (showHeatChk.checked) thermoBox.style.display = 'flex';
+    spawnBatch();
+  }
+
+  function resetReaction() {
+    running = false;
+    mixed = false;
+    particles = [];
+    waters = [];
+    particleLayer.innerHTML = '';
+    waterLayer.innerHTML = '';
+    acidLiquid.setAttribute('height', '166');
+    baseLiquid.setAttribute('height', '166');
+    hintEl.textContent = '点击"混合"按钮，让 H⁺ 和 OH⁻ 相遇';
+    statusEl.textContent = '点击下方按钮，开始反应';
+    statusEl.className = 'neutral-status';
+    startBtn.textContent = '▶ 混合';
+    thermoBox.style.display = 'none';
+    thermoFill.style.width = '30%';
+    thermoValue.textContent = '25°C';
+    refreshIndicatorColors();
+  }
+
+  startBtn.addEventListener('click', startReaction);
+  resetBtn.addEventListener('click', resetReaction);
+  showHeatChk.addEventListener('change', () => {
+    if (!running && !mixed) thermoBox.style.display = 'none';
+  });
+  refreshIndicatorColors();
+})();
+
+/* ================================================================
+   ④ 练习题
+   ================================================================ */
+(function () {
+  document.querySelectorAll('.quiz-question').forEach(q => {
+    const correct = q.dataset.correct;
+    q.querySelectorAll('.quiz-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (q.classList.contains('correct') || q.classList.contains('wrong')) return;
+        const key = opt.dataset.key;
+        q.querySelectorAll('.quiz-option').forEach(o =>
+          o.classList.remove('selected', 'correct-answer', 'wrong-answer'));
+        opt.classList.add('selected');
+        if (key === correct) {
+          q.classList.add('correct');
+          opt.classList.add('correct-answer');
+        } else {
+          q.classList.add('wrong');
+          opt.classList.add('wrong-answer');
+          q.querySelectorAll('.quiz-option').forEach(o => {
+            if (o.dataset.key === correct) o.classList.add('correct-answer');
+          });
+        }
+      });
+    });
+  });
+})();
+</script>
+<script src="../../assets/js/main.js"></script>
+</body>
+</html>

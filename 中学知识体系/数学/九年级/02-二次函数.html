@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九年级数学 · 二次函数</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本节专用样式 ===== */
+
+    /* 章节标题 */
+    .sec-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--bg-soft);
+    }
+    .sec-desc { color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* 页内快速导航 */
+    .toc-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .toc-strip a {
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .toc-strip a:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* 生活实例卡片 */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .example-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .example-card .emoji { font-size: 40px; }
+    .example-card .ex-title { font-weight: 700; margin: 8px 0 4px; }
+    .example-card .ex-desc { font-size: 13px; color: var(--text-secondary); }
+
+    /* 概念定义 */
+    .def-box {
+      background: rgba(155,89,182,0.08);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 18px;
+      text-align: center;
+    }
+    .def-box .math { color: var(--math); font-weight: 700; }
+    .svg-wrap {
+      text-align: center;
+      margin: 16px 0;
+    }
+    .svg-caption { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+    .key-points li { margin-bottom: 6px; }
+
+    /* 参数颜色 */
+    .coef-a { color: var(--math); font-weight: 700; }
+    .coef-b { color: var(--physics); font-weight: 700; }
+    .coef-c { color: var(--success); font-weight: 700; }
+
+    .equation-display {
+      font-size: 24px;
+      text-align: center;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 14px 0;
+      letter-spacing: 1px;
+    }
+
+    /* 滑块布局 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .slider-row .slider-label {
+      width: 92px;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .slider-row .slider-label small { display: block; font-weight: 400; font-size: 12px; color: var(--text-secondary); }
+    .slider-row .range { flex: 1; }
+    .slider-row .val {
+      width: 52px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* 画布 */
+    .canvas-box {
+      width: 100%;
+      height: 460px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .canvas-box canvas { display: block; width: 100%; height: 100%; }
+
+    /* a=0 警告 */
+    .warn-banner {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin: 12px 0;
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+    }
+    .warn-banner.show { display: block; animation: pulse 1s infinite; }
+
+    /* 预设按钮 */
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .preset-row .label { font-size: 13px; color: var(--text-secondary); }
+    .chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--primary); background: rgba(74,144,217,0.1); }
+
+    /* 参数作用小卡片 */
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .param-card {
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      border: 2px solid var(--border);
+    }
+    .param-card .p-var { font-size: 20px; font-weight: 800; }
+    .param-card.pa { background: rgba(155,89,182,0.06); border-color: rgba(155,89,182,0.35); }
+    .param-card.pb { background: rgba(74,144,217,0.06); border-color: rgba(74,144,217,0.35); }
+    .param-card.pc { background: rgba(39,174,96,0.06); border-color: rgba(39,174,96,0.35); }
+
+    /* 顶点读数 */
+    .vertex-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .vertex-readout .vr-item {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+    .vertex-readout .vr-item .vr-label { font-size: 13px; color: var(--text-secondary); }
+    .vertex-readout .vr-item .vr-value { font-size: 20px; font-weight: 800; color: var(--danger); }
+
+    /* 配方法步骤 */
+    .cstep-list { margin: 12px 0; }
+    .cstep-item {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin: 10px 0;
+      animation: fadeIn 0.3s ease;
+    }
+    .cstep-item .cstep-title { font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+    .cstep-item .cstep-math { font-size: 20px; font-weight: 700; margin: 6px 0; }
+    .cstep-item .cstep-note { font-size: 13px; color: var(--text-secondary); }
+    .cstep-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .step-ind { font-weight: 800; color: var(--primary); min-width: 56px; text-align: center; }
+
+    /* 三种形式标签页 */
+    .tab-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 2px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+    .form-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+    .form-table th, .form-table td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; vertical-align: top; }
+    .form-table th { background: var(--bg-soft); }
+
+    .convert-box {
+      background: rgba(155,89,182,0.06);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 12px;
+    }
+    .convert-box .c-line { margin: 6px 0; font-size: 16px; }
+    .convert-box .c-arrow { color: var(--accent); font-weight: 700; margin: 0 6px; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">📊 二次函数</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../八年级/index.html">← 八年级数学</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>二次函数</span>
+  </div>
+
+  <h1 style="font-size: 30px; margin-bottom: 8px;">📊 二次函数</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 20px;">从投篮的抛物线到顶点坐标——动手玩玩 <b style="color: var(--math);">y = ax² + bx + c</b>，看参数如何"指挥"图像！</p>
+
+  <div class="toc-strip">
+    <a href="#intro">🎯 引入</a>
+    <a href="#concept">📖 概念定义</a>
+    <a href="#explore">🎛️ 参数探索</a>
+    <a href="#vertex">📍 顶点与配方</a>
+    <a href="#forms">🔄 三种形式</a>
+    <a href="#quiz">✏️ 练一练</a>
+  </div>
+
+  <!-- ========== 引入 ========== -->
+  <section class="card" id="intro">
+    <div class="sec-title">🎯 引入：生活中的抛物线</div>
+    <p class="sec-desc">先别急着看公式——抬头看看生活，抛物线其实到处都是。</p>
+
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="emoji">🏀</div>
+        <div class="ex-title">投篮的弧线</div>
+        <div class="ex-desc">篮球出手后在空中画出一道美丽的弧线，球进没进，就看这条"抛物线"准不准！</div>
+      </div>
+      <div class="example-card">
+        <div class="emoji">⛲</div>
+        <div class="ex-title">喷泉的水珠</div>
+        <div class="ex-desc">喷泉喷出的每颗水珠，被重力"拉"下来，走过的路径也是一条抛物线。</div>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🚀</div>
+        <div class="ex-title">火箭与烟花</div>
+        <div class="ex-desc">斜向上发射的烟花升到最高点后下落，最高点——就是这条抛物线的"顶点"。</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 想一想</div>
+      投篮时，球的<b>出手高度</b>、<b>速度方向</b>不同，弧线的<b>高低</b>、<b>宽窄</b>、<b>左右位置</b>都会变。
+      你能想到吗？这些变化，居然可以用一个公式 <b>y = ax² + bx + c</b> 全部描述！
+    </div>
+  </section>
+
+  <!-- ========== 概念定义 ========== -->
+  <section class="card" id="concept">
+    <div class="sec-title">📖 概念定义</div>
+    <p class="sec-desc">把上面那些曲线抽象成数学语言，就得到了二次函数的定义。</p>
+
+    <div class="def-box">
+      形如 <span class="math">y = ax² + bx + c</span>（a、b、c 是常数，且 <b style="color: var(--danger);">a ≠ 0</b>）的函数，叫做<b>二次函数</b>。
+    </div>
+
+    <p><b>为什么叫"二次"？</b>因为自变量的最高次数是 2（x² 项）。它是初中数学里"曲线家族"的第一位成员。</p>
+
+    <div class="svg-wrap">
+      <svg viewBox="0 0 420 320" style="width:100%; max-width:560px; background:#fff; border-radius:8px; border:1px solid var(--border);" role="img" aria-label="标准抛物线 y=x² 的图像">
+        <!-- 网格 -->
+        <g stroke="#EDF1F6" stroke-width="1">
+          <line x1="176" y1="0" x2="176" y2="320"/><line x1="142" y1="0" x2="142" y2="320"/>
+          <line x1="108" y1="0" x2="108" y2="320"/><line x1="74" y1="0" x2="74" y2="320"/>
+          <line x1="40" y1="0" x2="40" y2="320"/><line x1="6" y1="0" x2="6" y2="320"/>
+          <line x1="244" y1="0" x2="244" y2="320"/><line x1="278" y1="0" x2="278" y2="320"/>
+          <line x1="312" y1="0" x2="312" y2="320"/><line x1="346" y1="0" x2="346" y2="320"/>
+          <line x1="380" y1="0" x2="380" y2="320"/><line x1="414" y1="0" x2="414" y2="320"/>
+          <line x1="0" y1="228" x2="420" y2="228"/><line x1="0" y1="194" x2="420" y2="194"/>
+          <line x1="0" y1="160" x2="420" y2="160"/><line x1="0" y1="126" x2="420" y2="126"/>
+          <line x1="0" y1="92" x2="420" y2="92"/><line x1="0" y1="58" x2="420" y2="58"/>
+          <line x1="0" y1="24" x2="420" y2="24"/><line x1="0" y1="296" x2="420" y2="296"/>
+          <line x1="0" y1="330" x2="420" y2="330"/>
+        </g>
+        <!-- 坐标轴 -->
+        <line x1="0" y1="262" x2="420" y2="262" stroke="#2C3E50" stroke-width="2"/>
+        <line x1="210" y1="0" x2="210" y2="320" stroke="#2C3E50" stroke-width="2"/>
+        <polygon points="420,262 408,258 408,266" fill="#2C3E50"/>
+        <polygon points="210,0 206,12 214,12" fill="#2C3E50"/>
+        <!-- 刻度数字 -->
+        <g fill="#7F8C8D" font-size="11" text-anchor="middle">
+          <text x="244" y="276">1</text><text x="278" y="276">2</text><text x="312" y="276">3</text>
+          <text x="346" y="276">4</text><text x="380" y="276">5</text>
+          <text x="176" y="276">-1</text><text x="142" y="276">-2</text><text x="108" y="276">-3</text>
+          <text x="74" y="276">-4</text><text x="40" y="276">-5</text>
+          <text x="222" y="228">1</text><text x="222" y="194">2</text><text x="222" y="160">3</text>
+          <text x="222" y="126">4</text><text x="222" y="92">5</text><text x="222" y="58">6</text>
+          <text x="222" y="296">-1</text>
+        </g>
+        <!-- 对称轴（虚线） -->
+        <line x1="210" y1="0" x2="210" y2="320" stroke="#E74C3C" stroke-dasharray="6 4" stroke-width="1.5" opacity="0.45"/>
+        <!-- 抛物线 y=x² -->
+        <path d="M -3.3 10.89 L -3 9 L -2.7 7.29 L -2.4 5.76 L -2.1 4.41 L -1.8 3.24 L -1.5 2.25 L -1.2 1.44 L -0.9 0.81 L -0.6 0.36 L -0.3 0.09 L 0 0 L 0.3 0.09 L 0.6 0.36 L 0.9 0.81 L 1.2 1.44 L 1.5 2.25 L 1.8 3.24 L 2.1 4.41 L 2.4 5.76 L 2.7 7.29 L 3 9 L 3.3 10.89"
+              transform="translate(210,262) scale(34,-34)"
+              fill="none" stroke="#9B59B6" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+        <text x="302" y="58" font-size="16" fill="#9B59B6" font-weight="bold">y = x²</text>
+        <!-- 顶点 -->
+        <circle cx="210" cy="262" r="6" fill="#E74C3C"/>
+        <text x="226" y="244" font-size="13" fill="#E74C3C" font-weight="bold">顶点 (0,0)</text>
+      </svg>
+      <div class="svg-caption">标准抛物线 y = x²：开口向上，对称轴是 y 轴，顶点在原点 (0, 0)。</div>
+    </div>
+
+    <div class="warning-box">
+      ⚠️ <b>关键点</b>：x² 的系数 <b>a ≠ 0</b>！如果 a = 0，式子变成 y = bx + c，那就是一条直线（一次函数），根本谈不上"抛物线"了。
+    </div>
+
+    <ul class="key-points">
+      <li>🔤 <b>a</b> 叫<b>二次项系数</b>，<b>b</b> 叫<b>一次项系数</b>，<b>c</b> 叫<b>常数项</b>。</li>
+      <li>🔺 二次函数的图像是一条<b>抛物线</b>，它总是关于一条竖直直线（<b>对称轴</b>）左右对称。</li>
+      <li>📍 抛物线与对称轴的交点就是它的<b>顶点</b>——开口向上时是最低点，开口向下时是最高点。</li>
+    </ul>
+  </section>
+
+  <!-- ========== 交互探索1 ========== -->
+  <section class="card" id="explore">
+    <div class="sec-title">🎛️ 交互探索 1：参数 a、b、c 如何"指挥"图像</div>
+    <p class="sec-desc">拖动下面的滑块，看看每个参数变化时，抛物线会怎么变。<b>动手是最好的老师！</b></p>
+
+    <div class="equation-display" id="eqDisplay">y = <span class="coef-a">x²</span></div>
+
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--math);">a</span>（开口）<small>二次项系数</small></div>
+      <input type="range" class="range" id="sliderA" min="-3" max="3" step="0.1" value="1">
+      <div class="val" id="valA" style="color: var(--math);">1</div>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--physics);">b</span>（对称轴）<small>一次项系数</small></div>
+      <input type="range" class="range" id="sliderB" min="-6" max="6" step="0.1" value="0">
+      <div class="val" id="valB" style="color: var(--physics);">0</div>
+    </div>
+    <div class="slider-row">
+      <div class="slider-label"><span style="color: var(--success);">c</span>（上下移）<small>常数项</small></div>
+      <input type="range" class="range" id="sliderC" min="-6" max="6" step="0.1" value="0">
+      <div class="val" id="valC" style="color: var(--success);">0</div>
+    </div>
+
+    <div class="preset-row">
+      <span class="label">试试这些经典函数：</span>
+      <button class="chip" data-a="1" data-b="0" data-c="0">y = x²</button>
+      <button class="chip" data-a="-1" data-b="0" data-c="0">y = −x²</button>
+      <button class="chip" data-a="1" data-b="-4" data-c="3">y = x²−4x+3</button>
+      <button class="chip" data-a="2" data-b="0" data-c="1">y = 2x²+1</button>
+      <button class="chip" data-a="-1" data-b="4" data-c="-3">y = −x²+4x−3</button>
+      <button class="chip" id="resetBtn">↺ 重置</button>
+    </div>
+
+    <div class="warn-banner" id="warnA0">⚠️ a = 0 时，y = bx + c 是一条直线（一次函数），不是二次函数！请把 a 调离 0。</div>
+
+    <div class="canvas-box">
+      <canvas id="graph1" width="760" height="460"></canvas>
+    </div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; text-align: center;">
+      🔴 红点表示顶点；红色虚线是抛物线的对称轴
+    </p>
+
+    <div class="tip-box">
+      <div class="tip-title">🔍 观察提示（按顺序试试）</div>
+      ① 先把 b、c 都设为 0，只拖 <b style="color: var(--math);">a</b>——看开口方向、宽窄怎么变；<br>
+      ② 再固定 a = 1、b = 0，只拖 <b style="color: var(--success);">c</b>——图像是不是在<b>上下平移</b>？<br>
+      ③ 最后拖 <b style="color: var(--physics);">b</b>——注意顶点在<b>左右移动</b>，对称轴位置跟着变。
+    </div>
+
+    <div class="param-grid">
+      <div class="param-card pa">
+        <div class="p-var" style="color: var(--math);">a — 开口</div>
+        <p style="font-size:14px; margin-top:6px;">
+          <b>a &gt; 0</b> 开口向上，有最小值；<b>a &lt; 0</b> 开口向下，有最大值。<br>
+          <b>|a| 越大</b>，开口越窄（"瘦"）；<b>|a| 越小</b>，开口越宽（"胖"）。
+        </p>
+      </div>
+      <div class="param-card pb">
+        <div class="p-var" style="color: var(--physics);">b — 对称轴</div>
+        <p style="font-size:14px; margin-top:6px;">
+          b 与 a 一起决定<b>对称轴</b> x = −b/(2a)。<br>
+          只动 b 时，图像左右移动、顶点沿一条抛物线"滑行"，但<b>形状不变</b>。
+        </p>
+      </div>
+      <div class="param-card pc">
+        <div class="p-var" style="color: var(--success);">c — 平移</div>
+        <p style="font-size:14px; margin-top:6px;">
+          抛物线始终经过点 <b>(0, c)</b>——与 y 轴的交点。<br>
+          c 增大图像<b>上移</b>，c 减小图像<b>下移</b>，形状和开口都不变。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 交互探索2 ========== -->
+  <section class="card" id="vertex">
+    <div class="sec-title">📍 交互探索 2：顶点坐标与配方法</div>
+    <p class="sec-desc">顶点是抛物线的"心脏"——求最值、画草图都靠它。记住下面的公式，再亲手"配方"一次！</p>
+
+    <div class="def-box" style="font-size:16px;">
+      顶点坐标公式：顶点为
+      <span style="color: var(--danger); font-weight:800;">( −b/(2a) , (4ac−b²)/(4a) )</span>，即 h = −b/(2a)，k = c − b²/(4a)
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 怎么记？</div>
+      横坐标 h = −b/(2a) 是<b>对称轴</b>；把 h 代回原式算出 y，就是纵坐标 k。
+      记住 <b>h = −b/(2a)</b>，就抓住了顶点的一半！
+    </div>
+
+    <!-- 实时顶点读数 -->
+    <div class="vertex-readout">
+      <div class="vr-item"><div class="vr-label">顶点坐标</div><div class="vr-value" id="vcVertex">(0, 0)</div></div>
+      <div class="vr-item"><div class="vr-label">对称轴</div><div class="vr-value" id="vcAxis">x = 0</div></div>
+      <div class="vr-item"><div class="vr-label">开口方向</div><div class="vr-value" id="vcDir">向上 ↑</div></div>
+    </div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">👆 上面的读数会跟着上方滑块实时变化，试试看吧！</p>
+
+    <div class="canvas-box" style="height: 420px;">
+      <canvas id="graph2" width="760" height="420"></canvas>
+    </div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; text-align: center;">
+      🔴 红点为顶点并标注坐标，红色虚线为对称轴 x = h
+    </p>
+
+    <h3 style="margin: 20px 0 8px;">🧩 配方法实战（跟着滑块走一遍）</h3>
+    <p style="color: var(--text-secondary); font-size: 14px;">用当前 a、b、c 的值，一步步把它变成顶点式 y = a(x−h)²+k，顶点就"显形"了。</p>
+
+    <div class="cstep-list" id="cstepList"></div>
+    <div class="cstep-controls">
+      <button class="btn btn-outline btn-sm" id="stepPrev">← 上一步</button>
+      <span class="step-ind" id="stepInd">1 / 5</span>
+      <button class="btn btn-primary btn-sm" id="stepNext">下一步 →</button>
+    </div>
+  </section>
+
+  <!-- ========== 三种形式 ========== -->
+  <section class="card" id="forms">
+    <div class="sec-title">🔄 三种形式：一样的内容，不同的"长相"</div>
+    <p class="sec-desc">同一个二次函数可以用三种形式表示，就像同一个人有不同的照片——怎么方便怎么用！</p>
+
+    <div class="tab-bar" id="formTabs">
+      <button class="tab-btn active" data-tab="general">① 一般式</button>
+      <button class="tab-btn" data-tab="vertex">② 顶点式</button>
+      <button class="tab-btn" data-tab="intercept">③ 交点式</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-general">
+      <div class="def-box">y = ax² + bx + c（a ≠ 0）</div>
+      <ul>
+        <li>最通用的形式，已知任意三点坐标时用（待定系数法）。</li>
+        <li>一眼能看到与 y 轴交点 (0, c)。</li>
+        <li>c = 0 时过原点；b = 0 时对称轴就是 y 轴。</li>
+      </ul>
+    </div>
+
+    <div class="tab-panel" id="tab-vertex">
+      <div class="def-box">y = a(x − h)² + k（a ≠ 0）</div>
+      <ul>
+        <li>顶点直接"摆"在式子里：<b>顶点是 (h, k)</b>，对称轴 x = h。</li>
+        <li>求最值、描述平移变换时最好用。</li>
+        <li>可由一般式<b>配方</b>得到：h = −b/(2a)，k = c − b²/(4a)。</li>
+      </ul>
+    </div>
+
+    <div class="tab-panel" id="tab-intercept">
+      <div class="def-box">y = a(x − x₁)(x − x₂)（a ≠ 0）</div>
+      <ul>
+        <li>x₁、x₂ 是抛物线与 x 轴<b>交点的横坐标</b>（即 ax²+bx+c = 0 的两个根）。</li>
+        <li>仅当抛物线与 x 轴有两个交点时可用；一个交点时退化为 y = a(x−x₀)²。</li>
+        <li>已知与 x 轴的两个交点时，设交点式最省事。</li>
+      </ul>
+    </div>
+
+    <h3 style="margin: 20px 0 8px;">🔄 三种形式互相转换</h3>
+    <table class="form-table">
+      <thead>
+        <tr><th>形式</th><th>表达式</th><th>直接读出什么</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>一般式</td><td>y = x² − 4x + 3</td><td>与 y 轴交于 (0, 3)</td></tr>
+        <tr><td>顶点式</td><td>y = (x − 2)² − 1</td><td>顶点 (2, −1)，对称轴 x = 2</td></tr>
+        <tr><td>交点式</td><td>y = (x − 1)(x − 3)</td><td>与 x 轴交于 (1, 0) 和 (3, 0)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="convert-box">
+      <div class="c-line"><b>① 配方：</b>一般式 <span style="font-weight:700;">→</span> 顶点式</div>
+      <div class="c-line" style="padding-left:18px;">y = x² − 4x + 3 = (x² − 4x) + 3 = (x − 2)² − 4 + 3 = <b style="color:var(--danger);">(x − 2)² − 1</b></div>
+      <div class="c-line"><b>② 因式分解：</b>一般式 <span style="font-weight:700;">→</span> 交点式</div>
+      <div class="c-line" style="padding-left:18px;">y = x² − 4x + 3 = <b style="color:var(--danger);">(x − 1)(x − 3)</b></div>
+      <div class="c-line"><b>③ 展开：</b>顶点式 / 交点式 <span style="font-weight:700;">→</span> 一般式（把括号乘开就行）</div>
+    </div>
+  </section>
+
+  <!-- ========== 练习题 ========== -->
+  <section class="card" id="quiz">
+    <div class="sec-title">✏️ 练一练</div>
+    <p class="sec-desc">点一点选项试试身手，答错也没关系，会有提示哦！</p>
+
+    <div class="quiz-question" id="quiz1">
+      <div class="question-text">1️⃣ 抛物线 y = x² − 4x + 3 的顶点坐标是（　）</div>
+      <div class="quiz-option" data-idx="0">A. (2, −1)</div>
+      <div class="quiz-option" data-idx="1">B. (−2, 7)</div>
+      <div class="quiz-option" data-idx="2">C. (2, 3)</div>
+      <div class="quiz-option" data-idx="3">D. (4, −3)</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz2">
+      <div class="question-text">2️⃣ 抛物线 y = −2x² + 1 的开口方向是（　）</div>
+      <div class="quiz-option" data-idx="0">A. 向上</div>
+      <div class="quiz-option" data-idx="1">B. 向下</div>
+      <div class="quiz-option" data-idx="2">C. 向左</div>
+      <div class="quiz-option" data-idx="3">D. 无法确定</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz3">
+      <div class="question-text">3️⃣ 把抛物线 y = x² 先向右平移 2 个单位，再向上平移 3 个单位，得到的解析式是（　）</div>
+      <div class="quiz-option" data-idx="0">A. y = (x − 2)² + 3</div>
+      <div class="quiz-option" data-idx="1">B. y = (x + 2)² + 3</div>
+      <div class="quiz-option" data-idx="2">C. y = (x − 2)² − 3</div>
+      <div class="quiz-option" data-idx="3">D. y = (x + 2)² − 3</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 提示</div>
+      不会就回到上面拖拖滑块！把参数设成题目里的值，图像会直接告诉你答案。
+    </div>
+  </section>
+
+  <!-- ========== 学科交叉 ========== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉</div>
+    <p>· 二次函数 ↔ <a href="../../物理/九年级/16-电功率.html">物理·九年级 电功率</a>（P = I²R 求极值时，P 关于 R 的图像就是开口方向相反的抛物线）</p>
+    <p>· 二次函数 ↔ <a href="../../物理/八年级/index.html">物理·八年级 抛体运动</a>（斜抛物体的运动轨迹就是抛物线，最高点对应顶点！）</p>
+    <p>· 一元二次方程 ↔ <a href="01-一元二次方程.html">数学·一元二次方程</a>（抛物线与 x 轴的交点，正是方程 ax²+bx+c = 0 的根）</p>
+  </div>
+
+  <!-- ========== 章节导航 ========== -->
+  <div class="step-nav">
+    <a href="01-一元二次方程.html" class="btn btn-outline">← 上一章：一元二次方程</a>
+    <a href="index.html" class="btn btn-outline">📚 目录</a>
+    <a href="03-旋转.html" class="btn btn-primary">下一章：旋转 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+(function () {
+  // ===== 数据与工具 =====
+  var sliderA = document.getElementById('sliderA');
+  var sliderB = document.getElementById('sliderB');
+  var sliderC = document.getElementById('sliderC');
+
+  function getParams() {
+    return {
+      a: parseFloat(sliderA.value),
+      b: parseFloat(sliderB.value),
+      c: parseFloat(sliderC.value)
+    };
+  }
+
+  function fmtNum(n) {
+    if (Math.abs(n) < 1e-9) return '0';
+    var r = Math.round(n * 100) / 100;
+    return String(r);
+  }
+
+  // 一般式字符串（带正负号）
+  function generalString(a, b, c) {
+    var absA = Math.abs(a), absB = Math.abs(b), absC = Math.abs(c);
+    var aCoeff = absA === 1 ? '' : fmtNum(absA);
+    var s = 'y = ' + (a < 0 ? '−' : '') + aCoeff + 'x²';
+    if (absB >= 1e-9) {
+      s += (b < 0 ? ' − ' : ' + ') + (absB === 1 ? '' : fmtNum(absB)) + 'x';
+    }
+    if (absC >= 1e-9) {
+      s += (c < 0 ? ' − ' : ' + ') + fmtNum(absC);
+    }
+    return s;
+  }
+
+  // 彩色 HTML 方程
+  function buildEquation(a, b, c) {
+    var absA = Math.abs(a), absB = Math.abs(b), absC = Math.abs(c);
+    var html = 'y = ';
+    html += (a < 0 ? '−' : '');
+    html += '<span class="coef-a">' + (absA === 1 ? '' : fmtNum(absA)) + 'x²</span>';
+    if (absB >= 1e-9) {
+      html += (b < 0 ? ' − ' : ' + ');
+      html += '<span class="coef-b">' + (absB === 1 ? '' : fmtNum(absB)) + 'x</span>';
+    }
+    if (absC >= 1e-9) {
+      html += (c < 0 ? ' − ' : ' + ');
+      html += '<span class="coef-c">' + fmtNum(absC) + '</span>';
+    }
+    return html;
+  }
+
+  // 顶点式字符串
+  function vertexFormString(a, h, k) {
+    var inner;
+    if (Math.abs(h) < 1e-9) inner = 'x²';
+    else inner = (h < 0 ? '(x + ' : '(x − ') + fmtNum(Math.abs(h)) + ')²';
+    var absA = Math.abs(a);
+    var aStr = (a < 0 ? '−' : '') + (absA === 1 ? '' : fmtNum(absA));
+    var s = 'y = ' + aStr + inner;
+    if (Math.abs(k) >= 1e-9) s += (k < 0 ? ' − ' : ' + ') + fmtNum(Math.abs(k));
+    return s;
+  }
+
+  function drawArrow(ctx, tipX, tipY, angle) {
+    var len = 10;
+    ctx.fillStyle = '#2C3E50';
+    ctx.beginPath();
+    ctx.moveTo(tipX, tipY);
+    ctx.lineTo(tipX - len * Math.cos(angle - 0.42), tipY - len * Math.sin(angle - 0.42));
+    ctx.lineTo(tipX - len * Math.cos(angle + 0.42), tipY - len * Math.sin(angle + 0.42));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // ===== 画图核心 =====
+  function drawGraph(canvas, a, b, c) {
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var W = canvas.clientWidth || 760;
+    var H = canvas.clientHeight || 460;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    var scale = 40;                 // 每单位像素数
+    var ox = W / 2, oy = H / 2;     // 原点位置
+
+    // 背景
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+
+    // 网格
+    ctx.strokeStyle = '#EDF1F6';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (var i = -Math.ceil(ox / scale); i <= Math.ceil((W - ox) / scale); i++) {
+      if (i === 0) continue;
+      var gx = Math.round(ox + i * scale) + 0.5;
+      ctx.moveTo(gx, 0); ctx.lineTo(gx, H);
+      var gy = Math.round(oy - i * scale) + 0.5;
+      ctx.moveTo(0, gy); ctx.lineTo(W, gy);
+    }
+    ctx.stroke();
+
+    // 坐标轴
+    ctx.strokeStyle = '#2C3E50';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(W, oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, H); ctx.stroke();
+    drawArrow(ctx, W - 10, oy, 0);
+    drawArrow(ctx, ox, 10, -Math.PI / 2);
+
+    // 刻度与数字
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.strokeStyle = '#B0BCC9';
+    ctx.lineWidth = 1;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (var xi = -Math.floor(ox / scale); xi <= Math.floor((W - ox) / scale); xi++) {
+      if (xi === 0) continue;
+      var px = Math.round(ox + xi * scale) + 0.5;
+      ctx.beginPath(); ctx.moveTo(px, oy - 4); ctx.lineTo(px, oy + 4); ctx.stroke();
+      ctx.fillText(xi, px, oy + 6);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (var yi = -Math.floor(oy / scale); yi <= Math.floor((H - oy) / scale); yi++) {
+      if (yi === 0) continue;
+      var py = Math.round(oy - yi * scale) + 0.5;
+      ctx.beginPath(); ctx.moveTo(ox - 4, py); ctx.lineTo(ox + 4, py); ctx.stroke();
+      ctx.fillText(yi, ox - 6, py);
+    }
+    ctx.fillStyle = '#7F8C8D';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('x', W - 18, oy + 10);
+    ctx.fillText('y', ox + 10, 2);
+    ctx.fillText('O', ox + 6, oy - 16);
+
+    // a = 0：只画一条直线，并提示
+    if (Math.abs(a) < 1e-6) {
+      ctx.setLineDash([8, 5]);
+      ctx.strokeStyle = '#E74C3C';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      var y0 = oy - (b * (-ox / scale) + c) * scale;
+      var y1 = oy - (b * ((W - ox) / scale) + c) * scale;
+      ctx.moveTo(0, y0); ctx.lineTo(W, y1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#E74C3C';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('这是一条直线（一次函数）', W / 2, H / 2 - 40);
+      return;
+    }
+
+    // 抛物线
+    var x0 = -ox / scale, x1 = (W - ox) / scale;
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    var started = false;
+    for (var x = x0; x <= x1; x += 0.02) {
+      var cx = ox + x * scale;
+      var cy = oy - (a * x * x + b * x + c) * scale;
+      if (cy < -800 || cy > H + 800) { started = false; continue; }
+      if (!started) { ctx.moveTo(cx, cy); started = true; }
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.stroke();
+
+    // 顶点与对称轴
+    var h = -b / (2 * a);
+    var k = c - b * b / (4 * a);
+    var vpx = ox + h * scale;
+    var vpy = oy - k * scale;
+
+    ctx.strokeStyle = 'rgba(231,76,60,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(vpx, -20);
+    ctx.lineTo(vpx, H + 20);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 红点
+    ctx.beginPath();
+    ctx.arc(vpx, vpy, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#E74C3C';
+    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 顶点标注（带白色底片的标签）
+    var label = '(' + fmtNum(h) + ', ' + fmtNum(k) + ')';
+    var tx = vpx + 14, ty = vpy - 12;
+    if (tx + 140 > W) tx = vpx - 150;
+    if (ty < 34) ty = vpy + 30;
+    ctx.font = 'bold 13px sans-serif';
+    var tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillRect(tx - 6, ty - 16, tw + 24, 22);
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(tx - 6, ty - 16, tw + 24, 22);
+    ctx.fillStyle = '#E74C3C';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('顶点', tx + 2, ty - 17);
+    ctx.fillText(label, tx + 2, ty - 3);
+  }
+
+  // ===== 配方法步骤 =====
+  var STEP_COUNT = 5;
+  var stepCount = 1;  // 当前显示到第几步
+
+  function buildStep(i, a, b, c) {
+    var div = document.createElement('div');
+    div.className = 'cstep-item';
+    var title = '', math = '', note = '';
+    var h = -b / (2 * a);
+    var k = c - b * b / (4 * a);
+
+    if (i === 0) {
+      title = '第 1 步 · 写出原式';
+      math = generalString(a, b, c);
+      note = '目标：把它变成 a(x−h)²+k 的样子，这样顶点就能直接"读"出来。';
+    } else if (i === 1) {
+      var ba = b / a;
+      var inner = 'x²';
+      if (Math.abs(ba) >= 1e-9) {
+        inner += (ba < 0 ? ' − ' : ' + ') + (Math.abs(ba) === 1 ? '' : fmtNum(Math.abs(ba))) + 'x';
+      }
+      var absA = Math.abs(a);
+      var aStr = (a < 0 ? '−' : '') + (absA === 1 ? '' : fmtNum(absA));
+      math = 'y = ' + aStr + '(' + inner + ')' +
+             (Math.abs(c) >= 1e-9 ? (c < 0 ? ' − ' : ' + ') + fmtNum(Math.abs(c)) : '');
+      title = '第 2 步 · 提出二次项系数 a';
+      note = '把含 x 的项先"归拢"到括号里，常数项 c 留在外面。';
+    } else if (i === 2) {
+      var p = b / (2 * a);
+      var inner3;
+      if (Math.abs(p) < 1e-9) inner3 = 'x²';
+      else inner3 = (p < 0 ? '(x − ' : '(x + ') + fmtNum(Math.abs(p)) + ')²';
+      if (Math.abs(p * p) >= 1e-9) inner3 += ' − ' + fmtNum(Math.abs(p * p));
+      var absA2 = Math.abs(a);
+      var aStr2 = (a < 0 ? '−' : '') + (absA2 === 1 ? '' : fmtNum(absA2));
+      math = 'y = ' + aStr2 + '[' + inner3 + ']' +
+             (Math.abs(c) >= 1e-9 ? (c < 0 ? ' − ' : ' + ') + fmtNum(Math.abs(c)) : '');
+      title = '第 3 步 · 括号内配方（核心！）';
+      note = '括号里补上 p² 再减回去，式子大小不变——这叫"配方法"，一次项就消失了。';
+    } else if (i === 3) {
+      math = vertexFormString(a, h, k);
+      title = '第 4 步 · 整理成顶点式';
+      note = '把括号外的常数合并：a(x−h)²+k，结构一下子就清爽了。';
+    } else {
+      math = '顶点 (' + fmtNum(h) + ', ' + fmtNum(k) + ')　对称轴 x = ' + fmtNum(h) +
+             '　开口' + (a > 0 ? '向上 ↑' : '向下 ↓');
+      title = '第 5 步 · 读出顶点坐标';
+      note = 'h = −b/(2a) = ' + fmtNum(h) + '，k = ' + fmtNum(k) + '。顶点是' +
+             (a > 0 ? '最低点（最小值 ' : '最高点（最大值 ') + fmtNum(k) + '）';
+    }
+
+    var t = document.createElement('div');
+    t.className = 'cstep-title'; t.textContent = title;
+    var m = document.createElement('div');
+    m.className = 'cstep-math'; m.textContent = math;
+    var n = document.createElement('div');
+    n.className = 'cstep-note'; n.textContent = note;
+    div.appendChild(t); div.appendChild(m); div.appendChild(n);
+    return div;
+  }
+
+  function renderSteps() {
+    var list = document.getElementById('cstepList');
+    var p = getParams();
+    var a = p.a;
+    list.innerHTML = '';
+    if (Math.abs(a) < 1e-6) {
+      var warn = document.createElement('div');
+      warn.className = 'warning-box';
+      warn.textContent = '⚠️ 请先回到上方，把滑块 a 调到非 0 的值，再来走配方法！';
+      list.appendChild(warn);
+      document.getElementById('stepInd').textContent = '—';
+      return;
+    }
+    for (var i = 0; i < stepCount; i++) {
+      list.appendChild(buildStep(i, p.a, p.b, p.c));
+    }
+    document.getElementById('stepInd').textContent = Math.min(stepCount, STEP_COUNT) + ' / ' + STEP_COUNT;
+  }
+
+  // ===== 全局刷新 =====
+  function updateAll() {
+    var p = getParams();
+    var a = p.a, b = p.b, c = p.c;
+
+    document.getElementById('eqDisplay').innerHTML = buildEquation(a, b, c);
+    document.getElementById('valA').textContent = fmtNum(a);
+    document.getElementById('valB').textContent = fmtNum(b);
+    document.getElementById('valC').textContent = fmtNum(c);
+
+    // a=0 警告
+    var isZero = Math.abs(a) < 1e-6;
+    document.getElementById('warnA0').classList.toggle('show', isZero);
+
+    // 顶点读数
+    var vcVertex = document.getElementById('vcVertex');
+    var vcAxis = document.getElementById('vcAxis');
+    var vcDir = document.getElementById('vcDir');
+    if (isZero) {
+      vcVertex.textContent = '—'; vcAxis.textContent = '—'; vcDir.textContent = '—';
+    } else {
+      var h = -b / (2 * a), k = c - b * b / (4 * a);
+      vcVertex.textContent = '(' + fmtNum(h) + ', ' + fmtNum(k) + ')';
+      vcAxis.textContent = 'x = ' + fmtNum(h);
+      vcDir.textContent = a > 0 ? '向上 ↑' : '向下 ↓';
+    }
+
+    // 两张图画布
+    drawGraph(document.getElementById('graph1'), a, b, c);
+    drawGraph(document.getElementById('graph2'), a, b, c);
+
+    // 配方法重绘
+    renderSteps();
+  }
+
+  // ===== 事件绑定 =====
+  sliderA.addEventListener('input', updateAll);
+  sliderB.addEventListener('input', updateAll);
+  sliderC.addEventListener('input', updateAll);
+
+  // 预设
+  var chips = document.querySelectorAll('.chip[data-a]');
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      sliderA.value = chip.dataset.a;
+      sliderB.value = chip.dataset.b;
+      sliderC.value = chip.dataset.c;
+      updateAll();
+    });
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    sliderA.value = 1; sliderB.value = 0; sliderC.value = 0;
+    updateAll();
+  });
+
+  // 配方法按钮
+  document.getElementById('stepNext').addEventListener('click', function () {
+    if (stepCount < STEP_COUNT) { stepCount++; renderSteps(); }
+  });
+  document.getElementById('stepPrev').addEventListener('click', function () {
+    if (stepCount > 1) { stepCount--; renderSteps(); }
+  });
+
+  // 窗口尺寸变化时重绘
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateAll, 120);
+  });
+
+  // 初始化
+  updateAll();
+
+  // 三种形式标签页 & 练习题（来自共享 main.js）
+  initTabs('formTabs');
+  initQuiz('quiz1', {
+    correct: 0,
+    explain: '用顶点公式：h = −b/(2a) = 2，k = f(2) = 4 − 8 + 3 = −1，顶点为 (2, −1)。',
+    hint: '试试 h = −b/(2a) 先求横坐标，再代回求纵坐标。'
+  });
+  initQuiz('quiz2', {
+    correct: 1,
+    explain: 'a = −2 < 0，开口向下。',
+    hint: '看二次项系数 a 的正负：a > 0 开口向上，a < 0 开口向下。'
+  });
+  initQuiz('quiz3', {
+    correct: 0,
+    explain: '左右平移看括号里："右减左加"；上下平移看括号外："上加下减"。所以 y = (x−2)² + 3。',
+    hint: '记住口诀：左加右减（x 里），上加下减（括号外）。'
+  });
+})();
+</script>
+</body>
+</html>

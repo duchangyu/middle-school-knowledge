@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>质量与密度 · 八年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 84px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+
+    /* 读数读出 */
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 17px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.9;
+    }
+    .formula-box .sub {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 引入卡片 */
+    .phenomenon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .phenomenon-card {
+      padding: 20px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border-top: 4px solid var(--primary);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .phenomenon-card:hover { transform: translateY(-3px); }
+    .phenomenon-card .icon { font-size: 38px; }
+    .phenomenon-card h4 {
+      margin: 10px 0 6px;
+      color: var(--primary-dark);
+      font-size: 16px;
+    }
+    .phenomenon-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .phenomenon-card.app-card { border-top-color: var(--accent); }
+    .phenomenon-card.app-card h4 { color: #B87900; }
+
+    /* 密度计算器布局 */
+    .dc-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .dc-visual {
+      background: white;
+      border-radius: var(--radius);
+      padding: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .dc-visual svg { max-width: 100%; height: auto; }
+    .dc-controls { display: flex; flex-direction: column; gap: 12px; }
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .input-wrap:focus-within { border-color: var(--primary); }
+    .input-wrap input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text-main);
+    }
+    .input-wrap .unit {
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-soft);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .input-group select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+    }
+    .input-group select:focus { border-color: var(--primary); }
+
+    /* 材质切换按钮 */
+    .mat-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 14px 0;
+      flex-wrap: wrap;
+    }
+    .mat-buttons .btn { border: 2px solid var(--primary); color: var(--primary); background: white; }
+    .mat-buttons .btn.active { background: var(--primary); color: white; }
+
+    /* 金饰判定 */
+    .verdict-box {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--bg-soft);
+    }
+    .gold-bar-track {
+      margin: 12px auto 0;
+      max-width: 420px;
+      height: 14px;
+      background: white;
+      border-radius: 7px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .gold-bar-fill {
+      height: 100%;
+      border-radius: 7px;
+      transition: width 0.3s ease;
+      min-width: 2px;
+      background: var(--success);
+    }
+    .gold-bar-label {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* 读数练习输入 */
+    .reading-check {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .reading-check input[type="number"] {
+      width: 110px;
+      padding: 9px 12px;
+      font-size: 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      font-family: inherit;
+    }
+    .reading-check input[type="number"]:focus { border-color: var(--primary); }
+    .reading-feedback {
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    /* 密度表 */
+    .density-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .density-table th, .density-table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .density-table th {
+      background: rgba(74,144,217,0.12);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .density-table tr:nth-child(even) td { background: var(--bg-soft); }
+
+    .exp-tip {
+      background: rgba(74,144,217,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--primary-dark);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .dc-layout { grid-template-columns: 1fr; }
+      .phenomenon-grid { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">⚖️ 质量与密度</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../九年级/index.html">物理九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">物理</a>
+    <span class="separator">/</span>
+    <a href="index.html">八年级</a>
+    <span class="separator">/</span>
+    <span>质量与密度</span>
+  </div>
+
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚖️ 质量与密度</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">体积相同的铁块和木头，为什么一个沉甸甸、一个轻飘飘？秘密就藏在"密度"里。</p>
+
+  <!-- ===== 1. 引入 ===== -->
+  <div class="card">
+    <div class="section-header">🤔 1. 先想一想：谁更重？</div>
+
+    <p>同样大小（1 立方米）的三个物体，一个是实心铁块，一个是木块，还有一个是泡沫塑料。把它们搬一搬，感受完全不一样：</p>
+
+    <div class="phenomenon-grid">
+      <div class="phenomenon-card">
+        <div class="icon">🔩</div>
+        <h4>1 m³ 的铁</h4>
+        <p>重达 <strong>7.9 吨</strong>，两个人拼尽全力也搬不动——它太"密实"了。</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🪵</div>
+        <h4>1 m³ 的木头</h4>
+        <p>重约 <strong>0.6 吨</strong>，几个人能抬动，但还是感觉沉甸甸的。</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🧽</div>
+        <h4>1 m³ 的泡沫</h4>
+        <p>轻飘飘，<strong>不到 30 公斤</strong>，一个人就能轻松抱起来。</p>
+      </div>
+    </div>
+
+    <p>体积完全一样，为什么重量差这么多？因为<strong>相同体积内"装"的物质多少不同</strong>——铁的原子排列得密密实实，泡沫里则充满了空气。物理学中，我们用<strong>密度</strong>来刻画物质的这一特性。</p>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 什么是质量？</div>
+      <p><strong>质量</strong>是物体所含<strong>物质的多少</strong>，用字母 m 表示。一块橡皮泥捏成球、压成饼、搓成条，它的质量都<strong>不变</strong>——质量不随<strong>形状、状态、位置</strong>而改变。把一瓶水带到月球上，重量变了，但质量还是那么多。</p>
+      <p style="margin-top:6px;">注意：质量是物体的属性，密度是<strong>物质</strong>的特性——同一种物质，密度是一定的。</p>
+    </div>
+  </div>
+
+  <!-- ===== 2. 概念定义 ===== -->
+  <div class="card">
+    <div class="section-header">📖 2. 密度的定义</div>
+
+    <p>为了比较"谁更密实"，我们把物体质量除以它的体积：</p>
+
+    <div class="formula-box">
+      ρ = m / V
+      <div class="sub">ρ（读作 róu）——密度；m —— 质量；V —— 体积</div>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>定义</strong>：单位体积的某种物质的质量，叫做这种物质的密度。</li>
+      <li><strong>单位</strong>：kg/m³（国际单位），常用 g/cm³。<strong>1 g/cm³ = 1000 kg/m³</strong>（记住这个换算！）</li>
+      <li><strong>水的密度</strong>：ρ水 = 1.0×10³ kg/m³ = 1.0 g/cm³——这是最常用的"参照物"。</li>
+      <li><strong>密度是物质的一种特性</strong>：同种物质密度相同，不同物质密度一般不同（常温常压下）。</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 两个常用变形公式</div>
+      由 ρ = m / V 可以推导出：<strong>m = ρV</strong>（求质量）、<strong>V = m / ρ</strong>（求体积）。三个量，知道任意两个，就能算出第三个——这正是下面要动手玩的计算器！
+    </div>
+  </div>
+
+  <!-- ===== 3. 交互探索1：密度计算器 ===== -->
+  <div class="card">
+    <div class="section-header">🧮 3. 交互探索：密度计算器</div>
+
+    <p>在下面的三个框里<strong>任意输入两个量</strong>，第三个会自动算出来。也可以先选一种物质，再给它"称质量、量体积"，看看算出的密度是不是对得上！</p>
+
+    <div class="dc-layout">
+      <div class="dc-visual">
+        <svg viewBox="0 0 220 158" width="220" height="158">
+          <defs>
+            <linearGradient id="grad-copper" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E8A06B"/>
+              <stop offset="100%" stop-color="#C96A2B"/>
+            </linearGradient>
+            <linearGradient id="grad-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F7D96B"/>
+              <stop offset="100%" stop-color="#E6B84B"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 水 -->
+          <g id="vis-water" style="display:none;">
+            <path d="M110 28 C 95 50 86 63 86 78 a 24 24 0 0 0 48 0 C 134 63 125 50 110 28 Z" fill="#4A90D9"/>
+            <path d="M110 40 C 101 53 96 62 96 70 a 14 14 0 0 0 28 0 C 124 62 119 53 110 40 Z" fill="rgba(255,255,255,0.35)"/>
+          </g>
+
+          <!-- 铁 -->
+          <g id="vis-iron" style="display:none;">
+            <rect x="90" y="46" width="60" height="56" rx="5" fill="#9AA0A8" stroke="#5F646E" stroke-width="2.5"/>
+            <rect x="98" y="54" width="15" height="10" fill="#7A8089"/>
+            <rect x="127" y="54" width="15" height="10" fill="#7A8089"/>
+            <circle cx="107" cy="76" r="4" fill="#5F646E"/>
+            <circle cx="133" cy="76" r="4" fill="#5F646E"/>
+            <rect x="98" y="54" width="44" height="4" fill="rgba(255,255,255,0.35)"/>
+          </g>
+
+          <!-- 铝（易拉罐） -->
+          <g id="vis-aluminum" style="display:none;">
+            <rect x="98" y="36" width="44" height="74" rx="6" fill="#D8DCE2" stroke="#9BA3AD" stroke-width="2.5"/>
+            <rect x="98" y="36" width="44" height="14" rx="6" fill="#C2C7CE"/>
+            <ellipse cx="120" cy="42" rx="22" ry="5" fill="#E6E9EE" stroke="#9BA3AD" stroke-width="1.5"/>
+            <rect x="112" y="96" width="16" height="14" fill="#C2C7CE"/>
+          </g>
+
+          <!-- 铜 -->
+          <g id="vis-copper" style="display:none;">
+            <path d="M 88 82 L 102 48 L 138 48 L 152 82 Z" fill="#D9823A" stroke="#A85F28" stroke-width="2.5"/>
+            <path d="M 102 48 L 138 48 L 152 82 L 88 82 Z" fill="url(#grad-copper)" opacity="0.55"/>
+            <ellipse cx="120" cy="48" rx="18" ry="4.5" fill="#E8A06B"/>
+            <rect x="96" y="58" width="48" height="4" fill="rgba(255,255,255,0.3)"/>
+          </g>
+
+          <!-- 金 -->
+          <g id="vis-gold" style="display:none;">
+            <path d="M 86 78 L 94 44 L 146 44 L 154 78 Z" fill="#F0C94C" stroke="#C9A227" stroke-width="2.5"/>
+            <path d="M 94 44 L 146 44 L 154 78 L 86 78 Z" fill="url(#grad-gold)" opacity="0.5"/>
+            <rect x="98" y="48" width="44" height="5" fill="#FFF7D6" opacity="0.9"/>
+            <rect x="86" y="78" width="68" height="12" rx="2" fill="#E6B84B" stroke="#C9A227" stroke-width="2"/>
+          </g>
+
+          <!-- 酒精（烧瓶） -->
+          <g id="vis-alcohol" style="display:none;">
+            <path d="M 110 32 L 130 32 L 130 50 L 146 78 Q 150 87 138 90 L 102 90 Q 90 87 94 78 L 110 50 Z" fill="#8FD9B6" stroke="#3DA574" stroke-width="2.5"/>
+            <path d="M 110 32 L 130 32 L 130 50 L 146 78 Q 150 87 138 90 L 102 90 Q 90 87 94 78 L 110 50 Z" fill="rgba(255,255,255,0.3)"/>
+            <rect x="102" y="64" width="36" height="26" fill="#52B788" opacity="0.8"/>
+          </g>
+
+          <text id="dc-obj-name" x="110" y="126" text-anchor="middle" font-size="15" font-weight="700" fill="#2C3E50">铁</text>
+          <text id="dc-obj-rho" x="110" y="143" text-anchor="middle" font-size="12" fill="#7F8C8D">7.9 g/cm³</text>
+        </svg>
+      </div>
+
+      <div class="dc-controls">
+        <div class="input-group">
+          <label>🎛 选择一种物质（自动填入密度）</label>
+          <select id="dc-select">
+            <option value="water">💧 水 —— 1.0 g/cm³</option>
+            <option value="iron" selected>🔩 铁 —— 7.9 g/cm³</option>
+            <option value="aluminum">🥫 铝 —— 2.7 g/cm³</option>
+            <option value="copper">🟠 铜 —— 8.9 g/cm³</option>
+            <option value="gold">🟡 金 —— 19.3 g/cm³</option>
+            <option value="alcohol">🧪 酒精 —— 0.8 g/cm³</option>
+          </select>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="input-group">
+            <label>质量 m</label>
+            <div class="input-wrap">
+              <input type="number" id="dc-mass" min="0" step="0.1" placeholder="输入质量">
+              <span class="unit">g</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>体积 V</label>
+            <div class="input-wrap">
+              <input type="number" id="dc-vol" min="0" step="0.1" placeholder="输入体积">
+              <span class="unit">cm³</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>密度 ρ</label>
+          <div class="input-wrap">
+            <input type="number" id="dc-rho" min="0" step="0.1" value="7.9" placeholder="输入密度">
+            <span class="unit">g/cm³</span>
+          </div>
+        </div>
+
+        <div class="formula-box" id="dc-formula">
+          请先输入 <strong>两个</strong> 物理量（质量、体积、密度任选两个），第三个会自动算出来。
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn btn-outline btn-sm" onclick="resetDensityCalc()">🔄 清空重来</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-tip">
+      💡 <strong>试一试</strong>：先输入质量 79 g、体积 10 cm³，看密度是不是算出 7.9 g/cm³（铁）；再把质量改成 27 g，密度会变成 2.7 g/cm³（铝）——同样 10 cm³，装的东西不一样，密度就不一样！
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互探索2：水的密度理解 ===== -->
+  <div class="card">
+    <div class="section-header">🔬 4. 交互探索：量筒排水实验</div>
+
+    <p>量筒里原来有 <strong>40 mL</strong> 水。把一块物体用细线拉着<strong>完全浸没</strong>在水中，水面会上升。拖动滑块改变物体的质量，或切换材质，观察水位、排开体积和密度的关系：</p>
+
+    <div class="mat-buttons" id="water-mat-buttons">
+      <button class="btn btn-sm active" data-mat="iron">🔩 铁块</button>
+      <button class="btn btn-sm" data-mat="aluminum">🥫 铝块</button>
+      <button class="btn btn-sm" data-mat="wood">🪵 木块</button>
+    </div>
+
+    <div class="slider-row">
+      <label for="water-mass">物体质量 m =</label>
+      <input type="range" id="water-mass" min="20" max="100" value="60" step="1">
+      <span class="value-display"><span id="water-mass-val">60</span> g</span>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 260 330" width="270" height="340">
+        <defs>
+          <clipPath id="clip-water1">
+            <polygon points="99,268 97,42 143,42 141,268"/>
+          </clipPath>
+          <linearGradient id="wg1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.25)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.5)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 量筒外壁 -->
+        <path d="M 90 36 L 97 284 L 143 284 L 150 36" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <path d="M 97 284 L 143 284" stroke="#7F8C8D" stroke-width="3"/>
+        <path d="M 90 36 L 82 46 L 90 50" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+
+        <!-- 刻度（JS 生成） -->
+        <g id="scale-grad-1"></g>
+
+        <!-- 初始水位参考线 -->
+        <line x1="99" y1="236" x2="141" y2="236" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="148" y="240" font-size="11" fill="#B87900" font-weight="600">初始 40 mL</text>
+
+        <!-- 水与物体（内部） -->
+        <g clip-path="url(#clip-water1)">
+          <rect id="water-fill1" x="99" y="230" width="42" height="38" fill="url(#wg1)"/>
+          <rect id="water-obj1" x="107" y="196" width="26" height="60" fill="#8A8F98" stroke="#5F646E" stroke-width="1.5"/>
+        </g>
+
+        <!-- 细线 -->
+        <line id="water-thread1" x1="120" y1="22" x2="120" y2="180" stroke="#7F8C8D" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+        <!-- 当前水位标记 -->
+        <line id="water-level-line1" x1="150" y1="230" x2="164" y2="230" stroke="#E74C3C" stroke-width="2"/>
+        <text id="water-reading-label1" x="170" y="234" font-size="12" fill="#E74C3C" font-weight="600">40.0 mL</text>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">物体质量</span><span class="value" id="water-v-display">60 g</span></div>
+      <div class="readout-item"><span class="label">物体体积 V物</span><span class="value" id="water-vpai">0.0 cm³</span></div>
+      <div class="readout-item"><span class="label">排开体积 V排</span><span class="value" id="water-vpai2">0.0 cm³</span></div>
+      <div class="readout-item"><span class="label">量筒读数</span><span class="value" id="water-reading">40.0 mL</span></div>
+      <div class="readout-item"><span class="label">物体密度 ρ</span><span class="value" id="water-rho-res">0.0 g/cm³</span></div>
+    </div>
+
+    <div class="formula-box" id="water-formula">
+      拖动滑块，看看水位怎么变吧！
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 关键结论</div>
+      物体<strong>完全浸没</strong>时：<strong>V排 = V物</strong>，液面上升的体积 = 物体自身的体积。<br>
+      所以 <strong>ρ = m / V = m / V排</strong>——量筒不仅能测体积，还能帮我们"测"出密度！
+    </div>
+
+    <div class="exp-tip">
+      💡 <strong>观察思考</strong>：把材质切到"木块"，保持质量不变，你会发现木块体积比铁块大得多、水位升得更高——因为木的密度小，同样质量"占的地方"就更大。试着总结：<strong>同质量时，密度越小，体积越大</strong>。
+    </div>
+  </div>
+
+  <!-- ===== 5. 密度与物质鉴别 ===== -->
+  <div class="card">
+    <div class="section-header">💍 5. 密度与物质鉴别：是纯金吗？</div>
+
+    <p>密度是物质的"身份证"——测出密度，就能大致判断它是什么物质。假设你得到一块"金"饰品，把它称一称、浸入量筒量一量体积，就能算出密度，和纯金的密度（<strong>19.3 g/cm³</strong>）比一比：</p>
+
+    <div class="slider-row">
+      <label for="gold-mass">质量 m =</label>
+      <input type="range" id="gold-mass" min="10" max="500" value="193" step="1">
+      <span class="value-display"><span id="gold-mass-val">193</span> g</span>
+    </div>
+    <div class="slider-row">
+      <label for="gold-vol">体积 V =</label>
+      <input type="range" id="gold-vol" min="1" max="100" value="10" step="1">
+      <span class="value-display"><span id="gold-vol-val">10</span> cm³</span>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 260 185" width="300" height="215">
+        <defs>
+          <linearGradient id="grad-gold2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F7D96B"/>
+            <stop offset="100%" stop-color="#E6B84B"/>
+          </linearGradient>
+        </defs>
+        <!-- 台面 -->
+        <rect x="36" y="150" width="188" height="26" rx="6" fill="#E8EEF4" stroke="#BDC3C7" stroke-width="2"/>
+        <!-- 金锭 -->
+        <path id="gold-body" d="M 90 150 L 98 100 L 162 100 L 170 150 Z" fill="#F0C94C" stroke="#C9A227" stroke-width="2.5"/>
+        <path d="M 98 100 L 162 100 L 170 150 L 90 150 Z" fill="url(#grad-gold2)" opacity="0.4"/>
+        <rect x="104" y="104" width="52" height="6" rx="3" fill="#FFF7D6" opacity="0.9"/>
+        <text id="gold-attr" x="130" y="92" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">m = 193 g，V = 10 cm³</text>
+        <text x="130" y="28" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="700">🔎 一块"金"饰品的密度鉴定</text>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">计算密度 ρ = m / V</span><span class="value" id="gold-rho">19.30 g/cm³</span></div>
+      <div class="readout-item"><span class="label">纯金密度</span><span class="value">19.3 g/cm³</span></div>
+    </div>
+
+    <div class="verdict-box" id="gold-verdict">拖动滑块，计算这块饰品的密度，和纯金比一比吧！</div>
+    <div class="gold-bar-track">
+      <div class="gold-bar-fill" id="gold-bar" style="width:0%;"></div>
+    </div>
+    <div class="gold-bar-label" id="gold-bar-label">与纯金密度的差距：—</div>
+
+    <h3 style="margin:20px 0 8px; font-size:17px; color:var(--primary-dark);">📋 常见物质的密度（常温常压下）</h3>
+    <table class="density-table">
+      <tr><th>物质</th><th>密度 ρ / (g/cm³)</th><th>密度 ρ / (kg/m³)</th><th>物质</th><th>密度 ρ / (g/cm³)</th><th>密度 ρ / (kg/m³)</th></tr>
+      <tr><td>金</td><td>19.3</td><td>19.3×10³</td><td>铝</td><td>2.7</td><td>2.7×10³</td></tr>
+      <tr><td>银</td><td>10.5</td><td>10.5×10³</td><td>冰</td><td>0.9</td><td>0.9×10³</td></tr>
+      <tr><td>铜</td><td>8.9</td><td>8.9×10³</td><td>酒精</td><td>0.8</td><td>0.8×10³</td></tr>
+      <tr><td>铁</td><td>7.9</td><td>7.9×10³</td><td>水</td><td>1.0</td><td>1.0×10³</td></tr>
+      <tr><td>铅</td><td>11.3</td><td>11.3×10³</td><td>松木</td><td>0.5</td><td>0.5×10³</td></tr>
+    </table>
+
+    <div class="exp-tip">
+      💡 用 ρ = m / V 算出密度后，再查表：若与某种物质的密度很接近，就<strong>很可能</strong>是这种物质（掺了杂质时密度会有偏差）。注意：用密度鉴别时，要选密度"特征明显"的物质，比如金和铜（19.3 和 8.9 差很远），一眼就能看出来。
+    </div>
+  </div>
+
+  <!-- ===== 6. 生活中的应用 ===== -->
+  <div class="card">
+    <div class="section-header">🏠 6. 密度在生活中的应用</div>
+
+    <div class="phenomenon-grid">
+      <div class="phenomenon-card app-card">
+        <div class="icon">💍</div>
+        <h4>鉴别物质</h4>
+        <p>首饰店用密度检验金银真假；考古学家靠密度判断文物材质。密度就是物质的"指纹"。</p>
+      </div>
+      <div class="phenomenon-card app-card">
+        <div class="icon">🌾</div>
+        <h4>盐水选种</h4>
+        <p>把种子倒入盐水中，<strong>饱满</strong>的种子密度大、沉到水底，<strong>干瘪</strong>的种子密度小、浮上来，从而分离良种。</p>
+      </div>
+      <div class="phenomenon-card app-card">
+        <div class="icon">🚜</div>
+        <h4>农业灌溉</h4>
+        <p>滴灌的肥液靠密度判断浓度是否合适；农民还会用密度检测土壤中悬浮物与肥料的配比。</p>
+      </div>
+      <div class="phenomenon-card app-card">
+        <div class="icon">✈️</div>
+        <h4>航空轻质合金</h4>
+        <p>飞机外壳用密度小的<strong>铝、钛合金</strong>制造——同样坚固，却比钢材轻得多，省油又能多载客。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7. 量筒读数练习 ===== -->
+  <div class="card">
+    <div class="section-header">📏 7. 量筒读数练习</div>
+
+    <p>量筒是测量液体体积（也就是物体排开体积）的重要工具。下面这个量筒量程 0~100 mL，拖动滑块改变水量，<strong>先观察，再在脑子里读数</strong>，然后把你读到的值填进去检查（容差 ±1 mL）：</p>
+
+    <div class="slider-row">
+      <label for="reading-slider">水量 V =</label>
+      <input type="range" id="reading-slider" min="0" max="100" value="64" step="1">
+      <span class="value-display"><span id="reading-target">64</span> mL</span>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 260 330" width="270" height="340">
+        <defs>
+          <clipPath id="clip-read2">
+            <polygon points="99,268 97,42 143,42 141,268"/>
+          </clipPath>
+          <linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,144,217,0.25)"/>
+            <stop offset="100%" stop-color="rgba(46,107,168,0.5)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 量筒外壁 -->
+        <path d="M 90 36 L 97 284 L 143 284 L 150 36" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <path d="M 97 284 L 143 284" stroke="#7F8C8D" stroke-width="3"/>
+        <path d="M 90 36 L 82 46 L 90 50" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+
+        <!-- 刻度（JS 生成） -->
+        <g id="scale-grad-2"></g>
+
+        <!-- 水（内部） -->
+        <g clip-path="url(#clip-read2)">
+          <rect id="reading-fill2" x="99" y="140" width="42" height="128" fill="url(#wg2)"/>
+        </g>
+
+        <!-- 凹液面 -->
+        <path id="reading-meniscus2" d="M 99 140 Q 120 144 141 140" fill="none" stroke="#1F5F8F" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="reading-check">
+      <span style="font-weight:600; color:var(--text-main);">我读到的读数：</span>
+      <input type="number" id="reading-input" step="0.1" placeholder="例如 63.5">
+      <span style="color:var(--text-secondary);">mL</span>
+      <button class="btn btn-primary btn-sm" onclick="checkReading()">✓ 检查</button>
+      <button class="btn btn-outline btn-sm" onclick="revealReading()">👀 看答案</button>
+    </div>
+    <div class="reading-feedback" id="reading-feedback"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 量筒读数小技巧</div>
+      • 视线要与液面（凹液面最低点）<strong>相平</strong>，俯视偏大、仰视偏小。<br>
+      • 读数时估读到最小刻度值的<strong>下一位</strong>，例如分度值 1 mL 时读到 0.1 mL。
+    </div>
+  </div>
+
+  <!-- ===== 8. 练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 8. 练习题</div>
+    <p>检验一下你对质量与密度的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 一块金属的质量是 158 g，体积是 20 cm³，它的密度是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 3.16 g/cm³</div>
+      <div class="quiz-option" data-idx="1">B. 7.9 g/cm³</div>
+      <div class="quiz-option" data-idx="2">C. 79 g/cm³</div>
+      <div class="quiz-option" data-idx="3">D. 3160 g/cm³</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 铜的密度是 8.9 g/cm³，换算成国际单位是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 8.9 kg/m³</div>
+      <div class="quiz-option" data-idx="1">B. 890 kg/m³</div>
+      <div class="quiz-option" data-idx="2">C. 8900 kg/m³</div>
+      <div class="quiz-option" data-idx="3">D. 89000 kg/m³</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 有一块体积为 20 cm³ 的物体，称得质量是 54 g。对照下表，它最有可能是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 铁（7.9 g/cm³）</div>
+      <div class="quiz-option" data-idx="1">B. 铜（8.9 g/cm³）</div>
+      <div class="quiz-option" data-idx="2">C. 金（19.3 g/cm³）</div>
+      <div class="quiz-option" data-idx="3">D. 铝（2.7 g/cm³）</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· ρ = m/V 的比值思想与公式变形 ↔ <a href="../../数学/八年级/06-分式.html">数学 · 分式</a>（m、V、ρ 三量的乘除互求）</p>
+    <p>· 溶液浓度计算中的"密度 × 体积 = 质量" ↔ <a href="../../化学/九年级/09-溶液.html">化学 · 溶液</a>（溶质质量分数 ω = m质 / m液）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="05-透镜及其应用.html" class="btn btn-outline">← 上一章：透镜及其应用</a>
+    <a href="07-力.html" class="btn btn-primary">下一章：力 →</a>
+  </div>
+
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+// ===== 工具函数 =====
+function fmt(x) {
+  if (x === null || x === undefined || isNaN(x)) return '0';
+  return parseFloat(Number(x).toFixed(3)).toString();
+}
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+// ===== 密度计算器 =====
+(function() {
+  const MATS = {
+    water:    { name: '水',     rho: 1.0 },
+    iron:     { name: '铁',     rho: 7.9 },
+    aluminum: { name: '铝',     rho: 2.7 },
+    copper:   { name: '铜',     rho: 8.9 },
+    gold:     { name: '金',     rho: 19.3 },
+    alcohol:  { name: '酒精',   rho: 0.8 }
+  };
+  const inputs = {
+    mass: document.getElementById('dc-mass'),
+    vol:  document.getElementById('dc-vol'),
+    rho:  document.getElementById('dc-rho')
+  };
+  const select = document.getElementById('dc-select');
+  const formula = document.getElementById('dc-formula');
+  const visIds = ['water','iron','aluminum','copper','gold','alcohol'];
+
+  let lastEdited = 'rho';
+  let rhoFromSelect = true;
+
+  function toNum(s) {
+    const t = s.trim();
+    if (t === '') return null;
+    const x = parseFloat(t);
+    return isNaN(x) ? null : x;
+  }
+
+  function setObjectVis(key) {
+    visIds.forEach(function(k) {
+      document.getElementById('vis-' + k).style.display = (k === key) ? 'block' : 'none';
+    });
+    document.getElementById('dc-obj-name').textContent = MATS[key].name;
+    document.getElementById('dc-obj-rho').textContent = MATS[key].rho + ' g/cm³';
+  }
+
+  function setInput(field, val) {
+    if (val !== null && val !== undefined && isFinite(val)) {
+      inputs[field].value = fmt(val);
+    }
+  }
+
+  function buildFormula(target, m, v, r) {
+    if (target === 'rho') {
+      return 'ρ = m / V = ' + fmt(m) + ' g ÷ ' + fmt(v) + ' cm³ = <strong>' + fmt(r) + ' g/cm³</strong>' +
+             ' = <strong>' + fmt(r * 1000) + ' kg/m³</strong>';
+    }
+    if (target === 'mass') {
+      return 'm = ρ × V = ' + fmt(r) + ' g/cm³ × ' + fmt(v) + ' cm³ = <strong>' + fmt(m) + ' g</strong>';
+    }
+    return 'V = m / ρ = ' + fmt(m) + ' g ÷ ' + fmt(r) + ' g/cm³ = <strong>' + fmt(v) + ' cm³</strong>';
+  }
+
+  function update() {
+    const m = toNum(inputs.mass.value);
+    const v = toNum(inputs.vol.value);
+    const r = toNum(inputs.rho.value);
+    const nonNull = (m !== null ? 1 : 0) + (v !== null ? 1 : 0) + (r !== null ? 1 : 0);
+
+    if (nonNull < 2) {
+      formula.innerHTML = '请先输入 <strong>两个</strong> 物理量（质量、体积、密度任选两个），第三个会自动算出来。';
+      return;
+    }
+
+    // 选了物质 + 质量体积都有 → 对比"实际密度"与所选物质
+    if (rhoFromSelect && lastEdited === 'rho-select' && m !== null && v !== null) {
+      const actual = m / v;
+      const mat = MATS[select.value];
+      const ok = Math.abs(actual - mat.rho) < 0.1;
+      formula.innerHTML = 'ρ实际 = m / V = ' + fmt(m) + ' g ÷ ' + fmt(v) + ' cm³ = <strong>' + fmt(actual) + ' g/cm³</strong>' +
+        (ok ? '　✅ 与你选的 ' : '　❌ 与你选的 ') + '<strong>' + mat.name + '</strong>（' + mat.rho + ' g/cm³）' +
+        (ok ? '一致，很可能是' + mat.name + '！' : '不一致——密度不同，说明它<strong>不是</strong>' + mat.name + '。');
+      return;
+    }
+
+    // 确定要计算的字段
+    let target;
+    if (nonNull === 2) {
+      target = (m === null) ? 'mass' : (v === null ? 'vol' : 'rho');
+    } else {
+      target = (lastEdited === 'rho-select') ? 'rho' : lastEdited;
+    }
+
+    let val = null;
+    const mm = toNum(inputs.mass.value);
+    const vv = toNum(inputs.vol.value);
+    const rr = toNum(inputs.rho.value);
+    if (target === 'mass' && rr !== null && vv !== null) val = rr * vv;
+    if (target === 'vol' && mm !== null && rr !== null && rr !== 0) val = mm / rr;
+    if (target === 'rho' && mm !== null && vv !== null && vv !== 0) val = mm / vv;
+
+    if (val === null || !isFinite(val) || val <= 0) {
+      formula.innerHTML = '⚠️ 数值无效，请输入正的、合理的数字。';
+      return;
+    }
+
+    setInput(target, val);
+
+    const m2 = toNum(inputs.mass.value);
+    const v2 = toNum(inputs.vol.value);
+    const r2 = toNum(inputs.rho.value);
+    formula.innerHTML = buildFormula(target, m2, v2, r2);
+  }
+
+  // 事件绑定
+  Object.keys(inputs).forEach(function(field) {
+    inputs[field].addEventListener('input', function() {
+      lastEdited = field;
+      rhoFromSelect = false;
+      update();
+    });
+  });
+
+  select.addEventListener('change', function() {
+    lastEdited = 'rho-select';
+    rhoFromSelect = true;
+    const rho = MATS[select.value].rho;
+    inputs.rho.value = rho;
+    setObjectVis(select.value);
+    update();
+  });
+
+  window.resetDensityCalc = function() {
+    inputs.mass.value = '';
+    inputs.vol.value = '';
+    inputs.rho.value = '7.9';
+    select.value = 'iron';
+    lastEdited = 'rho';
+    rhoFromSelect = true;
+    setObjectVis('iron');
+    formula.innerHTML = '请先输入 <strong>两个</strong> 物理量（质量、体积、密度任选两个），第三个会自动算出来。';
+  };
+
+  // 初始显示
+  setObjectVis('iron');
+  update();
+})();
+
+// ===== 量筒刻度生成 =====
+function buildScale(cfg) {
+  const g = document.getElementById(cfg.group);
+  const ns = 'http://www.w3.org/2000/svg';
+  const pxPer = (cfg.yBottom - cfg.yTop) / cfg.capacity;
+  for (let v = 0; v <= cfg.capacity; v += cfg.minor) {
+    const y = cfg.yBottom - v * pxPer;
+    const isMajor = (v % cfg.major === 0);
+    const len = isMajor ? 12 : 7;
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', cfg.xBase);
+    line.setAttribute('y1', y);
+    line.setAttribute('x2', cfg.xBase + len);
+    line.setAttribute('y2', y);
+    line.setAttribute('stroke', isMajor ? '#2C3E50' : '#95A5A6');
+    line.setAttribute('stroke-width', isMajor ? 2 : 1);
+    g.appendChild(line);
+    if (isMajor) {
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('x', cfg.xBase - 6);
+      t.setAttribute('y', y + 4);
+      t.setAttribute('text-anchor', 'end');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('fill', '#2C3E50');
+      t.textContent = v;
+      g.appendChild(t);
+    }
+  }
+}
+
+// ===== 水的密度理解（量筒排水） =====
+(function() {
+  const WMATS = {
+    iron:     { name: '铁', rho: 7.9, color: '#8A8F98', stroke: '#5F646E' },
+    aluminum: { name: '铝', rho: 2.7, color: '#C9CDD3', stroke: '#9BA3AD' },
+    wood:     { name: '木', rho: 0.6, color: '#C89B5E', stroke: '#9A7740' }
+  };
+  const W_INIT = 40;      // 初始水位 mL
+  const W_CAP  = 250;     // 量筒量程
+  const W_BOT  = 268;     // 底部 y
+  const W_PX   = (W_BOT - 70) / W_CAP;  // 每 mL 对应像素
+  const V_MAX  = 100 / 0.6;             // 最大物体体积（木 100g）
+
+  const slider = document.getElementById('water-mass');
+  const btns = document.querySelectorAll('#water-mat-buttons .btn');
+  let matKey = 'iron';
+
+  function updateWater() {
+    const mass = parseInt(slider.value, 10);
+    const mat = WMATS[matKey];
+    const V = mass / mat.rho;              // cm³
+    const total = W_INIT + V;              // 量筒读数 mL
+    const yWater = W_BOT - total * W_PX;
+
+    // 水
+    document.getElementById('water-fill1').setAttribute('y', yWater);
+    document.getElementById('water-fill1').setAttribute('height', W_BOT - yWater);
+    document.getElementById('water-level-line1').setAttribute('y1', yWater);
+    document.getElementById('water-level-line1').setAttribute('y2', yWater);
+    document.getElementById('water-reading-label1').setAttribute('y', yWater + 4);
+    document.getElementById('water-reading-label1').textContent = total.toFixed(1) + ' mL';
+
+    // 物体（底部固定，完全浸没）
+    const wObj = 26, xObj = 107;
+    const hObj = Math.max(7, V / V_MAX * 80);
+    const yObjTop = W_BOT - 6 - hObj;
+    const obj = document.getElementById('water-obj1');
+    obj.setAttribute('x', xObj);
+    obj.setAttribute('y', yObjTop);
+    obj.setAttribute('width', wObj);
+    obj.setAttribute('height', hObj);
+    obj.setAttribute('fill', mat.color);
+    obj.setAttribute('stroke', mat.stroke);
+
+    // 细线
+    document.getElementById('water-thread1').setAttribute('y2', yObjTop);
+
+    // 读数
+    document.getElementById('water-v-display').textContent = mass + ' g';
+    document.getElementById('water-vpai').textContent = fmt(V) + ' cm³';
+    document.getElementById('water-vpai2').textContent = fmt(V) + ' cm³';
+    document.getElementById('water-reading').textContent = total.toFixed(1) + ' mL';
+    document.getElementById('water-rho-res').textContent = mat.rho + ' g/cm³';
+
+    // 公式
+    document.getElementById('water-formula').innerHTML =
+      'V排 = V物 = m / ρ = ' + mass + ' g ÷ ' + mat.rho + ' g/cm³ = <strong>' + fmt(V) + ' cm³</strong>' +
+      '<br>量筒读数 = 40 + V排 = <strong>' + total.toFixed(1) + ' mL</strong>　|　ρ = m / V = ' + mass + ' ÷ ' + fmt(V) + ' = <strong>' + mat.rho + ' g/cm³</strong>';
+  }
+
+  slider.addEventListener('input', function() {
+    document.getElementById('water-mass-val').textContent = this.value;
+    updateWater();
+  });
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      matKey = btn.dataset.mat;
+      updateWater();
+    });
+  });
+
+  updateWater();
+})();
+
+// ===== 金饰鉴别 =====
+(function() {
+  const GOLD_RHO = 19.3;
+  const mSlider = document.getElementById('gold-mass');
+  const vSlider = document.getElementById('gold-vol');
+
+  function updateGold() {
+    const m = parseInt(mSlider.value, 10);
+    const v = parseInt(vSlider.value, 10);
+    const rho = m / v;
+    const diff = Math.abs(rho - GOLD_RHO);
+    const isGold = diff < 1;
+    const pct = diff / GOLD_RHO * 100;
+
+    document.getElementById('gold-mass-val').textContent = m;
+    document.getElementById('gold-vol-val').textContent = v;
+    document.getElementById('gold-attr').textContent = 'm = ' + m + ' g，V = ' + v + ' cm³';
+    document.getElementById('gold-rho').textContent = fmt(rho) + ' g/cm³';
+
+    const body = document.getElementById('gold-body');
+    body.setAttribute('fill', isGold ? '#F0C94C' : '#A9A29B');
+    body.setAttribute('stroke', isGold ? '#C9A227' : '#7E7A75');
+
+    const verdict = document.getElementById('gold-verdict');
+    if (isGold) {
+      verdict.innerHTML = '✅ 密度为 ' + fmt(rho) + ' g/cm³，与纯金（19.3 g/cm³）非常接近，<strong>很可能是纯金</strong>！';
+      verdict.style.color = '#27AE60';
+      verdict.style.background = 'rgba(39,174,96,0.1)';
+    } else {
+      verdict.innerHTML = '❌ 密度为 ' + fmt(rho) + ' g/cm³，与纯金（19.3 g/cm³）差距 ' + pct.toFixed(1) + '%，<strong>不是纯金</strong>！';
+      verdict.style.color = '#E74C3C';
+      verdict.style.background = 'rgba(231,76,60,0.1)';
+    }
+
+    const bar = document.getElementById('gold-bar');
+    bar.style.width = Math.min(pct, 100) + '%';
+    bar.style.background = diff < 1 ? '#27AE60' : (diff < 10 ? '#F5A623' : '#E74C3C');
+    document.getElementById('gold-bar-label').textContent = '与纯金密度的差距：' + pct.toFixed(1) + '%';
+  }
+
+  mSlider.addEventListener('input', updateGold);
+  vSlider.addEventListener('input', updateGold);
+  updateGold();
+})();
+
+// ===== 量筒读数练习 =====
+(function() {
+  const R_BOT = 268;
+  const R_PX = (R_BOT - 70) / 100;
+  const slider = document.getElementById('reading-slider');
+  const input = document.getElementById('reading-input');
+  const fb = document.getElementById('reading-feedback');
+
+  function updateReading() {
+    const v = parseInt(slider.value, 10);
+    const y = R_BOT - v * R_PX;
+    document.getElementById('reading-fill2').setAttribute('y', y);
+    document.getElementById('reading-fill2').setAttribute('height', R_BOT - y);
+    document.getElementById('reading-meniscus2').setAttribute('d', 'M 99 ' + y + ' Q 120 ' + (y + 4) + ' 141 ' + y);
+    document.getElementById('reading-target').textContent = v;
+  }
+
+  window.checkReading = function() {
+    const target = parseInt(slider.value, 10);
+    const user = parseFloat(input.value);
+    if (isNaN(user)) {
+      fb.innerHTML = '⚠️ 请先输入你读到的读数（mL）。';
+      fb.style.color = '#F39C12';
+      return;
+    }
+    const diff = Math.abs(user - target);
+    if (diff <= 1) {
+      fb.innerHTML = '✅ 正确！凹液面最低点对着 <strong>' + target + ' mL</strong> 刻度，你读的 ' + user + ' mL 在 ±1 mL 容差内。';
+      fb.style.color = '#27AE60';
+    } else {
+      fb.innerHTML = '❌ 还差一点：液面其实在 <strong>' + target + ' mL</strong>，你读的是 ' + user + ' mL。注意视线与液面平齐、读<strong>凹液面最低点</strong>。';
+      fb.style.color = '#E74C3C';
+    }
+  };
+
+  window.revealReading = function() {
+    const target = parseInt(slider.value, 10);
+    fb.innerHTML = '👀 答案：液面读数是 <strong>' + target + ' mL</strong>。移动滑块换一个量，再练一次吧！';
+    fb.style.color = '#4A90D9';
+  };
+
+  slider.addEventListener('input', function() {
+    document.getElementById('reading-target').textContent = this.value;
+    updateReading();
+  });
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkReading();
+  });
+
+  updateReading();
+})();
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 量筒刻度
+  buildScale({ group: 'scale-grad-1', capacity: 250, major: 50, minor: 10, yTop: 70, yBottom: 268, xBase: 84 });
+  buildScale({ group: 'scale-grad-2', capacity: 100, major: 10, minor: 2, yTop: 70, yBottom: 268, xBase: 84 });
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: 'ρ = m / V = 158 g ÷ 20 cm³ = <strong>7.9 g/cm³</strong>，恰好等于铁的密度，所以这块金属很可能是铁。',
+    hint: '密度 = 质量 ÷ 体积，158 ÷ 20 = ?'
+  });
+
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: '1 g/cm³ = 1000 kg/m³，所以 8.9 g/cm³ = 8.9 × 1000 = <strong>8900 kg/m³</strong>。',
+    hint: '回忆单位换算：1 g/cm³ = 1000 kg/m³。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 3,
+    explain: 'ρ = m / V = 54 g ÷ 20 cm³ = <strong>2.7 g/cm³</strong>，与表中铝的密度一致，最有可能是<strong>铝</strong>。',
+    hint: '先算出密度，再对照题目给出的密度值：54 ÷ 20 = ?'
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>欧姆定律 · 九年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 本页专属样式 ===== */
+    .analogy-svg-box, .circuit-box, .graph-box {
+      background: #FAFCFE;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    .formula-box {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(74,144,217,0.08), rgba(74,144,217,0.02));
+      border-radius: var(--radius);
+      margin: 20px 0;
+      border: 1px solid rgba(74,144,217,0.2);
+    }
+    .formula-box .big-formula {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Times New Roman", serif;
+      letter-spacing: 2px;
+      margin: 8px 0;
+    }
+    .formula-box .formula-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .formula-box .unit-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .formula-box .unit-item {
+      background: white;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      font-size: 14px;
+    }
+    .formula-box .unit-item b { color: var(--primary); }
+
+    /* 控制面板 */
+    .control-panel {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-top: 16px;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .control-row:last-child { margin-bottom: 0; }
+    .control-row label {
+      min-width: 130px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+    .control-row .slider-wrap {
+      flex: 1;
+      min-width: 180px;
+    }
+    .control-row .value-badge {
+      min-width: 80px;
+      text-align: center;
+      padding: 4px 10px;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .mode-switch {
+      display: inline-flex;
+      background: var(--bg-soft);
+      border-radius: 20px;
+      padding: 4px;
+      margin: 8px 0 16px;
+    }
+    .mode-switch button {
+      padding: 8px 20px;
+      border: none;
+      background: transparent;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .mode-switch button.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(74,144,217,0.4);
+    }
+
+    /* 电流读数显示 */
+    .readout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .readout-card {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+      border: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .readout-card.highlight { border-color: var(--primary); }
+    .readout-card .rd-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .readout-card .rd-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Courier New", monospace;
+    }
+    .readout-card .rd-unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* 实验步骤 */
+    .exp-step {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .exp-step.active { display: block; }
+    .exp-step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .exp-step-title {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .exp-step-content {
+      padding-left: 48px;
+      color: var(--text-main);
+      line-height: 1.8;
+    }
+    .exp-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .exp-progress {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .exp-progress .dots {
+      display: inline-flex;
+      gap: 6px;
+      margin-left: 8px;
+    }
+    .exp-progress .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .exp-progress .dot.active { background: var(--primary); }
+
+    /* Canvas 容器 */
+    .canvas-wrap {
+      text-align: center;
+      margin: 16px 0;
+    }
+    canvas { max-width: 100%; }
+
+    .quiz-feedback {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand">⚡ 欧姆定律</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="../八年级/index.html">🔌 物理八年级</a></li>
+    <li><a href="../../数学/九年级/index.html">📐 数学九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span class="separator">/</span>
+    <a href="index.html">物理</a>
+    <span class="separator">/</span>
+    <a href="index.html">九年级</a>
+    <span class="separator">/</span>
+    <span>欧姆定律</span>
+  </div>
+
+  <h1 style="font-size: 30px; margin-bottom: 8px;">⚡ 欧姆定律</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">
+    电学三大定律之一——揭示电流、电压、电阻之间的定量关系
+  </p>
+
+  <!-- ===== 1. 引入：水管类比 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🚰 从水管说起：电流像水流</div>
+    <p>在正式学习欧姆定律之前，我们先用一个生活中的现象来类比。</p>
+    <p>想象一根水管：水从高处流向低处，<b>水压</b>推动水流，<b>水管粗细</b>影响水流大小。电路中的电流、电压、电阻与之非常相似：</p>
+
+    <div class="analogy-svg-box">
+      <svg viewBox="0 0 680 260" width="100%" style="max-width:680px;">
+        <!-- 左侧：水管类比 -->
+        <text x="170" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#2E6BA8">水管模型</text>
+        <!-- 高低水槽 -->
+        <rect x="20" y="60" width="60" height="120" fill="#B3D4F0" stroke="#4A90D9" stroke-width="2"/>
+        <rect x="260" y="110" width="60" height="70" fill="#B3D4F0" stroke="#4A90D9" stroke-width="2"/>
+        <!-- 水面线 -->
+        <line x1="20" y1="75" x2="80" y2="75" stroke="#4A90D9" stroke-width="1" stroke-dasharray="4,2"/>
+        <line x1="260" y1="125" x2="320" y2="125" stroke="#4A90D9" stroke-width="1" stroke-dasharray="4,2"/>
+        <!-- 水管 -->
+        <path d="M 80 90 Q 170 90 170 130 L 260 130" fill="none" stroke="#4A90D9" stroke-width="14" stroke-linecap="round" opacity="0.7"/>
+        <!-- 水流箭头 -->
+        <text x="175" y="108" text-anchor="middle" font-size="22" fill="#2E6BA8">→</text>
+        <text x="175" y="155" text-anchor="middle" font-size="12" fill="#7F8C8D">水流</text>
+        <!-- 标注 -->
+        <text x="50" y="200" text-anchor="middle" font-size="11" fill="#E74C3C">高水位</text>
+        <text x="50" y="214" text-anchor="middle" font-size="11" fill="#E74C3C">（水压大）</text>
+        <text x="290" y="200" text-anchor="middle" font-size="11" fill="#E74C3C">低水位</text>
+        <text x="175" y="78" text-anchor="middle" font-size="11" fill="#27AE60">水管粗 = 阻力小</text>
+
+        <!-- 中间等号 -->
+        <text x="360" y="135" text-anchor="middle" font-size="28" font-weight="700" fill="#7F8C8D">≈</text>
+
+        <!-- 右侧：电路类比 -->
+        <text x="510" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#2E6BA8">电路模型</text>
+        <!-- 电池 -->
+        <rect x="430" y="60" width="30" height="60" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+        <line x1="425" y1="75" x2="465" y2="75" stroke="#2E6BA8" stroke-width="3"/>
+        <line x1="428" y1="105" x2="462" y2="105" stroke="#2E6BA8" stroke-width="1"/>
+        <text x="445" y="140" text-anchor="middle" font-size="11" fill="#E74C3C">电压 U</text>
+        <!-- 导线 -->
+        <path d="M 445 60 L 445 40 L 580 40 L 580 80" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+        <path d="M 445 120 L 445 180 L 580 180 L 580 160" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+        <!-- 电阻（灯泡） -->
+        <circle cx="580" cy="120" r="22" fill="#FFF3D6" stroke="#F5A623" stroke-width="2"/>
+        <text x="580" y="126" text-anchor="middle" font-size="16" fill="#F5A623">💡</text>
+        <text x="615" y="125" font-size="11" fill="#27AE60">电阻 R</text>
+        <!-- 电流箭头 -->
+        <text x="510" y="35" text-anchor="middle" font-size="18" fill="#4A90D9">→</text>
+        <text x="510" y="56" text-anchor="middle" font-size="11" fill="#4A90D9">电流 I</text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 类比对照表</div>
+      <table style="width:100%; border-collapse: collapse; font-size: 14px;">
+        <tr style="background: rgba(74,144,217,0.1);">
+          <th style="padding:8px; text-align:left; border-radius: 6px 0 0 6px;">水管世界</th>
+          <th style="padding:8px; text-align:left;">电路世界</th>
+          <th style="padding:8px; text-align:left; border-radius: 0 6px 6px 0;">关系</th>
+        </tr>
+        <tr><td style="padding:8px;">水压（水位差）</td><td style="padding:8px;">电压 U</td><td style="padding:8px;">推动力</td></tr>
+        <tr style="background:#F0F4F8;"><td style="padding:8px;">水管粗细 / 阀门</td><td style="padding:8px;">电阻 R</td><td style="padding:8px;">阻碍作用</td></tr>
+        <tr><td style="padding:8px;">水流大小</td><td style="padding:8px;">电流 I</td><td style="padding:8px;">结果</td></tr>
+      </table>
+      <p style="margin-top:10px; font-size:14px;">水压越大、水管越粗 → 水流越大；同样，电压越大、电阻越小 → 电流越大。</p>
+    </div>
+  </div>
+
+  <!-- ===== 2. 概念定义 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">📐 欧姆定律：核心公式</div>
+    <p>德国物理学家<b>欧姆</b>通过大量实验总结出：通过导体的电流，与导体两端的电压成正比，与导体的电阻成反比。</p>
+
+    <div class="formula-box">
+      <div class="big-formula">I = U / R</div>
+      <div class="formula-desc">电流 = 电压 ÷ 电阻</div>
+      <div class="unit-row">
+        <div class="unit-item"><b>I</b> — 电流，单位：安培（A）</div>
+        <div class="unit-item"><b>U</b> — 电压，单位：伏特（V）</div>
+        <div class="unit-item"><b>R</b> — 电阻，单位：欧姆（Ω）</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 三个变形公式</div>
+      <p>① 求电流：<b>I = U / R</b> &nbsp;&nbsp; ② 求电压：<b>U = I × R</b> &nbsp;&nbsp; ③ 求电阻：<b>R = U / I</b></p>
+      <p style="margin-top:6px; font-size:13px; color:var(--text-secondary);">
+        注意：R = U/I 只是计算式，<b>电阻是导体本身的性质</b>，不随 U、I 变化（这就是伏安法测电阻的依据）。
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 3. 交互探索1：串并联电路模拟器 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🔬 交互探索 ①：串并联电路模拟器</div>
+    <p>拖动滑块调节电源电压和两个电阻的阻值，观察电流的变化。点击按钮切换串联 / 并联模式。</p>
+
+    <div class="mode-switch">
+      <button id="modeSeries" class="active" onclick="setMode('series')">🔗 串联</button>
+      <button id="modeParallel" onclick="setMode('parallel')">∥ 并联</button>
+    </div>
+
+    <div class="control-panel">
+      <div class="control-row">
+        <label>电源电压 U</label>
+        <div class="slider-wrap">
+          <input type="range" id="voltageSlider" min="1.5" max="12" step="0.5" value="6">
+        </div>
+        <div class="value-badge"><span id="voltageValue">6.0</span> V</div>
+      </div>
+      <div class="control-row">
+        <label>电阻 R₁</label>
+        <div class="slider-wrap">
+          <input type="range" id="r1Slider" min="10" max="100" step="1" value="20">
+        </div>
+        <div class="value-badge"><span id="r1Value">20</span> Ω</div>
+      </div>
+      <div class="control-row">
+        <label>电阻 R₂</label>
+        <div class="slider-wrap">
+          <input type="range" id="r2Slider" min="10" max="100" step="1" value="30">
+        </div>
+        <div class="value-badge"><span id="r2Value">30</span> Ω</div>
+      </div>
+    </div>
+
+    <div class="circuit-box">
+      <svg id="circuitSvg" viewBox="0 0 680 280" width="100%" style="max-width:680px;">
+        <!-- 电路图将由 JS 动态绘制 -->
+      </svg>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-card highlight">
+        <div class="rd-label">总电压 U</div>
+        <div class="rd-value"><span id="rdU">6.00</span></div>
+        <div class="rd-unit">V</div>
+      </div>
+      <div class="readout-card" id="cardR1">
+        <div class="rd-label">电阻 R₁</div>
+        <div class="rd-value"><span id="rdR1">20</span></div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card" id="cardR2">
+        <div class="rd-label">电阻 R₂</div>
+        <div class="rd-value"><span id="rdR2">30</span></div>
+        <div class="rd-unit">Ω</div>
+      </div>
+      <div class="readout-card" id="cardI1">
+        <div class="rd-label">支路电流 I₁</div>
+        <div class="rd-value"><span id="rdI1">0.120</span></div>
+        <div class="rd-unit">A</div>
+      </div>
+      <div class="readout-card" id="cardI2">
+        <div class="rd-label">支路电流 I₂</div>
+        <div class="rd-value"><span id="rdI2">0.120</span></div>
+        <div class="rd-unit">A</div>
+      </div>
+      <div class="readout-card highlight">
+        <div class="rd-label">总电流 I</div>
+        <div class="rd-value"><span id="rdI">0.120</span></div>
+        <div class="rd-unit">A</div>
+      </div>
+    </div>
+
+    <div class="tip-box" id="circuitTip">
+      <div class="tip-title">📌 串联电路特点</div>
+      <p>电流处处相等：<b>I = I₁ = I₂ = U / (R₁ + R₂)</b></p>
+      <p>总电阻 = 各电阻之和：R = R₁ + R₂</p>
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互探索2：I-U 图像 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">📈 交互探索 ②：I-U 关系图像</div>
+    <p>当电阻 R 固定时，电流 I 与电压 U 成<b>正比</b>，图像是一条过原点的直线。<b>直线的斜率 = 1/R</b>。</p>
+    <p>拖动滑块改变电阻 R，观察直线倾斜程度的变化——这正是数学中<b>反比例函数</b>的体现。</p>
+
+    <div class="control-panel">
+      <div class="control-row">
+        <label>电阻 R</label>
+        <div class="slider-wrap">
+          <input type="range" id="graphR" min="5" max="100" step="1" value="20">
+        </div>
+        <div class="value-badge"><span id="graphRValue">20</span> Ω</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="iuCanvas" width="640" height="400"></canvas>
+    </div>
+
+    <div class="cross-ref-box">
+      <div class="ref-title">🔗 连接数学</div>
+      <p>把 I = U/R 稍作变形：<b>R · I = U</b>，即 <b>U = R · I</b>。</p>
+      <p>当 U 固定时，I 与 R 成反比：<b>I = U / R</b>（U 为常数），这正是数学中的<b>反比例函数 y = k/x</b>（k = U）。</p>
+      <p>而这里画的 I-U 图像（R 固定）则是<b>正比例函数</b> I = (1/R)·U，斜率 k = 1/R。</p>
+    </div>
+  </div>
+
+  <!-- ===== 5. 伏安法测电阻 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">🧪 伏安法测电阻（分步实验）</div>
+    <p>利用 R = U/I，用电压表测 U、电流表测 I，即可算出未知电阻。这是中考必考实验。</p>
+
+    <div id="expSteps">
+      <!-- Step 1 -->
+      <div class="exp-step active" id="exp1">
+        <div class="exp-step-title"><span class="exp-step-number">1</span>设计电路、连接器材</div>
+        <div class="exp-step-content">
+          <p>器材：电源、开关、未知电阻 Rₓ、滑动变阻器、电压表、电流表、导线若干。</p>
+          <p><b>电路设计</b>：滑动变阻器与 Rₓ <b>串联</b>，电压表<b>并联</b>在 Rₓ 两端，电流表<b>串联</b>在干路中。</p>
+          <div style="margin-top:12px;">
+            <svg viewBox="0 0 680 200" width="100%" style="max-width:520px;">
+              <!-- 电池 -->
+              <rect x="60" y="80" width="20" height="50" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+              <line x1="55" y1="92" x2="85" y2="92" stroke="#2E6BA8" stroke-width="3"/>
+              <text x="70" y="150" text-anchor="middle" font-size="12" fill="#7F8C8D">电源</text>
+              <!-- 开关 -->
+              <circle cx="120" cy="50" r="4" fill="#2E6BA8"/>
+              <line x1="120" y1="50" x2="145" y2="35" stroke="#2E6BA8" stroke-width="2"/>
+              <circle cx="150" cy="30" r="4" fill="#2E6BA8"/>
+              <text x="135" y="20" text-anchor="middle" font-size="12" fill="#7F8C8D">S</text>
+              <!-- 导线 -->
+              <path d="M 70 80 L 70 30 L 120 30 M 150 30 L 250 30 L 250 80" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+              <path d="M 70 130 L 70 170 L 400 170 L 400 130" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+              <!-- 滑动变阻器 -->
+              <rect x="160" y="70" width="80" height="20" fill="#FFF3D6" stroke="#F5A623" stroke-width="2"/>
+              <line x1="170" y1="65" x2="230" y2="85" stroke="#E74C3C" stroke-width="2"/>
+              <text x="200" y="110" text-anchor="middle" font-size="12" fill="#7F8C8D">滑动变阻器</text>
+              <path d="M 250 100 L 320 100" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+              <!-- 电阻 Rx -->
+              <rect x="320" y="90" width="60" height="20" fill="#B3D4F0" stroke="#4A90D9" stroke-width="2"/>
+              <text x="350" y="130" text-anchor="middle" font-size="12" fill="#7F8C8D">Rₓ</text>
+              <!-- 电压表（并联） -->
+              <circle cx="350" cy="50" r="18" fill="white" stroke="#E74C3C" stroke-width="2"/>
+              <text x="350" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">V</text>
+              <path d="M 320 90 L 320 50 L 332 50 M 368 50 L 380 50 L 380 90" fill="none" stroke="#E74C3C" stroke-width="2"/>
+              <!-- 电流表（串联） -->
+              <circle cx="430" cy="100" r="18" fill="white" stroke="#4A90D9" stroke-width="2"/>
+              <text x="430" y="105" text-anchor="middle" font-size="13" font-weight="700" fill="#4A90D9">A</text>
+              <path d="M 400 100 L 412 100 M 448 100 L 470 100 L 470 30 L 250 30" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="exp-step" id="exp2">
+        <div class="exp-step-title"><span class="exp-step-number">2</span>检查电路、试触</div>
+        <div class="exp-step-content">
+          <p>连接完毕后，先检查：</p>
+          <ul style="margin-left:20px; margin-top:8px;">
+            <li>电流表“+”接线柱是否接靠近电源正极一侧</li>
+            <li>电压表量程是否合适（通常 0~3V 或 0~15V）</li>
+            <li>滑动变阻器是否处于<b>阻值最大</b>位置（保护电路）</li>
+            <li>开关是否处于<b>断开</b>状态</li>
+          </ul>
+          <p style="margin-top:10px;"><b>试触法</b>：瞬间闭合开关，观察两表指针偏转是否正常，确认量程选择无误后再正式测量。</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="exp-step" id="exp3">
+        <div class="exp-step-title"><span class="exp-step-number">3</span>闭合开关、移动滑片测多组数据</div>
+        <div class="exp-step-content">
+          <p>闭合开关 S，移动滑动变阻器滑片，改变 Rₓ 两端电压，记录<b>至少三组</b> U、I 数据：</p>
+          <table style="width:100%; border-collapse:collapse; margin-top:12px; font-size:14px;">
+            <tr style="background:rgba(74,144,217,0.15);">
+              <th style="padding:10px; border:1px solid var(--border);">实验次数</th>
+              <th style="padding:10px; border:1px solid var(--border);">电压 U / V</th>
+              <th style="padding:10px; border:1px solid var(--border);">电流 I / A</th>
+              <th style="padding:10px; border:1px solid var(--border);">电阻 R = U/I / Ω</th>
+            </tr>
+            <tr><td style="padding:10px; border:1px solid var(--border); text-align:center;">1</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">1.0</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">0.10</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">10.0</td></tr>
+            <tr style="background:#F0F4F8;"><td style="padding:10px; border:1px solid var(--border); text-align:center;">2</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">2.0</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">0.20</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">10.0</td></tr>
+            <tr><td style="padding:10px; border:1px solid var(--border); text-align:center;">3</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">3.0</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">0.30</td><td style="padding:10px; border:1px solid var(--border); text-align:center;">10.0</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="exp-step" id="exp4">
+        <div class="exp-step-title"><span class="exp-step-number">4</span>数据处理、求平均值</div>
+        <div class="exp-step-content">
+          <p>计算每次的 R 值，然后求<b>平均值</b>以减小误差：</p>
+          <div class="formula-box" style="margin:12px 0;">
+            <div style="font-size:24px; font-weight:700; color:var(--primary); font-family:'Times New Roman',serif;">
+              Rₓ = (R₁ + R₂ + R₃) / 3 = (10.0 + 10.0 + 10.0) / 3 = 10.0 Ω
+            </div>
+          </div>
+          <p><b>为什么要测多组数据？</b> → 多次测量求平均值可以<b>减小偶然误差</b>，使结果更准确。</p>
+          <p style="margin-top:8px;"><b>为什么滑动变阻器要串联？</b> → ①保护电路；②改变 Rₓ 两端电压和电流，获得多组数据。</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="exp-step" id="exp5">
+        <div class="exp-step-title"><span class="exp-step-number">5</span>断开开关、整理器材</div>
+        <div class="exp-step-content">
+          <p>实验结束后：</p>
+          <ul style="margin-left:20px; margin-top:8px;">
+            <li>先<b>断开开关</b>，切断电源</li>
+            <li>拆除导线，将器材归位</li>
+            <li>整理数据记录，完成实验报告</li>
+          </ul>
+          <div class="tip-box" style="margin-top:12px;">
+            <div class="tip-title">⚠️ 易错点提醒</div>
+            <p>· 闭合开关前，滑动变阻器必须调到<b>阻值最大处</b>。</p>
+            <p>· 电流表<b>不能</b>直接接在电源两极（会烧坏）。</p>
+            <p>· 电压表<b>不能</b>串联在电路中（测不出电流）。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-nav">
+      <button class="btn btn-outline btn-sm" id="expPrev" onclick="expStep(-1)">← 上一步</button>
+      <div class="exp-progress">
+        进度
+        <span class="dots" id="expDots"></span>
+      </div>
+      <button class="btn btn-primary btn-sm" id="expNext" onclick="expStep(1)">下一步 →</button>
+    </div>
+  </div>
+
+  <!-- ===== 6. 练习题 ===== -->
+  <div class="card fade-in">
+    <div class="card-title">✏️ 课堂练习</div>
+
+    <div class="quiz-question" id="quiz1">
+      <div class="question-text">1. 一个定值电阻两端加 6V 电压时，通过它的电流是 0.3A。若将电压变为 12V，则通过它的电流是（电阻不变）</div>
+      <div class="quiz-option" data-idx="0">A. 0.15 A</div>
+      <div class="quiz-option" data-idx="1">B. 0.3 A</div>
+      <div class="quiz-option" data-idx="2">C. 0.6 A</div>
+      <div class="quiz-option" data-idx="3">D. 1.2 A</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz2">
+      <div class="question-text">2. 两个电阻 R₁ = 10Ω、R₂ = 20Ω 串联接在 6V 电源上，通过 R₁ 的电流为</div>
+      <div class="quiz-option" data-idx="0">A. 0.6 A</div>
+      <div class="quiz-option" data-idx="1">B. 0.3 A</div>
+      <div class="quiz-option" data-idx="2">C. 0.2 A</div>
+      <div class="quiz-option" data-idx="3">D. 0.15 A</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz3">
+      <div class="question-text">3. 关于公式 R = U/I，下列说法正确的是</div>
+      <div class="quiz-option" data-idx="0">A. 电阻 R 与电压 U 成正比</div>
+      <div class="quiz-option" data-idx="1">B. 电阻 R 与电流 I 成反比</div>
+      <div class="quiz-option" data-idx="2">C. 电阻 R 由导体本身性质决定，与 U、I 无关，R=U/I 只是计算式</div>
+      <div class="quiz-option" data-idx="3">D. 电压为零时电阻也为零</div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 7. 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉：欧姆定律 ↔ 数学·反比例函数</div>
+    <p>欧姆定律 <b>I = U/R</b> 与数学九年级的<b>反比例函数</b>紧密相关：</p>
+    <ul style="margin-left:20px; margin-top:8px;">
+      <li>当 <b>U 固定</b>时，I 与 R 成反比 → <b>I = U · (1/R)</b>，即 y = k/x 的形式（k = U）</li>
+      <li>在 I-R 图像上，这是一条双曲线，R 越大 I 越小</li>
+      <li>当 <b>R 固定</b>时，I 与 U 成正比 → I-U 图像是过原点的直线（斜率 = 1/R）</li>
+    </ul>
+    <p style="margin-top:10px;">👉 详细内容请见：<a href="../../数学/九年级/06-反比例函数.html">📐 数学九年级 · 反比例函数</a></p>
+  </div>
+
+  <!-- ===== 底部步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="14-电压电阻.html" class="btn btn-outline">← 上一章：电压电阻</a>
+    <a href="index.html" class="btn btn-outline btn-sm">目录</a>
+    <a href="16-电功率.html" class="btn btn-primary">下一章：电功率 →</a>
+  </div>
+</div>
+
+<script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================
+ * 欧姆定律交互逻辑
+ * ============================================ */
+
+/* ---------- 全局状态 ---------- */
+let circuitMode = 'series';   // 'series' | 'parallel'
+let expCurrent = 1;            // 实验步骤当前页
+const EXP_TOTAL = 5;
+
+/* ---------- 1. 串并联电路模拟器 ---------- */
+const voltageSlider = document.getElementById('voltageSlider');
+const r1Slider = document.getElementById('r1Slider');
+const r2Slider = document.getElementById('r2Slider');
+const voltageValueEl = document.getElementById('voltageValue');
+const r1ValueEl = document.getElementById('r1Value');
+const r2ValueEl = document.getElementById('r2Value');
+const circuitSvg = document.getElementById('circuitSvg');
+
+function setMode(mode) {
+  circuitMode = mode;
+  document.getElementById('modeSeries').classList.toggle('active', mode === 'series');
+  document.getElementById('modeParallel').classList.toggle('active', mode === 'parallel');
+  updateCircuit();
+}
+
+function updateCircuit() {
+  const U = parseFloat(voltageSlider.value);
+  const R1 = parseFloat(r1Slider.value);
+  const R2 = parseFloat(r2Slider.value);
+
+  // 更新滑块旁数值
+  voltageValueEl.textContent = U.toFixed(1);
+  r1ValueEl.textContent = R1;
+  r2ValueEl.textContent = R2;
+
+  let totalR, I, I1, I2, label1, label2;
+
+  if (circuitMode === 'series') {
+    // 串联：电流处处相等
+    totalR = R1 + R2;
+    I = U / totalR;
+    I1 = I;   // 串联电流处处相等
+    I2 = I;
+    label1 = 'I₁ = I';
+    label2 = 'I₂ = I';
+    // 显示/隐藏支路电流卡片
+    document.getElementById('cardI1').querySelector('.rd-label').textContent = 'R₁ 上电流 I₁';
+    document.getElementById('cardI2').querySelector('.rd-label').textContent = 'R₂ 上电流 I₂';
+  } else {
+    // 并联：各支路独立，电压相等 = U
+    I1 = U / R1;
+    I2 = U / R2;
+    I = I1 + I2;   // 总电流 = 各支路之和
+    totalR = U / I;
+    label1 = 'I₁ = U/R₁';
+    label2 = 'I₂ = U/R₂';
+    document.getElementById('cardI1').querySelector('.rd-label').textContent = '支路电流 I₁ (U/R₁)';
+    document.getElementById('cardI2').querySelector('.rd-label').textContent = '支路电流 I₂ (U/R₂)';
+  }
+
+  // 更新读数
+  document.getElementById('rdU').textContent = U.toFixed(2);
+  document.getElementById('rdR1').textContent = R1;
+  document.getElementById('rdR2').textContent = R2;
+  document.getElementById('rdI1').textContent = I1.toFixed(3);
+  document.getElementById('rdI2').textContent = I2.toFixed(3);
+  document.getElementById('rdI').textContent = I.toFixed(3);
+
+  // 绘制 SVG 电路图
+  drawCircuit(U, R1, R2, I, I1, I2);
+
+  // 更新提示框
+  const tip = document.getElementById('circuitTip');
+  if (circuitMode === 'series') {
+    tip.innerHTML = `
+      <div class="tip-title">📌 串联电路特点</div>
+      <p>电流处处相等：<b>I = I₁ = I₂ = U / (R₁ + R₂) = ${U.toFixed(1)} / ${(R1+R2)} = ${I.toFixed(3)} A</b></p>
+      <p>总电阻 R = R₁ + R₂ = ${R1} + ${R2} = ${totalR} Ω</p>
+    `;
+  } else {
+    tip.innerHTML = `
+      <div class="tip-title">📌 并联电路特点</div>
+      <p>各支路电压相等 = U；支路电流 I₁ = U/R₁ = ${I1.toFixed(3)} A，I₂ = U/R₂ = ${I2.toFixed(3)} A</p>
+      <p>总电流 <b>I = I₁ + I₂ = ${I.toFixed(3)} A</b>；总电阻 R = U/I = ${totalR.toFixed(2)} Ω</p>
+    `;
+  }
+}
+
+function drawCircuit(U, R1, R2, I, I1, I2) {
+  // 电流强度决定灯泡亮度（0~0.5A 映射到亮度）
+  const brightness = Math.min(I / 0.5, 1);
+  const glow = Math.round(255 * brightness);
+  const lampColor = `rgb(${255},${255 - glow*0.4},${100 + glow*0.3})`;
+  const lampOpacity = 0.3 + brightness * 0.7;
+
+  let svgContent = '';
+
+  if (circuitMode === 'series') {
+    svgContent = `
+      <!-- 串联电路：电池 - R1 - R2 回路 -->
+      <!-- 电池 -->
+      <rect x="80" y="120" width="24" height="60" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+      <line x1="74" y1="135" x2="110" y2="135" stroke="#2E6BA8" stroke-width="3"/>
+      <line x1="78" y1="165" x2="106" y2="165" stroke="#2E6BA8" stroke-width="1"/>
+      <text x="92" y="200" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700">${U.toFixed(1)} V</text>
+      <!-- 上方导线 -->
+      <path d="M 92 120 L 92 60 L 200 60" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 电阻 R1（折线电阻符号） -->
+      <polyline points="200,60 210,50 220,70 230,50 240,70 250,50 260,70 270,50 280,60" fill="none" stroke="#4A90D9" stroke-width="2.5"/>
+      <text x="240" y="40" text-anchor="middle" font-size="13" fill="#4A90D9" font-weight="700">R₁ = ${R1} Ω</text>
+      <!-- 中间导线 -->
+      <path d="M 280 60 L 400 60" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 电阻 R2 -->
+      <polyline points="400,60 410,50 420,70 430,50 440,70 450,50 460,70 470,50 480,60" fill="none" stroke="#4A90D9" stroke-width="2.5"/>
+      <text x="440" y="40" text-anchor="middle" font-size="13" fill="#4A90D9" font-weight="700">R₂ = ${R2} Ω</text>
+      <!-- 右侧导线下行 -->
+      <path d="M 480 60 L 580 60 L 580 150" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 灯泡 -->
+      <circle cx="580" cy="170" r="22" fill="${lampColor}" fill-opacity="${lampOpacity}" stroke="#F5A623" stroke-width="2"/>
+      <text x="580" y="176" text-anchor="middle" font-size="18">💡</text>
+      <text x="580" y="210" text-anchor="middle" font-size="11" fill="#7F8C8D">灯泡</text>
+      <!-- 下方导线回到电池 -->
+      <path d="M 580 192 L 580 240 L 92 240 L 92 180" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 电流表（串联） -->
+      <circle cx="340" cy="240" r="16" fill="white" stroke="#4A90D9" stroke-width="2"/>
+      <text x="340" y="245" text-anchor="middle" font-size="13" font-weight="700" fill="#4A90D9">A</text>
+      <!-- 电流方向箭头 -->
+      <text x="150" y="50" font-size="16" fill="#4A90D9">→</text>
+      <text x="340" y="50" font-size="11" fill="#4A90D9" font-weight="600">I = ${I.toFixed(3)} A</text>
+      <!-- 电流值标注 -->
+      <text x="150" y="80" font-size="11" fill="#27AE60">I₁=${I1.toFixed(3)}A</text>
+      <text x="340" y="80" font-size="11" fill="#27AE60">I₂=${I2.toFixed(3)}A</text>
+    `;
+  } else {
+    // 并联电路
+    svgContent = `
+      <!-- 电池 -->
+      <rect x="60" y="130" width="24" height="60" fill="#F5A623" stroke="#2E6BA8" stroke-width="2"/>
+      <line x1="54" y1="145" x2="90" y2="145" stroke="#2E6BA8" stroke-width="3"/>
+      <line x1="58" y1="175" x2="86" y2="175" stroke="#2E6BA8" stroke-width="1"/>
+      <text x="72" y="210" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700">${U.toFixed(1)} V</text>
+      <!-- 主干导线（上） -->
+      <path d="M 72 130 L 72 60 L 250 60" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 支路1：R1 -->
+      <path d="M 250 60 L 250 90" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+      <polyline points="250,90 260,80 270,100 280,80 290,100 300,80 310,100 320,80 330,90" fill="none" stroke="#4A90D9" stroke-width="2.5"/>
+      <text x="290" y="75" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700">R₁=${R1}Ω</text>
+      <path d="M 330 90 L 330 110 L 460 110" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+      <!-- 支路1 电流表 -->
+      <circle cx="395" cy="110" r="14" fill="white" stroke="#4A90D9" stroke-width="2"/>
+      <text x="395" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#4A90D9">A₁</text>
+      <text x="395" y="138" text-anchor="middle" font-size="11" fill="#27AE60">${I1.toFixed(3)}A</text>
+      <!-- 支路2：R2 -->
+      <path d="M 250 60 L 460 60 L 460 90" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+      <polyline points="460,90 470,80 480,100 490,80 500,100 510,80 520,100 530,80 540,90" fill="none" stroke="#4A90D9" stroke-width="2.5"/>
+      <text x="500" y="75" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="700">R₂=${R2}Ω</text>
+      <path d="M 540 90 L 540 110" fill="none" stroke="#2E6BA8" stroke-width="2"/>
+      <circle cx="540" cy="110" r="14" fill="white" stroke="#4A90D9" stroke-width="2"/>
+      <text x="540" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#4A90D9">A₂</text>
+      <text x="580" y="115" font-size="11" fill="#27AE60">${I2.toFixed(3)}A</text>
+      <!-- 右侧汇合 -->
+      <path d="M 460 110 L 600 110 L 600 170" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <path d="M 540 110 L 600 110" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 灯泡 -->
+      <circle cx="600" cy="190" r="22" fill="${lampColor}" fill-opacity="${lampOpacity}" stroke="#F5A623" stroke-width="2"/>
+      <text x="600" y="196" text-anchor="middle" font-size="18">💡</text>
+      <!-- 回到电池 -->
+      <path d="M 600 212 L 600 250 L 72 250 L 72 190" fill="none" stroke="#2E6BA8" stroke-width="2.5"/>
+      <!-- 干路电流表 -->
+      <circle cx="340" cy="250" r="16" fill="white" stroke="#E74C3C" stroke-width="2"/>
+      <text x="340" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#E74C3C">A</text>
+      <text x="340" y="275" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="700">总 I=${I.toFixed(3)}A</text>
+      <!-- 电流方向 -->
+      <text x="160" y="50" font-size="16" fill="#4A90D9">→</text>
+      <text x="340" y="35" text-anchor="middle" font-size="11" fill="#7F8C8D">并联：U₁=U₂=U，I=I₁+I₂</text>
+    `;
+  }
+
+  circuitSvg.innerHTML = svgContent;
+}
+
+voltageSlider.addEventListener('input', updateCircuit);
+r1Slider.addEventListener('input', updateCircuit);
+r2Slider.addEventListener('input', updateCircuit);
+
+// 初始化电路
+updateCircuit();
+
+/* ---------- 2. I-U 图像绘制（Canvas） ---------- */
+const canvas = document.getElementById('iuCanvas');
+const ctx = canvas.getContext('2d');
+const graphRSlider = document.getElementById('graphR');
+const graphRValueEl = document.getElementById('graphRValue');
+
+function drawIUGraph() {
+  const R = parseFloat(graphRSlider.value);
+  graphRValueEl.textContent = R;
+
+  const W = canvas.width;
+  const H = canvas.height;
+  const padL = 50, padB = 40, padT = 30, padR = 30;
+  const plotW = W - padL - padR;
+  const plotH = H - padB - padT;
+
+  // 坐标范围
+  const uMax = 12;       // 横轴 0~12 V
+  const iMax = 12 / 5;   // 纵轴最大 = 12/最小R(5) = 2.4 A，动态调整
+  const iMaxFixed = 2.5;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // 背景网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  for (let u = 2; u <= uMax; u += 2) {
+    const x = padL + (u / uMax) * plotW;
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, H - padB); ctx.stroke();
+  }
+  for (let i = 0.5; i <= iMaxFixed; i += 0.5) {
+    const y = H - padB - (i / iMaxFixed) * plotH;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+  }
+
+  // 坐标轴
+  ctx.strokeStyle = '#2C3E50';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, H - padB);
+  ctx.lineTo(W - padR, H - padB);
+  ctx.stroke();
+
+  // 箭头
+  ctx.fillStyle = '#2C3E50';
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL - 5, padT + 10);
+  ctx.lineTo(padL + 5, padT + 10);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(W - padR, H - padB);
+  ctx.lineTo(W - padR - 10, H - padB - 5);
+  ctx.lineTo(W - padR - 10, H - padB + 5);
+  ctx.closePath(); ctx.fill();
+
+  // 轴标签
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText('U / V', W - padR - 40, H - padB + 25);
+  ctx.save();
+  ctx.translate(18, padT + 60);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('I / A', 0, 0);
+  ctx.restore();
+
+  // 刻度
+  ctx.font = '11px sans-serif';
+  ctx.fillStyle = '#7F8C8D';
+  ctx.textAlign = 'center';
+  for (let u = 0; u <= uMax; u += 2) {
+    const x = padL + (u / uMax) * plotW;
+    ctx.fillText(u, x, H - padB + 16);
+    ctx.strokeStyle = '#2C3E50';
+    ctx.beginPath(); ctx.moveTo(x, H - padB); ctx.lineTo(x, H - padB + 4); ctx.stroke();
+  }
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= iMaxFixed; i += 0.5) {
+    const y = H - padB - (i / iMaxFixed) * plotH;
+    ctx.fillText(i.toFixed(1), padL - 6, y + 4);
+    ctx.strokeStyle = '#2C3E50';
+    ctx.beginPath(); ctx.moveTo(padL - 4, y); ctx.lineTo(padL, y); ctx.stroke();
+  }
+  ctx.textAlign = 'start';
+
+  // 绘制 I-U 直线：I = U / R
+  ctx.strokeStyle = '#4A90D9';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  // 起点 (0, 0)
+  const x0 = padL;
+  const y0 = H - padB;
+  ctx.moveTo(x0, y0);
+  // 终点：U = uMax 时 I = uMax / R
+  const iEnd = uMax / R;
+  const xEnd = padL + (uMax / uMax) * plotW;
+  const yEnd = H - padB - (Math.min(iEnd, iMaxFixed) / iMaxFixed) * plotH;
+  // 如果超出范围，截断
+  let actualXEnd = xEnd, actualYEnd = yEnd;
+  if (iEnd > iMaxFixed) {
+    // 反推 U 值：iMaxFixed = U/R => U = iMaxFixed * R
+    const uClip = iMaxFixed * R;
+    actualXEnd = padL + (uClip / uMax) * plotW;
+    actualYEnd = padT;
+  }
+  ctx.lineTo(actualXEnd, actualYEnd);
+  ctx.stroke();
+
+  // 数据点（每隔 2V 一个点）
+  ctx.fillStyle = '#F5A623';
+  for (let u = 0; u <= uMax; u += 2) {
+    const i = u / R;
+    if (i > iMaxFixed) continue;
+    const x = padL + (u / uMax) * plotW;
+    const y = H - padB - (i / iMaxFixed) * plotH;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 斜率标注
+  const slope = 1 / R;
+  ctx.fillStyle = '#E74C3C';
+  ctx.font = 'bold 15px sans-serif';
+  const slopeText = `斜率 k = 1/R = 1/${R} ≈ ${slope.toFixed(4)}`;
+  ctx.fillText(slopeText, padL + 20, padT + 25);
+
+  // 公式标注
+  ctx.fillStyle = '#4A90D9';
+  ctx.font = 'italic 14px serif';
+  ctx.fillText(`I = U / ${R}  (R = ${R} Ω)`, padL + 20, padT + 50);
+
+  // 在直线终点附近标注
+  if (iEnd <= iMaxFixed) {
+    ctx.fillStyle = '#27AE60';
+    ctx.font = '12px sans-serif';
+    ctx.fillText(`(${uMax}V, ${iEnd.toFixed(2)}A)`, actualXEnd - 60, actualYEnd - 8);
+  }
+
+  // 原点 O
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = '12px sans-serif';
+  ctx.fillText('O', padL - 12, H - padB + 16);
+}
+
+graphRSlider.addEventListener('input', drawIUGraph);
+drawIUGraph();
+
+/* ---------- 3. 伏安法实验步骤导航 ---------- */
+function renderExpDots() {
+  const dotsEl = document.getElementById('expDots');
+  let html = '';
+  for (let i = 1; i <= EXP_TOTAL; i++) {
+    html += `<span class="dot ${i === expCurrent ? 'active' : ''}"></span>`;
+  }
+  dotsEl.innerHTML = html;
+}
+
+function showExpStep(n) {
+  for (let i = 1; i <= EXP_TOTAL; i++) {
+    document.getElementById('exp' + i).classList.toggle('active', i === n);
+  }
+  expCurrent = n;
+  renderExpDots();
+  document.getElementById('expPrev').disabled = (n === 1);
+  document.getElementById('expNext').disabled = (n === EXP_TOTAL);
+  document.getElementById('expPrev').style.opacity = (n === 1) ? '0.4' : '1';
+  document.getElementById('expNext').style.opacity = (n === EXP_TOTAL) ? '0.4' : '1';
+  document.getElementById('expNext').textContent = (n === EXP_TOTAL) ? '已完成 ✓' : '下一步 →';
+}
+
+function expStep(delta) {
+  const next = expCurrent + delta;
+  if (next >= 1 && next <= EXP_TOTAL) {
+    showExpStep(next);
+  }
+}
+
+renderExpDots();
+showExpStep(1);
+
+/* ---------- 4. 练习题初始化 ---------- */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '电阻不变时，I 与 U 成正比。电压从 6V→12V 变为 2 倍，所以电流 0.3A×2 = 0.6A。',
+  hint: '电阻是定值，I 与 U 成正比。12V 是 6V 的几倍？'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '串联总电阻 R = R₁ + R₂ = 10 + 20 = 30 Ω，电流 I = U/R = 6/30 = 0.2 A。',
+  hint: '先算串联总电阻 R = R₁ + R₂，再用 I = U/R。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '电阻是导体本身的性质，由材料、长度、横截面积、温度决定，与 U、I 无关。R = U/I 只是计算式。',
+  hint: '想想：电阻是导体的固有属性，还是由 U、I 决定的？'
+});
+</script>
+</body>
+</html>
