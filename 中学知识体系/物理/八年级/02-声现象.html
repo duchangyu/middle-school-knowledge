@@ -6,53 +6,332 @@
   <title>声现象 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .demo-container h3 {
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+    .demo-container .demo-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 18px;
+      min-width: 64px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    .canvas-container {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin: 12px auto;
+      display: inline-block;
+    }
+    canvas { display: block; max-width: 100%; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin: 8px 4px;
+      flex-wrap: wrap;
+    }
+    .mode-toggle button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .mode-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .mode-toggle button:hover:not(.active) {
+      background: rgba(74,144,217,0.1);
+    }
+
+    /* 状态标签 */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 6px 0;
+    }
+    .status-badge.vibrating { background: rgba(231,76,60,0.15); color: var(--danger); animation: pulse 1s infinite; }
+    .status-badge.stopped { background: rgba(127,140,141,0.15); color: var(--text-secondary); }
+    .status-badge.info { background: rgba(74,144,217,0.15); color: var(--primary); }
+
+    /* 介质管道 */
+    .medium-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      padding: 10px;
+      background: white;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .medium-label {
+      width: 90px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .medium-label .icon { font-size: 22px; }
+    .medium-label .speed { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+    /* 拖拽分类 */
+    .dnd-area {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+    .dnd-scenarios {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .dnd-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      cursor: grab;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dnd-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .dnd-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .dnd-card.placed { display: none; }
+    .dnd-card .icon { font-size: 20px; }
+    .dnd-zones {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .dnd-zone {
+      background: rgba(74,144,217,0.06);
+      border: 2px dashed var(--primary-light);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-height: 180px;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .dnd-zone.drag-over { background: rgba(74,144,217,0.15); border-color: var(--primary); }
+    .dnd-zone .zone-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+    .dnd-zone .zone-item {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+    }
+    .dnd-zone .zone-item.correct { background: rgba(39,174,96,0.15); border: 2px solid var(--success); }
+    .dnd-zone .zone-item.wrong { background: rgba(231,76,60,0.15); border: 2px solid var(--danger); animation: shake 0.4s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .dnd-score {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .correct-formula {
+      background: rgba(39,174,96,0.1);
+      border: 2px solid var(--success);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      margin: 12px 0;
+      color: var(--success);
+      font-weight: 600;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    /* 应用卡片 */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .app-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      border-top: 4px solid var(--primary);
+      transition: transform 0.2s;
+    }
+    .app-card:hover { transform: translateY(-3px); }
+    .app-card .icon { font-size: 30px; }
+    .app-card .title { font-size: 15px; font-weight: 700; margin: 6px 0 4px; color: var(--primary-dark); }
+    .app-card .desc { font-size: 13px; color: var(--text-secondary); }
+    .app-card .tag-line { font-size: 12px; margin-top: 6px; }
+    .app-card .tag-line .tag { font-size: 11px; }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .dnd-area { grid-template-columns: 1fr; }
+      .dnd-zones { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚡ 声现象</div>
+  <div class="navbar-brand">🔊 声现象</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
   </ul>
 </nav>
 
@@ -60,31 +339,1638 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">物理</a>
+    <a href="../index.html">物理</a>
     <span class="separator">/</span>
-    <span>八年级</span>
+    <a href="index.html">八年级</a>
     <span class="separator">/</span>
     <span>声现象</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>声现象</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🔊 声现象</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从振动到声波，从音调到噪声——理解声音的产生、传播、特性与利用</p>
+
+  <!-- ===== 第一部分：声音的产生 ===== -->
+  <div class="card">
+    <div class="section-header">🥁 1. 声音的产生 —— 振动</div>
+
+    <p>我们生活在一个充满声音的世界里。那么，声音是怎样产生的呢？</p>
+
+    <p>通过大量实验可以证实：<strong>声音是由物体的振动产生的</strong>。</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      一切发声的物体都在<strong>振动</strong>；<strong>振动停止</strong>，发声也<strong>停止</strong>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>振动</strong>：物体的往复运动。发声的物体一定在振动</li>
+      <li><strong>声源</strong>：正在发声的物体。声源可以是固体、液体或气体</li>
+      <li><strong>常见声源</strong>：人说话（声带振动）、鼓（鼓面振动）、蜜蜂嗡嗡（翅膀振动）、流水（水振动）</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 关键理解</div>
+      • <strong>振动</strong>是声音产生的<strong>原因</strong>，声音是振动的<strong>结果</strong><br>
+      • 物体振动一定发声，但有些振动太慢或太快，人耳听不到<br>
+      • 振动停止后，之前发出的声音仍会在介质中继续传播（已发出的声波不会立刻消失）
+    </div>
+
+    <!-- ===== 交互1：鼓面与音叉振动 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互1：振动产生声音</h3>
+      <p class="demo-desc">敲击鼓面或音叉，观察振动与发声的关系。调节敲击力度，感受响度变化</p>
+
+      <svg id="vibScene" viewBox="0 0 600 280" width="600" height="280">
+        <!-- 鼓 -->
+        <g id="drumGroup" transform="translate(150, 160)">
+          <!-- 鼓身 -->
+          <rect x="-60" y="0" width="120" height="60" rx="4" fill="#8B4513"/>
+          <rect x="-60" y="0" width="120" height="8" fill="#A0522D"/>
+          <ellipse cx="0" cy="0" rx="60" ry="14" fill="#D2691E"/>
+          <!-- 鼓面（会振动） -->
+          <ellipse id="drumHead" cx="0" cy="0" rx="60" ry="14" fill="#F4E4BC" stroke="#D2691E" stroke-width="2"/>
+          <!-- 鼓棒 -->
+          <line x1="-40" y1="-50" x2="-20" y2="-18" stroke="#8B4513" stroke-width="4" stroke-linecap="round" id="drumStick"/>
+          <circle cx="-42" cy="-52" r="5" fill="#A0522D"/>
+          <!-- 标签 -->
+          <text x="0" y="85" text-anchor="middle" font-size="14" fill="#2E6BA8" font-weight="bold">鼓</text>
+          <!-- 振动指示 -->
+          <text id="drumStatus" x="0" y="-70" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold" opacity="0">正在振动 🔊</text>
+        </g>
+
+        <!-- 音叉 -->
+        <g id="forkGroup" transform="translate(450, 160)">
+          <!-- 音叉手柄 -->
+          <rect x="-4" y="20" width="8" height="55" fill="#7F8C8D" rx="2"/>
+          <rect x="-12" y="72" width="24" height="8" fill="#95A5A6" rx="3"/>
+          <!-- 音叉两臂（会振动） -->
+          <g id="forkProngs">
+            <rect x="-10" y="-60" width="6" height="80" fill="#BDC3C7" rx="2"/>
+            <rect x="4" y="-60" width="6" height="80" fill="#BDC3C7" rx="2"/>
+            <rect x="-10" y="-60" width="6" height="6" fill="#95A5A6" rx="2"/>
+            <rect x="4" y="-60" width="6" height="6" fill="#95A5A6" rx="2"/>
+          </g>
+          <!-- 连接处 -->
+          <ellipse cx="0" cy="18" rx="14" ry="6" fill="#95A5A6"/>
+          <!-- 标签 -->
+          <text x="0" y="100" text-anchor="middle" font-size="14" fill="#2E6BA8" font-weight="bold">音叉</text>
+          <!-- 振动指示 -->
+          <text id="forkStatus" x="0" y="-80" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold" opacity="0">正在振动 🔊</text>
+        </g>
+      </svg>
+
+      <div class="slider-row">
+        <label>敲击力度：</label>
+        <input type="range" id="forceSlider" min="20" max="100" value="60">
+        <span class="value-display"><span id="forceVal">60</span></span>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button class="btn btn-primary" id="hitDrumBtn">🥁 敲鼓</button>
+        <button class="btn btn-primary" id="hitForkBtn">🎵 敲音叉</button>
+        <button class="btn btn-outline" id="vibResetBtn">↺ 重置</button>
+      </div>
+
+      <div id="vibStatusArea" style="margin-top: 14px;">
+        <span class="status-badge stopped" id="vibStatus">未发声</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">鼓面振幅：</span><span class="value"><span id="drumAmp">0</span> px</span></div>
+        <div class="readout-item"><span class="label">音叉振幅：</span><span class="value"><span id="forkAmp">0</span> px</span></div>
+        <div class="readout-item"><span class="label">响度：</span><span class="value" id="loudness">—</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        <span id="vibTip">点击"敲鼓"或"敲音叉"，观察物体振动并发出声音。振动幅度逐渐减小（衰减），最终停止——此时发声也停止。</span>
+      </div>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：声音的传播 ===== -->
+  <div class="card">
+    <div class="section-header">📡 2. 声音的传播 —— 声波与介质</div>
+
+    <p>声音是怎样从声源传到我们耳朵里的呢？</p>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">声波</h3>
+    <p>声源的振动带动周围的介质产生<strong>疏密变化</strong>，形成<strong>声波</strong>，声波向外传播，到达人耳引起听觉。声波是一种<strong>疏密相间的纵波</strong>。<br>👉 通过下面的交互实验，直观感受"疏密相间"的纵波是怎样形成和传播的：</p>
+
+    <!-- ===== 交互2：声波的形成 —— 疏密波 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互2：声波的形成 —— 疏密相间的纵波</h3>
+      <p class="demo-desc">观察振动的声源如何带动空气粒子产生"疏密变化"：粒子只在原地振动，密部与疏部却不断向右传播</p>
+
+      <canvas id="waveCanvas" width="600" height="280" style="background:white;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.08);max-width:100%;display:block;margin:0 auto;"></canvas>
+
+      <div class="slider-row">
+        <label>波长（疏密间距）：</label>
+        <input type="range" id="waveLenSlider" min="80" max="240" value="140" step="10">
+        <span class="value-display"><span id="waveLenVal">140</span></span>
+        <label style="margin-left:16px;">振幅：</label>
+        <input type="range" id="waveAmpSlider" min="2" max="10" value="6" step="1">
+        <span class="value-display"><span id="waveAmpVal">6</span></span>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button class="btn btn-primary" id="wavePlayBtn">⏸ 暂停</button>
+        <button class="btn btn-outline" id="waveResetBtn">↺ 重置</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">波的类型：</span><span class="value">纵波（疏密波）</span></div>
+        <div class="readout-item"><span class="label">粒子运动：</span><span class="value">原地左右振动</span></div>
+        <div class="readout-item"><span class="label">传播方向：</span><span class="value">向右 →</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        1. <strong>声源（振膜）左右振动</strong>，推动邻近的空气粒子，粒子再推动更远的粒子；<br>
+        2. 盯住那颗<strong style="color:#F39C12;">橙色粒子</strong>——它只在原地附近来回振动，<strong>并不随波向右移动</strong>；<br>
+        3. 但<strong style="color:#E74C3C;">密部</strong>与<strong style="color:#4A90D9;">疏部</strong>的图案在<strong>不断向右传播</strong>——传播的只是"振动的形式"，介质本身并不迁移；<br>
+        4. 粒子的振动方向与波的传播方向<strong>平行</strong>，所以声波是<strong>纵波</strong>。
+      </div>
+    </div>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">声音的传播需要介质</h3>
+    <p>声音的传播需要<strong>介质</strong>。固体、液体、气体都能传声，但<strong>真空不能传声</strong>。</p>
+
+    <ul class="property-list">
+      <li><strong>气体</strong>传声：空气是最常见的传声介质，我们平时听到的声音大多通过空气传播</li>
+      <li><strong>液体</strong>传声：水中也能传声，如海豚在水中交流、钓鱼时说话会吓跑鱼</li>
+      <li><strong>固体</strong>传声：固体传声效果好，如"土电话"、耳朵贴在桌面上敲击桌面</li>
+      <li><strong>真空</strong>不能传声：月球上没有空气，宇航员只能靠无线电交流</li>
+    </ul>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">声速</h3>
+    <p>声音在不同介质中传播的<strong>快慢</strong>不同。声速的大小与介质的<strong>种类</strong>和<strong>温度</strong>有关。</p>
+
+    <div class="formula-box" style="font-size: 16px;">
+      <strong>固体</strong>中声速最快 > <strong>液体</strong>次之 > <strong>气体</strong>最慢<br>
+      <span style="font-size: 14px; font-weight: 500;">空气（15°C）中声速 v ≈ <strong style="color: var(--danger);">340 m/s</strong></span>
+    </div>
+
+    <!-- ===== 交互3：声速与介质 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互3：声速与介质</h3>
+      <p class="demo-desc">三条管道分别填充空气、水、钢铁，观察声波传播速度的差异</p>
+
+      <div class="slider-row">
+        <label>传播距离：</label>
+        <input type="range" id="distSlider" min="100" max="1000" value="500" step="10">
+        <span class="value-display"><span id="distVal">500</span> m</span>
+      </div>
+
+      <svg id="speedScene" viewBox="0 0 600 220" width="600" height="220" style="margin-top: 12px;">
+        <!-- 空气管道 -->
+        <g transform="translate(0, 20)">
+          <rect x="100" y="0" width="480" height="36" rx="4" fill="#E8F4FD" stroke="#7BB0E8" stroke-width="1.5"/>
+          <text x="90" y="22" text-anchor="end" font-size="13" fill="#4A90D9" font-weight="bold">💨 空气</text>
+          <text x="90" y="36" text-anchor="end" font-size="11" fill="#7F8C8D">340 m/s</text>
+          <circle id="dotAir" cx="100" cy="18" r="7" fill="#4A90D9"/>
+          <text id="timeAir" x="590" y="22" text-anchor="end" font-size="12" fill="#4A90D9" font-weight="bold">0.00 s</text>
+        </g>
+        <!-- 水管道 -->
+        <g transform="translate(0, 80)">
+          <rect x="100" y="0" width="480" height="36" rx="4" fill="#D4E4F4" stroke="#3498DB" stroke-width="1.5"/>
+          <text x="90" y="22" text-anchor="end" font-size="13" fill="#2980B9" font-weight="bold">💧 水</text>
+          <text x="90" y="36" text-anchor="end" font-size="11" fill="#7F8C8D">1500 m/s</text>
+          <circle id="dotWater" cx="100" cy="18" r="7" fill="#3498DB"/>
+          <text id="timeWater" x="590" y="22" text-anchor="end" font-size="12" fill="#2980B9" font-weight="bold">0.00 s</text>
+        </g>
+        <!-- 钢铁管道 -->
+        <g transform="translate(0, 140)">
+          <rect x="100" y="0" width="480" height="36" rx="4" fill="#E0E0E0" stroke="#7F8C8D" stroke-width="1.5"/>
+          <text x="90" y="22" text-anchor="end" font-size="13" fill="#2C3E50" font-weight="bold">⚙️ 钢铁</text>
+          <text x="90" y="36" text-anchor="end" font-size="11" fill="#7F8C8D">5200 m/s</text>
+          <circle id="dotSteel" cx="100" cy="18" r="7" fill="#2C3E50"/>
+          <text id="timeSteel" x="590" y="22" text-anchor="end" font-size="12" fill="#2C3E50" font-weight="bold">0.00 s</text>
+        </g>
+        <!-- 发声端标记 -->
+        <text x="100" y="205" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">🔊 发声端</text>
+        <text x="580" y="205" text-anchor="middle" font-size="12" fill="#27AE60" font-weight="bold">👂 接收端</text>
+      </svg>
+
+      <div style="margin-top: 12px;">
+        <button class="btn btn-primary" id="speedPlayBtn">▶ 发出声音</button>
+        <button class="btn btn-outline" id="speedResetBtn">↺ 重置</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">空气：</span><span class="value"><span id="rAir">1.47</span> s</span></div>
+        <div class="readout-item"><span class="label">水：</span><span class="value"><span id="rWater">0.33</span> s</span></div>
+        <div class="readout-item"><span class="label">钢铁：</span><span class="value"><span id="rSteel">0.10</span> s</span></div>
+      </div>
+
+      <div class="correct-formula">
+        钢铁（5200 m/s）> 水（1500 m/s）> 空气（340 m/s）→ 固体最快、液体次之、气体最慢
+      </div>
+
+      <!-- 真空铃罩实验 -->
+      <h3 style="color: var(--primary-dark); margin: 20px 0 8px;">🫧 真空铃罩实验</h3>
+      <p class="demo-desc">抽去罩内空气，观察声音的变化——验证"真空不能传声"</p>
+
+      <svg id="vacScene" viewBox="0 0 400 240" width="400" height="240" style="margin: 0 auto;">
+        <!-- 底座 -->
+        <rect x="60" y="195" width="280" height="15" rx="3" fill="#7F8C8D"/>
+        <!-- 玻璃罩 -->
+        <path id="dome" d="M 90 195 L 90 120 Q 90 50 200 50 Q 310 50 310 120 L 310 195 Z" fill="rgba(200,230,255,0.4)" stroke="#7BB0E8" stroke-width="2"/>
+        <!-- 铃铛 -->
+        <g id="bellGroup" transform="translate(200, 100)">
+          <line x1="0" y1="-50" x2="0" y2="-15" stroke="#7F8C8D" stroke-width="2"/>
+          <path d="M -16 -15 Q -16 8 0 12 Q 16 8 16 -15 Z" fill="#F39C12" stroke="#E67E22" stroke-width="1.5"/>
+          <circle cx="0" cy="16" r="4" fill="#E67E22"/>
+          <text x="0" y="40" text-anchor="middle" font-size="12" fill="#2E6BA8" font-weight="bold">🔔 电铃</text>
+        </g>
+        <!-- 声波纹（随空气量变化） -->
+        <g id="soundWaves" opacity="0.8"></g>
+        <!-- 空气粒子 -->
+        <g id="airParticles"></g>
+        <!-- 抽气管 -->
+        <rect x="310" y="185" width="30" height="6" fill="#7F8C8D"/>
+        <text x="345" y="190" font-size="11" fill="#7F8C8D">→泵</text>
+        <!-- 状态 -->
+        <text id="vacStatus" x="200" y="225" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="bold">空气充足，声音正常传播</text>
+      </svg>
+
+      <div style="margin-top: 12px;">
+        <button class="btn btn-primary" id="pumpOutBtn">⬇ 抽气</button>
+        <button class="btn btn-outline" id="pumpInBtn">⬆ 充气</button>
+        <button class="btn btn-outline" id="vacResetBtn">↺ 重置</button>
+      </div>
+
+      <div class="slider-row" style="margin-top: 10px;">
+        <label>罩内空气量：</label>
+        <input type="range" id="airSlider" min="0" max="100" value="100" style="max-width: 200px;">
+        <span class="value-display"><span id="airVal">100</span>%</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">声音响度：</span><span class="value" id="vacLoud">正常</span></div>
+        <div class="readout-item"><span class="label">传声介质：</span><span class="value" id="vacMedium">空气</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🧪 实验结论</div>
+        随着罩内空气被抽出，声音逐渐减弱；当罩内接近真空时，几乎听不到声音。<br>
+        <strong>结论：声音的传播需要介质，真空不能传声。</strong>
+      </div>
+    </div>
   </div>
+
+  <!-- ===== 第三部分：声音的特性 ===== -->
+  <div class="card">
+    <div class="section-header">🎵 3. 声音的特性 —— 音调、响度、音色</div>
+
+    <p>同样是声音，为什么有的高有的低？有的强有的弱？有的好听有的刺耳？这是因为声音有三个特性：</p>
+
+    <ul class="property-list">
+      <li><strong>音调</strong>：声音的<strong>高低</strong>。由<strong>频率</strong>决定——频率越高，音调越高。<br>
+        <span style="font-size: 13px; color: var(--text-secondary);">频率单位：赫兹（Hz），每秒振动的次数。人耳听觉范围 <strong>20~20000 Hz</strong></span></li>
+      <li><strong>响度</strong>：声音的<strong>大小（强弱）</strong>。由<strong>振幅</strong>决定——振幅越大，响度越大。<br>
+        <span style="font-size: 13px; color: var(--text-secondary);">响度单位：分贝（dB）</span></li>
+      <li><strong>音色</strong>：声音的<strong>品质</strong>。由发声体本身的<strong>材料、结构</strong>决定。<br>
+        <span style="font-size: 13px; color: var(--text-secondary);">即使音调和响度相同，不同乐器、不同人说话的音色也不同</span></li>
+    </ul>
+
+    <div class="formula-box" style="font-size: 16px;">
+      频率 ↑ → 音调 ↑ &nbsp;|&nbsp; 振幅 ↑ → 响度 ↑ &nbsp;|&nbsp; 材料/结构 → 音色
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 易混淆点</div>
+      • <strong>音调</strong>是"高低"（尖锐/低沉），如鸟鸣高、牛叫低<br>
+      • <strong>响度</strong>是"大小"（大声/小声），如大声喊、悄悄话<br>
+      • <strong>音色</strong>是"品质"，用来分辨是谁在说话、是什么乐器
+    </div>
+
+    <!-- ===== 交互4：声音三要素调节器 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互4：声音三要素调节器</h3>
+      <p class="demo-desc">调节频率、振幅、音色，观察波形变化并聆听真实声音</p>
+
+      <div class="slider-row">
+        <label>🔊 频率（音调）：</label>
+        <input type="range" id="freqSlider" min="20" max="20000" value="440" step="1">
+        <span class="value-display"><span id="freqVal">440</span> Hz</span>
+      </div>
+
+      <div class="slider-row">
+        <label>📈 振幅（响度）：</label>
+        <input type="range" id="ampSlider" min="0" max="100" value="50">
+        <span class="value-display"><span id="ampVal">50</span></span>
+      </div>
+
+      <div style="margin: 14px 0;">
+        <label style="font-size: 14px; color: var(--text-secondary); margin-right: 10px;">🎻 音色选择：</label>
+        <div class="mode-toggle" id="timbreToggle">
+          <button class="active" data-timbre="piano">🎹 钢琴</button>
+          <button data-timbre="violin">🎻 小提琴</button>
+          <button data-timbre="guitar">🎸 吉他</button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="waveCanvas" width="560" height="180"></canvas>
+      </div>
+
+      <div style="margin-top: 8px;">
+        <button class="btn btn-primary" id="playToneBtn">▶ 播放声音</button>
+        <button class="btn btn-outline" id="stopToneBtn">⏹ 停止</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">音调：</span><span class="value" id="pitchLabel">中音</span></div>
+        <div class="readout-item"><span class="label">响度：</span><span class="value" id="loudLabel">中等</span></div>
+        <div class="readout-item"><span class="label">音色：</span><span class="value" id="timbreLabel">钢琴</span></div>
+        <div class="readout-item"><span class="label">声波类型：</span><span class="value" id="waveType">—</span></div>
+      </div>
+
+      <!-- 听觉范围标尺 -->
+      <div style="margin: 16px 0; padding: 14px; background: white; border-radius: var(--radius-sm);">
+        <div style="font-size: 14px; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;">📏 人耳听觉范围</div>
+        <div style="position: relative; height: 36px; background: linear-gradient(90deg, #E74C3C 0%, #E74C3C 3%, #27AE60 3%, #27AE60 97%, #E74C3C 97%); border-radius: 8px;">
+          <div id="freqMarker" style="position: absolute; top: -4px; width: 4px; height: 44px; background: #2C3E50; border-radius: 2px; left: 3%; transition: left 0.1s;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+          <span>0 Hz</span>
+          <span style="color: #E74C3C; font-weight: 700;">20 Hz（次声波）</span>
+          <span style="color: #27AE60; font-weight: 700;">可听声 20~20000 Hz</span>
+          <span style="color: #E74C3C; font-weight: 700;">20000 Hz（超声波）</span>
+          <span>25000 Hz</span>
+        </div>
+        <div id="freqRangeLabel" style="text-align: center; margin-top: 6px; font-size: 14px; font-weight: 700; color: var(--success);">当前频率在可听声范围内 ✓</div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        • <strong>频率</strong>越高 → 波形越<strong>密集</strong> → 音调越<strong>高</strong><br>
+        • <strong>振幅</strong>越大 → 波形幅度越<strong>大</strong> → 响度越<strong>大</strong><br>
+        • 不同<strong>音色</strong> → 波形形状不同（叠加了不同的谐波）<br>
+        • 低于 20 Hz 为<strong>次声波</strong>，高于 20000 Hz 为<strong>超声波</strong>，人耳听不到
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：回声与声的利用 ===== -->
+  <div class="card">
+    <div class="section-header">🏔️ 4. 回声与声的利用</div>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">回声</h3>
+    <p>声音在传播过程中遇到障碍物被<strong>反射</strong>回来，就形成了<strong>回声</strong>。</p>
+
+    <p>人耳要区分原声和回声，回声至少比原声晚 <strong>0.1 s</strong> 到达人耳。声音在空气中速度为 340 m/s，因此：</p>
+
+    <div class="formula-box" style="font-size: 18px;">
+      分辨回声的最小距离：<strong>d = v × t / 2 = 340 × 0.1 / 2 = <span style="color: var(--danger);">17 m</span></strong>
+    </div>
+
+    <p>也就是说，人要距离障碍物至少 <strong>17 m</strong> 才能分辨出回声。距离不足 17 m 时，回声与原声混在一起，使声音听起来更响亮（如在小房间里说话）。</p>
+
+    <!-- ===== 交互5：回声测距 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互5：回声测距</h3>
+      <p class="demo-desc">调节人与山崖的距离，喊一声，观察声波往返过程与时间</p>
+
+      <div class="slider-row">
+        <label>人与山崖距离 d：</label>
+        <input type="range" id="echoDist" min="5" max="1000" value="170" step="1">
+        <span class="value-display"><span id="echoDistVal">170</span> m</span>
+      </div>
+
+      <svg id="echoScene" viewBox="0 0 600 200" width="600" height="200" style="margin-top: 12px;">
+        <!-- 天空 -->
+        <rect x="0" y="0" width="600" height="140" fill="#E8F4FD"/>
+        <!-- 地面 -->
+        <rect x="0" y="140" width="600" height="60" fill="#D4E4C4"/>
+        <!-- 山崖 -->
+        <polygon points="500,140 500,40 530,30 560,45 580,35 580,140" fill="#8B7355" stroke="#6B5344" stroke-width="1.5"/>
+        <polygon points="500,140 510,60 520,140" fill="#A0826D" opacity="0.5"/>
+        <!-- 人 -->
+        <g id="echoPerson" transform="translate(80, 120)">
+          <circle cx="0" cy="-30" r="8" fill="#FDB813"/>
+          <rect x="-6" y="-22" width="12" height="20" rx="2" fill="#4A90D9"/>
+          <rect x="-6" y="-2" width="5" height="18" fill="#2C3E50"/>
+          <rect x="1" y="-2" width="5" height="18" fill="#2C3E50"/>
+          <text x="0" y="28" text-anchor="middle" font-size="11" fill="#2E6BA8" font-weight="bold">人</text>
+        </g>
+        <!-- 声波圆点 -->
+        <circle id="echoWave" cx="80" cy="105" r="8" fill="#E74C3C" opacity="0"/>
+        <!-- 距离标线 -->
+        <line id="echoDistLine" x1="80" y1="155" x2="540" y2="155" stroke="#7F8C8D" stroke-width="1" stroke-dasharray="4,3"/>
+        <text id="echoDistLabel" x="310" y="172" text-anchor="middle" font-size="12" fill="#7F8C8D">170 m</text>
+        <!-- 方向标记 -->
+        <text id="echoDirLabel" x="310" y="100" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold" opacity="0"></text>
+      </svg>
+
+      <div style="margin-top: 8px;">
+        <button class="btn btn-primary" id="echoShoutBtn">📣 喊一声</button>
+        <button class="btn btn-outline" id="echoResetBtn">↺ 重置</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">距离 d：</span><span class="value"><span id="echoD">170</span> m</span></div>
+        <div class="readout-item"><span class="label">往返路程 2d：</span><span class="value"><span id="echo2D">340</span> m</span></div>
+        <div class="readout-item"><span class="label">往返时间 t：</span><span class="value"><span id="echoT">1.00</span> s</span></div>
+      </div>
+
+      <div id="echoResult" style="margin-top: 12px;"></div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">📐 回声测距公式</div>
+        声波往返总路程 = 2d，所用时间 t = 2d / v<br>
+        因此测出时间 t，可求距离：<strong>d = v × t / 2</strong>（v = 340 m/s）<br>
+        <strong>当 d &lt; 17 m（t &lt; 0.1 s）时，回声与原声混在一起，人耳无法分辨回声。</strong>
+      </div>
+    </div>
+
+    <h3 style="margin: 20px 0 8px; color: var(--primary-dark);">声的利用</h3>
+    <p>声音可以传递<strong>信息</strong>，也可以传递<strong>能量</strong>。</p>
+
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="icon">🦇</div>
+        <div class="title">回声定位（蝙蝠）</div>
+        <div class="desc">蝙蝠发出超声波，根据回声判断昆虫的位置和距离</div>
+        <div class="tag-line"><span class="tag tag-physics">传递信息</span></div>
+      </div>
+      <div class="app-card">
+        <div class="icon">🚢</div>
+        <div class="title">声呐测海深</div>
+        <div class="desc">船上的声呐向海底发射超声波，根据回声时间计算海水深度</div>
+        <div class="tag-line"><span class="tag tag-physics">传递信息</span></div>
+      </div>
+      <div class="app-card">
+        <div class="icon">🩺</div>
+        <div class="title">B 超检查</div>
+        <div class="desc">医生用超声波探查人体内部情况，安全无损伤</div>
+        <div class="tag-line"><span class="tag tag-physics">传递信息</span></div>
+      </div>
+      <div class="app-card">
+        <div class="icon">💎</div>
+        <div class="title">超声波碎石</div>
+        <div class="desc">用超声波的能量击碎体内的结石，免于开刀</div>
+        <div class="tag-line"><span class="tag tag-physics">传递能量</span></div>
+      </div>
+      <div class="app-card">
+        <div class="icon">🧼</div>
+        <div class="title">超声波清洗</div>
+        <div class="desc">超声波在液体中产生强烈振动，清洗精密零件上的污垢</div>
+        <div class="tag-line"><span class="tag tag-physics">传递能量</span></div>
+      </div>
+      <div class="app-card">
+        <div class="icon">🚗</div>
+        <div class="title">倒车雷达</div>
+        <div class="desc">汽车利用超声波探测后方障碍物的距离，提醒驾驶员</div>
+        <div class="tag-line"><span class="tag tag-physics">传递信息</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：噪声 ===== -->
+  <div class="card">
+    <div class="section-header">🔇 5. 噪声及其控制</div>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">什么是噪声？</h3>
+    <p>噪声可以从两个角度来定义：</p>
+    <ul class="property-list">
+      <li><strong>物理学角度</strong>：发声体做<strong>无规则振动</strong>时发出的声音</li>
+      <li><strong>环保角度</strong>：凡是妨碍人们工作、学习、生活，以及干扰人们要听的声音的声音</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 理解噪声</div>
+      从环保角度看，即使是美妙的音乐，如果在别人休息时大声播放，也是噪声。<br>
+      噪声的波形是<strong>杂乱无章</strong>的，而乐音的波形是<strong>有规律</strong>的。
+    </div>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">控制噪声的三种途径</h3>
+    <p>控制噪声要从<strong>声源</strong>、<strong>传播过程</strong>、<strong>接收处</strong>三个方面入手：</p>
+
+    <div class="formula-box" style="font-size: 15px;">
+      ① <strong>声源处减弱</strong> &nbsp; ② <strong>传播过程中减弱</strong> &nbsp; ③ <strong>接收处（人耳处）减弱</strong>
+    </div>
+
+    <!-- ===== 交互6：噪声控制分类拖拽 ===== -->
+    <div class="demo-container">
+      <h3>🧪 交互6：噪声控制分类</h3>
+      <p class="demo-desc">把左边的场景拖到右边正确的分类框中（也可点击卡片再点击分类框）</p>
+
+      <div class="dnd-area">
+        <div class="dnd-scenarios" id="dndScenarios">
+          <div class="dnd-card" draggable="true" data-cat="source">
+            <span class="icon">🚗</span>给汽车装消音器
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="source">
+            <span class="icon">🔇</span>摩托车安装消声排气管
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="path">
+            <span class="icon">🧱</span>公路旁建隔音墙
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="path">
+            <span class="icon">🚪</span>关闭门窗隔声
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="path">
+            <span class="icon">🌳</span>道路两旁种树
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="receiver">
+            <span class="icon">🎧</span>戴防噪声耳塞
+          </div>
+          <div class="dnd-card" draggable="true" data-cat="receiver">
+            <span class="icon">👂</span>工厂工人戴防护耳罩
+          </div>
+        </div>
+
+        <div class="dnd-zones">
+          <div class="dnd-zone" data-zone="source">
+            <div class="zone-title">① 声源处减弱</div>
+          </div>
+          <div class="dnd-zone" data-zone="path">
+            <div class="zone-title">② 传播中减弱</div>
+          </div>
+          <div class="dnd-zone" data-zone="receiver">
+            <div class="zone-title">③ 接收处减弱</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dnd-score" id="dndScore">已正确分类：0 / 7</div>
+
+      <div style="margin-top: 10px;">
+        <button class="btn btn-outline" id="dndResetBtn">↺ 重新拖拽</button>
+        <button class="btn btn-outline" id="dndHintBtn">💡 查看提示</button>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">📝 分类指南</div>
+        • <strong>声源处减弱</strong>：直接让发声物体少发声或不发声（如装消音器、禁止鸣笛）<br>
+        • <strong>传播过程中减弱</strong>：在声音传播路径上设置障碍（如隔音墙、种树、关门窗）<br>
+        • <strong>接收处减弱</strong>：在人耳处减少声音进入（如戴耳塞、耳罩）
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 6. 练习题</div>
+    <p>检验一下你对声现象知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 关于声音的产生，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 只要有振动就一定能听到声音</div>
+      <div class="quiz-option" data-idx="1">B. 一切发声的物体都在振动，振动停止，发声也停止</div>
+      <div class="quiz-option" data-idx="2">C. 物体振动停止后，声音立刻消失，不会继续传播</div>
+      <div class="quiz-option" data-idx="3">D. 只有固体振动才能产生声音</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 关于声音在不同介质中的传播速度，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 声音在真空中传播最快</div>
+      <div class="quiz-option" data-idx="1">B. 声音在钢铁中传播比在水中慢</div>
+      <div class="quiz-option" data-idx="2">C. 声音在钢铁中传播最快，水中次之，空气中最慢</div>
+      <div class="quiz-option" data-idx="3">D. 声音在空气（15°C）中的传播速度约为 1500 m/s</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 日常生活中，"声音太尖了"和"声音太大了"分别指声音的哪个特性？</div>
+      <div class="quiz-option" data-idx="0">A. 音调；响度</div>
+      <div class="quiz-option" data-idx="1">B. 响度；音调</div>
+      <div class="quiz-option" data-idx="2">C. 音色；响度</div>
+      <div class="quiz-option" data-idx="3">D. 音调；音色</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 声速也是一种速度，可运用 <a href="01-机械运动.html">物理 · 机械运动</a> 中的 v = s/t 进行计算（声速测距、回声测距）</p>
+    <p>· 声波数据的测量与分析 ↔ <a href="../../数学/八年级/11-数据的分析.html">数学 · 数据的分析</a>（用统计方法分析声波频率、响度数据）</p>
+    <p>· 回声测距 d = v·t/2 ↔ 数学中的一元一次方程应用（已知时间求距离、已知距离求时间）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="01-机械运动.html" class="btn btn-outline">← 上一章：机械运动</a>
+    <a href="03-物态变化.html" class="btn btn-primary">下一章：物态变化 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 共享音频上下文（需要用户交互后才能创建）
+// ============================================================
+var sharedAudioCtx = null;
+function getAudioCtx() {
+  if (!sharedAudioCtx) {
+    try {
+      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {
+      return null;
+    }
+  }
+  if (sharedAudioCtx.state === 'suspended') {
+    sharedAudioCtx.resume();
+  }
+  return sharedAudioCtx;
+}
+
+// ============================================================
+// 交互1：振动产生声音（鼓 + 音叉）
+// ============================================================
+(function() {
+  var drumHead = document.getElementById('drumHead');
+  var forkProngs = document.getElementById('forkProngs');
+  var drumStatus = document.getElementById('drumStatus');
+  var forkStatus = document.getElementById('forkStatus');
+  var vibStatus = document.getElementById('vibStatus');
+  var vibTip = document.getElementById('vibTip');
+
+  var drumAmp = 0;       // 当前鼓面振幅
+  var drumAmpMax = 0;    // 鼓面最大振幅（初始）
+  var forkAmp = 0;
+  var forkAmpMax = 0;
+  var force = 60;
+  var lastTime = 0;
+  var drumOsc = null, drumGain = null;
+  var forkOsc = null, forkGain = null;
+
+  function updateForce() {
+    force = parseFloat(document.getElementById('forceSlider').value);
+    document.getElementById('forceVal').textContent = force;
+  }
+  document.getElementById('forceSlider').addEventListener('input', updateForce);
+
+  function hitDrum() {
+    drumAmpMax = force / 100 * 18;
+    drumAmp = drumAmpMax;
+    drumStatus.setAttribute('opacity', '1');
+    vibStatus.className = 'status-badge vibrating';
+    vibStatus.textContent = '鼓面正在振动 🔊';
+    vibTip.innerHTML = '鼓面正在<strong>上下振动</strong>，发出声音。振幅随时间逐渐衰减，振动停止后发声也停止。<br>力度越大 → 振幅越大 → 响度越大。';
+
+    // 播放鼓声（低频，快速衰减）
+    var ctx = getAudioCtx();
+    if (ctx) {
+      drumOsc = ctx.createOscillator();
+      drumGain = ctx.createGain();
+      drumOsc.type = 'sine';
+      drumOsc.frequency.setValueAtTime(80 + Math.random() * 40, ctx.currentTime);
+      drumGain.gain.setValueAtTime(force / 100 * 0.5, ctx.currentTime);
+      drumGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+      drumOsc.connect(drumGain);
+      drumGain.connect(ctx.destination);
+      drumOsc.start();
+      drumOsc.stop(ctx.currentTime + 1.5);
+    }
+  }
+
+  function hitFork() {
+    forkAmpMax = force / 100 * 12;
+    forkAmp = forkAmpMax;
+    forkStatus.setAttribute('opacity', '1');
+    vibStatus.className = 'status-badge vibrating';
+    vibStatus.textContent = '音叉正在振动 🔊';
+    vibTip.innerHTML = '音叉两臂正在<strong>左右振动</strong>，发出清脆的声音。音叉的振动比鼓面更持久、更规律。';
+
+    // 播放音叉声（440 Hz 纯音，缓慢衰减）
+    var ctx = getAudioCtx();
+    if (ctx) {
+      forkOsc = ctx.createOscillator();
+      forkGain = ctx.createGain();
+      forkOsc.type = 'sine';
+      forkOsc.frequency.setValueAtTime(440, ctx.currentTime);
+      forkGain.gain.setValueAtTime(force / 100 * 0.3, ctx.currentTime);
+      forkGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
+      forkOsc.connect(forkGain);
+      forkGain.connect(ctx.destination);
+      forkOsc.start();
+      forkOsc.stop(ctx.currentTime + 3);
+    }
+  }
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    // 鼓面振动（衰减）
+    if (drumAmp > 0.05) {
+      drumAmp *= Math.pow(0.5, dt / 0.4); // 半衰期 0.4s
+      var phase = now / 1000 * 30;
+      var offset = Math.sin(phase) * drumAmp;
+      drumHead.setAttribute('transform', 'translate(0, ' + offset + ')');
+      document.getElementById('drumAmp').textContent = drumAmp.toFixed(1);
+    } else if (drumAmp > 0) {
+      drumAmp = 0;
+      drumHead.setAttribute('transform', 'translate(0, 0)');
+      document.getElementById('drumAmp').textContent = '0';
+      drumStatus.setAttribute('opacity', '0');
+    }
+
+    // 音叉振动（衰减更慢）
+    if (forkAmp > 0.05) {
+      forkAmp *= Math.pow(0.5, dt / 1.2); // 半衰期 1.2s
+      var fphase = now / 1000 * 25;
+      var foffset = Math.sin(fphase) * forkAmp;
+      // 两臂反向运动
+      var leftArm = forkProngs.querySelector('rect:nth-child(1)');
+      var rightArm = forkProngs.querySelector('rect:nth-child(2)');
+      var leftTop = forkProngs.querySelector('rect:nth-child(3)');
+      var rightTop = forkProngs.querySelector('rect:nth-child(4)');
+      if (leftArm) leftArm.setAttribute('transform', 'translate(' + (-foffset) + ', 0)');
+      if (rightArm) rightArm.setAttribute('transform', 'translate(' + foffset + ', 0)');
+      if (leftTop) leftTop.setAttribute('transform', 'translate(' + (-foffset) + ', 0)');
+      if (rightTop) rightTop.setAttribute('transform', 'translate(' + foffset + ', 0)');
+      document.getElementById('forkAmp').textContent = forkAmp.toFixed(1);
+    } else if (forkAmp > 0) {
+      forkAmp = 0;
+      var arms = forkProngs.querySelectorAll('rect');
+      arms.forEach(function(a) { a.setAttribute('transform', 'translate(0, 0)'); });
+      document.getElementById('forkAmp').textContent = '0';
+      forkStatus.setAttribute('opacity', '0');
+    }
+
+    // 更新响度显示
+    var maxAmp = Math.max(drumAmp, forkAmp);
+    if (maxAmp > 0) {
+      var loud = Math.round(maxAmp / 18 * 100);
+      document.getElementById('loudness').textContent = loud + ' dB';
+    } else {
+      document.getElementById('loudness').textContent = '—';
+      if (drumAmp === 0 && forkAmp === 0) {
+        vibStatus.className = 'status-badge stopped';
+        vibStatus.textContent = '振动停止，发声停止';
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.getElementById('hitDrumBtn').addEventListener('click', hitDrum);
+  document.getElementById('hitForkBtn').addEventListener('click', hitFork);
+  document.getElementById('vibResetBtn').addEventListener('click', function() {
+    drumAmp = 0; forkAmp = 0;
+    drumHead.setAttribute('transform', 'translate(0, 0)');
+    var arms = forkProngs.querySelectorAll('rect');
+    arms.forEach(function(a) { a.setAttribute('transform', 'translate(0, 0)'); });
+    drumStatus.setAttribute('opacity', '0');
+    forkStatus.setAttribute('opacity', '0');
+    vibStatus.className = 'status-badge stopped';
+    vibStatus.textContent = '未发声';
+    vibTip.innerHTML = '点击"敲鼓"或"敲音叉"，观察物体振动并发出声音。振动幅度逐渐减小（衰减），最终停止——此时发声也停止。';
+  });
+
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 交互2：声波的形成 —— 疏密相间的纵波
+// ============================================================
+(function() {
+  var canvas = document.getElementById('waveCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var wavelength = 140;
+  var amp = 6;
+  var phase = 0;
+  var playing = true;
+  var lastTime = 0;
+
+  var FIELD_X0 = 84, FIELD_X1 = 584;
+  var ROW_Y0 = 26, ROW_DY = 15, COL_DX = 17, ROW_Y1 = 170;
+  var CURVE_BASE = 232;   // 密度曲线基线
+  var CURVE_H = 22;       // 曲线幅度
+
+  // 生成空气粒子的静止位置（均匀网格）
+  var particles = [];
+  for (var y = ROW_Y0; y <= ROW_Y1; y += ROW_DY) {
+    for (var x = FIELD_X0; x <= FIELD_X1; x += COL_DX) {
+      particles.push({ rx: x, ry: y });
+    }
+  }
+  // 选一颗靠近中间的粒子高亮（展示"粒子只在原地振动"）
+  var hiIdx = 0, hiDist = Infinity;
+  for (var i = 0; i < particles.length; i++) {
+    var d = Math.abs(particles[i].rx - 300) + Math.abs(particles[i].ry - 100);
+    if (d < hiDist) { hiDist = d; hiIdx = i; }
+  }
+  var hi = particles[hiIdx];
+
+  function draw() {
+    var k = 2 * Math.PI / wavelength;
+    ctx.clearRect(0, 0, W, H);
+
+    // ===== 振膜（声源） =====
+    var memDisp = amp * Math.sin(k * FIELD_X0 - phase);
+    ctx.fillStyle = '#7F8C8D';
+    ctx.beginPath();
+    ctx.moveTo(18, 60);
+    ctx.lineTo(52, 30);
+    ctx.lineTo(52, 166);
+    ctx.lineTo(18, 136);
+    ctx.closePath();
+    ctx.fill();
+    // 振膜（随边界粒子同步振动）
+    ctx.fillStyle = '#E74C3C';
+    ctx.fillRect(56 + memDisp, ROW_Y0 - 6, 8, ROW_Y1 - ROW_Y0 + 12);
+    ctx.fillStyle = '#C0392B';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('声源（振膜）', 44, 192);
+
+    // ===== 高亮粒子的静止位置参考线 =====
+    ctx.strokeStyle = 'rgba(243,156,18,0.45)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(hi.rx, ROW_Y0 - 6);
+    ctx.lineTo(hi.rx, ROW_Y1 + 6);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ===== 空气粒子（纵波：水平方向原地振动） =====
+    for (var i = 0; i < particles.length; i++) {
+      if (i === hiIdx) continue;
+      var p = particles[i];
+      var disp = amp * Math.sin(k * p.rx - phase);
+      var density = Math.cos(k * p.rx - phase); // >0 密部, <0 疏部
+      // 密度越大颜色越深
+      var t = (density + 1) / 2; // 0~1
+      var rC = Math.round(187 - (187 - 46) * t);
+      var gC = Math.round(215 - (215 - 107) * t);
+      var bC = Math.round(240 - (240 - 168) * t);
+      ctx.fillStyle = 'rgb(' + rC + ',' + gC + ',' + bC + ')';
+      ctx.beginPath();
+      ctx.arc(p.rx + disp, p.ry, 4.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // 高亮粒子
+    var hdisp = amp * Math.sin(k * hi.rx - phase);
+    ctx.fillStyle = '#F39C12';
+    ctx.beginPath();
+    ctx.arc(hi.rx + hdisp, hi.ry, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#E67E22';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // ===== 疏密（密度）曲线 =====
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(FIELD_X0, CURVE_BASE);
+    ctx.lineTo(FIELD_X1, CURVE_BASE);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#4A90D9';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var x = FIELD_X0; x <= FIELD_X1; x += 2) {
+      var yy = CURVE_BASE - CURVE_H * Math.cos(k * x - phase);
+      if (x === FIELD_X0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+    }
+    ctx.stroke();
+
+    // 标注密部（波峰）与疏部（波谷）
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    // 根据当前相位动态计算视野内的波峰序号，保证标注始终跟随波形
+    var nStart = Math.ceil((k * (FIELD_X0 + 10) - phase) / (2 * Math.PI));
+    var nEnd = Math.floor((k * (FIELD_X1 - 10) - phase) / (2 * Math.PI));
+    for (var n = nStart; n <= nEnd; n++) {
+      var xPeak = (phase + 2 * Math.PI * n) / k;
+      ctx.fillStyle = '#E74C3C';
+      ctx.beginPath(); ctx.arc(xPeak, CURVE_BASE - CURVE_H, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText('密部', xPeak, CURVE_BASE - CURVE_H - 12);
+      var xTrough = (phase + Math.PI + 2 * Math.PI * n) / k;
+      if (xTrough > FIELD_X0 + 10 && xTrough < FIELD_X1 - 10) {
+        ctx.fillStyle = '#4A90D9';
+        ctx.beginPath(); ctx.arc(xTrough, CURVE_BASE + CURVE_H, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillText('疏部', xTrough, CURVE_BASE + CURVE_H + 18);
+      }
+    }
+
+    // 图例与传播方向
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.fillText('波的传播方向 →', FIELD_X1, 14);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#E67E22';
+    ctx.fillText('● 橙色粒子：只在原地振动', FIELD_X0, 14);
+  }
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+    if (playing) {
+      phase += dt * 2 * Math.PI * 0.9; // 约 0.9 Hz，波向右传播
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  document.getElementById('waveLenSlider').addEventListener('input', function(e) {
+    wavelength = parseFloat(e.target.value);
+    document.getElementById('waveLenVal').textContent = wavelength;
+  });
+  document.getElementById('waveAmpSlider').addEventListener('input', function(e) {
+    amp = parseFloat(e.target.value);
+    document.getElementById('waveAmpVal').textContent = amp;
+  });
+  document.getElementById('wavePlayBtn').addEventListener('click', function() {
+    playing = !playing;
+    this.textContent = playing ? '⏸ 暂停' : '▶ 播放';
+  });
+  document.getElementById('waveResetBtn').addEventListener('click', function() {
+    phase = 0;
+  });
+
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 交互3：声速与介质 + 真空铃罩
+// ============================================================
+(function() {
+  var V_AIR = 340, V_WATER = 1500, V_STEEL = 5200;
+  var distance = 500;
+  var playing = false;
+  var playStart = 0;
+  var lastTime = 0;
+
+  var dotAir = document.getElementById('dotAir');
+  var dotWater = document.getElementById('dotWater');
+  var dotSteel = document.getElementById('dotSteel');
+  var timeAir = document.getElementById('timeAir');
+  var timeWater = document.getElementById('timeWater');
+  var timeSteel = document.getElementById('timeSteel');
+
+  function updateDist() {
+    distance = parseFloat(document.getElementById('distSlider').value);
+    document.getElementById('distVal').textContent = distance;
+    var tAir = distance / V_AIR;
+    var tWater = distance / V_WATER;
+    var tSteel = distance / V_STEEL;
+    document.getElementById('rAir').textContent = tAir.toFixed(3);
+    document.getElementById('rWater').textContent = tWater.toFixed(3);
+    document.getElementById('rSteel').textContent = tSteel.toFixed(3);
+    // 更新距离标线
+  }
+  document.getElementById('distSlider').addEventListener('input', updateDist);
+  updateDist();
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (playing) {
+      var elapsed = (now - playStart) / 1000;
+      // 管道可视化范围 100~580 px，映射到 0~distance
+      var xAir = 100 + Math.min(elapsed * V_AIR / distance, 1) * 480;
+      var xWater = 100 + Math.min(elapsed * V_WATER / distance, 1) * 480;
+      var xSteel = 100 + Math.min(elapsed * V_STEEL / distance, 1) * 480;
+      dotAir.setAttribute('cx', xAir);
+      dotWater.setAttribute('cx', xWater);
+      dotSteel.setAttribute('cx', xSteel);
+
+      // 显示实时时间
+      timeAir.textContent = (Math.min(elapsed, distance / V_AIR)).toFixed(3) + ' s';
+      timeWater.textContent = (Math.min(elapsed, distance / V_WATER)).toFixed(3) + ' s';
+      timeSteel.textContent = (Math.min(elapsed, distance / V_STEEL)).toFixed(3) + ' s';
+
+      if (elapsed > distance / V_AIR + 0.3) {
+        playing = false;
+        document.getElementById('speedPlayBtn').textContent = '▶ 发出声音';
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.getElementById('speedPlayBtn').addEventListener('click', function() {
+    if (!playing) {
+      playing = true;
+      playStart = performance.now();
+      this.textContent = '⏸ 播放中...';
+      // 重置圆点位置
+      dotAir.setAttribute('cx', 100);
+      dotWater.setAttribute('cx', 100);
+      dotSteel.setAttribute('cx', 100);
+      // 播放提示音
+      var ctx = getAudioCtx();
+      if (ctx) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 600;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      }
+    }
+  });
+
+  document.getElementById('speedResetBtn').addEventListener('click', function() {
+    playing = false;
+    dotAir.setAttribute('cx', 100);
+    dotWater.setAttribute('cx', 100);
+    dotSteel.setAttribute('cx', 100);
+    timeAir.textContent = '0.00 s';
+    timeWater.textContent = '0.00 s';
+    timeSteel.textContent = '0.00 s';
+    document.getElementById('speedPlayBtn').textContent = '▶ 发出声音';
+  });
+
+  requestAnimationFrame(tick);
+
+  // ===== 真空铃罩实验 =====
+  var airAmount = 100;
+  var airSlider = document.getElementById('airSlider');
+  var airParticles = document.getElementById('airParticles');
+  var soundWaves = document.getElementById('soundWaves');
+  var vacStatus = document.getElementById('vacStatus');
+  var vacLoud = document.getElementById('vacLoud');
+  var vacMedium = document.getElementById('vacMedium');
+  var vacOsc = null, vacGain = null;
+
+  // 生成空气粒子
+  function genParticles() {
+    var html = '';
+    for (var i = 0; i < 30; i++) {
+      var x = 100 + Math.random() * 200;
+      var y = 70 + Math.random() * 110;
+      var r = 2 + Math.random() * 2;
+      html += '<circle class="air-particle" cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#7BB0E8" opacity="0.5"/>';
+    }
+    airParticles.innerHTML = html;
+  }
+  genParticles();
+
+  // 生成声波纹
+  function genWaves() {
+    var html = '';
+    for (var i = 0; i < 4; i++) {
+      var r = 25 + i * 15;
+      html += '<circle class="sound-wave" cx="200" cy="95" r="' + r + '" fill="none" stroke="#F39C12" stroke-width="2" opacity="' + (0.5 - i * 0.1) + '"/>';
+    }
+    soundWaves.innerHTML = html;
+  }
+  genWaves();
+
+  function updateVacuum() {
+    airAmount = parseFloat(airSlider.value);
+    document.getElementById('airVal').textContent = Math.round(airAmount);
+
+    // 粒子透明度
+    var particles = airParticles.querySelectorAll('.air-particle');
+    particles.forEach(function(p) {
+      p.setAttribute('opacity', airAmount / 100 * 0.5);
+    });
+
+    // 声波纹透明度
+    var waves = soundWaves.querySelectorAll('.sound-wave');
+    waves.forEach(function(w) {
+      w.setAttribute('opacity', airAmount / 100 * 0.5);
+    });
+
+    // 状态显示
+    if (airAmount > 70) {
+      vacStatus.textContent = '空气充足，声音正常传播';
+      vacStatus.setAttribute('fill', '#27AE60');
+      vacLoud.textContent = '正常';
+      vacLoud.style.color = '#27AE60';
+      vacMedium.textContent = '空气';
+    } else if (airAmount > 30) {
+      vacStatus.textContent = '空气减少，声音变弱';
+      vacStatus.setAttribute('fill', '#F39C12');
+      vacLoud.textContent = '变弱';
+      vacLoud.style.color = '#F39C12';
+      vacMedium.textContent = '稀薄空气';
+    } else if (airAmount > 5) {
+      vacStatus.textContent = '空气很少，声音很弱';
+      vacStatus.setAttribute('fill', '#E74C3C');
+      vacLoud.textContent = '很弱';
+      vacLoud.style.color = '#E74C3C';
+      vacMedium.textContent = '极稀薄空气';
+    } else {
+      vacStatus.textContent = '接近真空，声音几乎消失！';
+      vacStatus.setAttribute('fill', '#E74C3C');
+      vacLoud.textContent = '几乎无声';
+      vacLoud.style.color = '#E74C3C';
+      vacMedium.textContent = '真空（不能传声）';
+    }
+
+    // 调整正在播放的声音
+    if (vacGain) {
+      vacGain.gain.setValueAtTime(airAmount / 100 * 0.2, getAudioCtx().currentTime);
+    }
+  }
+
+  airSlider.addEventListener('input', updateVacuum);
+
+  document.getElementById('pumpOutBtn').addEventListener('click', function() {
+    var cur = parseFloat(airSlider.value);
+    airSlider.value = Math.max(0, cur - 15);
+    updateVacuum();
+    // 播放铃铛声（音量随空气变化）
+    playBell();
+  });
+
+  document.getElementById('pumpInBtn').addEventListener('click', function() {
+    var cur = parseFloat(airSlider.value);
+    airSlider.value = Math.min(100, cur + 15);
+    updateVacuum();
+    playBell();
+  });
+
+  document.getElementById('vacResetBtn').addEventListener('click', function() {
+    airSlider.value = 100;
+    updateVacuum();
+    stopBell();
+  });
+
+  function playBell() {
+    var ctx = getAudioCtx();
+    if (!ctx) return;
+    stopBell();
+    vacOsc = ctx.createOscillator();
+    vacGain = ctx.createGain();
+    vacOsc.type = 'triangle';
+    vacOsc.frequency.value = 880;
+    vacGain.gain.setValueAtTime(airAmount / 100 * 0.2, ctx.currentTime);
+    vacOsc.connect(vacGain);
+    vacGain.connect(ctx.destination);
+    vacOsc.start();
+  }
+
+  function stopBell() {
+    if (vacOsc) {
+      try { vacOsc.stop(); } catch(e) {}
+      vacOsc = null;
+    }
+  }
+
+  updateVacuum();
+})();
+
+// ============================================================
+// 交互4：声音三要素调节器（波形 + Web Audio）
+// ============================================================
+(function() {
+  var canvas = document.getElementById('waveCanvas');
+  var ctx = canvas.getContext('2d');
+  var freq = 440, amp = 50, timbre = 'piano';
+  var toneOsc = null, toneGain = null, toneHarmonics = [];
+  var playing = false;
+
+  // 音色谐波配置 {倍数: 振幅比}
+  var timbreConfig = {
+    piano:  { name: '钢琴',   harmonics: [{m:1,a:1.0},{m:2,a:0.5},{m:3,a:0.3},{m:4,a:0.1}] },
+    violin: { name: '小提琴', harmonics: [{m:1,a:1.0},{m:2,a:0.8},{m:3,a:0.6},{m:4,a:0.4},{m:5,a:0.2}] },
+    guitar: { name: '吉他',   harmonics: [{m:1,a:1.0},{m:2,a:0.6},{m:3,a:0.4},{m:4,a:0.2}] }
+  };
+
+  function drawWave() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var w = canvas.width, h = canvas.height;
+    var cy = h / 2;
+
+    // 网格
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    for (var i = 0; i <= 10; i++) {
+      var x = (w / 10) * i;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+
+    // 轴标签
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('0', 2, cy - 2);
+    ctx.textAlign = 'right';
+    ctx.fillText('振幅', w - 4, 14);
+    ctx.textAlign = 'left';
+    ctx.fillText('→ 时间', w - 50, h - 4);
+
+    // 可视化周期数：用对数让低频和高频都可见
+    var cycles = Math.max(1, Math.log10(freq / 20) * 18 + 2);
+    cycles = Math.min(cycles, 80);
+    var ampPx = amp / 100 * (cy - 10);
+    var config = timbreConfig[timbre].harmonics;
+
+    // 绘制波形
+    ctx.strokeStyle = '#4A90D9';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var px = 0; px <= w; px++) {
+      var t = px / w; // 0~1
+      var phase = t * cycles * 2 * Math.PI;
+      var y = 0;
+      for (var k = 0; k < config.length; k++) {
+        y += config[k].a * Math.sin(config[k].m * phase);
+      }
+      y = y * ampPx / config[0].a; // 归一化到最大谐波振幅
+      if (px === 0) ctx.moveTo(px, cy - y);
+      else ctx.lineTo(px, cy - y);
+    }
+    ctx.stroke();
+
+    // 标注
+    ctx.fillStyle = '#2E6BA8';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('频率 ' + freq + ' Hz · 振幅 ' + amp + ' · ' + timbreConfig[timbre].name, 8, 18);
+  }
+
+  function updateLabels() {
+    // 音调
+    var pitchLabel = '中音';
+    if (freq < 100) pitchLabel = '低音（低沉）';
+    else if (freq < 500) pitchLabel = '中低音';
+    else if (freq < 2000) pitchLabel = '中高音';
+    else if (freq < 8000) pitchLabel = '高音（尖锐）';
+    else pitchLabel = '极高音';
+    document.getElementById('pitchLabel').textContent = pitchLabel;
+
+    // 响度
+    var loudLabel = '中等';
+    if (amp < 20) loudLabel = '很轻';
+    else if (amp < 50) loudLabel = '较轻';
+    else if (amp < 80) loudLabel = '较响';
+    else loudLabel = '很响';
+    document.getElementById('loudLabel').textContent = loudLabel;
+
+    // 音色
+    document.getElementById('timbreLabel').textContent = timbreConfig[timbre].name;
+    document.getElementById('waveType').textContent = timbreConfig[timbre].harmonics.length + ' 个谐波叠加';
+
+    // 频率范围标记
+    var pct = (Math.log(freq) / Math.log(25000)) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    document.getElementById('freqMarker').style.left = pct + '%';
+
+    var rangeLabel = document.getElementById('freqRangeLabel');
+    if (freq < 20) {
+      rangeLabel.textContent = '当前为次声波（< 20 Hz），人耳听不到';
+      rangeLabel.style.color = '#E74C3C';
+    } else if (freq > 20000) {
+      rangeLabel.textContent = '当前为超声波（> 20000 Hz），人耳听不到';
+      rangeLabel.style.color = '#E74C3C';
+    } else {
+      rangeLabel.textContent = '当前频率在可听声范围内（20~20000 Hz）✓';
+      rangeLabel.style.color = '#27AE60';
+    }
+
+    drawWave();
+  }
+
+  function startTone() {
+    var actx = getAudioCtx();
+    if (!actx) return;
+    stopTone();
+    var config = timbreConfig[timbre].harmonics;
+    var masterGain = actx.createGain();
+    masterGain.gain.setValueAtTime(amp / 100 * 0.3, actx.currentTime);
+    masterGain.connect(actx.destination);
+
+    for (var i = 0; i < config.length; i++) {
+      var osc = actx.createOscillator();
+      var g = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq * config[i].m;
+      g.gain.value = config[i].a;
+      osc.connect(g);
+      g.connect(masterGain);
+      osc.start();
+      toneHarmonics.push(osc);
+    }
+    toneGain = masterGain;
+    playing = true;
+    document.getElementById('playToneBtn').textContent = '▶ 播放中...';
+  }
+
+  function stopTone() {
+    toneHarmonics.forEach(function(o) {
+      try { o.stop(); } catch(e) {}
+    });
+    toneHarmonics = [];
+    playing = false;
+    document.getElementById('playToneBtn').textContent = '▶ 播放声音';
+  }
+
+  function updateTone() {
+    if (playing && toneGain) {
+      var actx = getAudioCtx();
+      toneGain.gain.setTargetAtTime(amp / 100 * 0.3, actx.currentTime, 0.05);
+      // 更新谐波频率
+      var config = timbreConfig[timbre].harmonics;
+      for (var i = 0; i < toneHarmonics.length && i < config.length; i++) {
+        toneHarmonics[i].frequency.setTargetAtTime(freq * config[i].m, actx.currentTime, 0.05);
+      }
+    }
+  }
+
+  document.getElementById('freqSlider').addEventListener('input', function(e) {
+    freq = parseFloat(e.target.value);
+    document.getElementById('freqVal').textContent = freq;
+    updateLabels();
+    updateTone();
+  });
+
+  document.getElementById('ampSlider').addEventListener('input', function(e) {
+    amp = parseFloat(e.target.value);
+    document.getElementById('ampVal').textContent = amp;
+    updateLabels();
+    updateTone();
+  });
+
+  document.querySelectorAll('#timbreToggle button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#timbreToggle button').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      timbre = btn.dataset.timbre;
+      // 切换音色时重新生成振荡器
+      if (playing) { stopTone(); startTone(); }
+      updateLabels();
+    });
+  });
+
+  document.getElementById('playToneBtn').addEventListener('click', function() {
+    if (playing) {
+      stopTone();
+    } else {
+      startTone();
+    }
+  });
+
+  document.getElementById('stopToneBtn').addEventListener('click', stopTone);
+
+  updateLabels();
+})();
+
+// ============================================================
+// 交互5：回声测距
+// ============================================================
+(function() {
+  var V = 340;
+  var d = 170;
+  var playing = false;
+  var playStart = 0;
+  var lastTime = 0;
+  var phase = 0; // 0=去程, 1=回程, 2=完成
+
+  var echoWave = document.getElementById('echoWave');
+  var echoDirLabel = document.getElementById('echoDirLabel');
+  var echoDistLine = document.getElementById('echoDistLine');
+  var echoDistLabel = document.getElementById('echoDistLabel');
+  var echoResult = document.getElementById('echoResult');
+
+  // SVG 中人 x=80，山崖 x=540，有效距离 460px 映射到 d
+  var personX = 80, cliffX = 540;
+
+  function updateDist() {
+    d = parseFloat(document.getElementById('echoDist').value);
+    document.getElementById('echoDistVal').textContent = d;
+    document.getElementById('echoD').textContent = d;
+    document.getElementById('echo2D').textContent = 2 * d;
+    var t = 2 * d / V;
+    document.getElementById('echoT').textContent = t.toFixed(3);
+    echoDistLabel.textContent = d + ' m';
+
+    // 显示结果
+    if (d < 17) {
+      echoResult.innerHTML = '<div class="status-badge info" style="background: rgba(243,156,18,0.15); color: var(--warning);">⚠️ d &lt; 17 m（t &lt; 0.1 s），人耳无法分辨回声与原声</div>';
+    } else {
+      echoResult.innerHTML = '<div class="status-badge info" style="background: rgba(39,174,96,0.15); color: var(--success);">✓ d ≥ 17 m（t ≥ 0.1 s），人耳可以分辨回声</div>';
+    }
+  }
+  document.getElementById('echoDist').addEventListener('input', updateDist);
+  updateDist();
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    lastTime = now;
+
+    if (playing) {
+      var elapsed = (now - playStart) / 1000;
+      var totalT = 2 * d / V;
+      var progress = elapsed / totalT;
+
+      if (progress < 0.5) {
+        // 去程：人 → 山崖
+        phase = 0;
+        var p = progress / 0.5;
+        var x = personX + (cliffX - personX) * p;
+        echoWave.setAttribute('cx', x);
+        echoWave.setAttribute('opacity', '1');
+        echoDirLabel.textContent = '→ 声波传向山崖';
+        echoDirLabel.setAttribute('opacity', '1');
+      } else if (progress < 1) {
+        // 回程：山崖 → 人
+        phase = 1;
+        var p2 = (progress - 0.5) / 0.5;
+        var x2 = cliffX - (cliffX - personX) * p2;
+        echoWave.setAttribute('cx', x2);
+        echoDirLabel.textContent = '← 声波反射回来';
+      } else {
+        playing = false;
+        echoWave.setAttribute('opacity', '0');
+        echoDirLabel.setAttribute('opacity', '0');
+        document.getElementById('echoShoutBtn').textContent = '📣 喊一声';
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.getElementById('echoShoutBtn').addEventListener('click', function() {
+    if (!playing) {
+      playing = true;
+      playStart = performance.now();
+      this.textContent = '⏸ 传播中...';
+      // 播放喊声
+      var ctx = getAudioCtx();
+      if (ctx) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      }
+    }
+  });
+
+  document.getElementById('echoResetBtn').addEventListener('click', function() {
+    playing = false;
+    echoWave.setAttribute('opacity', '0');
+    echoDirLabel.setAttribute('opacity', '0');
+    document.getElementById('echoShoutBtn').textContent = '📣 喊一声';
+  });
+
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 交互6：噪声控制分类拖拽
+// ============================================================
+(function() {
+  var selectedCard = null;
+  var correctCount = 0;
+  var totalCards = 7;
+
+  function updateScore() {
+    document.getElementById('dndScore').textContent = '已正确分类：' + correctCount + ' / ' + totalCards;
+    if (correctCount === totalCards) {
+      document.getElementById('dndScore').innerHTML = '🎉 全部正确！' + correctCount + ' / ' + totalCards;
+      document.getElementById('dndScore').style.color = '#27AE60';
+    }
+  }
+
+  function handleDrop(card, zone) {
+    var cat = card.dataset.cat;
+    var zoneCat = zone.dataset.zone;
+
+    // 检查是否已放置
+    if (card.classList.contains('placed')) return;
+
+    // 创建放置项
+    var item = document.createElement('div');
+    item.className = 'zone-item';
+    item.innerHTML = card.innerHTML;
+
+    if (cat === zoneCat) {
+      item.classList.add('correct');
+      card.classList.add('placed');
+      correctCount++;
+      updateScore();
+    } else {
+      item.classList.add('wrong');
+      // 错误的放回
+      setTimeout(function() {
+        item.remove();
+      }, 800);
+    }
+
+    zone.appendChild(item);
+  }
+
+  // 拖拽事件
+  var cards = document.querySelectorAll('.dnd-card');
+  cards.forEach(function(card) {
+    card.addEventListener('dragstart', function(e) {
+      selectedCard = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', function() {
+      card.classList.remove('dragging');
+    });
+    // 点击选择
+    card.addEventListener('click', function() {
+      cards.forEach(function(c) { c.style.borderColor = ''; });
+      if (selectedCard === card) {
+        selectedCard = null;
+      } else {
+        selectedCard = card;
+        card.style.borderColor = 'var(--primary)';
+      }
+    });
+  });
+
+  var zones = document.querySelectorAll('.dnd-zone');
+  zones.forEach(function(zone) {
+    zone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', function() {
+      zone.classList.remove('drag-over');
+    });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (selectedCard) {
+        handleDrop(selectedCard, zone);
+        selectedCard = null;
+      }
+    });
+    // 点击放置（移动端友好）
+    zone.addEventListener('click', function() {
+      if (selectedCard) {
+        handleDrop(selectedCard, zone);
+        selectedCard.style.borderColor = '';
+        selectedCard = null;
+      }
+    });
+  });
+
+  document.getElementById('dndResetBtn').addEventListener('click', function() {
+    // 恢复所有卡片
+    cards.forEach(function(c) {
+      c.classList.remove('placed');
+      c.style.display = '';
+      c.style.borderColor = '';
+    });
+    // 清空所有区域
+    zones.forEach(function(z) {
+      var items = z.querySelectorAll('.zone-item');
+      items.forEach(function(it) { it.remove(); });
+    });
+    correctCount = 0;
+    selectedCard = null;
+    document.getElementById('dndScore').innerHTML = '已正确分类：0 / ' + totalCards;
+    document.getElementById('dndScore').style.color = '';
+  });
+
+  document.getElementById('dndHintBtn').addEventListener('click', function() {
+    var hints = [
+      '消音器、消声排气管 → 装在发声物体上 → 声源处减弱',
+      '隔音墙、种树、关门窗 → 在传播路径上阻挡 → 传播中减弱',
+      '耳塞、耳罩 → 在人耳处防护 → 接收处减弱'
+    ];
+    alert('💡 提示：\n\n' + hints.join('\n'));
+  });
+})();
+
+// ============================================================
+// 练习题
+// ============================================================
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '一切发声的物体都在振动，振动停止，发声也停止。A错：有些振动频率不在人耳范围听不到；C错：振动停止后已发出的声波仍会传播一段距离；D错：固液气都能振动发声。',
+  hint: '记住核心：发声→振动，振动停→发声停。注意已发出的声波不会因声源停止而立刻消失。'
+});
+
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '声速：固体 > 液体 > 气体。钢铁 5200 m/s > 水 1500 m/s > 空气 340 m/s。真空不能传声，A错；空气（15°C）中声速约 340 m/s 而非 1500 m/s，D错。',
+  hint: '记住三个关键数值和大小关系：钢 5200 > 水 1500 > 空气 340 m/s。真空不能传声。'
+});
+
+initQuiz('quiz3', {
+  correct: 0,
+  explain: '"声音太尖了"指音调高（频率高，如鸟鸣）；"声音太大了"指响度大（振幅大，如大声喊）。音调用频率衡量，响度用分贝(dB)衡量。',
+  hint: '音调=高低（尖/低沉），响度=大小（大声/小声），音色=品质（分辨不同声源）。'
+});
+</script>
+
 </body>
 </html>
