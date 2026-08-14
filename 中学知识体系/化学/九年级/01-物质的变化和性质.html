@@ -6,50 +6,267 @@
   <title>物质的变化和性质 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 知识卡片 */
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card.physical { border-left-color: var(--info); }
+    .know-card.chemical { border-left-color: var(--chemistry); }
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title {
+      font-size: 17px; font-weight: 700; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .know-card.physical .kc-title { color: var(--info); }
+    .know-card.chemical .kc-title { color: var(--chemistry); }
+    .know-card .kc-def { font-size: 14px; color: var(--text-main); line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); }
+    .know-card .kc-examples strong { color: var(--text-main); }
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #fff7f5, #fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 18px; margin: 14px auto; max-width: 480px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .formula-box .label { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400; }
+
+    /* 判断器 */
+    .judge-item {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 16px 18px; margin-bottom: 12px;
+      border: 2px solid var(--border); transition: border-color 0.3s, background 0.3s;
     }
+    .judge-item.correct { border-color: var(--success); background: rgba(39,174,96,0.05); }
+    .judge-item.wrong { border-color: var(--danger); background: rgba(231,76,60,0.05); }
+    .judge-item .ji-text {
+      font-size: 16px; font-weight: 500; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .judge-item .ji-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 13px; flex-shrink: 0;
+    }
+    .judge-item .ji-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    .judge-btn {
+      padding: 8px 18px; border: 2px solid var(--border); background: var(--bg-soft);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 14px;
+      font-weight: 600; transition: all 0.2s; font-family: inherit;
+    }
+    .judge-btn:hover { background: #DCEAF5; border-color: var(--primary); }
+    .judge-btn.physical.selected { background: var(--info); color: white; border-color: var(--info); }
+    .judge-btn.chemical.selected { background: var(--chemistry); color: white; border-color: var(--chemistry); }
+    .judge-feedback {
+      margin-top: 10px; font-size: 14px; padding: 8px 12px;
+      border-radius: var(--radius-sm); display: none; line-height: 1.6;
+    }
+    .judge-feedback.show { display: block; }
+    .judge-feedback.ok { background: rgba(39,174,96,0.1); color: var(--success); }
+    .judge-feedback.no { background: rgba(231,76,60,0.1); color: var(--danger); }
+
+    /* 拖拽分类 */
+    .dnd-area {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+    }
+    @media (max-width: 640px) { .dnd-area { grid-template-columns: 1fr; } }
+    .dnd-zone {
+      background: var(--bg-card); border: 2px dashed var(--border);
+      border-radius: var(--radius); padding: 16px; min-height: 140px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .dnd-zone.over { border-color: var(--chemistry); background: rgba(231,76,60,0.05); }
+    .dnd-zone.physical { border-color: var(--info); }
+    .dnd-zone.physical.over { background: rgba(52,152,219,0.05); }
+    .dnd-zone .dz-title {
+      font-size: 15px; font-weight: 700; margin-bottom: 10px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dnd-zone.physical .dz-title { color: var(--info); }
+    .dnd-zone.chemical .dz-title { color: var(--chemistry); }
+    .dnd-zone .dz-count { font-size: 12px; color: var(--text-secondary); margin-left: auto; }
+
+    .dnd-pool {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; justify-content: center;
+    }
+    .dnd-item {
+      display: inline-block; padding: 8px 14px; background: var(--bg-soft);
+      border-radius: var(--radius-sm); cursor: grab; font-size: 14px;
+      border: 2px solid transparent; transition: all 0.2s; user-select: none;
+    }
+    .dnd-item:hover { background: #DCEAF5; transform: translateY(-2px); }
+    .dnd-item.dragging { opacity: 0.4; }
+    .dnd-item.placed { cursor: default; }
+    .dnd-item.placed.correct { border-color: var(--success); background: rgba(39,174,96,0.1); color: var(--success); }
+    .dnd-item.placed.wrong { border-color: var(--danger); background: rgba(231,76,60,0.1); color: var(--danger); }
+    .dnd-item .remove-x { margin-left: 6px; opacity: 0.6; cursor: pointer; }
+    .dnd-item .remove-x:hover { opacity: 1; }
+
+    /* 四分类 */
+    .dnd-area-4 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;
+    }
+    @media (max-width: 640px) { .dnd-area-4 { grid-template-columns: 1fr; } }
+    .dnd-zone-4 {
+      background: var(--bg-card); border: 2px dashed var(--border);
+      border-radius: var(--radius); padding: 12px 14px; min-height: 110px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .dnd-zone-4.over { border-style: solid; }
+    .dnd-zone-4 .dz4-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .dnd-zone-4.z1 { border-color: var(--info); }
+    .dnd-zone-4.z1.over { background: rgba(52,152,219,0.06); }
+    .dnd-zone-4.z1 .dz4-title { color: var(--info); }
+    .dnd-zone-4.z2 { border-color: var(--chemistry); }
+    .dnd-zone-4.z2.over { background: rgba(231,76,60,0.06); }
+    .dnd-zone-4.z2 .dz4-title { color: var(--chemistry); }
+    .dnd-zone-4.z3 { border-color: var(--success); }
+    .dnd-zone-4.z3.over { background: rgba(39,174,96,0.06); }
+    .dnd-zone-4.z3 .dz4-title { color: var(--success); }
+    .dnd-zone-4.z4 { border-color: var(--warning); }
+    .dnd-zone-4.z4.over { background: rgba(243,156,18,0.06); }
+    .dnd-zone-4.z4 .dz4-title { color: var(--warning); }
+
+    /* 现象识别 */
+    .phenom-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px; margin: 14px 0;
+    }
+    .phenom-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 14px; box-shadow: var(--shadow);
+      border: 2px solid var(--border); transition: all 0.2s;
+    }
+    .phenom-card.identified { border-color: var(--chemistry); }
+    .phenom-card svg { max-width: 100%; height: auto; display: block; margin: 0 auto 8px; }
+    .phenom-card .pc-title { font-size: 15px; font-weight: 700; color: var(--chemistry); margin-bottom: 6px; text-align: center; }
+    .phenom-card .pc-phenom-btns { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
+    .phenom-card .pc-btn {
+      padding: 5px 11px; font-size: 12px; border: 1.5px solid var(--border);
+      background: var(--bg-soft); border-radius: 14px; cursor: pointer;
+      transition: all 0.2s; font-family: inherit;
+    }
+    .phenom-card .pc-btn:hover { border-color: var(--primary); }
+    .phenom-card .pc-btn.selected {
+      background: var(--chemistry); color: white; border-color: var(--chemistry);
+    }
+    .phenom-card .pc-result { font-size: 13px; margin-top: 8px; text-align: center; min-height: 18px; color: var(--success); font-weight: 600; }
+
+    /* 镁条燃烧实验 */
+    .mg-stage {
+      position: relative; width: 100%; max-width: 540px;
+      height: 260px; margin: 0 auto;
+      background: linear-gradient(180deg, #1a1f2e 0%, #2c3e50 100%);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .mg-flame {
+      position: absolute; opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .mg-flame.show { opacity: 1; }
+    .mg-status {
+      position: absolute; top: 10px; left: 12px;
+      color: #fde049; font-size: 13px; font-weight: 700;
+      background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 12px;
+    }
+    .mg-annotate {
+      position: absolute; bottom: 8px; left: 12px; right: 12px;
+      display: flex; justify-content: space-between; font-size: 12px;
+      color: #cbd5e1;
+    }
+    .mg-annotate .ann-l, .mg-annotate .ann-r { background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 8px; }
+    .mg-controls { margin-top: 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* 性质清单 */
+    .prop-pool {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      padding: 14px; background: var(--bg-soft); border-radius: var(--radius);
+      margin: 10px 0; min-height: 60px;
+    }
+
+    /* 学科交叉 */
+    .cross-row {
+      display: flex; justify-content: space-between; align-items: stretch;
+      gap: 12px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .cross-link {
+      flex: 1; min-width: 180px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--text-main); transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--border);
+    }
+    .cross-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cross-link.cross-chem { border-left-color: var(--chemistry); }
+    .cross-link.cross-phys { border-left-color: var(--physics); }
+    .cross-link .arrow { font-size: 20px; color: var(--text-secondary); }
+    .cross-link .cl-label { font-size: 12px; color: var(--text-secondary); }
+    .cross-link .cl-title { font-size: 14px; font-weight: 600; }
+
+    /* 小结提示 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">⚗️ 物质的变化和性质</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">🔬 物质的变化和性质</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
@@ -60,31 +277,759 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>物质的变化和性质</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>物质的变化和性质</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">🔬 第一单元 课题1：物质的变化和性质</div>
+    <p style="color: var(--text-secondary); font-size: 15px;">
+      世界是由物质组成的，物质总是在不断变化着。本节课我们要学会区分两类变化——<strong style="color:var(--info);">物理变化</strong>与<strong style="color:var(--chemistry);">化学变化</strong>，
+      并认识物质的两类性质——<strong style="color:var(--info);">物理性质</strong>与<strong style="color:var(--chemistry);">化学性质</strong>。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ========== 知识点 1：两类变化 ========== -->
+  <h2 class="section-header"><span class="num">1</span>两类变化</h2>
+  <div class="knowledge-grid">
+    <div class="know-card physical">
+      <div class="kc-title">🔵 物理变化</div>
+      <div class="kc-def">没有生成其他物质的变化叫做物理变化。</div>
+      <div class="kc-examples">
+        <strong>特征：</strong>无新物质生成。<br>
+        <strong>举例：</strong>冰雪融化、纸张撕碎、汽油挥发、水结冰、矿石粉碎。
+      </div>
+    </div>
+    <div class="know-card chemical">
+      <div class="kc-title">🔴 化学变化</div>
+      <div class="kc-def">生成了其他物质的变化叫做化学变化（又称化学反应）。</div>
+      <div class="kc-examples">
+        <strong>本质特征：</strong>有新物质生成。<br>
+        <strong>常伴随现象：</strong>发光、放热、变色、产生气体、生成沉淀。<br>
+        <strong>举例：</strong>镁条燃烧、铁钉生锈、食物腐败、蜡烛燃烧。
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 关键区分</div>
+    发光、放热、变色、产生气体、生成沉淀这些<strong>现象</strong>常常伴随化学变化发生，
+    但<strong>不能仅凭现象判断</strong>是否为化学变化。判断化学变化的<strong>本质标准</strong>是：<strong>是否生成了新物质</strong>。
+    例如：灯泡通电发光放热，但灯丝（钨）没有变成新物质，所以是物理变化。
+  </div>
+
+  <!-- ========== 交互 1：变化判断器 ========== -->
+  <h2 class="section-header"><span class="num">互</span>交互一：物理变化 vs 化学变化判断器</h2>
+  <div class="demo-container">
+    <h3>下列变化属于物理变化还是化学变化？</h3>
+    <div class="demo-desc">逐题选择，立即反馈。请抓住"是否生成新物质"这一本质。</div>
+    <div id="judgeList"></div>
+    <div style="margin-top:14px; font-size:14px; color:var(--text-secondary);">
+      进度：<span id="judgeProgress" style="font-weight:700; color:var(--chemistry);">0 / 10</span>
+      &nbsp;｜&nbsp; 正确：<span id="judgeCorrect" style="font-weight:700; color:var(--success);">0</span>
+    </div>
+  </div>
+
+  <!-- ========== 交互 2：镁条燃烧实验 ========== -->
+  <h2 class="section-header"><span class="num">实</span>交互二：镁条燃烧实验</h2>
+  <div class="demo-container">
+    <h3>2Mg + O₂ —点燃→ 2MgO</h3>
+    <div class="demo-desc">点击"点燃"观察镁条在空气中燃烧的现象，注意反应前后的物质变化。</div>
+
+    <div class="mg-stage" id="mgStage">
+      <div class="mg-status" id="mgStatus">反应前 · 银白色金属镁</div>
+      <!-- 镁条 -->
+      <svg viewBox="0 0 540 260" style="position:absolute; inset:0; width:100%; height:100%;">
+        <!-- 桌面 -->
+        <rect x="0" y="220" width="540" height="40" fill="#1a1f2e" opacity="0.4"/>
+        <!-- 坩埚钳 -->
+        <line x1="40" y1="240" x2="200" y2="160" stroke="#6b7280" stroke-width="4" stroke-linecap="round"/>
+        <line x1="44" y1="246" x2="204" y2="166" stroke="#4b5563" stroke-width="3" stroke-linecap="round"/>
+        <!-- 镁条（反应前） -->
+        <g id="mgStrip">
+          <rect x="200" y="155" width="120" height="10" rx="2" fill="#c0c5ce"/>
+          <rect x="200" y="155" width="120" height="3" rx="1.5" fill="#e5e7eb"/>
+          <text x="260" y="180" text-anchor="middle" fill="#fde049" font-size="13" font-weight="700">镁条 Mg</text>
+        </g>
+        <!-- 火焰 -->
+        <g class="mg-flame" id="mgFlame" style="transform-origin: 320px 160px;">
+          <!-- 外焰 -->
+          <ellipse cx="320" cy="130" rx="36" ry="60" fill="#fef08a" opacity="0.85"/>
+          <!-- 内焰 -->
+          <ellipse cx="320" cy="140" rx="22" ry="40" fill="#fb923c" opacity="0.9"/>
+          <!-- 焰心 -->
+          <ellipse cx="320" cy="155" rx="10" ry="20" fill="#0ea5e9" opacity="0.7"/>
+          <!-- 光晕 -->
+          <circle cx="320" cy="135" r="55" fill="#ffffff" opacity="0.25"/>
+          <circle cx="320" cy="135" r="80" fill="#ffffff" opacity="0.12"/>
+        </g>
+        <!-- 反应后白色氧化镁 -->
+        <g id="mgO" style="opacity:0;">
+          <rect x="200" y="156" width="120" height="8" rx="2" fill="#f8fafc"/>
+          <ellipse cx="225" cy="160" rx="10" ry="3" fill="#ffffff"/>
+          <ellipse cx="260" cy="160" rx="14" ry="4" fill="#ffffff"/>
+          <ellipse cx="295" cy="160" rx="10" ry="3" fill="#ffffff"/>
+          <text x="260" y="180" text-anchor="middle" fill="#fde049" font-size="13" font-weight="700">氧化镁 MgO</text>
+        </g>
+      </svg>
+
+      <div class="mg-annotate">
+        <div class="ann-l" id="annLeft">反应前：银白色金属镁</div>
+        <div class="ann-r" id="annRight">现象：剧烈燃烧、发出耀眼白光</div>
+      </div>
+    </div>
+
+    <div class="mg-controls">
+      <button class="btn btn-danger" id="mgIgnite">🔥 点燃</button>
+      <button class="btn btn-outline" id="mgReset">重置</button>
+    </div>
+
+    <div class="formula-box">
+      2Mg + O₂ <span style="color:var(--warning);">—点燃→</span> 2MgO
+      <span class="label">反应物：镁和氧气 ｜ 生成物：氧化镁（白色固体）</span>
+    </div>
+
+    <div class="tip-box" style="text-align:left;">
+      <div class="tip-title">🔍 现象与分析</div>
+      <strong>反应前：</strong>镁条是银白色金属。<br>
+      <strong>反应中：</strong>剧烈燃烧，发出耀眼白光，放出大量热。<br>
+      <strong>反应后：</strong>镁条消失，生成白色粉末状固体（氧化镁）。<br>
+      <strong>结论：</strong>有新物质（MgO）生成 → 这是化学变化！现象中的"发光放热"只是辅助判断，本质依据是新物质的生成。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 2：两类性质 ========== -->
+  <h2 class="section-header"><span class="num">2</span>两类性质</h2>
+  <div class="knowledge-grid">
+    <div class="know-card physical">
+      <div class="kc-title">🔵 物理性质</div>
+      <div class="kc-def">物质不需要发生化学变化就表现出来的性质。</div>
+      <div class="kc-examples">
+        <strong>举例：</strong>颜色、状态、气味、密度、熔点、沸点、硬度、溶解性、延展性、导电性、导热性、挥发性、熔沸点。
+      </div>
+    </div>
+    <div class="know-card chemical">
+      <div class="kc-title">🔴 化学性质</div>
+      <div class="kc-def">物质在化学变化中表现出来的性质。</div>
+      <div class="kc-examples">
+        <strong>举例：</strong>可燃性、氧化性、还原性、酸碱性、稳定性、毒性、助燃性。
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 性质与变化的关系</div>
+    <strong>性质</strong>是物质的固有属性，是"能"或"会"——例如"铁<em>能</em>生锈"、"氢气<em>能</em>燃烧"。<br>
+    <strong>变化</strong>是一个过程，是"正在"或"已经"——例如"铁<em>正在</em>生锈"、"氢气<em>正在</em>燃烧"。<br>
+    性质决定变化能否发生，变化体现性质。
+  </div>
+
+  <!-- ========== 交互 3：性质vs变化四分类 ========== -->
+  <h2 class="section-header"><span class="num">辨</span>交互三：性质 vs 变化四分类</h2>
+  <div class="demo-container">
+    <h3>把下列描述拖到正确的分类框中</h3>
+    <div class="demo-desc">四类：物理性质 / 化学性质 / 物理变化 / 化学变化。提示：抓"能/会"还是"正在/已经"。</div>
+
+    <div class="dnd-pool" id="dndPool3"></div>
+
+    <div class="dnd-area-4">
+      <div class="dnd-zone-4 z1" data-cat="phys-prop">
+        <div class="dz4-title">🔵 物理性质 <span style="font-size:11px; color:var(--text-secondary);">(能…)</span></div>
+        <div class="dz4-items"></div>
+      </div>
+      <div class="dnd-zone-4 z2" data-cat="chem-prop">
+        <div class="dz4-title">🔴 化学性质 <span style="font-size:11px; color:var(--text-secondary);">(会…)</span></div>
+        <div class="dz4-items"></div>
+      </div>
+      <div class="dnd-zone-4 z3" data-cat="phys-change">
+        <div class="dz4-title">🟢 物理变化 <span style="font-size:11px; color:var(--text-secondary);">(正在…)</span></div>
+        <div class="dz4-items"></div>
+      </div>
+      <div class="dnd-zone-4 z4" data-cat="chem-change">
+        <div class="dz4-title">🟠 化学变化 <span style="font-size:11px; color:var(--text-secondary);">(已经…)</span></div>
+        <div class="dz4-items"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <button class="btn btn-primary" id="dnd3Check" style="background:var(--chemistry);">✓ 检查答案</button>
+      <button class="btn btn-outline" id="dnd3Reset">重置</button>
+      <span id="dnd3Result" style="margin-left:12px; font-size:14px; font-weight:600;"></span>
+    </div>
+  </div>
+
+  <!-- ========== 交互 4：现象识别 ========== -->
+  <h2 class="section-header"><span class="num">现</span>交互四：化学变化的现象识别</h2>
+  <div class="demo-container">
+    <h3>下面是几个化学实验，请识别它们伴随的现象</h3>
+    <div class="demo-desc">注意：现象只是辅助判断，本质依据还是"是否有新物质生成"。</div>
+
+    <div class="phenom-grid" id="phenomGrid"></div>
+  </div>
+
+  <!-- ========== 交互 5：性质清单分类 ========== -->
+  <h2 class="section-header"><span class="num">类</span>交互五：性质清单分类</h2>
+  <div class="demo-container">
+    <h3>把下列性质拖到"物理性质"或"化学性质"框中</h3>
+    <div class="demo-desc">性质清单：颜色/状态/气味/密度/熔沸点/硬度 vs 可燃性/氧化性/酸碱性/稳定性。</div>
+
+    <div class="prop-pool" id="propPool"></div>
+
+    <div class="dnd-area">
+      <div class="dnd-zone physical" data-cat="physical">
+        <div class="dz-title">🔵 物理性质 <span class="dz-count">已放 0</span></div>
+        <div class="dz-items"></div>
+      </div>
+      <div class="dnd-zone chemical" data-cat="chemical">
+        <div class="dz-title">🔴 化学性质 <span class="dz-count">已放 0</span></div>
+        <div class="dz-items"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <button class="btn btn-primary" id="propCheck" style="background:var(--chemistry);">✓ 检查答案</button>
+      <button class="btn btn-outline" id="propReset">重置</button>
+      <span id="propResult" style="margin-left:12px; font-size:14px; font-weight:600;"></span>
+    </div>
+  </div>
+
+  <!-- ========== 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 必记要点</div>
+    <div class="sb-item">物理变化 vs 化学变化：<strong>本质区别是有无新物质生成</strong>。化学变化中常伴随发光、放热、变色、产生气体、生成沉淀等现象，但这些现象<em>不是判断依据</em>。</div>
+    <div class="sb-item">物理性质 vs 化学性质：物理性质是<em>不需要发生化学变化</em>就表现出来的性质（颜色、状态、密度、熔沸点等）；化学性质是<em>在化学变化中</em>表现出来的性质（可燃性、氧化性等）。</div>
+    <div class="sb-item">性质 = 能力（能/会）；变化 = 过程（正在/已经）。<strong>性质决定变化，变化体现性质</strong>。</div>
+    <div class="sb-item">化学变化中往往同时发生物理变化（如蜡烛燃烧时蜡烛熔化是物理变化，燃烧是化学变化）。</div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 下列变化中，属于化学变化的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 冰雪融化</div>
+    <div class="quiz-option" data-idx="1">B. 汽油挥发</div>
+    <div class="quiz-option" data-idx="2">C. 镁条燃烧</div>
+    <div class="quiz-option" data-idx="3">D. 纸张折叠</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 下列性质中属于物质化学性质的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 颜色、状态</div>
+    <div class="quiz-option" data-idx="1">B. 密度、硬度</div>
+    <div class="quiz-option" data-idx="2">C. 熔点、沸点</div>
+    <div class="quiz-option" data-idx="3">D. 可燃性、氧化性</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 判断镁条燃烧属于化学变化的本质依据是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 发出耀眼白光</div>
+    <div class="quiz-option" data-idx="1">B. 放出大量热</div>
+    <div class="quiz-option" data-idx="2">C. 生成了新物质氧化镁</div>
+    <div class="quiz-option" data-idx="3">D. 镁条消失了</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>学科交叉</h2>
+  <div class="cross-row">
+    <a class="cross-link cross-chem" href="../八年级/01-化学是什么.html">
+      <span class="arrow">←</span>
+      <div>
+        <div class="cl-label">化学 · 八年级</div>
+        <div class="cl-title">01-化学是什么</div>
+      </div>
+    </a>
+    <a class="cross-link cross-chem" href="02-空气.html">
+      <div style="text-align:right;">
+        <div class="cl-label">化学 · 九年级（下一课）</div>
+        <div class="cl-title">02-空气</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="cross-link cross-phys" href="../../物理/八年级/03-物态变化.html">
+      <span class="arrow">↔</span>
+      <div>
+        <div class="cl-label">物理 · 八年级</div>
+        <div class="cl-title">03-物态变化（同为物理变化）</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="../八年级/index.html" class="btn btn-outline">← 上一章：化学八年级目录</a>
+    <a href="02-空气.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：02-空气 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：判断器 ===================== */
+const judgeData = [
+  { text: '冰雪融化成水', answer: 'physical', explain: '只是状态改变（固态→液态），水分子本身没变，没有新物质生成。' },
+  { text: '镁条燃烧', answer: 'chemical', explain: '镁和氧气反应生成新物质氧化镁（MgO），发出耀眼白光，是化学变化。' },
+  { text: '纸张折叠成纸飞机', answer: 'physical', explain: '只是形状改变，纸的成分未变，无新物质生成。' },
+  { text: '铁钉在潮湿空气中生锈', answer: 'chemical', explain: '铁与氧气、水反应生成铁锈（主要成分是氧化铁），是不同于铁的新物质。' },
+  { text: '汽油挥发', answer: 'physical', explain: '汽油从液态变气态，只是状态改变，分子未变。' },
+  { text: '蜡烛燃烧', answer: 'chemical', explain: '石蜡与氧气反应生成二氧化碳和水，是新物质，化学变化。' },
+  { text: '玻璃杯摔碎', answer: 'physical', explain: '只是形状破碎，玻璃的成分未变。' },
+  { text: '食物腐败', answer: 'chemical', explain: '食物中的有机物被氧化分解，生成多种新物质（缓慢氧化）。' },
+  { text: '白炽灯通电发光', answer: 'physical', explain: '电能→光+热，但灯丝（钨）未变成新物质，是物理变化（迷惑点！）。' },
+  { text: '铜器表面生铜绿', answer: 'chemical', explain: '铜与氧气、水、二氧化碳反应生成碱式碳酸铜（铜绿），是新物质。' }
+];
+
+const judgeList = document.getElementById('judgeList');
+const judgeProgressEl = document.getElementById('judgeProgress');
+const judgeCorrectEl = document.getElementById('judgeCorrect');
+let judgeAnswered = 0, judgeCorrectCount = 0;
+
+judgeData.forEach((item, i) => {
+  const div = document.createElement('div');
+  div.className = 'judge-item';
+  div.innerHTML = `
+    <div class="ji-text"><span class="ji-num">${i+1}</span>${item.text}</div>
+    <div class="ji-options">
+      <button class="judge-btn physical" data-ans="physical">🔵 物理变化</button>
+      <button class="judge-btn chemical" data-ans="chemical">🔴 化学变化</button>
+    </div>
+    <div class="judge-feedback"></div>
+  `;
+  judgeList.appendChild(div);
+
+  const fb = div.querySelector('.judge-feedback');
+  const parent = div;
+  div.querySelectorAll('.judge-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (parent.classList.contains('correct') || parent.classList.contains('wrong')) return;
+      const ans = this.dataset.ans;
+      this.classList.add('selected');
+      if (ans === item.answer) {
+        parent.classList.add('correct');
+        fb.className = 'judge-feedback ok show';
+        fb.innerHTML = `<strong>✓ 正确！</strong> ${item.explain}`;
+        judgeCorrectCount++;
+      } else {
+        parent.classList.add('wrong');
+        fb.className = 'judge-feedback no show';
+        const rightText = item.answer === 'physical' ? '物理变化' : '化学变化';
+        fb.innerHTML = `<strong>✗ 再想想。</strong> 正确答案：<strong>${rightText}</strong>。${item.explain}`;
+      }
+      judgeAnswered++;
+      judgeProgressEl.textContent = `${judgeAnswered} / 10`;
+      judgeCorrectEl.textContent = judgeCorrectCount;
+    });
+  });
+});
+
+/* ===================== 交互 2：镁条燃烧 ===================== */
+const mgIgnite = document.getElementById('mgIgnite');
+const mgReset = document.getElementById('mgReset');
+const mgFlame = document.getElementById('mgFlame');
+const mgO = document.getElementById('mgO');
+const mgStrip = document.getElementById('mgStrip');
+const mgStatus = document.getElementById('mgStatus');
+const annLeft = document.getElementById('annLeft');
+const annRight = document.getElementById('annRight');
+
+function resetMg() {
+  mgFlame.classList.remove('show');
+  mgO.style.opacity = '0';
+  mgStrip.style.opacity = '1';
+  mgStatus.textContent = '反应前 · 银白色金属镁';
+  mgStatus.style.background = 'rgba(0,0,0,0.4)';
+  annLeft.textContent = '反应前：银白色金属镁';
+  annRight.textContent = '现象：剧烈燃烧、发出耀眼白光';
+}
+
+mgIgnite.addEventListener('click', function() {
+  if (mgFlame.classList.contains('show')) return;
+  mgFlame.classList.add('show');
+  mgStatus.textContent = '反应中 · 剧烈燃烧发出耀眼白光';
+  mgStatus.style.background = 'rgba(253,224,71,0.4)';
+  annRight.textContent = '现象：剧烈燃烧、发出耀眼白光、放出大量热';
+  // 2 秒后镁条消失，生成氧化镁
+  setTimeout(() => {
+    mgStrip.style.transition = 'opacity 0.4s';
+    mgStrip.style.opacity = '0';
+    mgO.style.transition = 'opacity 0.5s';
+    mgO.style.opacity = '1';
+    mgFlame.classList.remove('show');
+    mgStatus.textContent = '反应后 · 生成白色固体氧化镁';
+    mgStatus.style.background = 'rgba(253,224,71,0.5)';
+    annLeft.textContent = '反应后：白色粉末氧化镁（新物质！）';
+    annRight.textContent = '有新物质生成 → 化学变化！';
+  }, 2200);
+});
+
+mgReset.addEventListener('click', resetMg);
+
+/* ===================== 通用拖拽工具 ===================== */
+function makeDraggable(item, onDrop) {
+  // HTML5 原生拖拽
+  item.setAttribute('draggable', 'true');
+  item.addEventListener('dragstart', function(e) {
+    e.dataTransfer.setData('text/plain', item.dataset.id);
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => item.classList.add('dragging'), 0);
+  });
+  item.addEventListener('dragend', function() {
+    item.classList.remove('dragging');
+  });
+  // 移动端 touch 支持（简化版：点击放置到第一个空位区域）
+  let touchStartTarget = null;
+  item.addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+    touchStartTarget = item;
+    item.classList.add('dragging');
+  }, {passive: true});
+  item.addEventListener('touchend', function(e) {
+    item.classList.remove('dragging');
+    if (!touchStartTarget) return;
+    const touch = e.changedTouches[0];
+    const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+    const zone = targetEl ? targetEl.closest('.dnd-zone, .dnd-zone-4') : null;
+    if (zone && onDrop) onDrop(item, zone);
+    touchStartTarget = null;
+  });
+}
+
+function setupDropZone(zone, onDrop) {
+  zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    zone.classList.add('over');
+  });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('over'); });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('over');
+    const id = e.dataTransfer.getData('text/plain');
+    const item = document.querySelector(`[data-id="${id}"]`);
+    if (item && onDrop) onDrop(item, zone);
+  });
+}
+
+/* ===================== 交互 3：性质vs变化四分类 ===================== */
+const dnd3Data = [
+  { id: 'd3-1', text: '铁是银白色的', cat: 'phys-prop' },
+  { id: 'd3-2', text: '铁在潮湿空气中会生锈', cat: 'chem-prop' },
+  { id: 'd3-3', text: '铁块被砸扁了', cat: 'phys-change' },
+  { id: 'd3-4', text: '铁生锈了', cat: 'chem-change' },
+  { id: 'd3-5', text: '水在0°C会结冰', cat: 'phys-prop' },
+  { id: 'd3-6', text: '水正在结冰', cat: 'phys-change' },
+  { id: 'd3-7', text: '氢气可以燃烧', cat: 'chem-prop' },
+  { id: 'd3-8', text: '氢气正在燃烧', cat: 'chem-change' }
+];
+
+const dndPool3 = document.getElementById('dndPool3');
+const dnd3Zones = document.querySelectorAll('.dnd-zone-4');
+
+// 打乱顺序
+const shuffled3 = [...dnd3Data].sort(() => Math.random() - 0.5);
+shuffled3.forEach(item => {
+  const span = document.createElement('span');
+  span.className = 'dnd-item';
+  span.dataset.id = item.id;
+  span.dataset.cat = item.cat;
+  span.textContent = item.text;
+  dndPool3.appendChild(span);
+});
+
+function placeItem3(item, zone) {
+  // 已放置过的不再处理
+  if (item.classList.contains('placed')) return;
+  const itemsBox = zone.querySelector('.dz4-items');
+  if (!itemsBox) return;
+  // 移到目标区
+  item.classList.add('placed');
+  itemsBox.appendChild(item);
+  // 添加删除按钮
+  if (!item.querySelector('.remove-x')) {
+    const x = document.createElement('span');
+    x.className = 'remove-x';
+    x.textContent = '✕';
+    x.addEventListener('click', function(e) {
+      e.stopPropagation();
+      item.classList.remove('placed', 'correct', 'wrong');
+      dndPool3.appendChild(item);
+      x.remove();
+    });
+    item.appendChild(x);
+  }
+}
+
+dnd3Zones.forEach(z => setupDropZone(z, placeItem3));
+document.querySelectorAll('#dndPool3 .dnd-item').forEach(it => makeDraggable(it, placeItem3));
+
+document.getElementById('dnd3Check').addEventListener('click', function() {
+  let correct = 0, total = 0;
+  dnd3Zones.forEach(z => {
+    const items = z.querySelectorAll('.dnd-item');
+    items.forEach(it => {
+      total++;
+      if (it.dataset.cat === z.dataset.cat) {
+        it.classList.add('correct');
+        it.classList.remove('wrong');
+        correct++;
+      } else {
+        it.classList.add('wrong');
+        it.classList.remove('correct');
+      }
+    });
+  });
+  const resEl = document.getElementById('dnd3Result');
+  if (total === 0) {
+    resEl.textContent = '请先把卡片拖到分类框中';
+    resEl.style.color = 'var(--warning)';
+  } else if (correct === dnd3Data.length) {
+    resEl.innerHTML = `<span style="color:var(--success);">✓ 全部正确！${correct}/${dnd3Data.length}</span>`;
+  } else {
+    resEl.innerHTML = `<span style="color:var(--danger);">正确 ${correct}/${dnd3Data.length}，红色为错放，请调整。</span>`;
+  }
+});
+
+document.getElementById('dnd3Reset').addEventListener('click', function() {
+  document.querySelectorAll('.dnd-zone-4 .dnd-item').forEach(it => {
+    it.classList.remove('placed', 'correct', 'wrong');
+    const x = it.querySelector('.remove-x');
+    if (x) x.remove();
+    dndPool3.appendChild(it);
+  });
+  document.getElementById('dnd3Result').textContent = '';
+});
+
+/* ===================== 交互 4：现象识别 ===================== */
+const phenomData = [
+  {
+    title: '镁条燃烧',
+    svg: `<svg viewBox="0 0 200 140">
+      <rect x="0" y="120" width="200" height="20" fill="#1a1f2e"/>
+      <rect x="60" y="95" width="80" height="6" rx="2" fill="#c0c5ce"/>
+      <ellipse cx="100" cy="70" rx="22" ry="35" fill="#fef08a" opacity="0.85"/>
+      <ellipse cx="100" cy="80" rx="14" ry="22" fill="#fb923c" opacity="0.9"/>
+      <ellipse cx="100" cy="92" rx="6" ry="12" fill="#0ea5e9" opacity="0.7"/>
+    </svg>`,
+    phenomena: ['发光', '放热', '变色', '产生气体', '生成沉淀'],
+    correct: ['发光', '放热', '变色'],
+    explain: '镁条剧烈燃烧发出耀眼白光（发光、放热），由银白色变为白色固体氧化镁（变色）。'
+  },
+  {
+    title: '铜片加热',
+    svg: `<svg viewBox="0 0 200 140">
+      <rect x="0" y="120" width="200" height="20" fill="#1a1f2e"/>
+      <line x1="60" y1="40" x2="100" y2="95" stroke="#6b7280" stroke-width="3"/>
+      <rect x="80" y="92" width="80" height="6" rx="2" fill="#b87333"/>
+      <rect x="80" y="92" width="80" height="6" rx="2" fill="#1a1a1a" opacity="0.5"/>
+      <!-- 紫红色→黑色 -->
+      <ellipse cx="80" cy="95" rx="12" ry="4" fill="#b87333"/>
+      <ellipse cx="160" cy="95" rx="12" ry="4" fill="#1a1a1a"/>
+      <path d="M 80 90 Q 100 70 120 88 Q 140 70 160 90" stroke="#fb923c" stroke-width="2" fill="none" opacity="0.7"/>
+    </svg>`,
+    phenomena: ['发光', '放热', '变色', '产生气体', '生成沉淀'],
+    correct: ['放热', '变色'],
+    explain: '紫红色铜在空气中加热变黑，生成氧化铜（CuO）——变色，同时放热。'
+  },
+  {
+    title: '石灰水通入CO₂',
+    svg: `<svg viewBox="0 0 200 140">
+      <rect x="0" y="120" width="200" height="20" fill="#1a1f2e"/>
+      <!-- 烧杯 -->
+      <path d="M 60 60 L 60 110 Q 60 115 65 115 L 135 115 Q 140 115 140 110 L 140 60" fill="none" stroke="#94a3b8" stroke-width="2"/>
+      <!-- 浑浊液体 -->
+      <rect x="62" y="80" width="76" height="33" fill="#cbd5e1" opacity="0.5"/>
+      <circle cx="75" cy="95" r="3" fill="#94a3b8"/>
+      <circle cx="95" cy="100" r="2" fill="#94a3b8"/>
+      <circle cx="115" cy="92" r="3" fill="#94a3b8"/>
+      <circle cx="125" cy="105" r="2" fill="#94a3b8"/>
+      <!-- 通气管 -->
+      <line x1="100" y1="30" x2="100" y2="85" stroke="#6b7280" stroke-width="3"/>
+      <!-- 气泡 -->
+      <circle cx="100" cy="78" r="3" fill="#ffffff" opacity="0.5"/>
+      <circle cx="103" cy="68" r="2" fill="#ffffff" opacity="0.5"/>
+    </svg>`,
+    phenomena: ['发光', '放热', '变色', '产生气体', '生成沉淀'],
+    correct: ['生成沉淀'],
+    explain: 'CO₂通入澄清石灰水，石灰水变浑浊——生成了碳酸钙沉淀（CaCO₃）。'
+  },
+  {
+    title: '锌 + 稀盐酸',
+    svg: `<svg viewBox="0 0 200 140">
+      <rect x="0" y="120" width="200" height="20" fill="#1a1f2e"/>
+      <!-- 试管 -->
+      <path d="M 85 30 L 85 105 Q 85 115 100 115 Q 115 115 115 105 L 115 30" fill="none" stroke="#94a3b8" stroke-width="2"/>
+      <rect x="86" y="80" width="28" height="32" fill="#dbeafe" opacity="0.6"/>
+      <!-- 锌粒 -->
+      <ellipse cx="95" cy="108" rx="3" ry="2" fill="#7dd3fc"/>
+      <ellipse cx="105" cy="110" rx="3" ry="2" fill="#7dd3fc"/>
+      <!-- 气泡 -->
+      <circle cx="95" cy="75" r="3" fill="#ffffff" opacity="0.7"/>
+      <circle cx="103" cy="65" r="2.5" fill="#ffffff" opacity="0.7"/>
+      <circle cx="100" cy="55" r="2" fill="#ffffff" opacity="0.7"/>
+      <circle cx="100" cy="40" r="2" fill="#ffffff" opacity="0.5"/>
+    </svg>`,
+    phenomena: ['发光', '放热', '变色', '产生气体', '生成沉淀'],
+    correct: ['产生气体'],
+    explain: '锌与稀盐酸反应产生氢气（H₂），观察到试管中有大量气泡冒出。'
+  }
+];
+
+const phenomGrid = document.getElementById('phenomGrid');
+phenomData.forEach((p, idx) => {
+  const card = document.createElement('div');
+  card.className = 'phenom-card';
+  card.innerHTML = `
+    <div class="pc-title">实验 ${idx+1}：${p.title}</div>
+    ${p.svg}
+    <div class="pc-phenom-btns" data-exp="${idx}">
+      ${p.phenomena.map(ph => `<button class="pc-btn" data-phen="${ph}">${ph}</button>`).join('')}
+    </div>
+    <div class="pc-result"></div>
+  `;
+  phenomGrid.appendChild(card);
+
+  const btns = card.querySelectorAll('.pc-btn');
+  const result = card.querySelector('.pc-result');
+  btns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.classList.toggle('selected');
+      const selected = Array.from(btns).filter(b => b.classList.contains('selected')).map(b => b.dataset.phen);
+      // 全部选中正确项且无错项时标记为正确
+      const allRight = p.correct.every(c => selected.includes(c)) && selected.every(s => p.correct.includes(s));
+      if (allRight) {
+        card.classList.add('identified');
+        result.style.color = 'var(--success)';
+        result.innerHTML = `✓ ${p.explain}`;
+      } else {
+        card.classList.remove('identified');
+        result.style.color = 'var(--text-secondary)';
+        result.textContent = `已选 ${selected.length} 项，继续识别`;
+      }
+    });
+  });
+});
+
+/* ===================== 交互 5：性质清单分类 ===================== */
+const propData = [
+  { id: 'p1', text: '颜色', cat: 'physical' },
+  { id: 'p2', text: '状态', cat: 'physical' },
+  { id: 'p3', text: '气味', cat: 'physical' },
+  { id: 'p4', text: '密度', cat: 'physical' },
+  { id: 'p5', text: '熔沸点', cat: 'physical' },
+  { id: 'p6', text: '硬度', cat: 'physical' },
+  { id: 'p7', text: '可燃性', cat: 'chemical' },
+  { id: 'p8', text: '氧化性', cat: 'chemical' },
+  { id: 'p9', text: '酸碱性', cat: 'chemical' },
+  { id: 'p10', text: '稳定性', cat: 'chemical' }
+];
+
+const propPool = document.getElementById('propPool');
+const propZones = document.querySelectorAll('.dnd-zone');
+
+const shuffledProp = [...propData].sort(() => Math.random() - 0.5);
+shuffledProp.forEach(item => {
+  const span = document.createElement('span');
+  span.className = 'dnd-item';
+  span.dataset.id = item.id;
+  span.dataset.cat = item.cat;
+  span.textContent = item.text;
+  propPool.appendChild(span);
+});
+
+function placePropItem(item, zone) {
+  if (item.classList.contains('placed')) return;
+  const itemsBox = zone.querySelector('.dz-items');
+  if (!itemsBox) return;
+  item.classList.add('placed');
+  itemsBox.appendChild(item);
+  if (!item.querySelector('.remove-x')) {
+    const x = document.createElement('span');
+    x.className = 'remove-x';
+    x.textContent = '✕';
+    x.addEventListener('click', function(e) {
+      e.stopPropagation();
+      item.classList.remove('placed', 'correct', 'wrong');
+      propPool.appendChild(item);
+      x.remove();
+      updatePropCount();
+    });
+    item.appendChild(x);
+  }
+  updatePropCount();
+}
+
+function updatePropCount() {
+  propZones.forEach(z => {
+    const count = z.querySelectorAll('.dnd-item').length;
+    const cEl = z.querySelector('.dz-count');
+    if (cEl) cEl.textContent = `已放 ${count}`;
+  });
+}
+
+propZones.forEach(z => setupDropZone(z, placePropItem));
+document.querySelectorAll('#propPool .dnd-item').forEach(it => makeDraggable(it, placePropItem));
+
+document.getElementById('propCheck').addEventListener('click', function() {
+  let correct = 0, total = 0;
+  propZones.forEach(z => {
+    const items = z.querySelectorAll('.dnd-item');
+    items.forEach(it => {
+      total++;
+      if (it.dataset.cat === z.dataset.cat) {
+        it.classList.add('correct');
+        it.classList.remove('wrong');
+        correct++;
+      } else {
+        it.classList.add('wrong');
+        it.classList.remove('correct');
+      }
+    });
+  });
+  const resEl = document.getElementById('propResult');
+  if (total === 0) {
+    resEl.textContent = '请先把性质卡片拖到分类框中';
+    resEl.style.color = 'var(--warning)';
+  } else if (correct === propData.length) {
+    resEl.innerHTML = `<span style="color:var(--success);">✓ 全部正确！${correct}/${propData.length}</span>`;
+  } else {
+    resEl.innerHTML = `<span style="color:var(--danger);">正确 ${correct}/${propData.length}，红色为错放，请调整。</span>`;
+  }
+});
+
+document.getElementById('propReset').addEventListener('click', function() {
+  document.querySelectorAll('.dnd-zone .dnd-item').forEach(it => {
+    it.classList.remove('placed', 'correct', 'wrong');
+    const x = it.querySelector('.remove-x');
+    if (x) x.remove();
+    propPool.appendChild(it);
+  });
+  updatePropCount();
+  document.getElementById('propResult').textContent = '';
+});
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('q1', {
+  correct: 2,
+  explain: '镁条燃烧生成新物质氧化镁（MgO），是化学变化。其他三项均无新物质生成，属物理变化。',
+  hint: '化学变化的本质是有新物质生成。A、B、D 都没有新物质生成。'
+});
+initQuiz('q2', {
+  correct: 3,
+  explain: '可燃性和氧化性是物质在化学变化中表现出来的性质，属于化学性质。颜色、密度、熔沸点都属于物理性质。',
+  hint: '化学性质是在化学变化中表现出来的性质，如可燃性、氧化性。A、B、C 都是物理性质。'
+});
+initQuiz('q3', {
+  correct: 2,
+  explain: '判断化学变化的本质依据是有新物质生成。发光放热只是现象，不是本质依据；镁条消失也不足以判断。',
+  hint: '现象（A、B、D）只是辅助观察，本质依据是新物质生成。'
+});
+</script>
+
 </body>
 </html>

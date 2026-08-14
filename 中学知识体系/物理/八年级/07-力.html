@@ -6,50 +6,264 @@
   <title>力 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 18px;
+      min-width: 70px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 180px;
+      max-width: 300px;
+    }
+
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 17px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.9;
+    }
+
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 10px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-row .btn { min-width: 100px; }
+    .btn.active {
+      background: var(--primary-dark);
+      box-shadow: 0 0 0 3px rgba(74,144,217,0.25);
+    }
+
+    .effect-label {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 12px;
+      background: rgba(74,144,217,0.12);
+      color: var(--primary-dark);
+      transition: all 0.3s;
+    }
+    .effect-label.shape {
+      background: rgba(243,156,18,0.12);
+      color: var(--warning);
+    }
+    .effect-label.motion {
+      background: rgba(39,174,96,0.12);
+      color: var(--success);
+    }
+
+    .force-label {
+      font-size: 13px;
+      fill: var(--primary-dark);
+      font-weight: 600;
+    }
+    .force-label-bg {
+      fill: rgba(255,255,255,0.9);
+      stroke: var(--primary-light);
+      stroke-width: 1;
+      rx: 4;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .example-card {
+      padding: 18px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border-top: 4px solid var(--primary);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .example-card:hover { transform: translateY(-3px); }
+    .example-card .icon { font-size: 34px; }
+    .example-card h4 {
+      margin: 8px 0 6px;
+      color: var(--primary-dark);
+      font-size: 15px;
+    }
+    .example-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .scene-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .scene-tab {
+      padding: 8px 18px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .scene-tab:hover { border-color: var(--primary-light); }
+    .scene-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .draw-canvas-wrap {
+      position: relative;
+      display: inline-block;
+      cursor: crosshair;
+    }
+    .draw-canvas-wrap svg { display: block; }
+
+    .draw-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .elastic-warning {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      margin-top: 12px;
+      font-weight: 600;
+      color: var(--danger);
+      text-align: center;
+    }
+    .elastic-warning.show { display: block; animation: fadeIn 0.3s; }
+
+    .graph-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .graph-wrap canvas {
+      background: white;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
+    .quiz-feedback {
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚡ 力</div>
+  <div class="navbar-brand">💪 力</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
@@ -67,24 +281,1194 @@
     <span>力</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>力</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <!-- ===== 知识要点 ===== -->
+  <div class="card">
+    <div class="section-header">📖 知识要点</div>
+    <p>力（force）是物理学中最基本的概念之一。人推车、马拉车、太阳吸引地球……这些都是力的表现。掌握力的概念，是理解后续运动和力、压强、浮力等章节的基础。</p>
+
+    <ul class="property-list">
+      <li><strong>1. 力的定义：</strong>力是<strong>物体对物体的作用</strong>。力不能脱离物体而独立存在，有力发生时至少涉及两个物体——<strong>施力物体</strong>和<strong>受力物体</strong>。</li>
+      <li><strong>2. 力的作用效果：</strong>① 使物体发生<strong>形变</strong>（形状改变）；② 改变物体的<strong>运动状态</strong>（速度大小改变或方向改变，或两者同时改变）。</li>
+      <li><strong>3. 力的三要素：</strong>力的大小、方向、作用点。三者中任一改变，力的作用效果就会改变。</li>
+      <li><strong>4. 力的单位：</strong>牛顿，简称<strong>牛</strong>，符号<strong>N</strong>。手托两个鸡蛋的力约 1 N。</li>
+      <li><strong>5. 力的示意图：</strong>从<strong>作用点</strong>出发，沿力的方向画一条<strong>带箭头的线段</strong>。线段长度表示力的大小，箭头方向表示力的方向，起点（或终点）表示作用点。</li>
+      <li><strong>6. 力的作用是相互的：</strong>一个物体对另一个物体施力时，也同时受到对方的力。两个力大小相等、方向相反、作用在<strong>同一直线上</strong>。施力物体同时也是受力物体。</li>
+      <li><strong>7. 弹力：</strong>物体发生<strong>弹性形变</strong>时产生的力叫弹力。弹簧测力计原理：在<strong>弹性限度</strong>内，弹簧的<strong>伸长量</strong>与所受<strong>拉力成正比</strong>。</li>
+    </ul>
+
+    <div class="formula-box">
+      弹簧测力计原理（弹性限度内）：ΔL ∝ F &nbsp;→&nbsp; F = k · ΔL<br>
+      <span style="font-size:14px; font-weight:400; color:var(--text-secondary);">k 为弹簧的劲度系数，ΔL 为弹簧伸长量，F 为所受拉力</span>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 交互1：力的作用效果 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互1：力的作用效果演示</div>
+    <p>力有两种作用效果：<strong>改变形状</strong>和<strong>改变运动状态</strong>。选择不同操作，观察力的效果，并注意施力物体和受力物体。</p>
+
+    <div class="btn-row">
+      <button class="btn btn-primary active" id="effect-btn-push" onclick="setEffectMode('push')">👉 推球（运动状态改变）</button>
+      <button class="btn btn-primary" id="effect-btn-press" onclick="setEffectMode('press')">🤚 压弹簧（形变）</button>
+      <button class="btn btn-primary" id="effect-btn-pull" onclick="setEffectMode('pull')">💪 拉弹簧（形变）</button>
+    </div>
+
+    <div class="slider-row">
+      <label for="effect-slider">力的大小 F =</label>
+      <input type="range" id="effect-slider" min="1" max="20" value="8" step="1">
+      <span class="value-display"><span id="effect-force-val">8</span> N</span>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 260" width="600" height="260">
+        <!-- 地面 -->
+        <line x1="20" y1="210" x2="580" y2="210" stroke="#7F8C8D" stroke-width="2"/>
+        <!-- 地面阴影线 -->
+        <g stroke="#BDC3C7" stroke-width="1">
+          <line x1="30" y1="210" x2="20" y2="220"/>
+          <line x1="60" y1="210" x2="50" y2="220"/>
+          <line x1="90" y1="210" x2="80" y2="220"/>
+          <line x1="120" y1="210" x2="110" y2="220"/>
+          <line x1="150" y1="210" x2="140" y2="220"/>
+          <line x1="180" y1="210" x2="170" y2="220"/>
+          <line x1="210" y1="210" x2="200" y2="220"/>
+          <line x1="240" y1="210" x2="230" y2="220"/>
+          <line x1="270" y1="210" x2="260" y2="220"/>
+          <line x1="300" y1="210" x2="290" y2="220"/>
+          <line x1="330" y1="210" x2="320" y2="220"/>
+          <line x1="360" y1="210" x2="350" y2="220"/>
+          <line x1="390" y1="210" x2="380" y2="220"/>
+          <line x1="420" y1="210" x2="410" y2="220"/>
+          <line x1="450" y1="210" x2="440" y2="220"/>
+          <line x1="480" y1="210" x2="470" y2="220"/>
+          <line x1="510" y1="210" x2="500" y2="220"/>
+          <line x1="540" y1="210" x2="530" y2="220"/>
+          <line x1="570" y1="210" x2="560" y2="220"/>
+        </g>
+
+        <!-- 墙（压弹簧时显示） -->
+        <rect id="effect-wall" x="530" y="140" width="14" height="70" fill="#95A5A6" rx="2"/>
+
+        <!-- 弹簧 -->
+        <path id="effect-spring" d="" fill="none" stroke="#2E6BA8" stroke-width="3" stroke-linejoin="round"/>
+
+        <!-- 球 -->
+        <circle id="effect-ball" cx="150" cy="185" r="22" fill="#4A90D9" stroke="#2E6BA8" stroke-width="2"/>
+        <text x="150" y="190" text-anchor="middle" fill="white" font-size="14" font-weight="700" id="effect-ball-text">球</text>
+
+        <!-- 手（施力物体） -->
+        <g id="effect-hand" opacity="0">
+          <text x="0" y="0" font-size="36" text-anchor="middle">✋</text>
+        </g>
+
+        <!-- 施力/受力标注 -->
+        <g id="effect-annotations"></g>
+
+        <!-- 效果标签 -->
+        <text id="effect-label-text" x="300" y="40" text-anchor="middle" font-size="16" font-weight="700" fill="#2E6BA8"></text>
+      </svg>
+    </div>
+
+    <div class="info-readout" id="effect-readout">
+      <div class="readout-item"><span class="label">施力物体：</span><span class="value" id="effect-shili">手</span></div>
+      <div class="readout-item"><span class="label">受力物体：</span><span class="value" id="effect-shouli">球</span></div>
+      <div class="readout-item"><span class="label">力的效果：</span><span class="value" id="effect-result">改变运动状态</span></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 小结</div>
+      推球——球的运动状态由静止变为运动（<strong>运动状态改变</strong>）；压弹簧/拉弹簧——弹簧形状改变（<strong>形变</strong>）。力越大，形变越明显或运动变化越剧烈。
+    </div>
   </div>
+
+  <!-- ===== 交互2：力的三要素 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互2：力的三要素实验</div>
+    <p>力的大小、方向、作用点称为<strong>力的三要素</strong>。调节下方三个滑块，观察木块上方力的示意图如何变化，以及不同组合对木块运动效果的影响。</p>
+
+    <div class="slider-row">
+      <label for="elem-mag">力的大小：</label>
+      <input type="range" id="elem-mag" min="1" max="20" value="10" step="1">
+      <span class="value-display"><span id="elem-mag-val">10</span> N</span>
+    </div>
+    <div class="slider-row">
+      <label for="elem-dir">力的方向：</label>
+      <input type="range" id="elem-dir" min="0" max="360" value="0" step="5">
+      <span class="value-display"><span id="elem-dir-val">0</span>°</span>
+    </div>
+    <div class="slider-row">
+      <label for="elem-pos">作用点：</label>
+      <select id="elem-pos" style="padding:6px 14px; border-radius:var(--radius-sm); border:2px solid var(--border); font-size:14px; cursor:pointer;">
+        <option value="left">左侧</option>
+        <option value="center" selected>中部（重心）</option>
+        <option value="right">右侧</option>
+      </select>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 500 280" width="500" height="280">
+        <!-- 桌面 -->
+        <rect x="20" y="200" width="460" height="14" fill="#D4B896" stroke="#A0826D" stroke-width="1.5" rx="2"/>
+        <!-- 桌腿 -->
+        <rect x="40" y="214" width="10" height="40" fill="#A0826D"/>
+        <rect x="450" y="214" width="10" height="40" fill="#A0826D"/>
+
+        <!-- 木块 -->
+        <rect id="elem-block" x="180" y="150" width="120" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="3"/>
+        <text x="240" y="180" text-anchor="middle" fill="white" font-size="16" font-weight="700">木块</text>
+        <!-- 重心点 -->
+        <circle id="elem-center" cx="240" cy="175" r="3" fill="#F1C40F"/>
+
+        <!-- 力的示意图箭头（JS动态生成） -->
+        <g id="elem-arrow-group"></g>
+
+        <!-- 方向参考罗盘 -->
+        <g transform="translate(440, 60)">
+          <circle cx="0" cy="0" r="34" fill="white" stroke="#BDC3C7" stroke-width="1.5"/>
+          <text x="0" y="-22" text-anchor="middle" font-size="11" fill="#7F8C8D">↑ 0°</text>
+          <text x="24" y="4" text-anchor="middle" font-size="11" fill="#7F8C8D">→ 90°</text>
+          <text x="0" y="30" text-anchor="middle" font-size="11" fill="#7F8C8D">↓ 180°</text>
+          <text x="-24" y="4" text-anchor="middle" font-size="11" fill="#7F8C8D">← 270°</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">运动效果预测：</span><span class="value" id="elem-effect">水平平移</span></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 三要素如何影响效果</div>
+      • <strong>方向水平（0°）</strong>→ 木块平移；<strong>方向竖直（180°向下）</strong>→ 木块不动（被压在桌面上）；<strong>斜向推</strong>→ 既平移又可能旋转。<br>
+      • <strong>作用点不在重心</strong>（如左侧或右侧）+ 斜向力 → 木块容易发生<strong>旋转</strong>。<br>
+      • <strong>力的大小</strong>越大，运动状态改变越明显。
+    </div>
+  </div>
+
+  <!-- ===== 交互3：力的相互作用 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互3：力的相互作用</div>
+    <p>力的作用是<strong>相互的</strong>。两个带磁铁的小车（同名磁极相斥），释放后同时向相反方向运动。A 对 B 的力和 B 对 A 的力大小相等、方向相反、在同一直线上。</p>
+
+    <div class="slider-row">
+      <label for="mutual-slider">磁力大小：</label>
+      <input type="range" id="mutual-slider" min="2" max="20" value="10" step="1">
+      <span class="value-display"><span id="mutual-val">10</span> N</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="releaseCars()">🚀 释放小车</button>
+      <button class="btn btn-outline" onclick="resetCars()">🔄 重置</button>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 260" width="600" height="260">
+        <!-- 地面 -->
+        <line x1="20" y1="210" x2="580" y2="210" stroke="#7F8C8D" stroke-width="2"/>
+        <g stroke="#BDC3C7" stroke-width="1">
+          <line x1="30" y1="210" x2="20" y2="220"/>
+          <line x1="80" y1="210" x2="70" y2="220"/>
+          <line x1="130" y1="210" x2="120" y2="220"/>
+          <line x1="180" y1="210" x2="170" y2="220"/>
+          <line x1="230" y1="210" x2="220" y2="220"/>
+          <line x1="280" y1="210" x2="270" y2="220"/>
+          <line x1="330" y1="210" x2="320" y2="220"/>
+          <line x1="380" y1="210" x2="370" y2="220"/>
+          <line x1="430" y1="210" x2="420" y2="220"/>
+          <line x1="480" y1="210" x2="470" y2="220"/>
+          <line x1="530" y1="210" x2="520" y2="220"/>
+          <line x1="570" y1="210" x2="560" y2="220"/>
+        </g>
+
+        <!-- 小车A（左） -->
+        <g id="car-a" transform="translate(260, 0)">
+          <rect x="0" y="160" width="70" height="42" fill="#4A90D9" stroke="#2E6BA8" stroke-width="2" rx="5"/>
+          <text x="35" y="186" text-anchor="middle" fill="white" font-size="18" font-weight="700">A</text>
+          <!-- 磁铁（右侧，N极朝右） -->
+          <rect x="70" y="168" width="18" height="26" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
+          <text x="79" y="185" text-anchor="middle" fill="white" font-size="11" font-weight="700">N</text>
+          <!-- 车轮 -->
+          <circle cx="15" cy="205" r="8" fill="#2C3E50"/>
+          <circle cx="55" cy="205" r="8" fill="#2C3E50"/>
+          <circle cx="15" cy="205" r="3" fill="#7F8C8D"/>
+          <circle cx="55" cy="205" r="3" fill="#7F8C8D"/>
+        </g>
+
+        <!-- 小车B（右） -->
+        <g id="car-b" transform="translate(340, 0)">
+          <rect x="0" y="160" width="70" height="42" fill="#27AE60" stroke="#1E8449" stroke-width="2" rx="5"/>
+          <text x="35" y="186" text-anchor="middle" fill="white" font-size="18" font-weight="700">B</text>
+          <!-- 磁铁（左侧，N极朝左） -->
+          <rect x="-18" y="168" width="18" height="26" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
+          <text x="-9" y="185" text-anchor="middle" fill="white" font-size="11" font-weight="700">N</text>
+          <!-- 车轮 -->
+          <circle cx="15" cy="205" r="8" fill="#2C3E50"/>
+          <circle cx="55" cy="205" r="8" fill="#2C3E50"/>
+          <circle cx="15" cy="205" r="3" fill="#7F8C8D"/>
+          <circle cx="55" cy="205" r="3" fill="#7F8C8D"/>
+        </g>
+
+        <!-- 力的标注 -->
+        <g id="mutual-forces" opacity="0">
+          <!-- A对B的力（向右） -->
+          <line x1="322" y1="150" x2="372" y2="150" stroke="#E74C3C" stroke-width="3" marker-end="url(#arrow-red)"/>
+          <rect x="328" y="128" width="56" height="18" fill="white" stroke="#E74C3C" rx="3"/>
+          <text x="356" y="141" text-anchor="middle" fill="#E74C3C" font-size="12" font-weight="700">A→B 力</text>
+
+          <!-- B对A的力（向左） -->
+          <line x1="348" y1="118" x2="298" y2="118" stroke="#9B59B6" stroke-width="3" marker-end="url(#arrow-purple)"/>
+          <rect x="300" y="96" width="56" height="18" fill="white" stroke="#9B59B6" rx="3"/>
+          <text x="328" y="109" text-anchor="middle" fill="#9B59B6" font-size="12" font-weight="700">B→A 力</text>
+        </g>
+
+        <defs>
+          <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#9B59B6"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">A→B 的力：</span><span class="value" id="mutual-fab">10 N →</span></div>
+      <div class="readout-item"><span class="label">B→A 的力：</span><span class="value" id="mutual-fba">10 N ←</span></div>
+      <div class="readout-item"><span class="label">关系：</span><span class="value">大小相等、方向相反</span></div>
+    </div>
+
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="icon">🏊</div>
+        <h4>游泳划水</h4>
+        <p>人向后划水（人对水施力），水同时向前推人（水对人施力），人前进。</p>
+      </div>
+      <div class="example-card">
+        <div class="icon">🚶</div>
+        <h4>走路蹬地</h4>
+        <p>脚向后蹬地（人对地施力），地同时向前推脚（地对人施力），人向前走。</p>
+      </div>
+      <div class="example-card">
+        <div class="icon">🚀</div>
+        <h4>火箭发射</h4>
+        <p>火箭向下喷出燃气（对燃气施力），燃气同时向上推火箭（对火箭施力），火箭升空。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 交互4：弹簧测力计 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互4：弹簧测力计模拟</div>
+    <p>弹簧测力计是测量力的工具，原理是<strong>在弹性限度内，弹簧的伸长量与拉力成正比</strong>。拖动滑块改变拉力，观察弹簧伸长和指针位置。超过弹性限度（5 N）时弹簧会损坏。</p>
+
+    <div class="slider-row">
+      <label for="spring-slider">拉力 F =</label>
+      <input type="range" id="spring-slider" min="0" max="7" value="3" step="0.5">
+      <span class="value-display"><span id="spring-force-val">3.0</span> N</span>
+    </div>
+
+    <div class="graph-wrap">
+      <div class="demo-container" style="margin:0; padding:16px;">
+        <svg viewBox="0 0 200 380" width="180" height="360">
+          <!-- 挂环 -->
+          <circle cx="100" cy="20" r="12" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+          <!-- 外壳 -->
+          <rect x="70" y="36" width="60" height="300" fill="none" stroke="#7F8C8D" stroke-width="2" rx="4"/>
+
+          <!-- 刻度线（JS生成） -->
+          <g id="spring-scale-ticks"></g>
+
+          <!-- 弹簧 -->
+          <path id="spring-coil" d="" fill="none" stroke="#2E6BA8" stroke-width="2.5" stroke-linejoin="round"/>
+
+          <!-- 指针 -->
+          <line id="spring-pointer" x1="60" y1="100" x2="140" y2="100" stroke="#E74C3C" stroke-width="2.5"/>
+          <polygon id="spring-pointer-tip" points="140,100 134,96 134,104" fill="#E74C3C"/>
+
+          <!-- 挂钩 -->
+          <line id="spring-hook" x1="100" y1="100" x2="100" y2="350" stroke="#7F8C8D" stroke-width="2"/>
+          <path id="spring-hook-end" d="M 92 350 Q 100 360 108 350" fill="none" stroke="#7F8C8D" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <div class="demo-container" style="margin:0; padding:16px; min-width:280px;">
+        <canvas id="spring-graph" width="280" height="280"></canvas>
+      </div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">拉力 F：</span><span class="value" id="spring-f-display">3.0 N</span></div>
+      <div class="readout-item"><span class="label">弹簧伸长量 ΔL：</span><span class="value" id="spring-dl-display">3.0 cm</span></div>
+      <div class="readout-item"><span class="label">弹性限度：</span><span class="value">5.0 N</span></div>
+    </div>
+
+    <div class="elastic-warning" id="spring-warning">
+      ⚠️ 超出弹性限度！弹簧发生永久形变，无法恢复原长，测力计已损坏。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 弹簧测力计原理</div>
+      在<strong>弹性限度内</strong>，弹簧的伸长量 ΔL 与拉力 F 成<strong>正比</strong>（F = k·ΔL）。<br>
+      右图 F-ΔL 图像是一条<strong>过原点的直线</strong>——这正是"成正比"的几何特征。超过弹性限度后，弹簧伸长不再与拉力成正比，且撤去力后不能恢复原长。
+    </div>
+  </div>
+
+  <!-- ===== 交互5：画力的示意图 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互5：力的示意图练习</div>
+    <p>力的示意图：从<strong>作用点</strong>出发，沿力的方向画一条<strong>带箭头的线段</strong>。下面有三个场景，选择场景后在图上<strong>按住鼠标拖动</strong>即可画力的示意图，点击"显示答案"对照。</p>
+
+    <div class="scene-tabs">
+      <div class="scene-tab active" data-scene="incline" onclick="switchScene('incline')">⛰️ 斜面上的木块</div>
+      <div class="scene-tab" data-scene="lamp" onclick="switchScene('lamp')">💡 悬挂的灯泡</div>
+      <div class="scene-tab" data-scene="box" onclick="switchScene('box')">📦 被推的箱子</div>
+    </div>
+
+    <div class="demo-container">
+      <div class="draw-canvas-wrap">
+        <svg id="draw-svg" viewBox="0 0 500 300" width="500" height="300" style="background:white; border-radius:var(--radius-sm);">
+          <defs>
+            <marker id="draw-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+              <polygon points="0,0 10,3 0,6" fill="#E74C3C"/>
+            </marker>
+            <marker id="answer-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+              <polygon points="0,0 10,3 0,6" fill="#27AE60"/>
+            </marker>
+          </defs>
+          <g id="scene-bg"></g>
+          <g id="user-arrows"></g>
+          <g id="answer-arrows" opacity="0"></g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="toggleAnswer()">👁️ 显示/隐藏答案</button>
+      <button class="btn btn-outline" onclick="clearArrows()">🗑️ 清除我的标注</button>
+    </div>
+    <p class="draw-hint" id="draw-hint">提示：木块在斜面上受重力（竖直向下），从木块重心出发画箭头。</p>
+
+    <!-- 选择题 -->
+    <div style="margin-top:20px;">
+      <p style="font-weight:600; margin-bottom:10px;">📝 力的示意图判断题：</p>
+      <p style="font-size:14px; color:var(--text-secondary); margin-bottom:8px;">一个木块放在水平桌面上，受到水平向右的推力 10 N。下列哪个示意图正确？</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+        <div class="quiz-option" data-idx="0" id="diag-opt-0" style="text-align:center; padding:12px;">
+          <svg viewBox="0 0 160 80" width="160" height="80">
+            <rect x="50" y="40" width="60" height="30" fill="#C0392B" rx="2"/>
+            <line x1="80" y1="55" x2="120" y2="55" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#opt-arrow0)"/>
+            <defs><marker id="opt-arrow0" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#E74C3C"/></marker></defs>
+          </svg>
+          <p style="font-size:12px; margin-top:4px;">A. 从重心向右画箭头</p>
+        </div>
+        <div class="quiz-option" data-idx="1" id="diag-opt-1" style="text-align:center; padding:12px;">
+          <svg viewBox="0 0 160 80" width="160" height="80">
+            <rect x="50" y="40" width="60" height="30" fill="#C0392B" rx="2"/>
+            <line x1="80" y1="55" x2="80" y2="15" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#opt-arrow1)"/>
+            <defs><marker id="opt-arrow1" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#E74C3C"/></marker></defs>
+          </svg>
+          <p style="font-size:12px; margin-top:4px;">B. 从重心向上画箭头</p>
+        </div>
+        <div class="quiz-option" data-idx="2" id="diag-opt-2" style="text-align:center; padding:12px;">
+          <svg viewBox="0 0 160 80" width="160" height="80">
+            <rect x="50" y="40" width="60" height="30" fill="#C0392B" rx="2"/>
+            <line x1="80" y1="55" x2="40" y2="55" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#opt-arrow2)"/>
+            <defs><marker id="opt-arrow2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#E74C3C"/></marker></defs>
+          </svg>
+          <p style="font-size:12px; margin-top:4px;">C. 从重心向左画箭头</p>
+        </div>
+      </div>
+      <div id="diag-feedback" class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 练习题</div>
+    <p>检验你对"力"的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 关于力，下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 力可以脱离物体而存在</div>
+      <div class="quiz-option" data-idx="1">B. 一个物体也能产生力的作用</div>
+      <div class="quiz-option" data-idx="2">C. 力是物体对物体的作用</div>
+      <div class="quiz-option" data-idx="3">D. 发生力作用时，只有施力物体存在</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 下列措施中，能改变力的作用效果的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 只改变力的大小</div>
+      <div class="quiz-option" data-idx="1">B. 只改变力的方向</div>
+      <div class="quiz-option" data-idx="2">C. 只改变力的作用点</div>
+      <div class="quiz-option" data-idx="3">D. 以上都可以</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 游泳时人向后划水，人就前进。下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 水对人的力大于人对水的力</div>
+      <div class="quiz-option" data-idx="1">B. 人对水的力和水对人的力大小相等</div>
+      <div class="quiz-option" data-idx="2">C. 只有水对人施力，人不对水施力</div>
+      <div class="quiz-option" data-idx="3">D. 人对水的力和水对人的力方向相同</div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 力的合成与分解中的"力三角形" ↔ <a href="../../数学/八年级/01-三角形.html">数学 · 三角形</a>（利用三角形的边角关系分析力）</p>
+    <p>· 弹簧伸长量与拉力的正比关系 ↔ <a href="../../数学/八年级/10-一次函数.html">数学 · 一次函数</a>（F = k·ΔL 是正比例函数，图像为过原点的直线）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="06-质量与密度.html" class="btn btn-outline">← 上一章：质量与密度</a>
+    <a href="08-运动和力.html" class="btn btn-primary">下一章：运动和力 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：力的作用效果演示
+// ============================================================
+var effectMode = 'push';
+var effectForce = 8;
+var effectAnimId = null;
+
+function springPath(x1, x2, y, coils, amp) {
+  coils = coils || 10;
+  amp = amp || 10;
+  var len = x2 - x1;
+  if (len < 20) len = 20;
+  var seg = len / (coils * 2);
+  var d = 'M ' + x1 + ' ' + y + ' L ' + (x1 + seg * 0.5) + ' ' + y;
+  for (var i = 0; i < coils; i++) {
+    d += ' L ' + (x1 + seg * 0.5 + i * 2 * seg + seg) + ' ' + (y - amp);
+    d += ' L ' + (x1 + seg * 0.5 + i * 2 * seg + 2 * seg) + ' ' + (y + amp);
+  }
+  d += ' L ' + (x2 - seg * 0.5) + ' ' + y + ' L ' + x2 + ' ' + y;
+  return d;
+}
+
+function setEffectMode(mode) {
+  effectMode = mode;
+  document.querySelectorAll('#effect-btn-push, #effect-btn-press, #effect-btn-pull').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('effect-btn-' + mode).classList.add('active');
+  updateEffect();
+}
+
+function updateEffect() {
+  var slider = document.getElementById('effect-slider');
+  effectForce = parseInt(slider.value);
+  document.getElementById('effect-force-val').textContent = effectForce;
+
+  var ball = document.getElementById('effect-ball');
+  var ballText = document.getElementById('effect-ball-text');
+  var spring = document.getElementById('effect-spring');
+  var wall = document.getElementById('effect-wall');
+  var hand = document.getElementById('effect-hand');
+  var labelText = document.getElementById('effect-label-text');
+  var shili = document.getElementById('effect-shili');
+  var shouli = document.getElementById('effect-shouli');
+  var result = document.getElementById('effect-result');
+
+  // 重置
+  if (effectAnimId) { cancelAnimationFrame(effectAnimId); effectAnimId = null; }
+
+  if (effectMode === 'push') {
+    // 推球：球从静止开始运动（运动状态改变）
+    wall.style.opacity = 0;
+    spring.style.opacity = 0;
+    ball.style.opacity = 1;
+    ballText.textContent = '球';
+    shili.textContent = '手';
+    shouli.textContent = '球';
+    result.textContent = '改变运动状态（由静到动）';
+    labelText.textContent = '运动状态改变：球由静止变为运动';
+
+    // 球回到起点，然后根据力大小运动
+    var startX = 120;
+    var maxOffset = Math.min(effectForce * 12, 280);
+    ball.setAttribute('cx', startX);
+    animateBall(startX, startX + maxOffset, effectForce);
+    hand.setAttribute('opacity', 1);
+
+  } else if (effectMode === 'press') {
+    // 压弹簧：球推向弹簧，弹簧被压缩（形变）
+    wall.style.opacity = 1;
+    spring.style.opacity = 1;
+    ball.style.opacity = 1;
+    ballText.textContent = '球';
+    shili.textContent = '球（对弹簧）';
+    shouli.textContent = '弹簧';
+    result.textContent = '形变（弹簧被压缩）';
+    labelText.textContent = '形变：弹簧被压缩';
+
+    var compressAmount = Math.min(effectForce * 1.5, 30);
+    var springEnd = 500 - compressAmount;
+    var ballX = springEnd - 22 - 2;
+    ball.setAttribute('cx', ballX);
+    spring.setAttribute('d', springPath(springEnd, 530, 190, 8, 10));
+    hand.setAttribute('opacity', 0);
+
+  } else if (effectMode === 'pull') {
+    // 拉弹簧：弹簧被拉伸（形变）
+    wall.style.opacity = 1;
+    spring.style.opacity = 1;
+    ball.style.opacity = 0;
+    shili.textContent = '手';
+    shouli.textContent = '弹簧';
+    result.textContent = '形变（弹簧被拉伸）';
+    labelText.textContent = '形变：弹簧被拉伸';
+
+    var stretchAmount = Math.min(effectForce * 2, 40);
+    var springStart = 350 - stretchAmount;
+    spring.setAttribute('d', springPath(340, 530, 190, 8 + Math.floor(stretchAmount / 5), 10));
+    hand.setAttribute('opacity', 0);
+  }
+}
+
+function animateBall(startX, endX, force) {
+  var ball = document.getElementById('effect-ball');
+  var startTime = performance.now();
+  var duration = 2000 - force * 50; // 力越大，运动越快
+  if (duration < 600) duration = 600;
+  function step(now) {
+    var elapsed = now - startTime;
+    var t = Math.min(elapsed / duration, 1);
+    // 缓动
+    var eased = t * t * (3 - 2 * t);
+    var x = startX + (endX - startX) * eased;
+    ball.setAttribute('cx', x);
+    if (t < 1) {
+      effectAnimId = requestAnimationFrame(step);
+    } else {
+      // 回到起点，循环
+      setTimeout(function() {
+        ball.setAttribute('cx', startX);
+        setTimeout(function() {
+          if (effectMode === 'push') animateBall(startX, endX, force);
+        }, 300);
+      }, 800);
+    }
+  }
+  effectAnimId = requestAnimationFrame(step);
+}
+
+// ============================================================
+// 交互2：力的三要素
+// ============================================================
+function updateElements() {
+  var mag = parseInt(document.getElementById('elem-mag').value);
+  var dir = parseInt(document.getElementById('elem-dir').value);
+  var pos = document.getElementById('elem-pos').value;
+
+  document.getElementById('elem-mag-val').textContent = mag;
+  document.getElementById('elem-dir-val').textContent = dir;
+
+  // 作用点位置
+  var blockLeft = 180, blockW = 120, blockTop = 150, blockH = 50;
+  var cx;
+  if (pos === 'left') cx = blockLeft + 20;
+  else if (pos === 'right') cx = blockLeft + blockW - 20;
+  else cx = blockLeft + blockW / 2;
+  var cy = blockTop + blockH / 2;
+
+  // 方向：0°=上, 90°=右, 180°=下, 270°=左
+  // 但物理上"水平推"应该是向右=0°为参考。这里我们约定：
+  // 0° = 向上, 90° = 向右, 180° = 向下, 270° = 向左
+  // 实际更直观的约定：0°=向右（水平向右），逆时针增加
+  // 让我们改为：0°=向右，90°=向上，180°=向左，270°=向下
+  // 但用户滑块标签显示的是 0~360°，罗盘标注 ↑0° →90° ↓180° ←270°
+  // 所以 0°=上, 90°=右, 180°=下, 270°=左
+  var rad = (dir - 90) * Math.PI / 180; // 转换为标准角度（0°=右）
+  // 罗盘约定：0°=上, 90°=右, 180°=下, 270°=左
+  // 对应标准角度：0°→-90°(270°), 90°→0°, 180°→90°, 270°→180°
+  var stdAngle = dir - 90; // 0°上→-90°, 90°右→0°, 180°下→90°, 270°左→180°
+  rad = stdAngle * Math.PI / 180;
+
+  // 箭头长度：力越大越长
+  var arrowLen = 30 + mag * 3;
+  var dx = Math.cos(rad) * arrowLen;
+  var dy = -Math.sin(rad) * arrowLen; // SVG y轴向下
+
+  var endX = cx + dx;
+  var endY = cy + dy;
+
+  var g = document.getElementById('elem-arrow-group');
+  g.innerHTML = '';
+  // 箭头线
+  var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', cx);
+  line.setAttribute('y1', cy);
+  line.setAttribute('x2', endX);
+  line.setAttribute('y2', endY);
+  line.setAttribute('stroke', '#E74C3C');
+  line.setAttribute('stroke-width', '3');
+  line.setAttribute('marker-end', 'url(#elem-arrow-head)');
+  g.appendChild(line);
+
+  // 箭头标记定义
+  var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  defs.innerHTML = '<marker id="elem-arrow-head" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0,0 10,3 0,6" fill="#E74C3C"/></marker>';
+  g.appendChild(defs);
+
+  // 作用点标记
+  var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  dot.setAttribute('cx', cx);
+  dot.setAttribute('cy', cy);
+  dot.setAttribute('r', '4');
+  dot.setAttribute('fill', '#2E6BA8');
+  g.appendChild(dot);
+
+  // 力的大小标注
+  var labelBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  var labelX = endX + 5, labelY = endY - 10;
+  labelBg.setAttribute('x', labelX);
+  labelBg.setAttribute('y', labelY);
+  labelBg.setAttribute('width', '56');
+  labelBg.setAttribute('height', '20');
+  labelBg.setAttribute('fill', 'white');
+  labelBg.setAttribute('stroke', '#E74C3C');
+  labelBg.setAttribute('stroke-width', '1');
+  labelBg.setAttribute('rx', '3');
+  g.appendChild(labelBg);
+
+  var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  label.setAttribute('x', labelX + 28);
+  label.setAttribute('y', labelY + 14);
+  label.setAttribute('text-anchor', 'middle');
+  label.setAttribute('fill', '#E74C3C');
+  label.setAttribute('font-size', '12');
+  label.setAttribute('font-weight', '700');
+  label.textContent = 'F=' + mag + 'N';
+  g.appendChild(label);
+
+  // 运动效果预测
+  var effectText;
+  var isHorizontal = (dir === 90 || dir === 270);
+  var isVertical = (dir === 0 || dir === 180);
+  var isOblique = !isHorizontal && !isVertical;
+  var isAtCenter = (pos === 'center');
+
+  if (isVertical && dir === 180) {
+    effectText = '木块不动（竖直向下压）';
+  } else if (isVertical && dir === 0) {
+    effectText = '木块不动（竖直向上提，力小时）';
+  } else if (isHorizontal) {
+    effectText = '水平平移' + (isAtCenter ? '（不旋转）' : '（可能轻微旋转）');
+  } else if (isOblique) {
+    effectText = '既平移又' + (isAtCenter ? '可能旋转' : '旋转');
+  } else {
+    effectText = '运动状态改变';
+  }
+  document.getElementById('elem-effect').textContent = effectText;
+}
+
+// ============================================================
+// 交互3：力的相互作用
+// ============================================================
+var mutualForce = 10;
+var carAnimId = null;
+
+function updateMutual() {
+  mutualForce = parseInt(document.getElementById('mutual-slider').value);
+  document.getElementById('mutual-val').textContent = mutualForce;
+  document.getElementById('mutual-fab').textContent = mutualForce + ' N →';
+  document.getElementById('mutual-fba').textContent = mutualForce + ' N ←';
+}
+
+function releaseCars() {
+  if (carAnimId) { cancelAnimationFrame(carAnimId); carAnimId = null; }
+  resetCars();
+
+  var forces = document.getElementById('mutual-forces');
+  forces.setAttribute('opacity', 1);
+
+  var carA = document.getElementById('car-a');
+  var carB = document.getElementById('car-b');
+  var startA = 260, startB = 340;
+  var maxDist = mutualForce * 8;
+  var startTime = performance.now();
+  var duration = 1500;
+
+  function step(now) {
+    var elapsed = now - startTime;
+    var t = Math.min(elapsed / duration, 1);
+    var eased = 1 - Math.pow(1 - t, 3); // ease-out
+    var dist = maxDist * eased;
+    carA.setAttribute('transform', 'translate(' + (startA - dist) + ', 0)');
+    carB.setAttribute('transform', 'translate(' + (startB + dist) + ', 0)');
+
+    if (t < 1) {
+      carAnimId = requestAnimationFrame(step);
+    } else {
+      carAnimId = null;
+    }
+  }
+  carAnimId = requestAnimationFrame(step);
+}
+
+function resetCars() {
+  if (carAnimId) { cancelAnimationFrame(carAnimId); carAnimId = null; }
+  document.getElementById('car-a').setAttribute('transform', 'translate(260, 0)');
+  document.getElementById('car-b').setAttribute('transform', 'translate(340, 0)');
+  document.getElementById('mutual-forces').setAttribute('opacity', 0);
+}
+
+// ============================================================
+// 交互4：弹簧测力计
+// ============================================================
+var ELASTIC_LIMIT = 5; // N
+var SPRING_K = 1; // 1 N → 1 cm 伸长（在弹性限度内）
+
+function drawSpringScaleTicks() {
+  var g = document.getElementById('spring-scale-ticks');
+  g.innerHTML = '';
+  // 刻度：0~5N，每1N一大格，每0.5N一小格
+  // 弹簧顶部 y=50，底部 y=280，量程 5N → 每N间距 46px
+  var top = 50;
+  var perN = 46;
+  for (var i = 0; i <= 5; i++) {
+    var y = top + i * perN;
+    // 大刻度线
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', '70');
+    line.setAttribute('y1', y);
+    line.setAttribute('x2', '90');
+    line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#2C3E50');
+    line.setAttribute('stroke-width', '1.5');
+    g.appendChild(line);
+    // 数字
+    var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', '60');
+    text.setAttribute('y', y + 4);
+    text.setAttribute('text-anchor', 'end');
+    text.setAttribute('fill', '#2C3E50');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-weight', '600');
+    text.textContent = i;
+    g.appendChild(text);
+    // 小刻度
+    if (i < 5) {
+      for (var j = 1; j < 2; j++) {
+        var y2 = y + perN * j / 2;
+        var sline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        sline.setAttribute('x1', '70');
+        sline.setAttribute('y1', y2);
+        sline.setAttribute('x2', '80');
+        sline.setAttribute('y2', y2);
+        sline.setAttribute('stroke', '#7F8C8D');
+        sline.setAttribute('stroke-width', '1');
+        g.appendChild(sline);
+      }
+    }
+  }
+  // 单位标注
+  var unit = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  unit.setAttribute('x', '60');
+  unit.setAttribute('y', '36');
+  unit.setAttribute('text-anchor', 'end');
+  unit.setAttribute('fill', '#7F8C8D');
+  unit.setAttribute('font-size', '11');
+  unit.textContent = 'N';
+  g.appendChild(unit);
+}
+
+function updateSpring() {
+  var F = parseFloat(document.getElementById('spring-slider').value);
+  document.getElementById('spring-force-val').textContent = F.toFixed(1);
+  document.getElementById('spring-f-display').textContent = F.toFixed(1) + ' N';
+
+  var warning = document.getElementById('spring-warning');
+  var coil = document.getElementById('spring-coil');
+  var pointer = document.getElementById('spring-pointer');
+  var pointerTip = document.getElementById('spring-pointer-tip');
+  var hook = document.getElementById('spring-hook');
+  var hookEnd = document.getElementById('spring-hook-end');
+
+  var top = 50;
+  var perN = 46;
+  var dL, pointerY;
+
+  if (F <= ELASTIC_LIMIT) {
+    // 正常：伸长量与拉力成正比
+    dL = F * 1; // 1 cm per N
+    pointerY = top + F * perN;
+    warning.classList.remove('show');
+    coil.setAttribute('stroke', '#2E6BA8');
+    pointer.setAttribute('stroke', '#E74C3C');
+    pointerTip.setAttribute('fill', '#E74C3C');
+  } else {
+    // 超过弹性限度：弹簧损坏，伸长量不再成正比（夸张化）
+    dL = ELASTIC_LIMIT * 1 + (F - ELASTIC_LIMIT) * 3; // 非线性大幅伸长
+    pointerY = top + ELASTIC_LIMIT * perN + (F - ELASTIC_LIMIT) * perN * 2;
+    if (pointerY > 340) pointerY = 340;
+    warning.classList.add('show');
+    coil.setAttribute('stroke', '#E74C3C');
+    pointer.setAttribute('stroke', '#E74C3C');
+    pointerTip.setAttribute('fill', '#E74C3C');
+  }
+
+  document.getElementById('spring-dl-display').textContent = dL.toFixed(1) + ' cm';
+
+  // 更新弹簧（拉伸）
+  var springTop = top;
+  var springBot = pointerY;
+  var coils = 12;
+  var seg = (springBot - springTop) / (coils * 2);
+  if (seg < 1) seg = 1;
+  var d = 'M 100 ' + springTop;
+  for (var i = 0; i < coils; i++) {
+    d += ' L ' + (100 + 10) + ' ' + (springTop + (i * 2 + 1) * seg);
+    d += ' L ' + (100 - 10) + ' ' + (springTop + (i * 2 + 2) * seg);
+  }
+  d += ' L 100 ' + springBot;
+  coil.setAttribute('d', d);
+
+  // 指针
+  pointer.setAttribute('y1', pointerY);
+  pointer.setAttribute('y2', pointerY);
+  pointerTip.setAttribute('points', '140,' + pointerY + ' 134,' + (pointerY - 4) + ' 134,' + (pointerY + 4));
+
+  // 挂钩
+  hook.setAttribute('y1', pointerY);
+  hook.setAttribute('y2', '350');
+  hookEnd.setAttribute('d', 'M 92 350 Q 100 360 108 350');
+
+  // 绘制 F-ΔL 图像
+  drawSpringGraph(F, dL);
+}
+
+function drawSpringGraph(currentF, currentDL) {
+  var canvas = document.getElementById('spring-graph');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  var margin = 36;
+  var plotW = W - margin - 16;
+  var plotH = H - margin - 16;
+  var maxF = 7, maxDL = 7; // cm
+
+  // 网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  for (var i = 0; i <= 7; i++) {
+    var x = margin + (i / maxF) * plotW;
+    var y = H - 16 - (i / maxDL) * plotH;
+    ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(W - 16, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, H - 16); ctx.lineTo(x, 16); ctx.stroke();
+  }
+
+  // 坐标轴
+  ctx.strokeStyle = '#2C3E50';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(margin, 16);
+  ctx.lineTo(margin, H - 16);
+  ctx.lineTo(W - 16, H - 16);
+  ctx.stroke();
+
+  // 轴标签
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('ΔL / cm', W / 2, H - 2);
+  ctx.save();
+  ctx.translate(12, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('F / N', 0, 0);
+  ctx.restore();
+
+  // 刻度数字
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'right';
+  for (var i2 = 0; i2 <= 7; i2++) {
+    var y2 = H - 16 - (i2 / maxDL) * plotH;
+    ctx.fillText(i2, margin - 4, y2 + 3);
+  }
+  ctx.textAlign = 'center';
+  for (var i3 = 0; i3 <= 7; i3++) {
+    var x3 = margin + (i3 / maxF) * plotW;
+    ctx.fillText(i3, x3, H - 16 + 12);
+  }
+
+  // 弹性限度虚线
+  var limitX = margin + (ELASTIC_LIMIT / maxF) * plotW;
+  ctx.strokeStyle = '#E74C3C';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(limitX, 16);
+  ctx.lineTo(limitX, H - 16);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#E74C3C';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('弹性限度', limitX + 3, 26);
+
+  // 理论直线（0~5N，正比例）
+  ctx.strokeStyle = '#27AE60';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  var x0 = margin, y0 = H - 16;
+  var x1 = margin + (ELASTIC_LIMIT / maxF) * plotW;
+  var y1 = H - 16 - (ELASTIC_LIMIT / maxDL) * plotH;
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.stroke();
+
+  // 超过弹性限度后的虚线（非正比）
+  ctx.strokeStyle = '#E74C3C';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  var x2 = margin + (maxF / maxF) * plotW;
+  var y2 = H - 16 - (ELASTIC_LIMIT + (maxF - ELASTIC_LIMIT) * 3) / maxDL * plotH;
+  if (y2 < 16) y2 = 16;
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 当前点
+  var cx = margin + (currentF / maxF) * plotW;
+  var cy = H - 16 - (currentDL / maxDL) * plotH;
+  if (cy < 16) cy = 16;
+  ctx.fillStyle = currentF > ELASTIC_LIMIT ? '#E74C3C' : '#4A90D9';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 标注当前点
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('(' + currentDL.toFixed(1) + ', ' + currentF.toFixed(1) + ')', cx + 8, cy - 8);
+}
+
+// ============================================================
+// 交互5：画力的示意图
+// ============================================================
+var currentScene = 'incline';
+var answerVisible = false;
+var drawing = false;
+var drawStart = null;
+
+var scenes = {
+  incline: {
+    bg: function() {
+      return '' +
+        '<polygon points="50,250 450,250 450,120" fill="#D4B896" stroke="#A0826D" stroke-width="2"/>' +
+        '<line x1="50" y1="250" x2="470" y2="250" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<g transform="translate(0,0) rotate(-20 250 200)"><rect x="210" y="180" width="60" height="35" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/><circle cx="240" cy="197" r="2.5" fill="#F1C40F"/></g>' +
+        '<text x="80" y="245" font-size="12" fill="#7F8C8D">斜面</text>';
+    },
+    answers: function() {
+      // 重力（竖直向下）
+      return '<line x1="240" y1="197" x2="240" y2="267" stroke="#27AE60" stroke-width="3" marker-end="url(#answer-arrow)"/>' +
+             '<rect x="216" y="240" width="48" height="16" fill="white" stroke="#27AE60" rx="2"/>' +
+             '<text x="240" y="252" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">重力G</text>';
+    },
+    hint: '提示：木块在斜面上受重力（方向竖直向下），从木块重心出发画箭头。'
+  },
+  lamp: {
+    bg: function() {
+      return '' +
+        '<line x1="100" y1="30" x2="400" y2="30" stroke="#7F8C8D" stroke-width="3"/>' +
+        '<line x1="250" y1="30" x2="250" y2="120" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<ellipse cx="250" cy="155" rx="40" ry="35" fill="#F1C40F" stroke="#F39C12" stroke-width="2"/>' +
+        '<rect x="240" y="118" width="20" height="10" fill="#7F8C8D"/>' +
+        '<text x="260" y="160" font-size="20">💡</text>';
+    },
+    answers: function() {
+      // 重力（竖直向下）+ 拉力（竖直向上）
+      return '<line x1="250" y1="155" x2="250" y2="225" stroke="#27AE60" stroke-width="3" marker-end="url(#answer-arrow)"/>' +
+             '<rect x="226" y="198" width="48" height="16" fill="white" stroke="#27AE60" rx="2"/>' +
+             '<text x="250" y="210" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">重力G</text>' +
+             '<line x1="250" y1="155" x2="250" y2="85" stroke="#27AE60" stroke-width="3" marker-end="url(#answer-arrow)"/>' +
+             '<rect x="226" y="92" width="48" height="16" fill="white" stroke="#27AE60" rx="2"/>' +
+             '<text x="250" y="104" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">拉力F</text>';
+    },
+    hint: '提示：灯泡受重力（竖直向下）和绳的拉力（竖直向上），从灯泡重心画两个箭头。'
+  },
+  box: {
+    bg: function() {
+      return '' +
+        '<line x1="30" y1="230" x2="470" y2="230" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<g stroke="#BDC3C7" stroke-width="1">' +
+        '<line x1="40" y1="230" x2="30" y2="240"/><line x1="80" y1="230" x2="70" y2="240"/>' +
+        '<line x1="120" y1="230" x2="110" y2="240"/><line x1="160" y1="230" x2="150" y2="240"/>' +
+        '<line x1="200" y1="230" x2="190" y2="240"/><line x1="240" y1="230" x2="230" y2="240"/>' +
+        '<line x1="280" y1="230" x2="270" y2="240"/><line x1="320" y1="230" x2="310" y2="240"/>' +
+        '<line x1="360" y1="230" x2="350" y2="240"/><line x1="400" y1="230" x2="390" y2="240"/>' +
+        '<line x1="440" y1="230" x2="430" y2="240"/></g>' +
+        '<rect x="200" y="180" width="80" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/>' +
+        '<text x="240" y="210" text-anchor="middle" fill="white" font-size="14" font-weight="700">箱</text>' +
+        '<circle cx="240" cy="205" r="2.5" fill="#F1C40F"/>';
+    },
+    answers: function() {
+      // 推力（水平向右）+ 重力（竖直向下）
+      return '<line x1="240" y1="205" x2="320" y2="205" stroke="#27AE60" stroke-width="3" marker-end="url(#answer-arrow)"/>' +
+             '<rect x="296" y="188" width="48" height="16" fill="white" stroke="#27AE60" rx="2"/>' +
+             '<text x="320" y="200" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">推力F</text>' +
+             '<line x1="240" y1="205" x2="240" y2="275" stroke="#27AE60" stroke-width="3" marker-end="url(#answer-arrow)"/>' +
+             '<rect x="216" y="248" width="48" height="16" fill="white" stroke="#27AE60" rx="2"/>' +
+             '<text x="240" y="260" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">重力G</text>';
+    },
+    hint: '提示：箱子受水平推力（向右）和重力（竖直向下），从重心画两个箭头。'
+  }
+};
+
+function switchScene(scene) {
+  currentScene = scene;
+  document.querySelectorAll('.scene-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('[data-scene="' + scene + '"]').classList.add('active');
+  document.getElementById('scene-bg').innerHTML = scenes[scene].bg();
+  document.getElementById('answer-arrows').innerHTML = scenes[scene].answers();
+  document.getElementById('answer-arrows').setAttribute('opacity', answerVisible ? 1 : 0);
+  document.getElementById('draw-hint').textContent = scenes[scene].hint;
+  clearArrows();
+}
+
+function toggleAnswer() {
+  answerVisible = !answerVisible;
+  document.getElementById('answer-arrows').setAttribute('opacity', answerVisible ? 1 : 0);
+}
+
+function clearArrows() {
+  document.getElementById('user-arrows').innerHTML = '';
+}
+
+function initDrawing() {
+  var svg = document.getElementById('draw-svg');
+  var isDown = false;
+  var startX, startY;
+  var previewLine = null;
+
+  function getMousePos(e) {
+    var rect = svg.getBoundingClientRect();
+    var scaleX = 500 / rect.width;
+    var scaleY = 300 / rect.height;
+    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  function down(e) {
+    e.preventDefault();
+    var pos = getMousePos(e);
+    isDown = true;
+    startX = pos.x;
+    startY = pos.y;
+    previewLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    previewLine.setAttribute('x1', startX);
+    previewLine.setAttribute('y1', startY);
+    previewLine.setAttribute('x2', startX);
+    previewLine.setAttribute('y2', startY);
+    previewLine.setAttribute('stroke', '#E74C3C');
+    previewLine.setAttribute('stroke-width', '2.5');
+    previewLine.setAttribute('marker-end', 'url(#draw-arrow)');
+    previewLine.setAttribute('opacity', '0.6');
+    document.getElementById('user-arrows').appendChild(previewLine);
+  }
+
+  function move(e) {
+    if (!isDown) return;
+    e.preventDefault();
+    var pos = getMousePos(e);
+    previewLine.setAttribute('x2', pos.x);
+    previewLine.setAttribute('y2', pos.y);
+  }
+
+  function up(e) {
+    if (!isDown) return;
+    isDown = false;
+    if (previewLine) {
+      previewLine.setAttribute('opacity', '1');
+      previewLine = null;
+    }
+  }
+
+  svg.addEventListener('mousedown', down);
+  svg.addEventListener('mousemove', move);
+  svg.addEventListener('mouseup', up);
+  svg.addEventListener('mouseleave', up);
+  svg.addEventListener('touchstart', down);
+  svg.addEventListener('touchmove', move);
+  svg.addEventListener('touchend', up);
+}
+
+// ============================================================
+// 力的示意图判断题
+// ============================================================
+function initDiagramQuiz() {
+  var correctIdx = 0; // A 正确
+  var options = [document.getElementById('diag-opt-0'), document.getElementById('diag-opt-1'), document.getElementById('diag-opt-2')];
+  var feedback = document.getElementById('diag-feedback');
+  options.forEach(function(opt, idx) {
+    opt.addEventListener('click', function() {
+      options.forEach(function(o) { o.classList.remove('selected', 'correct-answer', 'wrong-answer'); });
+      opt.classList.add('selected');
+      if (idx === correctIdx) {
+        opt.classList.add('correct-answer');
+        feedback.innerHTML = '<span style="color:#27AE60;">✓ 正确！</span> 水平向右的推力，应从作用点（重心）出发，沿水平向右方向画带箭头的线段。';
+        feedback.style.display = 'block';
+      } else {
+        opt.classList.add('wrong-answer');
+        options[correctIdx].classList.add('correct-answer');
+        feedback.innerHTML = '<span style="color:#E74C3C;">✗ 再想想</span> 题目说"水平向右的推力"，箭头方向应该是水平向右。';
+        feedback.style.display = 'block';
+      }
+    });
+  });
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  // 交互1
+  document.getElementById('effect-slider').addEventListener('input', updateEffect);
+  setEffectMode('push');
+
+  // 交互2
+  document.getElementById('elem-mag').addEventListener('input', updateElements);
+  document.getElementById('elem-dir').addEventListener('input', updateElements);
+  document.getElementById('elem-pos').addEventListener('change', updateElements);
+  updateElements();
+
+  // 交互3
+  document.getElementById('mutual-slider').addEventListener('input', updateMutual);
+  updateMutual();
+
+  // 交互4
+  drawSpringScaleTicks();
+  document.getElementById('spring-slider').addEventListener('input', updateSpring);
+  updateSpring();
+
+  // 交互5
+  switchScene('incline');
+  initDrawing();
+  initDiagramQuiz();
+
+  // 练习题
+  initQuiz('quiz1', { correct: 2, explain: '力是物体对物体的作用，力不能脱离物体存在，至少涉及施力物体和受力物体两个物体。', hint: '想想力的定义——物体对物体的作用。' });
+  initQuiz('quiz2', { correct: 3, explain: '力的三要素（大小、方向、作用点）中任何一个改变，都会影响力的作用效果。', hint: '力的三要素都会影响作用效果。' });
+  initQuiz('quiz3', { correct: 1, explain: '力的作用是相互的，人对水的力和水对人的力大小相等、方向相反、作用在同一直线上。', hint: '力的作用是相互的，两个力大小相等。' });
+});
+</script>
+
 </body>
 </html>

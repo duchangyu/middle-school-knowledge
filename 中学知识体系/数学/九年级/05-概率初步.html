@@ -6,85 +6,1225 @@
   <title>概率初步 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-header .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 24px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      line-height: 1.7;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 90px;
+      color: var(--math);
+      font-size: 16px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row .value-display {
+      min-width: 56px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 演示容器 ===== */
+    .demo-container {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container canvas {
+      max-width: 100%;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .demo-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* ===== 数据读数面板 ===== */
+    .info-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .readout-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid rgba(155,89,182,0.25);
+    }
+    .readout-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .readout-cell .num {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+    }
+    .readout-cell .num.green { color: var(--success); }
+
+    /* ===== 模式切换按钮 ===== */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .mode-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      border: 2px solid rgba(155,89,182,0.4);
+      background: #fff;
+      color: var(--math);
       transition: all 0.2s;
+      user-select: none;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .mode-btn:hover:not(:disabled) { background: rgba(155,89,182,0.08); }
+    .mode-btn.active {
+      background: var(--math);
+      color: #fff;
+      border-color: var(--math);
     }
+    .mode-btn:disabled { opacity: 0.45; cursor: default; }
+
+    /* ===== 性质列表 ===== */
+    .property-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0;
+    }
+    .property-list li {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    .property-list li .prop-tag {
+      display: inline-block;
+      background: var(--math);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-right: 8px;
+    }
+    .property-list li .prop-formula {
+      font-family: Georgia, serif;
+      color: var(--math);
+      font-weight: 700;
+    }
+
+    /* ===== 事件分类小游戏 ===== */
+    .game-event-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.12), rgba(155,89,182,0.04));
+      border: 2px solid rgba(155,89,182,0.3);
+      border-radius: var(--radius);
+      padding: 26px 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 16px 0;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.6;
+    }
+    .game-answers {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .game-btn {
+      padding: 12px 26px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 700;
+      border: 2px solid var(--math);
+      background: #fff;
+      color: var(--math);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .game-btn:hover:not(:disabled) { background: rgba(155,89,182,0.1); transform: translateY(-2px); }
+    .game-btn:disabled { opacity: 0.4; cursor: default; }
+    .game-btn.picked-right { background: var(--success); border-color: var(--success); color: #fff; opacity: 1; }
+    .game-btn.picked-wrong { background: var(--danger); border-color: var(--danger); color: #fff; opacity: 1; }
+    .game-feedback {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 15px;
+      min-height: 26px;
+      line-height: 1.6;
+    }
+    .score-bar {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--math);
+      background: rgba(155,89,182,0.1);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    /* ===== 摸球袋 ===== */
+    .bag-zone {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .bag-box {
+      background: #FDF2E9;
+      border: 3px solid #E67E22;
+      border-radius: 0 0 40px 40px;
+      padding: 18px 20px 14px;
+      min-width: 200px;
+      text-align: center;
+      position: relative;
+    }
+    .bag-box::before {
+      content: '抽 签 袋';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #E67E22;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .bag-balls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 220px; margin: 0 auto; }
+    .ball {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      box-shadow: inset -3px -4px 6px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .ball.red { background: radial-gradient(circle at 35% 30%, #FF8A80, #C0392B); }
+    .ball.white { background: radial-gradient(circle at 35% 30%, #FFFFFF, #B2BABB); }
+    .drawn-ball-info {
+      font-size: 16px;
+      font-weight: 700;
+      min-width: 150px;
+      text-align: center;
+    }
+
+    /* ===== 骰子 ===== */
+    .dice-zone {
+      display: flex;
+      gap: 26px;
+      justify-content: center;
+      align-items: center;
+      margin: 16px 0;
+    }
+    .die {
+      width: 72px; height: 72px;
+      border-radius: 14px;
+      background: #fff;
+      border: 3px solid var(--math);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+      box-shadow: 0 4px 10px rgba(155,89,182,0.25);
+      transition: transform 0.1s;
+    }
+    .die.rolling { transform: rotate(12deg) scale(1.06); }
+    .dice-sum {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+    }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); line-height: 1.8; }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+
+    /* ===== 树状图 ===== */
+    .tree-wrap {
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    .tree-result {
+      background: rgba(155,89,182,0.1);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 16px;
+      line-height: 1.9;
+      margin-top: 10px;
+    }
+    .tree-result .hit { color: var(--math); font-weight: 700; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 概率初步</div>
+  <div class="navbar-brand">🎲 概率初步</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>🎲 概率初步</h1>
+  <p>从"可能"到"多可能"——用数字度量不确定性</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">数学</a>
+    <span>数学</span>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>概率初步</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>概率初步</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 事件分类 ===== -->
+  <h2 class="section-header"><span class="step-badge">1</span> 事件的分类：必然、不可能与随机</h2>
+  <div class="card">
+    <p>生活中，有些事情我们<strong>事先就能断定结果</strong>，有些则<strong>无法预料</strong>：</p>
+    <ul class="property-list">
+      <li><span class="prop-tag">必然事件</span>在一定条件下，<strong>必然会发生</strong>的事件。例：太阳从东方升起；掷一枚骰子，点数小于 7。</li>
+      <li><span class="prop-tag">不可能事件</span>在一定条件下，<strong>必然不会发生</strong>的事件。例：从只装红球的袋中摸出白球；掷骰子点数为 8。</li>
+      <li><span class="prop-tag">随机事件</span>在一定条件下，<strong>可能发生也可能不发生</strong>的事件。例：明天降雨；抛一枚硬币正面朝上。</li>
+    </ul>
+    <div class="formula-box">
+      <div class="formula">必然事件 + 不可能事件 = 确定性事件</div>
+      <div class="formula-note">随机事件又称"不确定事件"——概率研究的正是随机事件发生可能性的大小</div>
+    </div>
+
+    <p><strong>🎮 小游戏：事件分类挑战</strong>——判断下面的事件属于哪一类，点击对应按钮：</p>
+    <div class="score-bar" id="game-score">第 1 / 8 题 · 得分 0</div>
+    <div class="game-event-card" id="game-event">加载中…</div>
+    <div class="game-answers">
+      <button class="game-btn" data-cat="certain">💯 必然事件</button>
+      <button class="game-btn" data-cat="impossible">🚫 不可能事件</button>
+      <button class="game-btn" data-cat="random">🎲 随机事件</button>
+    </div>
+    <div class="game-feedback" id="game-feedback"></div>
+    <div style="text-align:center; margin-top:6px;">
+      <span class="mode-btn" id="game-restart">🔄 重新开始</span>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 概率的意义 ===== -->
+  <h2 class="section-header"><span class="step-badge">2</span> 概率的意义：给"可能性"打分</h2>
+  <div class="card">
+    <p>一般地，如果在一次试验中，有 <strong>n</strong> 种可能的结果，并且它们发生的<strong>可能性都相等</strong>，事件 A 包含其中的 <strong>m</strong> 种结果，那么事件 A 发生的概率为：</p>
+    <div class="formula-box">
+      <div class="formula">P(A) = m / n</div>
+      <div class="formula-note">m = 事件 A 包含的结果数，n = 所有等可能结果的总数</div>
+    </div>
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">必然事件</div>
+        <div class="num">P = 1</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">不可能事件</div>
+        <div class="num">P = 0</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">随机事件</div>
+        <div class="num green" style="font-size:17px;">0 &lt; P &lt; 1</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">取值范围</div>
+        <div class="num" style="font-size:17px;">0 ≤ P(A) ≤ 1</div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 概率越大 = 越可能发生</div>
+      概率是介于 0 和 1 之间的数：P 越接近 1，事件越可能发生；P 越接近 0，越不可能发生。注意前提——<strong>所有结果必须"等可能"</strong>，否则不能直接数个数之比！
+    </div>
   </div>
+
+  <!-- ===== 交互1：摸球实验 ===== -->
+  <h2 class="section-header"><span class="step-badge">3</span> 交互探索①：摸球实验（频率趋近概率）</h2>
+  <div class="card">
+    <p>调节袋中<strong class="math-accent">红球</strong>和<strong>白球</strong>的数量，然后点击按钮<strong>有放回</strong>地摸球。观察折线图中"红球频率"如何随着试验次数增加，逐渐稳定在理论概率附近。</p>
+
+    <div class="slider-row" style="margin-top:18px;">
+      <label>🔴 红球个数</label>
+      <input type="range" id="slider-red" min="1" max="10" value="3" step="1">
+      <span class="value-display" id="display-red">3</span>
+      <label style="min-width:90px;">⚪ 白球个数</label>
+      <input type="range" id="slider-white" min="1" max="10" value="2" step="1">
+      <span class="value-display" id="display-white">2</span>
+    </div>
+
+    <div class="bag-zone">
+      <div class="bag-box">
+        <div class="bag-balls" id="bag-balls"></div>
+      </div>
+      <div class="drawn-ball-info" id="drawn-info">点击按钮开始摸球</div>
+    </div>
+
+    <div class="mode-toggle">
+      <span class="mode-btn" id="btn-draw1">🖐️ 摸 1 次</span>
+      <span class="mode-btn" id="btn-draw10">🔟 摸 10 次</span>
+      <span class="mode-btn" id="btn-draw100">💯 摸 100 次</span>
+      <span class="mode-btn" id="btn-draw1000">⚡ 快速摸 1000 次</span>
+      <span class="mode-btn" id="btn-reset-exp">🔄 重置实验</span>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">试验总次数</div>
+        <div class="num" id="stat-total">0</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">摸出红球次数</div>
+        <div class="num" id="stat-red">0</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">红球频率</div>
+        <div class="num green" id="stat-freq">—</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">理论概率 P(红)</div>
+        <div class="num" id="stat-theory">3/5 = 0.6</div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <canvas id="canvas-freq" width="580" height="280"></canvas>
+      <div class="demo-hint">紫色折线 = 红球频率随试验次数的变化；虚线 = 理论概率。摸得越多，折线越"贴"住虚线。</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📉 观察要点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>试验次数<strong>少</strong>时，频率上下波动很大；</li>
+        <li>试验次数<strong>足够多</strong>时，频率逐渐<strong>稳定</strong>在理论概率附近；</li>
+        <li>改变红白球比例后记得点"重置实验"，看看新概率下折线收敛到哪里。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 列举法求概率 ===== -->
+  <h2 class="section-header"><span class="step-badge">4</span> 交互探索②：掷两枚骰子（列举法）</h2>
+  <div class="card">
+    <p>当试验只涉及<strong>一个对象</strong>时，可以直接列举；涉及<strong>两个对象</strong>（如两枚骰子）时，常用<strong class="math-accent">列表法</strong>避免遗漏和重复。</p>
+    <p>掷两枚均匀骰子，所有等可能结果共 <strong>6 × 6 = 36</strong> 种。点数和为 2~12，其中"和为 7"包含 6 种结果，最多——所以 <span class="prop-formula" style="font-family:Georgia,serif;color:var(--math);font-weight:700;">P(和=7) = 6/36 = 1/6</span> 最大。</p>
+
+    <div class="dice-zone">
+      <div class="die" id="die1">?</div>
+      <div style="font-size:26px; font-weight:700; color:var(--math);">+</div>
+      <div class="die" id="die2">?</div>
+      <div class="dice-sum">点数和：<span id="dice-sum-val">—</span></div>
+    </div>
+
+    <div class="mode-toggle">
+      <span class="mode-btn" id="btn-roll1">🎲 掷 1 次</span>
+      <span class="mode-btn" id="btn-roll10">🎲 掷 10 次</span>
+      <span class="mode-btn" id="btn-roll50">🎲 掷 50 次</span>
+      <span class="mode-btn" id="btn-roll-reset">🔄 重置</span>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">已掷次数</div>
+        <div class="num" id="dice-total">0</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">"和=7"出现次数</div>
+        <div class="num" id="dice-seven">0</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">实验频率</div>
+        <div class="num green" id="dice-freq">—</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">理论概率 P(和=7)</div>
+        <div class="num" style="font-size:18px;">1/6 ≈ 0.167</div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <canvas id="canvas-dice" width="580" height="300"></canvas>
+      <div class="demo-hint">紫色柱 = 实验次数统计；白底虚线框 = 理论分布（36 种结果中各点数和的个数）</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📋 列表法</div>
+      <p style="margin-top:4px;">把第一枚骰子的点数写在行头、第二枚写在列头，填出 6×6 表格，就能不重不漏地列出全部 36 种结果。数"和 = 7"的格子：(1,6)(2,5)(3,4)(4,3)(5,2)(6,1)——恰好 <strong>6</strong> 个，所以 P(和=7) = 6/36 = 1/6。</p>
+    </div>
+  </div>
+
+  <!-- ===== 树状图 ===== -->
+  <h2 class="section-header"><span class="step-badge">5</span> 交互探索③：画树状图（两步试验）</h2>
+  <div class="card">
+    <p>当试验涉及<strong>两步或更多步</strong>时，<strong class="math-accent">画树状图</strong>是最清晰的列举方法：每一步画一层分叉，从根到叶子的每条路径就是一个结果。</p>
+
+    <div class="mode-toggle">
+      <span class="mode-btn active" data-scene="balls">🏀 袋中有红、黄、蓝各 1 球，有放回地摸两次</span>
+      <span class="mode-btn" data-scene="coins">🪙 连续抛掷两枚均匀硬币</span>
+    </div>
+    <div class="mode-toggle" id="tree-targets"><!-- JS 动态生成目标事件按钮 --></div>
+
+    <div class="demo-container tree-wrap">
+      <svg id="svg-tree" width="640" height="300" viewBox="0 0 640 300"></svg>
+    </div>
+
+    <div class="tree-result" id="tree-result"><!-- JS 动态生成列举与计算 --></div>
+
+    <div class="tip-box">
+      <div class="tip-title">🌳 树状图三步法</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>画</strong>：第一步的结果画第一层分支，每个分支下再画第二步的所有分支；</li>
+        <li><strong>数</strong>：数出总结果数 n（所有路径），再数出目标事件包含的结果数 m；</li>
+        <li><strong>算</strong>：P = m / n，注意检查每种结果是否等可能。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 用频率估计概率 ===== -->
+  <h2 class="section-header"><span class="step-badge">6</span> 用频率估计概率</h2>
+  <div class="card">
+    <p>回到第 3 节的摸球实验：如果袋中球的数量<strong>未知</strong>，我们还能知道摸出红球的概率吗？——可以！大量重复摸球，用<strong>稳定的频率</strong>去估计概率。</p>
+    <div class="formula-box">
+      <div class="formula">大量重复试验 → 频率稳定在某个常数附近 → 用频率估计概率</div>
+      <div class="formula-note">适用于"结果不等可能"或"无法列举"的试验（如：投篮命中率、种子发芽率、图钉尖朝上的概率）</div>
+    </div>
+    <ul class="property-list">
+      <li><span class="prop-tag">联系</span>频率是概率的"实验影子"：试验次数越多，频率越接近概率，两者在大量试验下趋于一致。</li>
+      <li><span class="prop-tag">区别</span>频率是<strong>试验值</strong>，随试验而波动，试验前不知道；概率是<strong>理论值</strong>，是事件固有的客观常数，与是否做试验无关。</li>
+      <li><span class="prop-tag">注意</span><span class="prop-formula">频率 ≠ 概率</span>。不能说"摸 10 次出 6 次红球，概率就是 0.6"——少量试验的频率可能与概率相差很远。</li>
+    </ul>
+    <div class="warning-box">
+      <strong>⚠️ 常见误区</strong>："抛硬币连出 5 次正面，下一次反面概率更大"是<strong>错误</strong>的！每次抛掷相互独立，正反面概率始终是 1/2。频率的稳定性是<strong>大量试验的整体趋势</strong>，不是对下一次结果的"补偿"。
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-header"><span class="step-badge">7</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. "从只装有 5 个红球的袋子中摸出 1 个白球"，这一事件是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 必然事件</div>
+    <div class="quiz-option" data-idx="1">B. 不可能事件</div>
+    <div class="quiz-option" data-idx="2">C. 随机事件</div>
+    <div class="quiz-option" data-idx="3">D. 以上都有可能</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 从分别标有数字 1、2、3、4、5 的五张卡片中随机抽出一张，抽到偶数的概率是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 1/5</div>
+    <div class="quiz-option" data-idx="1">B. 2/5</div>
+    <div class="quiz-option" data-idx="2">C. 3/5</div>
+    <div class="quiz-option" data-idx="3">D. 1/2</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 连续抛掷两枚均匀的硬币，"两次都是正面朝上"的概率是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 1/2</div>
+    <div class="quiz-option" data-idx="1">B. 1/3</div>
+    <div class="quiz-option" data-idx="2">C. 1/4</div>
+    <div class="quiz-option" data-idx="3">D. 2/3</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-header"><span class="step-badge">8</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 概率与相关知识的联系</div>
+    <ul class="cross-ref-list">
+      <li>
+        📊 <a href="../../数学/八年级/11-数据的分析.html"><strong>数学·数据的分析</strong></a>——
+        统计中的"频率"是概率的实验基础：频数 ÷ 总数 = 频率，大量数据下频率稳定于概率。数据分析中的平均数、中位数又常用来对随机现象作决策（如评估抽奖活动是否划算）。
+        <span class="tag tag-cross">频率与概率</span>
+      </li>
+      <li>
+        🌀 <a href="03-旋转.html"><strong>数学·旋转（上一章）</strong></a>——
+        转盘游戏中的指针绕中心旋转，停在各扇形的概率 = 扇形圆心角 ÷ 360°——旋转角的大小直接决定了概率的大小。
+        <span class="tag tag-cross">转盘游戏</span>
+      </li>
+      <li>
+        🧪 <a href="../../化学/九年级/index.html"><strong>化学·微观世界</strong></a>——
+        微观粒子的运动（如气体分子的碰撞）本质上是随机的，化学中用统计规律描述大量分子的整体行为——这正是"频率稳定于概率"思想在科学中的应用。
+        <span class="tag tag-cross">统计思想</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="04-圆.html" class="btn btn-outline">← 上一章：圆</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="06-反比例函数.html" class="btn btn-primary" style="background: var(--math);">下一章：反比例函数 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 交互1：事件分类小游戏
+ * ======================================== */
+(function () {
+  var events = [
+    { text: '☀️ 太阳每天从东方升起', cat: 'certain', note: '这是自然规律，必然发生。' },
+    { text: '🎲 掷一枚骰子，朝上一面的点数是 7', cat: 'impossible', note: '骰子只有 1~6 点，点数 7 不可能出现。' },
+    { text: '🌧️ 明天本地会下雨', cat: 'random', note: '可能发生也可能不发生，无法事先断定。' },
+    { text: '🌙 水中捞月——从水里捞出月亮', cat: 'impossible', note: '水中的"月亮"只是倒影，不可能捞出。' },
+    { text: '🪙 抛一枚硬币，正面朝上', cat: 'random', note: '可能正面也可能反面，结果是随机的。' },
+    { text: '📐 任意三角形的内角和等于 180°', cat: 'certain', note: '这是已证明的几何定理，必然成立。' },
+    { text: '🎫 买一张彩票就中一等奖', cat: 'random', note: '概率极小，但仍属"可能发生"的随机事件。' },
+    { text: '🌱 煮熟的种子种到土里发了芽', cat: 'impossible', note: '煮熟的种子失去生命力，不可能发芽。' }
+  ];
+  var catNames = { certain: '必然事件', impossible: '不可能事件', random: '随机事件' };
+
+  var order = [];
+  var cur = 0, score = 0, answered = false;
+
+  var eventEl = document.getElementById('game-event');
+  var scoreEl = document.getElementById('game-score');
+  var fbEl = document.getElementById('game-feedback');
+  var btns = document.querySelectorAll('.game-btn');
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function showCurrent() {
+    var idx = order[cur];
+    eventEl.textContent = events[idx].text;
+    scoreEl.textContent = '第 ' + (cur + 1) + ' / ' + events.length + ' 题 · 得分 ' + score;
+    fbEl.innerHTML = '';
+    answered = false;
+    btns.forEach(function (b) {
+      b.disabled = false;
+      b.classList.remove('picked-right', 'picked-wrong');
+    });
+  }
+
+  function start() {
+    order = shuffle(events.map(function (_, i) { return i; }));
+    cur = 0;
+    score = 0;
+    showCurrent();
+  }
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (answered) return;
+      answered = true;
+      var ev = events[order[cur]];
+      var right = this.dataset.cat === ev.cat;
+      if (right) {
+        score++;
+        this.classList.add('picked-right');
+        fbEl.innerHTML = '<span style="color:var(--success);font-weight:700;">✓ 正确！</span>' + ev.note;
+      } else {
+        this.classList.add('picked-wrong');
+        fbEl.innerHTML = '<span style="color:var(--danger);font-weight:700;">✗ 答错啦。</span>正确分类：<strong>' + catNames[ev.cat] + '</strong>。' + ev.note;
+      }
+      btns.forEach(function (b) { b.disabled = true; });
+      scoreEl.textContent = '第 ' + (cur + 1) + ' / ' + events.length + ' 题 · 得分 ' + score;
+      setTimeout(function () {
+        cur++;
+        if (cur < events.length) {
+          showCurrent();
+        } else {
+          eventEl.textContent = score === events.length
+            ? '🎉 全部答对！你已经是"分类大师"了！'
+            : '🏁 挑战结束！得分 ' + score + ' / ' + events.length + '，点"重新开始"再战！';
+          fbEl.innerHTML = '';
+          scoreEl.textContent = '已完成 ' + events.length + ' 题 · 最终得分 ' + score;
+        }
+      }, 1600);
+    });
+  });
+
+  document.getElementById('game-restart').addEventListener('click', start);
+  start();
+})();
+
+/* ========================================
+ * 交互2：摸球实验（频率 → 概率）
+ * ======================================== */
+(function () {
+  var canvas = document.getElementById('canvas-freq');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  var total = 0, redCount = 0;
+  var freqHistory = []; // 每次摸球后的频率
+
+  function getRed() { return parseInt(document.getElementById('slider-red').value, 10); }
+  function getWhite() { return parseInt(document.getElementById('slider-white').value, 10); }
+  function theory() { return getRed() / (getRed() + getWhite()); }
+
+  function renderBag() {
+    var box = document.getElementById('bag-balls');
+    box.innerHTML = '';
+    var r = getRed(), w = getWhite(), i;
+    for (i = 0; i < r; i++) {
+      var b1 = document.createElement('div');
+      b1.className = 'ball red';
+      box.appendChild(b1);
+    }
+    for (i = 0; i < w; i++) {
+      var b2 = document.createElement('div');
+      b2.className = 'ball white';
+      box.appendChild(b2);
+    }
+    var p = theory();
+    document.getElementById('stat-theory').textContent =
+      r + '/' + (r + w) + ' = ' + p.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  function updateStats(lastDrawn) {
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-red').textContent = redCount;
+    document.getElementById('stat-freq').textContent =
+      total === 0 ? '—' : (redCount / total).toFixed(3);
+    if (lastDrawn) {
+      document.getElementById('drawn-info').innerHTML =
+        lastDrawn === 'red'
+          ? '<span class="ball red" style="display:inline-block;vertical-align:middle;margin-right:8px;"></span>摸出红球！'
+          : '<span class="ball white" style="display:inline-block;vertical-align:middle;margin-right:8px;"></span>摸出白球';
+    }
+  }
+
+  function drawChart() {
+    ctx.clearRect(0, 0, W, H);
+    var padL = 46, padR = 16, padT = 18, padB = 34;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var p = theory();
+
+    // 网格与 y 轴刻度（0 ~ 1）
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px Georgia, serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (var v = 0; v <= 1.0001; v += 0.2) {
+      var y = padT + plotH * (1 - v);
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(W - padR, y);
+      ctx.stroke();
+      ctx.fillText(v.toFixed(1), padL - 6, y);
+    }
+
+    // 边框
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(padL, padT, plotW, plotH);
+
+    // 轴标签
+    ctx.fillStyle = '#5D6D7E';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('试验次数 →', padL + plotW / 2, H - padB + 12);
+    ctx.save();
+    ctx.translate(14, padT + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('红球频率', 0, 0);
+    ctx.restore();
+
+    // 理论概率虚线
+    var ty = padT + plotH * (1 - p);
+    ctx.strokeStyle = '#E67E22';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 5]);
+    ctx.beginPath();
+    ctx.moveTo(padL, ty);
+    ctx.lineTo(W - padR, ty);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#E67E22';
+    ctx.font = 'bold 12px Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('理论概率 ' + p.toFixed(3), padL + 8, ty - 4);
+
+    // 频率折线
+    if (freqHistory.length > 0) {
+      var n = freqHistory.length;
+      ctx.strokeStyle = '#9B59B6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (var i = 0; i < n; i++) {
+        var x = padL + plotW * (n === 1 ? 0 : i / (n - 1));
+        var yy = padT + plotH * (1 - freqHistory[i]);
+        if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function drawOnce() {
+    var r = getRed(), w = getWhite();
+    var isRed = Math.random() < r / (r + w);
+    total++;
+    if (isRed) redCount++;
+    freqHistory.push(redCount / total);
+    return isRed ? 'red' : 'white';
+  }
+
+  function drawMany(times, animated) {
+    var last = null;
+    for (var i = 0; i < times; i++) last = drawOnce();
+    updateStats(last);
+    drawChart();
+  }
+
+  function resetExp() {
+    total = 0;
+    redCount = 0;
+    freqHistory = [];
+    document.getElementById('drawn-info').textContent = '点击按钮开始摸球';
+    updateStats(null);
+    drawChart();
+  }
+
+  document.getElementById('btn-draw1').addEventListener('click', function () { drawMany(1); });
+  document.getElementById('btn-draw10').addEventListener('click', function () { drawMany(10); });
+  document.getElementById('btn-draw100').addEventListener('click', function () { drawMany(100); });
+  document.getElementById('btn-draw1000').addEventListener('click', function () { drawMany(1000); });
+  document.getElementById('btn-reset-exp').addEventListener('click', resetExp);
+
+  document.getElementById('slider-red').addEventListener('input', function () {
+    document.getElementById('display-red').textContent = this.value;
+    renderBag();
+    resetExp();
+  });
+  document.getElementById('slider-white').addEventListener('input', function () {
+    document.getElementById('display-white').textContent = this.value;
+    renderBag();
+    resetExp();
+  });
+
+  renderBag();
+  resetExp();
+})();
+
+/* ========================================
+ * 交互3：掷两枚骰子（列表法）
+ * ======================================== */
+(function () {
+  var canvas = document.getElementById('canvas-dice');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  // 理论分布：和为 s 的结果数（共 36 种）
+  var theoryCounts = [0, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]; // 索引即点数和
+  var counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var totalRolls = 0;
+  var rolling = false;
+
+  var die1El = document.getElementById('die1');
+  var die2El = document.getElementById('die2');
+
+  function updateDiceStats() {
+    document.getElementById('dice-total').textContent = totalRolls;
+    document.getElementById('dice-seven').textContent = counts[7];
+    document.getElementById('dice-freq').textContent =
+      totalRolls === 0 ? '—' : (counts[7] / totalRolls).toFixed(3);
+  }
+
+  function drawDiceChart() {
+    ctx.clearRect(0, 0, W, H);
+    var padL = 40, padR = 16, padT = 30, padB = 34;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var maxV = Math.max(8, Math.max.apply(null, counts) + 1);
+    var barSlot = plotW / 11;
+
+    // 网格与 y 刻度
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px Georgia, serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    var step = Math.max(1, Math.ceil(maxV / 6));
+    for (var v = 0; v <= maxV; v += step) {
+      var y = padT + plotH * (1 - v / maxV);
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(W - padR, y);
+      ctx.stroke();
+      ctx.fillText(v, padL - 6, y);
+    }
+
+    // 柱子
+    for (var s = 2; s <= 12; s++) {
+      var cx = padL + (s - 2) * barSlot + barSlot / 2;
+      var bw = barSlot * 0.52;
+
+      // 理论分布（白底虚线框，按 36 次标准化缩放到当前尺度便于对比形状）
+      var theoH = plotH * (theoryCounts[s] / maxV);
+      ctx.strokeStyle = 'rgba(230,126,34,0.8)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.strokeRect(cx - bw * 0.62, padT + plotH - theoH, bw * 1.24, theoH);
+      ctx.setLineDash([]);
+
+      // 实验柱
+      var h = plotH * (counts[s] / maxV);
+      var isSeven = (s === 7);
+      ctx.fillStyle = isSeven ? '#9B59B6' : 'rgba(155,89,182,0.45)';
+      ctx.fillRect(cx - bw / 2, padT + plotH - h, bw, h);
+      if (counts[s] > 0) {
+        ctx.fillStyle = isSeven ? '#7D3C98' : '#8E44AD';
+        ctx.font = 'bold 12px Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(counts[s], cx, padT + plotH - h - 3);
+      }
+
+      // x 轴标签
+      ctx.fillStyle = isSeven ? '#7D3C98' : '#5D6D7E';
+      ctx.font = (isSeven ? 'bold ' : '') + '13px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(s, cx, padT + plotH + 6);
+    }
+
+    // 标题
+    ctx.fillStyle = '#5D6D7E';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('点数和（虚线框 = 理论分布形状）', padL + plotW / 2, 6);
+  }
+
+  function rollOnce(showDice) {
+    var d1 = 1 + Math.floor(Math.random() * 6);
+    var d2 = 1 + Math.floor(Math.random() * 6);
+    counts[d1 + d2]++;
+    totalRolls++;
+    if (showDice) {
+      die1El.textContent = d1;
+      die2El.textContent = d2;
+      document.getElementById('dice-sum-val').textContent = d1 + d2;
+    }
+  }
+
+  function rollAnimated() {
+    if (rolling) return;
+    rolling = true;
+    die1El.classList.add('rolling');
+    die2El.classList.add('rolling');
+    var frames = 0;
+    var timer = setInterval(function () {
+      die1El.textContent = 1 + Math.floor(Math.random() * 6);
+      die2El.textContent = 1 + Math.floor(Math.random() * 6);
+      frames++;
+      if (frames >= 10) {
+        clearInterval(timer);
+        die1El.classList.remove('rolling');
+        die2El.classList.remove('rolling');
+        rollOnce(true);
+        updateDiceStats();
+        drawDiceChart();
+        rolling = false;
+      }
+    }, 70);
+  }
+
+  function rollMany(times) {
+    if (rolling) return;
+    for (var i = 0; i < times; i++) rollOnce(false);
+    updateDiceStats();
+    drawDiceChart();
+  }
+
+  document.getElementById('btn-roll1').addEventListener('click', rollAnimated);
+  document.getElementById('btn-roll10').addEventListener('click', function () { rollMany(10); });
+  document.getElementById('btn-roll50').addEventListener('click', function () { rollMany(50); });
+  document.getElementById('btn-roll-reset').addEventListener('click', function () {
+    counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    totalRolls = 0;
+    die1El.textContent = '?';
+    die2El.textContent = '?';
+    document.getElementById('dice-sum-val').textContent = '—';
+    updateDiceStats();
+    drawDiceChart();
+  });
+
+  updateDiceStats();
+  drawDiceChart();
+})();
+
+/* ========================================
+ * 交互4：树状图生成器
+ * ======================================== */
+(function () {
+  var svg = document.getElementById('svg-tree');
+  var resultEl = document.getElementById('tree-result');
+  var targetsBox = document.getElementById('tree-targets');
+
+  var scenes = {
+    balls: {
+      step1: ['红', '黄', '蓝'],
+      step2: ['红', '黄', '蓝'],
+      colors: { '红': '#E74C3C', '黄': '#F39C12', '蓝': '#3498DB' },
+      targets: [
+        { name: '两次颜色相同', test: function (a, b) { return a === b; }, frac: '3/9 = 1/3' },
+        { name: '至少一次红色', test: function (a, b) { return a === '红' || b === '红'; }, frac: '5/9' },
+        { name: '第一次红、第二次蓝', test: function (a, b) { return a === '红' && b === '蓝'; }, frac: '1/9' }
+      ]
+    },
+    coins: {
+      step1: ['正', '反'],
+      step2: ['正', '反'],
+      colors: { '正': '#9B59B6', '反': '#16A085' },
+      targets: [
+        { name: '两次结果相同', test: function (a, b) { return a === b; }, frac: '2/4 = 1/2' },
+        { name: '至少一次正面', test: function (a, b) { return a === '正' || b === '正'; }, frac: '3/4' },
+        { name: '先正后反', test: function (a, b) { return a === '正' && b === '反'; }, frac: '1/4' }
+      ]
+    }
+  };
+
+  var sceneKey = 'balls';
+  var targetIdx = 0;
+
+  function buildTargetBtns() {
+    targetsBox.innerHTML = '';
+    scenes[sceneKey].targets.forEach(function (t, i) {
+      var btn = document.createElement('span');
+      btn.className = 'mode-btn' + (i === targetIdx ? ' active' : '');
+      btn.textContent = '🎯 ' + t.name;
+      btn.addEventListener('click', function () {
+        targetIdx = i;
+        buildTargetBtns();
+        renderTree();
+      });
+      targetsBox.appendChild(btn);
+    });
+  }
+
+  function renderTree() {
+    var sc = scenes[sceneKey];
+    var tgt = sc.targets[targetIdx];
+    var W = 640, H = 300;
+    var NS = 'http://www.w3.org/2000/svg';
+    svg.innerHTML = '';
+
+    var rootX = 60, midX = 300, leafX = 520;
+    var n1 = sc.step1.length;
+    var outcomes = [];
+
+    function line(x1, y1, x2, y2, color, width) {
+      var l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+      l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+      l.setAttribute('stroke', color);
+      l.setAttribute('stroke-width', width || 1.6);
+      svg.appendChild(l);
+    }
+    function node(x, y, text, color, r) {
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', x); c.setAttribute('cy', y);
+      c.setAttribute('r', r || 16);
+      c.setAttribute('fill', color);
+      svg.appendChild(c);
+      var t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', x); t.setAttribute('y', y + 5);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', '#fff');
+      t.setAttribute('font-size', '14');
+      t.setAttribute('font-weight', 'bold');
+      t.textContent = text;
+      svg.appendChild(t);
+    }
+
+    // 根节点
+    node(rootX, H / 2, '始', '#5D6D7E', 18);
+
+    for (var i = 0; i < n1; i++) {
+      var y1 = (H / (n1 + 1)) * (i + 1);
+      var v1 = sc.step1[i];
+      var n2 = sc.step2.length;
+      for (var j = 0; j < n2; j++) {
+        var v2 = sc.step2[j];
+        var hit = tgt.test(v1, v2);
+        outcomes.push({ a: v1, b: v2, hit: hit });
+        // 第二层叶子位置：围绕 y1 分布
+        var y2 = y1 + (j - (n2 - 1) / 2) * 34;
+        line(midX, y1, leafX, y2, hit ? '#9B59B6' : '#D5DBDB', hit ? 2.6 : 1.4);
+        node(leafX, y2, v1 + v2, hit ? '#9B59B6' : '#B2BABB', 15);
+      }
+      line(rootX, H / 2, midX, y1, sc.colors[v1], 2.2);
+      node(midX, y1, v1, sc.colors[v1], 16);
+    }
+
+    // 层标签
+    [['开始', rootX], ['第一步', midX], ['第二步结果', leafX]].forEach(function (pair) {
+      var t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', pair[1]); t.setAttribute('y', 18);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', '#7F8C8D');
+      t.setAttribute('font-size', '12');
+      t.textContent = pair[0];
+      svg.appendChild(t);
+    });
+
+    // 结果统计
+    var n = outcomes.length;
+    var m = outcomes.filter(function (o) { return o.hit; }).length;
+    var listAll = outcomes.map(function (o) {
+      return o.hit ? '<span class="hit">(' + o.a + ',' + o.b + ')</span>' : '(' + o.a + ',' + o.b + ')';
+    }).join('　');
+    resultEl.innerHTML =
+      '所有等可能结果（n = ' + n + '）：<br>' + listAll + '<br>' +
+      '目标事件「' + tgt.name + '」包含 <span class="hit">' + m + '</span> 种结果，' +
+      '所以 <span class="hit">P = ' + m + '/' + n + (tgt.frac.indexOf('=') >= 0 ? ' = ' + tgt.frac.split('=')[1].trim() : '') + '</span>';
+  }
+
+  document.querySelectorAll('[data-scene]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('[data-scene]').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      sceneKey = this.dataset.scene;
+      targetIdx = 0;
+      buildTargetBtns();
+      renderTree();
+    });
+  });
+
+  buildTargetBtns();
+  renderTree();
+})();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '袋子中只有红球，摸出白球在给定条件下必然不会发生，是不可能事件，其概率为 0。',
+  hint: '先看条件："只装红球"。摸出白球有可能吗？'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '5 张卡片中偶数有 2、4 共 2 张，所以 P(抽到偶数) = 2/5。',
+  hint: 'P = 目标结果数 ÷ 总结果数。先数偶数卡片有几张。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '画树状图（或列表）：所有等可能结果为（正,正）（正,反）（反,正）（反,反）共 4 种，"两次都正面"只有 1 种，P = 1/4。',
+  hint: '两步试验要列出全部 4 种等可能结果，别漏掉（正,反）和（反,正）这两种不同结果！'
+});
+</script>
 </body>
 </html>

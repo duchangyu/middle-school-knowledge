@@ -6,49 +6,234 @@
   <title>化学式与化合价 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #fff7f5, #fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
+      padding: 12px 18px; margin: 14px auto; max-width: 520px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
+    }
+    .formula-box .label { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400; }
+
+    /* 属性清单 */
+    .property-list {
+      list-style: none; padding: 0; margin: 12px 0;
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .property-list li {
+      padding: 12px 18px; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .property-list li:last-child { border-bottom: none; }
+    .property-list li .pl-icon { flex-shrink: 0; font-size: 16px; }
+    .property-list li strong { color: var(--chemistry); }
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex; align-items: center; gap: 14px;
+      max-width: 520px; margin: 14px auto;
+    }
+    .slider-row input[type="range"] { flex: 1; }
+    .value-display {
+      min-width: 76px; padding: 6px 10px; text-align: center;
+      background: var(--chemistry); color: white; font-weight: 700;
+      border-radius: var(--radius-sm); font-size: 17px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+    }
+
+    /* 信息读数区 */
+    .info-readout {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow); padding: 14px 18px; margin: 12px auto;
+      max-width: 560px; text-align: left; font-size: 14px; line-height: 1.9;
+      border-left: 4px solid var(--chemistry);
+    }
+    .info-readout .ir-title {
+      font-weight: 700; color: var(--chemistry); margin-bottom: 6px; font-size: 15px;
+    }
+    .info-readout .ir-math {
+      font-family: 'Cambria', 'Times New Roman', serif; font-size: 16px;
       color: var(--text-main);
+    }
+
+    /* 模式切换 */
+    .mode-toggle {
+      display: inline-flex; background: var(--bg-soft);
+      border-radius: 22px; padding: 4px; gap: 4px; margin-bottom: 14px;
+    }
+    .mode-toggle .mt-btn {
+      padding: 7px 20px; border-radius: 18px; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      background: transparent; color: var(--text-secondary); transition: all 0.2s;
+    }
+    .mode-toggle .mt-btn.active { background: var(--chemistry); color: white; }
+
+    /* 离子选择按钮 */
+    .ion-group { margin: 10px 0; }
+    .ion-group .ig-label { font-size: 14px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+    .ion-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .ion-btn {
+      padding: 9px 14px; border: 2px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 15px;
+      font-family: 'Cambria', 'Times New Roman', serif; font-weight: 600;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .ion-btn:hover { border-color: var(--chemistry); transform: translateY(-2px); }
+    .ion-btn.selected.cation { background: var(--info); color: white; border-color: var(--info); }
+    .ion-btn.selected.anion { background: var(--chemistry); color: white; border-color: var(--chemistry); }
+
+    .build-result {
+      margin: 18px auto 8px; padding: 18px 24px;
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); max-width: 460px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 34px; font-weight: 700; color: var(--chemistry);
+      min-height: 80px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
     }
+    .build-result .br-name { font-size: 14px; font-family: -apple-system, "PingFang SC", sans-serif; color: var(--text-secondary); font-weight: 400; }
+    .build-steps { font-size: 13px; color: var(--text-secondary); line-height: 1.8; max-width: 460px; margin: 0 auto; text-align: left; min-height: 22px; }
+    .build-steps strong { color: var(--chemistry); }
+
+    /* 化合价口诀 */
+    .valence-chant {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px; margin: 14px 0;
+    }
+    .vc-card {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow); padding: 12px 16px;
+      border-top: 4px solid var(--chemistry);
+      font-family: 'Cambria', 'Times New Roman', serif; font-size: 16px; font-weight: 600;
+      text-align: center; line-height: 1.8;
+    }
+    .vc-card .vc-note { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+
+    /* 化合物选择 */
+    .cmp-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px; }
+    .cmp-btn {
+      padding: 8px 16px; border: 2px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 16px;
+      font-family: 'Cambria', 'Times New Roman', serif; font-weight: 600; transition: all 0.2s;
+    }
+    .cmp-btn:hover { border-color: var(--chemistry); }
+    .cmp-btn.active { background: var(--chemistry); color: white; border-color: var(--chemistry); }
+
+    /* 计算器 */
+    .calc-panel {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 18px; margin-top: 12px; text-align: left;
+    }
+    .calc-panel .cp-row { padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 14px; line-height: 1.9; }
+    .calc-panel .cp-row:last-child { border-bottom: none; }
+    .calc-panel .cp-label { font-weight: 700; color: var(--chemistry); margin-right: 6px; }
+    .calc-panel .cp-math { font-family: 'Cambria', 'Times New Roman', serif; font-size: 16px; }
+    .el-btns { display: inline-flex; gap: 6px; flex-wrap: wrap; margin-left: 8px; vertical-align: middle; }
+    .el-btn {
+      padding: 3px 12px; border: 1.5px solid var(--border); background: var(--bg-soft);
+      border-radius: 14px; cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s;
+    }
+    .el-btn.active { background: var(--info); color: white; border-color: var(--info); }
+
+    /* 交叉法步骤 */
+    .cross-steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px; margin: 14px 0;
+    }
+    .cs-step {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow); padding: 14px; font-size: 13px; line-height: 1.7;
+      position: relative; padding-top: 34px;
+    }
+    .cs-step .cs-num {
+      position: absolute; top: -12px; left: 14px;
+      background: var(--chemistry); color: white; font-weight: 700;
+      padding: 4px 12px; border-radius: 14px; font-size: 13px;
+    }
+    .cs-step .cs-math { font-family: 'Cambria', 'Times New Roman', serif; font-size: 17px; color: var(--chemistry); font-weight: 700; margin-top: 4px; }
+
+    /* 学科交叉链接 */
+    .cross-row {
+      display: flex; justify-content: space-between; align-items: stretch;
+      gap: 12px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .cross-link {
+      flex: 1; min-width: 180px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--text-main); transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--border);
+    }
+    .cross-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cross-link.cross-chem { border-left-color: var(--chemistry); }
+    .cross-link .arrow { font-size: 20px; color: var(--text-secondary); }
+    .cross-link .cl-label { font-size: 12px; color: var(--text-secondary); }
+    .cross-link .cl-title { font-size: 14px; font-weight: 600; }
+
+    /* 小结 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
+
+    .check-feedback {
+      margin-top: 12px; font-size: 14px; padding: 10px 14px;
+      border-radius: var(--radius-sm); display: none; line-height: 1.7;
+      max-width: 560px; margin-left: auto; margin-right: auto; text-align: left;
+    }
+    .check-feedback.show { display: block; }
+    .check-feedback.ok { background: rgba(39,174,96,0.12); color: var(--success); }
+    .check-feedback.no { background: rgba(231,76,60,0.12); color: var(--danger); }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
   <div class="navbar-brand">⚗️ 化学式与化合价</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
@@ -60,31 +245,567 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>化学式与化合价</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>化学式与化合价</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">⚗️ 第四单元 课题4：化学式与化合价</div>
+    <p style="color: var(--text-secondary); font-size: 15px;">
+      用<strong style="color:var(--chemistry);">元素符号和数字的组合</strong>表示物质组成的式子叫做化学式。
+      化学式是化学世界的"身份证"，而<strong style="color:var(--info);">化合价</strong>则是书写化学式的钥匙。
+      本节课我们学会：读懂化学式的意义 → 记住常见化合价 → 用交叉法写化学式 → 根据化学式进行计算。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ========== 知识点 1：化学式的意义 ========== -->
+  <h2 class="section-header"><span class="num">1</span>化学式的意义（以 H₂O 为例）</h2>
+
+  <div class="formula-box">
+    H₂O
+    <span class="label">一个化学式，四层意义：宏观两层 + 微观两层</span>
+  </div>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">🌍</span><span><strong>宏观①：</strong>表示一种物质 —— H₂O 表示<em>水</em>这种物质。</span></li>
+    <li><span class="pl-icon">🌍</span><span><strong>宏观②：</strong>表示该物质的元素组成 —— 水由<em>氢元素和氧元素</em>组成。</span></li>
+    <li><span class="pl-icon">🔬</span><span><strong>微观①：</strong>表示该物质的一个分子 —— <em>一个水分子</em>。</span></li>
+    <li><span class="pl-icon">🔬</span><span><strong>微观②：</strong>表示该物质分子的构成 —— 一个水分子由<em>2个氢原子和1个氧原子</em>构成。</span></li>
+  </ul>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 化学式前面加系数：只剩微观意义</div>
+    化学式前面的数字（系数）只表示<strong>微粒的个数</strong>，不再表示宏观物质。<br>
+    例如 <strong>2H₂O</strong> 只表示"2 个水分子"，不能说"两种水"——水只有一种！<br>
+    类似地：2H 表示 2 个氢原子；2H₂ 表示 2 个氢分子；2H⁺ 表示 2 个氢离子。<strong>只有分子（H₂）能表示物质</strong>。
+  </div>
+
+  <!-- ========== 知识点 2：化合价 ========== -->
+  <h2 class="section-header"><span class="num">2</span>化合价</h2>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">📖</span><span><strong>定义：</strong>化合价是元素的原子在<strong>相互化合时</strong>表现出来的一种性质，用来表示原子之间相互化合的数目。</span></li>
+    <li><span class="pl-icon">➕</span><span><strong>正价与负价：</strong>金属元素通常显<em>正价</em>，非金属元素与金属化合时通常显<em>负价</em>；氢通常显 +1 价，氧通常显 −2 价。</span></li>
+    <li><span class="pl-icon">⚖️</span><span><strong>核心规则：</strong>在化合物里，<em>正负化合价的代数和为 0</em>。</span></li>
+    <li><span class="pl-icon">0️⃣</span><span><strong>单质规则：</strong>在单质分子里，元素的化合价为 <em>0</em>（如 O₂、Fe、H₂ 中元素均为 0 价）。</span></li>
+    <li><span class="pl-icon">🔀</span><span><strong>可变价：</strong>一些元素在不同物质中可显不同化合价。如铁有 +2（亚铁）和 +3（铁）；硫有 −2、+4、+6 等。</span></li>
+  </ul>
+
+  <h3 style="color:var(--chemistry); margin:18px 0 6px; font-size:16px;">🎵 常见化合价口诀（必背）</h3>
+  <div class="valence-chant">
+    <div class="vc-card">一价 氢 氯 钾 钠 银<span class="vc-note">H +1｜Cl −1｜K、Na、Ag 均为 +1</span></div>
+    <div class="vc-card">二价 氧 钙 钡 镁 锌<span class="vc-note">O −2｜Ca、Ba、Mg、Zn 均为 +2</span></div>
+    <div class="vc-card">三铝 四硅 五价磷<span class="vc-note">Al +3｜Si +4｜P +5</span></div>
+    <div class="vc-card">二三铁 · 二四碳<span class="vc-note">Fe 有 +2（亚铁）和 +3（铁）｜C 有 +2 和 +4</span></div>
+    <div class="vc-card">铜汞二价最常见<span class="vc-note">Cu +2（氧化铜）｜也有 +1（亚铜）</span></div>
+    <div class="vc-card">单质零价要记全<span class="vc-note">任何单质中元素化合价都是 0</span></div>
+  </div>
+
+  <h3 style="color:var(--chemistry); margin:18px 0 6px; font-size:16px;">🧩 常见原子团（根）的化合价</h3>
+  <ul class="property-list">
+    <li><span class="pl-icon">−1</span><span><strong>氢氧根 OH⁻（−1）、硝酸根 NO₃⁻（−1）</strong> —— 如 NaOH、KNO₃。</span></li>
+    <li><span class="pl-icon">−2</span><span><strong>硫酸根 SO₄²⁻（−2）、碳酸根 CO₃²⁻（−2）</strong> —— 如 CuSO₄、CaCO₃。</span></li>
+    <li><span class="pl-icon">+1</span><span><strong>铵根 NH₄⁺（+1）</strong> —— 唯一常见的正价原子团，如 NH₄Cl、NH₄NO₃。</span></li>
+  </ul>
+
+  <div class="warning-box">
+    ⚠️ 原子团在化学反应中常作为一个整体参加反应。书写含原子团的化学式时，若原子团个数 ≥ 2，要用<strong>括号</strong>把原子团括起来再标角码，如 Ca(OH)₂、Al₂(SO₄)₃。
+  </div>
+
+  <!-- ========== 交互 1：化学式拼搭器 ========== -->
+  <h2 class="section-header"><span class="num">拼</span>交互一：化学式拼搭器</h2>
+  <div class="demo-container">
+    <h3>选一个阳离子 + 一个阴离子，自动交叉生成化学式</h3>
+    <div class="demo-desc">规则：正价在前、负价在后；化合价绝对值交叉作角码，能约简的要约简。</div>
+
+    <div class="ion-group">
+      <div class="ig-label">第一步：选择阳离子（正价）</div>
+      <div class="ion-btns" id="catList"></div>
+    </div>
+    <div class="ion-group">
+      <div class="ig-label">第二步：选择阴离子（负价）</div>
+      <div class="ion-btns" id="anList"></div>
+    </div>
+
+    <div class="build-result" id="buildResult">
+      <div style="font-size:15px; color:var(--text-light); font-family:-apple-system,'PingFang SC',sans-serif; font-weight:400;">请选择阳离子和阴离子</div>
+    </div>
+    <div class="build-steps" id="buildSteps"></div>
+  </div>
+
+  <!-- ========== 知识点 3：根据化合价写化学式 ========== -->
+  <h2 class="section-header"><span class="num">3</span>根据化合价写化学式：交叉法</h2>
+
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    以"写出氧化铝的化学式"为例：铝 +3 价、氧 −2 价。交叉法四步走：
+  </p>
+  <div class="cross-steps">
+    <div class="cs-step"><span class="cs-num">① 排</span>正价元素写在左，负价元素写在右<div class="cs-math">Al&nbsp;&nbsp;O</div></div>
+    <div class="cs-step"><span class="cs-num">② 标</span>在元素符号正上方标出化合价<div class="cs-math">Al⁺³&nbsp;&nbsp;O⁻²</div></div>
+    <div class="cs-step"><span class="cs-num">③ 交</span>把化合价绝对值交叉写到对方右下角<div class="cs-math">Al₂&nbsp;&nbsp;O₃</div></div>
+    <div class="cs-step"><span class="cs-num">④ 查</span>检查代数和为 0（角码要约到最简）<div class="cs-math">(+3)×2+(−2)×3=0 ✓</div></div>
+  </div>
+
+  <div class="formula-box">
+    Al₂O₃
+    <span class="label">检验：(+3)×2 + (−2)×3 = +6 − 6 = 0，正确！</span>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 约简提醒</div>
+    交叉后角码若有公约数必须约简：如 Mg(+2) 与 O(−2) 交叉得 Mg₂O₂，约简为 <strong>MgO</strong>；
+    但 <strong>H₂O₂（过氧化氢）</strong>是真实存在的分子，不能约简——约简只适用于由离子构成的化合物。
+  </div>
+
+  <!-- ========== 交互 2：化合价检验器 ========== -->
+  <h2 class="section-header"><span class="num">验</span>交互二：化合价检验器</h2>
+  <div class="demo-container">
+    <h3>拖动滑块，求出目标元素的化合价</h3>
+    <div class="demo-desc">利用"化合物中正负化合价代数和为 0"列方程求解。设未知价为 x。</div>
+
+    <div class="mode-toggle" id="valMode">
+      <button class="mt-btn active" data-mode="basic">🌱 基础</button>
+      <button class="mt-btn" data-mode="adv">🚀 进阶</button>
+    </div>
+
+    <div class="cmp-btns" id="cmpBtns"></div>
+
+    <div class="info-readout">
+      <div class="ir-title">列方程</div>
+      <div class="ir-math" id="valEquation">—</div>
+      <div id="valKnown" style="color:var(--text-secondary); font-size:13px;"></div>
+    </div>
+
+    <div class="slider-row">
+      <span style="font-size:13px; color:var(--text-secondary);">目标化合价</span>
+      <input type="range" id="valSlider" min="-4" max="8" step="1" value="0">
+      <div class="value-display" id="valDisplay">0</div>
+    </div>
+
+    <div style="margin-top:10px;">
+      <button class="btn btn-primary" id="valCheck" style="background:var(--chemistry);">✓ 验证代数和为 0</button>
+    </div>
+    <div class="check-feedback" id="valFeedback"></div>
+  </div>
+
+  <!-- ========== 知识点 4：化学式的计算 ========== -->
+  <h2 class="section-header"><span class="num">4</span>根据化学式的计算</h2>
+
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    常用相对原子质量：H−1　C−12　N−14　O−16　Na−23　Mg−24　Al−27　S−32　Cl−35.5　K−39　Ca−40　Fe−56　Cu−64
+  </p>
+
+  <div class="formula-box">
+    相对分子质量 = 各原子的相对原子质量 × 原子个数 之和
+    <span class="label">例：H₂O 的相对分子质量 = 1×2 + 16×1 = 18</span>
+  </div>
+  <div class="formula-box">
+    元素质量比 = (相对原子质量 × 原子个数) 之比
+    <span class="label">例：H₂O 中 m(H) : m(O) = (1×2) : (16×1) = 1 : 8</span>
+  </div>
+  <div class="formula-box">
+    某元素质量分数 = (该元素相对原子质量 × 原子个数) ÷ 相对分子质量 × 100%
+    <span class="label">例：H₂O 中氢元素质量分数 = (1×2)/18 × 100% ≈ 11.1%</span>
+  </div>
+
+  <div class="warning-box">
+    ⚠️ 易错点：计算质量分数时，分子上一定要乘<strong>原子个数</strong>！如 NH₄NO₃ 中有 2 个 N，氮元素质量分数 = (14×2)/80 × 100% = 35%，不能漏乘 2。
+  </div>
+
+  <!-- ========== 交互 3：相对分子质量计算器 ========== -->
+  <h2 class="section-header"><span class="num">算</span>交互三：相对分子质量 / 质量分数计算器</h2>
+  <div class="demo-container">
+    <h3>选择物质，查看完整计算过程</h3>
+    <div class="demo-desc">再点击某个元素，查看它的质量分数。</div>
+
+    <div class="cmp-btns" id="subBtns"></div>
+
+    <div class="calc-panel" id="calcPanel">
+      <div class="cp-row"><span class="cp-label">物质</span><span class="cp-math" id="calcFormula">—</span></div>
+      <div class="cp-row"><span class="cp-label">相对分子质量</span><span class="cp-math" id="calcMr">—</span></div>
+      <div class="cp-row"><span class="cp-label">元素质量比</span><span class="cp-math" id="calcRatio">—</span></div>
+      <div class="cp-row">
+        <span class="cp-label">质量分数</span>选择元素：
+        <span class="el-btns" id="elBtns"></span>
+        <div class="cp-math" id="calcFrac" style="margin-top:6px;">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 必记要点</div>
+    <div class="sb-item">化学式的意义：宏观表示<em>一种物质</em>及其<em>元素组成</em>；微观表示<em>一个分子</em>及其<em>分子构成</em>。化学式前加系数只表示微粒个数。</div>
+    <div class="sb-item">化合价规则：化合物中<strong>正负化合价代数和为 0</strong>；单质中元素化合价为 <strong>0</strong>。口诀：一价氢氯钾钠银，二价氧钙钡镁锌，三铝四硅五价磷。</div>
+    <div class="sb-item">交叉法写化学式：<strong>正价前、负价后，绝对值交叉作角码，能约简的要约简</strong>；原子团个数 ≥2 要加括号，如 Ca(OH)₂。</div>
+    <div class="sb-item">化学式计算三件套：相对分子质量、元素质量比、元素质量分数 =<em> 该元素相对原子质量×个数 ÷ 相对分子质量 × 100%</em>。</div>
+  </div>
+
+  <!-- ========== 交叉参考 ========== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 交叉参考</div>
+    化合价的本质与原子的<strong>最外层电子数</strong>密切相关：原子通过得失电子或共用电子对形成稳定结构，从而表现出化合价。
+    回顾 <a href="03-物质构成的奥秘.html" style="color:var(--chemistry); font-weight:600;">03-物质构成的奥秘</a> 中"离子"的内容，理解为什么 Na 显 +1、Cl 显 −1。
+    化合价也是下一步书写<strong>化学方程式</strong>的基础——只有化学式写对，方程式才能配平。
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 下列化学符号中，能表示 2 个氢分子的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 2H</div>
+    <div class="quiz-option" data-idx="1">B. 2H₂</div>
+    <div class="quiz-option" data-idx="2">C. H₂</div>
+    <div class="quiz-option" data-idx="3">D. 2H⁺</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 已知 R 元素在化合物中只有 +3 价，则 R 与氧元素（−2 价）组成的化合物的化学式为（ ）</div>
+    <div class="quiz-option" data-idx="0">A. RO</div>
+    <div class="quiz-option" data-idx="1">B. RO₂</div>
+    <div class="quiz-option" data-idx="2">C. R₂O₃</div>
+    <div class="quiz-option" data-idx="3">D. R₃O₂</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 硝酸铵（NH₄NO₃，相对分子质量为 80）中氮元素的质量分数为（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 17.5%</div>
+    <div class="quiz-option" data-idx="1">B. 21.2%</div>
+    <div class="quiz-option" data-idx="2">C. 35%</div>
+    <div class="quiz-option" data-idx="3">D. 46.7%</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>章节衔接</h2>
+  <div class="cross-row">
+    <a class="cross-link cross-chem" href="03-物质构成的奥秘.html">
+      <span class="arrow">←</span>
+      <div>
+        <div class="cl-label">化学 · 九年级（上一课）</div>
+        <div class="cl-title">03-物质构成的奥秘</div>
+      </div>
+    </a>
+    <a class="cross-link cross-chem" href="05-化学方程式.html">
+      <div style="text-align:right;">
+        <div class="cl-label">化学 · 九年级（下一课）</div>
+        <div class="cl-title">05-化学方程式</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="03-物质构成的奥秘.html" class="btn btn-outline">← 上一章：03-物质构成的奥秘</a>
+    <a href="05-化学方程式.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：05-化学方程式 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：化学式拼搭器 ===================== */
+(function() {
+  const cations = [
+    { sym: 'Na', name: '钠', val: 1, poly: false },
+    { sym: 'K', name: '钾', val: 1, poly: false },
+    { sym: 'Mg', name: '镁', val: 2, poly: false },
+    { sym: 'Ca', name: '钙', val: 2, poly: false },
+    { sym: 'Al', name: '铝', val: 3, poly: false },
+    { sym: 'Fe', name: '亚铁', val: 2, poly: false },
+    { sym: 'Fe', name: '铁', val: 3, poly: false },
+    { sym: 'NH₄', name: '铵根', val: 1, poly: true }
+  ];
+  const anions = [
+    { sym: 'Cl', name: '氯', val: -1, poly: false },
+    { sym: 'O', name: '氧', val: -2, poly: false },
+    { sym: 'OH', name: '氢氧根', val: -1, poly: true },
+    { sym: 'NO₃', name: '硝酸根', val: -1, poly: true },
+    { sym: 'SO₄', name: '硫酸根', val: -2, poly: true },
+    { sym: 'CO₃', name: '碳酸根', val: -2, poly: true }
+  ];
+
+  const catList = document.getElementById('catList');
+  const anList = document.getElementById('anList');
+  const buildResult = document.getElementById('buildResult');
+  const buildSteps = document.getElementById('buildSteps');
+  let selCat = null, selAn = null;
+
+  function sub(n) { return n > 1 ? '<sub>' + n + '</sub>' : ''; }
+  function fmtVal(v) { return v > 0 ? '+' + v : '−' + Math.abs(v); }
+  function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+  function render() {
+    if (!selCat || !selAn) {
+      buildResult.innerHTML = '<div style="font-size:15px; color:var(--text-light); font-family:-apple-system,\'PingFang SC\',sans-serif; font-weight:400;">请选择阳离子和阴离子</div>';
+      buildSteps.innerHTML = '';
+      return;
+    }
+    let a = Math.abs(selAn.val), b = Math.abs(selCat.val);
+    const g = gcd(a, b);
+    a /= g; b /= g;
+    const catPart = selCat.poly && a > 1 ? '(' + selCat.sym + ')' + sub(a) : selCat.sym + sub(a);
+    const anPart = selAn.poly && b > 1 ? '(' + selAn.sym + ')' + sub(b) : selAn.sym + sub(b);
+    buildResult.innerHTML = '<div>' + catPart + anPart + '</div><div class="br-name">由 ' + selCat.name + '离子 与 ' + selAn.name + ' 构成</div>';
+    let steps = '① 标化合价：' + selCat.sym + ' 显 <strong>' + fmtVal(selCat.val) + '</strong> 价，' + selAn.sym + ' 显 <strong>' + fmtVal(selAn.val) + '</strong> 价；' +
+      '② 交叉作角码：' + selCat.sym + ' 的角码 = ' + Math.abs(selAn.val) + '，' + selAn.sym + ' 的角码 = ' + Math.abs(selCat.val);
+    if (g > 1) steps += '；③ 约简：除以公约数 ' + g;
+    steps += '；检验：(' + fmtVal(selCat.val) + ')×' + a + ' + (' + fmtVal(selAn.val) + ')×' + b + ' = 0 ✓';
+    buildSteps.innerHTML = steps;
+  }
+
+  cations.forEach(function(c, i) {
+    const btn = document.createElement('button');
+    btn.className = 'ion-btn cation';
+    btn.innerHTML = c.sym + '<sup>' + (c.val > 1 ? c.val : '') + '+</sup>';
+    btn.title = c.name + '（' + fmtVal(c.val) + ' 价）';
+    btn.addEventListener('click', function() {
+      catList.querySelectorAll('.ion-btn').forEach(function(x) { x.classList.remove('selected'); });
+      btn.classList.add('selected');
+      selCat = c;
+      render();
+    });
+    catList.appendChild(btn);
+  });
+
+  anions.forEach(function(a) {
+    const btn = document.createElement('button');
+    btn.className = 'ion-btn anion';
+    btn.innerHTML = a.sym + '<sup>' + (Math.abs(a.val) > 1 ? Math.abs(a.val) : '') + '−</sup>';
+    btn.title = a.name + '（' + fmtVal(a.val) + ' 价）';
+    btn.addEventListener('click', function() {
+      anList.querySelectorAll('.ion-btn').forEach(function(x) { x.classList.remove('selected'); });
+      btn.classList.add('selected');
+      selAn = a;
+      render();
+    });
+    anList.appendChild(btn);
+  });
+})();
+
+/* ===================== 交互 2：化合价检验器 ===================== */
+(function() {
+  const compounds = {
+    basic: [
+      { formula: 'CO<sub>2</sub>', target: 'C', fixed: [{ sym: 'O', val: -2, n: 2 }], targetN: 1, answer: 4, range: [-2, 6] },
+      { formula: 'SO<sub>3</sub>', target: 'S', fixed: [{ sym: 'O', val: -2, n: 3 }], targetN: 1, answer: 6, range: [-2, 8] },
+      { formula: 'Fe<sub>2</sub>O<sub>3</sub>', target: 'Fe', fixed: [{ sym: 'O', val: -2, n: 3 }], targetN: 2, answer: 3, range: [-2, 6] },
+      { formula: 'Na<sub>2</sub>S', target: 'S', fixed: [{ sym: 'Na', val: 1, n: 2 }], targetN: 1, answer: -2, range: [-4, 6] }
+    ],
+    adv: [
+      { formula: 'H<sub>2</sub>SO<sub>4</sub>', target: 'S', fixed: [{ sym: 'H', val: 1, n: 2 }, { sym: 'O', val: -2, n: 4 }], targetN: 1, answer: 6, range: [-2, 8] },
+      { formula: 'KMnO<sub>4</sub>', target: 'Mn', fixed: [{ sym: 'K', val: 1, n: 1 }, { sym: 'O', val: -2, n: 4 }], targetN: 1, answer: 7, range: [-2, 8] },
+      { formula: 'K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub>', target: 'Cr', fixed: [{ sym: 'K', val: 1, n: 2 }, { sym: 'O', val: -2, n: 7 }], targetN: 2, answer: 6, range: [-2, 8] },
+      { formula: 'NH<sub>3</sub>', target: 'N', fixed: [{ sym: 'H', val: 1, n: 3 }], targetN: 1, answer: -3, range: [-4, 6] }
+    ]
+  };
+
+  const cmpBtns = document.getElementById('cmpBtns');
+  const valEquation = document.getElementById('valEquation');
+  const valKnown = document.getElementById('valKnown');
+  const valSlider = document.getElementById('valSlider');
+  const valDisplay = document.getElementById('valDisplay');
+  const valFeedback = document.getElementById('valFeedback');
+  let mode = 'basic';
+  let current = null;
+
+  function fmt(v) { return v > 0 ? '+' + v : (v < 0 ? '−' + Math.abs(v) : '0'); }
+
+  function loadButtons() {
+    cmpBtns.innerHTML = '';
+    compounds[mode].forEach(function(c, i) {
+      const btn = document.createElement('button');
+      btn.className = 'cmp-btn';
+      btn.innerHTML = c.formula;
+      btn.addEventListener('click', function() {
+        cmpBtns.querySelectorAll('.cmp-btn').forEach(function(x) { x.classList.remove('active'); });
+        btn.classList.add('active');
+        select(c);
+      });
+      cmpBtns.appendChild(btn);
+    });
+    cmpBtns.children[0].classList.add('active');
+    select(compounds[mode][0]);
+  }
+
+  function select(c) {
+    current = c;
+    valSlider.min = c.range[0];
+    valSlider.max = c.range[1];
+    valSlider.value = 0;
+    valDisplay.textContent = '0';
+    valFeedback.className = 'check-feedback';
+    valFeedback.innerHTML = '';
+    let fixedStr = c.fixed.map(function(f) {
+      return '(' + fmt(f.val) + ')×' + f.n;
+    }).join(' + ');
+    valEquation.innerHTML = fixedStr + ' + x×' + c.targetN + ' = 0';
+    valKnown.innerHTML = '已知：' + c.fixed.map(function(f) { return f.sym + ' 为 ' + fmt(f.val) + ' 价'; }).join('，') +
+      '。求 <strong>' + c.target + '</strong> 的化合价 x。';
+  }
+
+  valSlider.addEventListener('input', function() {
+    const v = parseInt(valSlider.value);
+    valDisplay.textContent = v > 0 ? '+' + v : String(v);
+  });
+
+  document.getElementById('valCheck').addEventListener('click', function() {
+    if (!current) return;
+    const v = parseInt(valSlider.value);
+    const fixedSum = current.fixed.reduce(function(s, f) { return s + f.val * f.n; }, 0);
+    const total = fixedSum + v * current.targetN;
+    if (v === current.answer && total === 0) {
+      valFeedback.className = 'check-feedback ok show';
+      let eq = current.fixed.map(function(f) { return '(' + fmt(f.val) + ')×' + f.n; }).join(' + ');
+      valFeedback.innerHTML = '<strong>✓ 正确！</strong>' + eq + ' + (' + fmt(v) + ')×' + current.targetN + ' = 0，' +
+        current.target + ' 显 <strong>' + fmt(v) + '</strong> 价。';
+    } else {
+      valFeedback.className = 'check-feedback no show';
+      const hint = -fixedSum / current.targetN;
+      valFeedback.innerHTML = '<strong>✗ 再想想。</strong>当前代数和 = ' + total + ' ≠ 0。提示：x×' + current.targetN +
+        ' 应等于 ' + (-fixedSum) + '，试试 x = ' + fmt(hint) + '。';
+    }
+  });
+
+  document.getElementById('valMode').querySelectorAll('.mt-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.getElementById('valMode').querySelectorAll('.mt-btn').forEach(function(x) { x.classList.remove('active'); });
+      btn.classList.add('active');
+      mode = btn.dataset.mode;
+      loadButtons();
+    });
+  });
+
+  loadButtons();
+})();
+
+/* ===================== 交互 3：化学式计算器 ===================== */
+(function() {
+  const substances = [
+    {
+      formula: 'H<sub>2</sub>O', name: '水',
+      atoms: [ { el: 'H', n: 2, ar: 1 }, { el: 'O', n: 1, ar: 16 } ]
+    },
+    {
+      formula: 'CO<sub>2</sub>', name: '二氧化碳',
+      atoms: [ { el: 'C', n: 1, ar: 12 }, { el: 'O', n: 2, ar: 16 } ]
+    },
+    {
+      formula: 'CaCO<sub>3</sub>', name: '碳酸钙',
+      atoms: [ { el: 'Ca', n: 1, ar: 40 }, { el: 'C', n: 1, ar: 12 }, { el: 'O', n: 3, ar: 16 } ]
+    },
+    {
+      formula: 'H<sub>2</sub>SO<sub>4</sub>', name: '硫酸',
+      atoms: [ { el: 'H', n: 2, ar: 1 }, { el: 'S', n: 1, ar: 32 }, { el: 'O', n: 4, ar: 16 } ]
+    },
+    {
+      formula: 'NH<sub>4</sub>NO<sub>3</sub>', name: '硝酸铵',
+      atoms: [ { el: 'N', n: 2, ar: 14 }, { el: 'H', n: 4, ar: 1 }, { el: 'O', n: 3, ar: 16 } ]
+    },
+    {
+      formula: 'Fe<sub>2</sub>O<sub>3</sub>', name: '氧化铁',
+      atoms: [ { el: 'Fe', n: 2, ar: 56 }, { el: 'O', n: 3, ar: 16 } ]
+    },
+    {
+      formula: 'CuSO<sub>4</sub>', name: '硫酸铜',
+      atoms: [ { el: 'Cu', n: 1, ar: 64 }, { el: 'S', n: 1, ar: 32 }, { el: 'O', n: 4, ar: 16 } ]
+    }
+  ];
+
+  const subBtns = document.getElementById('subBtns');
+  const calcFormula = document.getElementById('calcFormula');
+  const calcMr = document.getElementById('calcMr');
+  const calcRatio = document.getElementById('calcRatio');
+  const elBtns = document.getElementById('elBtns');
+  const calcFrac = document.getElementById('calcFrac');
+  let currentSub = null;
+  let currentEl = null;
+
+  function gcdAll(nums) {
+    function g(a, b) { return b === 0 ? a : g(b, a % b); }
+    return nums.reduce(function(a, b) { return g(a, b); });
+  }
+
+  function renderFrac() {
+    if (!currentSub || !currentEl) { calcFrac.textContent = '—'; return; }
+    const a = currentEl;
+    const mr = currentSub.atoms.reduce(function(s, x) { return s + x.ar * x.n; }, 0);
+    const part = a.ar * a.n;
+    const pct = (part / mr * 100);
+    const pctStr = Number.isInteger(pct) ? pct + '' : pct.toFixed(1);
+    calcFrac.innerHTML = a.el + ' 元素质量分数 = (' + a.ar + '×' + a.n + ') ÷ ' + mr + ' × 100% = <strong style="color:var(--chemistry);">' + pctStr + '%</strong>';
+  }
+
+  function select(s) {
+    currentSub = s;
+    currentEl = null;
+    calcFormula.innerHTML = s.formula + '（' + s.name + '）';
+    const parts = s.atoms.map(function(a) { return a.ar + '×' + a.n; });
+    const mr = s.atoms.reduce(function(sum, a) { return sum + a.ar * a.n; }, 0);
+    calcMr.innerHTML = parts.join(' + ') + ' = <strong style="color:var(--chemistry);">' + mr + '</strong>';
+
+    const masses = s.atoms.map(function(a) { return a.ar * a.n; });
+    const g = gcdAll(masses);
+    const ratioNums = masses.map(function(m) { return m / g; });
+    calcRatio.innerHTML = s.atoms.map(function(a) { return a.el; }).join(' : ') + ' = ' +
+      masses.join(' : ') + ' = <strong style="color:var(--chemistry);">' + ratioNums.join(' : ') + '</strong>';
+
+    elBtns.innerHTML = '';
+    s.atoms.forEach(function(a) {
+      const btn = document.createElement('button');
+      btn.className = 'el-btn';
+      btn.textContent = a.el;
+      btn.addEventListener('click', function() {
+        elBtns.querySelectorAll('.el-btn').forEach(function(x) { x.classList.remove('active'); });
+        btn.classList.add('active');
+        currentEl = a;
+        renderFrac();
+      });
+      elBtns.appendChild(btn);
+    });
+    calcFrac.textContent = '—';
+  }
+
+  substances.forEach(function(s, i) {
+    const btn = document.createElement('button');
+    btn.className = 'cmp-btn';
+    btn.innerHTML = s.formula;
+    btn.title = s.name;
+    btn.addEventListener('click', function() {
+      subBtns.querySelectorAll('.cmp-btn').forEach(function(x) { x.classList.remove('active'); });
+      btn.classList.add('active');
+      select(s);
+    });
+    subBtns.appendChild(btn);
+  });
+  subBtns.children[0].classList.add('active');
+  select(substances[0]);
+})();
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('q1', {
+  correct: 1,
+  explain: '2H₂ 中前面的"2"表示 2 个氢分子。2H 表示 2 个氢原子，H₂ 表示 1 个氢分子（或氢气），2H⁺ 表示 2 个氢离子。',
+  hint: '表示"分子个数"要在化学式（H₂）前面加系数。2H 是原子，2H⁺ 是离子。'
+});
+initQuiz('q2', {
+  correct: 2,
+  explain: '交叉法：R(+3) 与 O(−2) 交叉得 R₂O₃。检验：(+3)×2 + (−2)×3 = 0，正确。',
+  hint: '化合价绝对值交叉作角码：3 写到 O 的右下角，2 写到 R 的右下角。'
+});
+initQuiz('q3', {
+  correct: 2,
+  explain: 'NH₄NO₃ 中含 2 个 N：氮元素质量分数 = (14×2)÷80 × 100% = 28÷80 × 100% = 35%。',
+  hint: '注意 NH₄NO₃ 中有两个 N 原子！相对分子质量 = 14×2+1×4+16×3 = 80。'
+});
+</script>
+
 </body>
 </html>

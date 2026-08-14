@@ -6,43 +6,279 @@
   <title>功和机械能 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 18px;
+      min-width: 88px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.8;
+    }
+    .formula-box .sub {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 引入卡片 */
+    .phenomenon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .phenomenon-card {
+      padding: 20px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border-top: 4px solid var(--primary);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .phenomenon-card:hover { transform: translateY(-3px); }
+    .phenomenon-card .icon { font-size: 38px; }
+    .phenomenon-card h4 {
+      margin: 10px 0 6px;
+      color: var(--primary-dark);
+      font-size: 16px;
+    }
+    .phenomenon-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* 做功判断卡片 */
+    .work-case {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      border: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .work-case.correct { border-color: var(--success); background: rgba(39,174,96,0.05); }
+    .work-case.wrong { border-color: var(--danger); background: rgba(231,76,60,0.05); }
+    .work-case .case-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .work-case .case-icon { font-size: 28px; }
+    .work-case .case-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-main);
+    }
+    .work-case .case-btns {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    .work-case .case-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .work-case .case-btn:hover { border-color: var(--primary); }
+    .work-case .case-btn.selected-yes { border-color: var(--success); background: var(--success); color: white; }
+    .work-case .case-btn.selected-no { border-color: var(--danger); background: var(--danger); color: white; }
+    .work-case .case-feedback {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.7;
+      display: none;
+    }
+    .work-case .case-badge {
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      margin-left: 8px;
+    }
+    .work-case .case-badge.b-yes { background: var(--success); }
+    .work-case .case-badge.b-no { background: var(--danger); }
+
+    /* 能量条 */
+    .energy-bars { max-width: 480px; margin: 14px auto 0; }
+    .energy-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .energy-bar .eb-label { min-width: 100px; font-weight: 700; text-align: left; }
+    .energy-bar .eb-track {
+      flex: 1;
+      height: 18px;
+      background: #fff;
+      border-radius: 9px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .energy-bar .eb-fill {
+      height: 100%;
+      border-radius: 9px;
+      transition: width 0.4s ease;
+      min-width: 4px;
+    }
+    .eb-fill.eb-ke { background: linear-gradient(90deg, #E74C3C, #F39C12); }
+    .eb-fill.eb-pe { background: linear-gradient(90deg, #4A90D9, #7BB0E8); }
+    .eb-fill.eb-total { background: linear-gradient(90deg, #27AE60, #2ECC71); }
+    .energy-bar .eb-value { min-width: 100px; text-align: right; font-weight: 600; color: var(--text-secondary); }
+
+    .exp-tip {
+      background: rgba(74,144,217,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--primary-dark);
+      line-height: 1.7;
+    }
+
+    .energy-display {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .energy-display .ed-item {
+      background: white;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      font-size: 15px;
+    }
+    .energy-display .ed-item .ed-label { color: var(--text-secondary); margin-right: 8px; }
+    .energy-display .ed-item .ed-value { font-weight: 700; font-size: 18px; }
+    .ed-value.v-ke { color: #E74C3C; }
+    .ed-value.v-pe { color: var(--primary); }
+    .ed-value.v-total { color: var(--success); }
+
+    .control-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .phenomenon-grid { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; max-width: none; }
+      .energy-bar { flex-wrap: wrap; }
+      .energy-bar .eb-value { min-width: auto; }
     }
   </style>
 </head>
@@ -53,6 +289,8 @@
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
   </ul>
 </nav>
 
@@ -62,29 +300,972 @@
     <span class="separator">/</span>
     <a href="index.html">物理</a>
     <span class="separator">/</span>
-    <span>八年级</span>
+    <a href="index.html">八年级</a>
     <span class="separator">/</span>
     <span>功和机械能</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>功和机械能</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚡ 功和机械能</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从推箱子到过山车，认识力做功的奥秘和能量的转化</p>
+
+  <!-- ===== 第一部分：功 ===== -->
+  <div class="card">
+    <div class="section-header">💪 1. 什么是功</div>
+
+    <p>生活中我们常说"工作"、"功劳"，物理学里的"功"有严格定义：</p>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 功的定义</div>
+      如果一个物体受力，并且在<strong>力的方向上</strong>移动了一段距离，就说这个力对物体做了<strong>功</strong>。
+    </div>
+
+    <div class="formula-box">
+      W = Fs
+      <div class="sub">W —— 功（J），F —— 作用力（N），s —— 沿力方向移动的距离（m）</div>
+    </div>
+
+    <p>功的单位是<strong>焦耳</strong>，符号 <strong>J</strong>。1 J = 1 N·m，即用 1 N 的力使物体沿力的方向移动 1 m，所做的功就是 1 J。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 200" width="480" height="200">
+        <defs>
+          <marker id="arrowF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrowS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+        <!-- 地面 -->
+        <line x1="40" y1="160" x2="440" y2="160" stroke="#7F8C8D" stroke-width="2"/>
+        <!-- 阴影线 -->
+        <g stroke="#BDC3C7" stroke-width="1">
+          <line x1="50" y1="160" x2="42" y2="170"/>
+          <line x1="70" y1="160" x2="62" y2="170"/>
+          <line x1="90" y1="160" x2="82" y2="170"/>
+          <line x1="110" y1="160" x2="102" y2="170"/>
+          <line x1="130" y1="160" x2="122" y2="170"/>
+          <line x1="150" y1="160" x2="142" y2="170"/>
+          <line x1="170" y1="160" x2="162" y2="170"/>
+          <line x1="190" y1="160" x2="182" y2="170"/>
+          <line x1="210" y1="160" x2="202" y2="170"/>
+          <line x1="230" y1="160" x2="222" y2="170"/>
+          <line x1="250" y1="160" x2="242" y2="170"/>
+          <line x1="270" y1="160" x2="262" y2="170"/>
+          <line x1="290" y1="160" x2="282" y2="170"/>
+          <line x1="310" y1="160" x2="302" y2="170"/>
+          <line x1="330" y1="160" x2="322" y2="170"/>
+          <line x1="350" y1="160" x2="342" y2="170"/>
+          <line x1="370" y1="160" x2="362" y2="170"/>
+          <line x1="390" y1="160" x2="382" y2="170"/>
+          <line x1="410" y1="160" x2="402" y2="170"/>
+          <line x1="430" y1="160" x2="422" y2="170"/>
+        </g>
+        <!-- 箱子 -->
+        <rect x="180" y="110" width="60" height="50" fill="#E6B84B" stroke="#8A6A18" stroke-width="2"/>
+        <text x="210" y="140" text-anchor="middle" font-size="14" fill="#5A4310" font-weight="700">箱子</text>
+        <!-- 推力 F -->
+        <line x1="160" y1="135" x2="178" y2="135" stroke="#E74C3C" stroke-width="4" marker-end="url(#arrowF)"/>
+        <text x="145" y="128" text-anchor="middle" font-size="14" fill="#E74C3C" font-weight="700">F</text>
+        <!-- 位移 s -->
+        <line x1="180" y1="180" x2="320" y2="180" stroke="#4A90D9" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowS)"/>
+        <text x="250" y="196" text-anchor="middle" font-size="14" fill="#4A90D9" font-weight="700">s（沿力方向）</text>
+        <!-- 终点虚线 -->
+        <line x1="320" y1="110" x2="320" y2="160" stroke="#7F8C8D" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="240" y="55" text-anchor="middle" font-size="16" fill="#2E6BA8" font-weight="700">W = F × s</text>
+        <text x="240" y="78" text-anchor="middle" font-size="13" fill="#7F8C8D">力 F 推箱子沿力的方向移动了 s 米</text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 不做功的三种情况（重点！）</div>
+      <strong>① 力 F = 0</strong>：没有力作用在物体上（如球踢出后在草地上滚，脚不再施力，脚对球不做功）<br>
+      <strong>② 距离 s = 0</strong>：有力但物体没动（如举杠铃不动、推墙墙不动）<br>
+      <strong>③ 力 ⊥ 距离</strong>：力的方向与运动方向垂直（如提水桶水平走，提力向上、位移水平，提力不做功）
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：做功判断器 ===== -->
+  <div class="card">
+    <div class="section-header">🤔 2. 交互：做功判断器</div>
+
+    <p>判断下面场景中，<strong>指定力</strong>是否对物体做了功。先想一想，再点击你的判断：</p>
+
+    <div id="workCases"></div>
   </div>
+
+  <!-- ===== 第三部分：功的计算器 ===== -->
+  <div class="card">
+    <div class="section-header">🧮 3. 交互：功的计算器</div>
+
+    <p>拖动滑块改变力 F 和距离 s，实时计算所做的功 W = Fs：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 220" width="480" height="220">
+        <defs>
+          <marker id="arrowF2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrowS2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+        <!-- 地面 -->
+        <line x1="30" y1="170" x2="450" y2="170" stroke="#7F8C8D" stroke-width="2"/>
+        <g id="ground-lines2" stroke="#BDC3C7" stroke-width="1"></g>
+
+        <!-- 箱子（位置随 s 变化）-->
+        <rect id="calc-box" x="60" y="120" width="60" height="50" fill="#E6B84B" stroke="#8A6A18" stroke-width="2"/>
+        <text id="calc-box-label" x="90" y="150" text-anchor="middle" font-size="14" fill="#5A4310" font-weight="700">📦</text>
+
+        <!-- 推力 F -->
+        <line id="calc-f-arrow" x1="38" y1="145" x2="58" y2="145" stroke="#E74C3C" stroke-width="5" marker-end="url(#arrowF2)"/>
+        <text id="calc-f-label" x="28" y="138" text-anchor="middle" font-size="14" fill="#E74C3C" font-weight="700">F</text>
+
+        <!-- 位移 s 标注 -->
+        <line id="calc-s-line" x1="60" y1="190" x2="160" y2="190" stroke="#4A90D9" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowS2)"/>
+        <text id="calc-s-label" x="110" y="208" text-anchor="middle" font-size="13" fill="#4A90D9" font-weight="700">s</text>
+
+        <!-- 公式 -->
+        <text x="240" y="60" text-anchor="middle" font-size="22" fill="#2E6BA8" font-weight="700">W = F × s</text>
+        <text id="calc-formula" x="240" y="90" text-anchor="middle" font-size="18" fill="#E74C3C" font-weight="700">= 50 × 10 = 500 J</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>力 F</label>
+        <input type="range" id="calc-f" min="1" max="100" value="50" step="1">
+        <span class="value-display"><span id="calc-f-val">50</span> N</span>
+      </div>
+      <div class="slider-row">
+        <label>距离 s</label>
+        <input type="range" id="calc-s" min="1" max="50" value="10" step="1">
+        <span class="value-display"><span id="calc-s-val">10</span> m</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">功 W =</span>
+          <span class="value"><span id="calc-w">500</span> J</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">相当于提起</span>
+          <span class="value"><span id="calc-eq">50</span> kg 物体 1 m</span>
+        </div>
+      </div>
+
+      <div class="exp-tip" id="calc-tip">用 50 N 的力推箱子前进 10 m，做了 500 J 的功。</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 功的计算要点</div>
+      • 公式 W = Fs 中，s 必须是<strong>沿力方向</strong>的距离，不是物体实际运动的总路程。<br>
+      • 力与运动方向相同时，W = Fs；力与运动方向相反时（如摩擦力对运动物体），力做负功。<br>
+      • 力与运动方向垂直时，力不做功（W = 0）。
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：功率 ===== -->
+  <div class="card">
+    <div class="section-header">⏱️ 4. 功率</div>
+
+    <p>做同样的功，有人快有人慢。物理学用<strong>功率</strong>来描述做功的快慢：</p>
+
+    <div class="formula-box">
+      P = W / t
+      <div class="sub">P —— 功率（W），W —— 功（J），t —— 时间（s）</div>
+    </div>
+
+    <p>功率的单位是<strong>瓦特</strong>，符号 <strong>W</strong>，1 W = 1 J/s，即每秒做 1 J 的功。常见单位的换算：<strong>1 kW = 1000 W</strong>。</p>
+
+    <div class="phenomenon-grid">
+      <div class="phenomenon-card">
+        <div class="icon">🚶</div>
+        <h4>人步行</h4>
+        <p>功率约 70 W<br>（长时间做功的能力）</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🚴</div>
+        <h4>骑车</h4>
+        <p>功率约 200 W<br>（短时间可冲刺更高）</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🚗</div>
+        <h4>小汽车</h4>
+        <p>功率约 50~100 kW<br>（高速行驶时）</p>
+      </div>
+      <div class="phenomenon-card">
+        <div class="icon">🚄</div>
+        <h4>高铁</h4>
+        <p>功率约 8000 kW<br>（8节编组）</p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 功率的理解</div>
+      • 功率大表示<strong>做功快</strong>，不代表做的功多。功率 P = W/t，做功 W 相同时，时间越短功率越大。<br>
+      • 例：搬同样重的砖上楼，小明用 1 分钟、小红用 2 分钟，两人做功相同，但小明功率是小红的 2 倍。
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：动能 ===== -->
+  <div class="card">
+    <div class="section-header">🏃 5. 动能</div>
+
+    <p>物体由于<strong>运动</strong>而具有的能量叫做<strong>动能</strong>。行驶的汽车、飞行的子弹、流动的水都具有动能。</p>
+
+    <div class="formula-box">
+      E<sub>k</sub> = ½ m v²
+      <div class="sub">E<sub>k</sub> —— 动能（J），m —— 质量（kg），v —— 速度（m/s）</div>
+    </div>
+
+    <p style="margin: 12px 0;"><strong>动手试一试：</strong>调节球的质量和速度，观察球撞击木块后木块被推开的距离（动能越大，木块被推得越远）：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 260" width="480" height="260">
+        <!-- 地面 -->
+        <line x1="20" y1="200" x2="460" y2="200" stroke="#7F8C8D" stroke-width="2"/>
+        <g id="ke-ground" stroke="#BDC3C7" stroke-width="1"></g>
+
+        <!-- 球（左侧）-->
+        <circle id="ke-ball" cx="80" cy="180" r="20" fill="#E74C3C" stroke="#922B21" stroke-width="2"/>
+        <text id="ke-ball-label" x="80" y="186" text-anchor="middle" font-size="12" fill="white" font-weight="700">球</text>
+
+        <!-- 速度箭头 -->
+        <line id="ke-v-arrow" x1="105" y1="180" x2="145" y2="180" stroke="#F5A623" stroke-width="3" marker-end="url(#arrowF2)"/>
+        <text id="ke-v-label" x="125" y="172" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="700">v</text>
+
+        <!-- 木块（右侧，被撞击后移动）-->
+        <rect id="ke-block" x="320" y="160" width="50" height="40" fill="#8B6F47" stroke="#5A4310" stroke-width="2"/>
+        <text id="ke-block-label" x="345" y="185" text-anchor="middle" font-size="12" fill="white" font-weight="700">木块</text>
+
+        <!-- 初始位置虚线 -->
+        <line x1="345" y1="200" x2="345" y2="220" stroke="#7F8C8D" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="345" y="235" text-anchor="middle" font-size="11" fill="#7F8C8D">起始位置</text>
+
+        <!-- 位移标注 -->
+        <line id="ke-d-line" x1="345" y1="218" x2="345" y2="218" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowS2)"/>
+        <text id="ke-d-label" x="345" y="252" text-anchor="middle" font-size="12" fill="#27AE60" font-weight="700">推动距离 d</text>
+
+        <text x="240" y="40" text-anchor="middle" font-size="16" fill="#2E6BA8" font-weight="700">球撞击木块：动能越大，木块被推得越远</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>质量 m</label>
+        <input type="range" id="ke-m" min="1" max="10" value="3" step="1">
+        <span class="value-display"><span id="ke-m-val">3</span> kg</span>
+      </div>
+      <div class="slider-row">
+        <label>速度 v</label>
+        <input type="range" id="ke-v" min="1" max="20" value="6" step="1">
+        <span class="value-display"><span id="ke-v-val">6</span> m/s</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">动能 Eₖ = ½mv² =</span>
+          <span class="value"><span id="ke-ek">54</span> J</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">木块被推动</span>
+          <span class="value"><span id="ke-d">5.4</span> m</span>
+        </div>
+      </div>
+
+      <div class="exp-tip" id="ke-tip">注意：速度对动能的影响更大——速度加倍，动能变成原来的 4 倍！</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 动能的影响因素</div>
+      • <strong>质量</strong>越大，动能越大（质量加倍，动能加倍）。<br>
+      • <strong>速度</strong>越大，动能越大（速度加倍，动能变成 4 倍，因为 v² ）。<br>
+      • 这就是为什么汽车限速——速度越快，动能越大，刹车距离越长，撞击时造成的伤害也越大。
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：势能 ===== -->
+  <div class="card">
+    <div class="section-header">⛰️ 6. 势能</div>
+
+    <p>势能分为<strong>重力势能</strong>和<strong>弹性势能</strong>两种：</p>
+
+    <ul class="property-list">
+      <li><strong>重力势能</strong>：物体由于被举高而具有的能量。质量越大、位置越高，重力势能越大。</li>
+      <li><strong>弹性势能</strong>：物体由于发生弹性形变而具有的能量。如拉长的橡皮筋、压缩的弹簧、拉开的弓。</li>
+    </ul>
+
+    <div class="formula-box">
+      E<sub>p</sub> = m g h
+      <div class="sub">E<sub>p</sub> —— 重力势能（J），m —— 质量（kg），g —— 10 N/kg，h —— 高度（m）</div>
+    </div>
+
+    <p style="margin: 12px 0;"><strong>动手试一试：</strong>调节物体的质量和高度，观察物体落下时在沙坑中砸出的深度（势能越大，坑越深）：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 280" width="480" height="280">
+        <defs>
+          <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+        </defs>
+        <!-- 高度刻度 -->
+        <line x1="80" y1="40" x2="80" y2="200" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="70" y="45" text-anchor="end" font-size="11" fill="#7F8C8D">高度 h</text>
+        <line id="pe-h-line" x1="80" y1="100" x2="180" y2="100" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text id="pe-h-label" x="65" y="105" text-anchor="end" font-size="13" fill="#4A90D9" font-weight="700">h</text>
+
+        <!-- 物体（被举高）-->
+        <rect id="pe-obj" x="160" y="80" width="40" height="40" fill="#9B59B6" stroke="#5B2F7D" stroke-width="2"/>
+        <text id="pe-obj-label" x="180" y="105" text-anchor="middle" font-size="12" fill="white" font-weight="700">物体</text>
+
+        <!-- 重力箭头 -->
+        <line id="pe-g-arrow" x1="180" y1="125" x2="180" y2="155" stroke="#F5A623" stroke-width="3" marker-end="url(#arrowG)"/>
+        <text x="195" y="145" font-size="12" fill="#F5A623" font-weight="700">G = mg</text>
+
+        <!-- 地面 -->
+        <line x1="20" y1="200" x2="460" y2="200" stroke="#7F8C8D" stroke-width="2"/>
+        <text x="30" y="195" font-size="11" fill="#7F8C8D">地面</text>
+
+        <!-- 沙坑（坑深度随势能变化）-->
+        <rect id="pe-sand" x="140" y="200" width="120" height="40" fill="#E4D5A8" stroke="#B8A06A" stroke-width="1.5"/>
+        <text x="200" y="225" text-anchor="middle" font-size="11" fill="#7A6535">沙坑</text>
+        <rect id="pe-hole" x="160" y="200" width="40" height="4" fill="#8B6F47"/>
+
+        <text x="340" y="100" text-anchor="middle" font-size="14" fill="#2E6BA8" font-weight="700">物体从高处落下</text>
+        <text x="340" y="122" text-anchor="middle" font-size="13" fill="#7F8C8D">势能越大，沙坑越深</text>
+        <text x="340" y="148" text-anchor="middle" font-size="12" fill="#27AE60" font-weight="600">坑深 ∝ Ep</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>质量 m</label>
+        <input type="range" id="pe-m" min="1" max="10" value="3" step="1">
+        <span class="value-display"><span id="pe-m-val">3</span> kg</span>
+      </div>
+      <div class="slider-row">
+        <label>高度 h</label>
+        <input type="range" id="pe-h" min="1" max="50" value="10" step="1">
+        <span class="value-display"><span id="pe-h-val">10</span> m</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">重力势能 Eₚ = mgh =</span>
+          <span class="value"><span id="pe-ep">300</span> J</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">沙坑深度</span>
+          <span class="value"><span id="pe-depth">3.0</span> cm</span>
+        </div>
+      </div>
+
+      <div class="exp-tip" id="pe-tip">物体的重力势能与质量和高度都成正比——质量加倍或高度加倍，势能都加倍。</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 弹性势能</div>
+      拉伸或压缩的弹簧、拉开的弓、弯曲的跳板……它们发生<strong>弹性形变</strong>时储存的能量叫做弹性势能。形变越大，弹性势能越大。<br>
+      弹弓把石子射出去，就是<strong>弹性势能转化为动能</strong>的过程。
+    </div>
+  </div>
+
+  <!-- ===== 第七部分：机械能及转化 ===== -->
+  <div class="card">
+    <div class="section-header">🎢 7. 机械能及转化</div>
+
+    <p><strong>动能和势能统称为机械能</strong>。动能和势能可以相互转化，最经典的例子就是过山车：</p>
+
+    <div class="formula-box">
+      机械能 = 动能 + 势能（E = E<sub>k</sub> + E<sub>p</sub>）
+      <div class="sub">忽略摩擦阻力时，总机械能保持不变——机械能守恒</div>
+    </div>
+
+    <p style="margin: 12px 0;">点击"释放"按钮，让小车从最高点滑下，观察动能和势能的相互转化：</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 280" width="480" height="280">
+        <!-- 过山车轨道 -->
+        <path id="track-path"
+              d="M 40 60 Q 120 60 160 100 Q 200 140 220 200 Q 240 250 280 240 Q 340 220 380 160 Q 420 100 460 80"
+              fill="none" stroke="#7F8C8D" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- 轨道支柱 -->
+        <line x1="60" y1="60" x2="60" y2="260" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <line x1="220" y1="200" x2="220" y2="260" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <line x1="380" y1="160" x2="380" y2="260" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+        <!-- 地面 -->
+        <line x1="20" y1="260" x2="460" y2="260" stroke="#7F8C8D" stroke-width="2"/>
+
+        <!-- 最高点标注 -->
+        <text x="50" y="50" text-anchor="middle" font-size="11" fill="#4A90D9" font-weight="700">最高点</text>
+        <text x="50" y="36" text-anchor="middle" font-size="10" fill="#7F8C8D">势能最大</text>
+
+        <!-- 最低点标注 -->
+        <text x="240" y="225" text-anchor="middle" font-size="11" fill="#E74C3C" font-weight="700">最低点</text>
+        <text x="240" y="275" text-anchor="middle" font-size="10" fill="#7F8C8D">动能最大</text>
+
+        <!-- 小车 -->
+        <g id="coaster-car">
+          <rect x="-14" y="-10" width="28" height="14" rx="3" fill="#E74C3C" stroke="#922B21" stroke-width="2"/>
+          <circle cx="-8" cy="6" r="3" fill="#2C3E50"/>
+          <circle cx="8" cy="6" r="3" fill="#2C3E50"/>
+        </g>
+
+        <!-- 速度箭头（动态显示） -->
+        <line id="coaster-v-arrow" x1="0" y1="0" x2="0" y2="0" stroke="#F5A623" stroke-width="2.5" marker-end="url(#arrowF2)" opacity="0"/>
+
+        <!-- 当前位置信息 -->
+        <text x="240" y="20" text-anchor="middle" font-size="14" fill="#2E6BA8" font-weight="700">过山车：动能 ↔ 势能 转化</text>
+      </svg>
+
+      <div class="energy-display">
+        <div class="ed-item">
+          <span class="ed-label">动能 Eₖ</span>
+          <span class="ed-value v-ke"><span id="co-ek">0</span> J</span>
+        </div>
+        <div class="ed-item">
+          <span class="ed-label">势能 Eₚ</span>
+          <span class="ed-value v-pe"><span id="co-ep">600</span> J</span>
+        </div>
+        <div class="ed-item">
+          <span class="ed-label">总机械能 E</span>
+          <span class="ed-value v-total"><span id="co-total">600</span> J</span>
+        </div>
+        <div class="ed-item">
+          <span class="ed-label">速度 v</span>
+          <span class="ed-value" style="color:#F5A623"><span id="co-v">0</span> m/s</span>
+        </div>
+      </div>
+
+      <div class="energy-bars">
+        <div class="energy-bar">
+          <span class="eb-label" style="color:#E74C3C;">🔥 动能</span>
+          <div class="eb-track"><div class="eb-fill eb-ke" id="bar-ke" style="width:0%"></div></div>
+          <span class="eb-value" id="bar-ke-val">0 J</span>
+        </div>
+        <div class="energy-bar">
+          <span class="eb-label" style="color:#4A90D9;">⛰️ 势能</span>
+          <div class="eb-track"><div class="eb-fill eb-pe" id="bar-pe" style="width:100%"></div></div>
+          <span class="eb-value" id="bar-pe-val">600 J</span>
+        </div>
+        <div class="energy-bar">
+          <span class="eb-label" style="color:#27AE60;">⚡ 总机械能</span>
+          <div class="eb-track"><div class="eb-fill eb-total" id="bar-total" style="width:100%"></div></div>
+          <span class="eb-value" id="bar-total-val">600 J</span>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <button class="btn btn-primary" id="co-release">▶ 释放小车</button>
+        <button class="btn btn-outline" id="co-reset">↻ 重置</button>
+      </div>
+
+      <div class="exp-tip" id="co-tip">小车在最高点静止，势能最大、动能为 0。点击"释放小车"开始观察转化过程。</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 机械能转化的规律</div>
+      • <strong>下坡</strong>：高度 h 减小 → 重力势能 Eₖ 减小 → 动能 Eₖ 增大 → 速度 v 增大（势能转化为动能）<br>
+      • <strong>上坡</strong>：高度 h 增大 → 重力势能 Eₚ 增大 → 动能 Eₖ 减小 → 速度 v 减小（动能转化为势能）<br>
+      • <strong>最高点</strong>：势能最大、动能最小（v≈0）<br>
+      • <strong>最低点</strong>：动能最大、势能最小<br>
+      • 忽略摩擦时，总机械能 E = Eₖ + Eₚ 保持不变——这就是<strong>机械能守恒</strong>。<br>
+      • 实际上由于摩擦，一部分机械能会转化为内能（轨道发热），所以总机械能会减小。
+    </div>
+  </div>
+
+  <!-- ===== 第八部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 8. 练习题</div>
+    <p>检验一下你对功和机械能知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 下列情况中，力对物体做了功的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 举重运动员举着杠铃不动</div>
+      <div class="quiz-option" data-idx="1">B. 冰球被击出后在冰面上滑行（不再受击球力）</div>
+      <div class="quiz-option" data-idx="2">C. 人提着水桶在水平地面上匀速前进</div>
+      <div class="quiz-option" data-idx="3">D. 推力推动箱子在水平地面上前进了一段距离</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 用 50 N 的水平推力推一个箱子，使箱子在水平方向上前进了 6 m，推力对箱子做的功为（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 100 J</div>
+      <div class="quiz-option" data-idx="1">B. 200 J</div>
+      <div class="quiz-option" data-idx="2">C. 300 J</div>
+      <div class="quiz-option" data-idx="3">D. 600 J</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于动能，下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 质量越大的物体，动能一定越大</div>
+      <div class="quiz-option" data-idx="1">B. 速度越大的物体，动能一定越大</div>
+      <div class="quiz-option" data-idx="2">C. 质量和速度都影响动能大小；速度加倍，动能变成原来的 4 倍</div>
+      <div class="quiz-option" data-idx="3">D. 静止的物体也可能有动能</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 功率 P = W/t 描述做功快慢 ↔ <a href="../../数学/八年级/10-一次函数.html">数学 · 一次函数</a>（P 与 W 的正比关系、P 与 t 的反比关系）</p>
+    <p>· 动能 Eₖ = ½mv² 中的平方关系 ↔ <a href="../../数学/八年级/08-勾股定理.html">数学 · 勾股定理</a>（平方运算的几何意义）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="10-浮力.html" class="btn btn-outline">← 上一章：浮力</a>
+    <a href="12-简单机械.html" class="btn btn-primary">下一章：简单机械 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ===== 工具函数 =====
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+// 生成地面阴影线
+function makeGroundLines(parentId, x1, x2, y, step) {
+  var parent = document.getElementById(parentId);
+  if (!parent) return;
+  var html = '';
+  for (var x = x1; x < x2; x += step) {
+    html += '<line x1="' + x + '" y1="' + y + '" x2="' + (x - 8) + '" y2="' + (y + 10) + '"/>';
+  }
+  parent.innerHTML = html;
+}
+
+// ===== 交互1：做功判断器 =====
+var WORK_CASES = [
+  {
+    icon: '📦',
+    title: '推箱子前进',
+    desc: '人用水平推力 F 推箱子，箱子在水平方向移动了 s 米。',
+    force: '水平推力 F',
+    doesWork: true,
+    reason: '箱子受到推力 F，且在力的方向上移动了距离 s，所以推力对箱子做了功 W = Fs。'
+  },
+  {
+    icon: '🪣',
+    title: '提水桶水平走',
+    desc: '人提着水桶在水平地面上匀速行走，提力方向竖直向上。',
+    force: '提力（竖直向上）',
+    doesWork: false,
+    reason: '不做功！提力方向竖直向上，而水桶在水平方向移动，力与运动方向垂直（F⊥s），所以提力不做功。'
+  },
+  {
+    icon: '🏋️',
+    title: '举杠铃不动',
+    desc: '举重运动员举着杠铃站立不动（保持 3 秒）。',
+    force: '举力（竖直向上）',
+    doesWork: false,
+    reason: '不做功！有力 F（举力），但物体没有在力的方向上移动（s = 0），所以不做功。'
+  },
+  {
+    icon: '⚽',
+    title: '踢球后球在草地上滚',
+    desc: '球被踢出后，脚不再接触球，球在草地上向前滚动。',
+    force: '脚对球的力',
+    doesWork: false,
+    reason: '不做功！球离开脚后，脚对球不再有力的作用（F = 0），球继续滚动是由于惯性，所以脚不再对球做功。'
+  },
+  {
+    icon: '🪑',
+    title: '搬椅子下楼',
+    desc: '人提着椅子从楼上走到楼下，椅子在竖直方向下降了 h 米。',
+    force: '提力（竖直向上）',
+    doesWork: true,
+    reason: '做功（注意是负功）。椅子受到提力向上，但位移向下，力与位移方向相反，提力对椅子做负功。如果把重力作为施力，重力方向与位移方向相同，重力对椅子做正功 W = mgh。'
+  }
+];
+
+function renderWorkCases() {
+  var container = document.getElementById('workCases');
+  var html = '';
+  WORK_CASES.forEach(function(c, i) {
+    html += '<div class="work-case" id="case-' + i + '">' +
+      '<div class="case-header">' +
+        '<span class="case-icon">' + c.icon + '</span>' +
+        '<span class="case-title">场景 ' + (i+1) + '：' + c.title + '</span>' +
+      '</div>' +
+      '<div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 6px;">' + c.desc + '</div>' +
+      '<div style="font-size: 13px; color: var(--primary-dark); margin-bottom: 4px;">分析的力：<strong>' + c.force + '</strong></div>' +
+      '<div class="case-btns">' +
+        '<button class="case-btn" data-ans="yes" data-idx="' + i + '">✓ 做功</button>' +
+        '<button class="case-btn" data-ans="no" data-idx="' + i + '">✗ 不做功</button>' +
+      '</div>' +
+      '<div class="case-feedback" id="case-feedback-' + i + '"></div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll('.case-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      var ans = this.dataset.ans;
+      var c = WORK_CASES[idx];
+      var caseEl = document.getElementById('case-' + idx);
+      var fb = document.getElementById('case-feedback-' + idx);
+
+      // 清除兄弟按钮状态
+      caseEl.querySelectorAll('.case-btn').forEach(function(b) {
+        b.classList.remove('selected-yes', 'selected-no');
+      });
+      // 标记当前
+      this.classList.add(ans === 'yes' ? 'selected-yes' : 'selected-no');
+
+      var correct = (ans === 'yes') === c.doesWork;
+      caseEl.classList.remove('correct', 'wrong');
+      caseEl.classList.add(correct ? 'correct' : 'wrong');
+
+      var badge = c.doesWork
+        ? '<span class="case-badge b-yes">做功</span>'
+        : '<span class="case-badge b-no">不做功</span>';
+
+      fb.style.display = 'block';
+      if (correct) {
+        fb.innerHTML = '<span style="color:#27AE60;">✓ 判断正确！</span> ' + badge + '<br>' + c.reason;
+      } else {
+        fb.innerHTML = '<span style="color:#E74C3C;">✗ 再想想</span> 正确答案：' + badge + '<br>' + c.reason;
+      }
+    });
+  });
+}
+
+// ===== 交互2：功的计算器 =====
+function updateCalcWork() {
+  var F = parseInt(document.getElementById('calc-f').value);
+  var s = parseInt(document.getElementById('calc-s').value);
+  var W = F * s;
+
+  document.getElementById('calc-f-val').textContent = F;
+  document.getElementById('calc-s-val').textContent = s;
+  document.getElementById('calc-w').textContent = W;
+  document.getElementById('calc-eq').textContent = W.toFixed(0);
+  document.getElementById('calc-formula').textContent = '= ' + F + ' × ' + s + ' = ' + W + ' J';
+
+  // 箱子位置：s 越大，箱子向右移动
+  var maxS = 50;
+  var boxStartX = 60;
+  var boxRange = 260;  // 像素
+  var boxX = boxStartX + (s / maxS) * boxRange;
+  document.getElementById('calc-box').setAttribute('x', boxX);
+  document.getElementById('calc-box-label').setAttribute('x', boxX + 30);
+
+  // 力箭头跟着箱子
+  document.getElementById('calc-f-arrow').setAttribute('x1', boxX - 22);
+  document.getElementById('calc-f-arrow').setAttribute('x2', boxX - 2);
+  document.getElementById('calc-f-label').setAttribute('x', boxX - 32);
+
+  // 位移标注
+  var sLineStart = boxStartX;
+  var sLineEnd = boxX;
+  document.getElementById('calc-s-line').setAttribute('x1', sLineStart);
+  document.getElementById('calc-s-line').setAttribute('x2', sLineEnd);
+  document.getElementById('calc-s-label').setAttribute('x', (sLineStart + sLineEnd) / 2);
+
+  document.getElementById('calc-tip').innerHTML =
+    '用 <strong>' + F + ' N</strong> 的力推箱子前进 <strong>' + s + ' m</strong>，做了 <strong>' + W + ' J</strong> 的功。' +
+    '相当于把 ' + W.toFixed(0) + ' kg（约 ' + (W/60).toFixed(1) + ' 个成年人）的物体举高 1 m。';
+}
+
+// ===== 交互3：动能探索 =====
+function updateKinetic() {
+  var m = parseInt(document.getElementById('ke-m').value);
+  var v = parseInt(document.getElementById('ke-v').value);
+  var Ek = 0.5 * m * v * v;
+  // 木块被推动距离与动能成正比（简化模型，假设比例 0.1 m/J）
+  var d = Ek * 0.1;
+
+  document.getElementById('ke-m-val').textContent = m;
+  document.getElementById('ke-v-val').textContent = v;
+  document.getElementById('ke-ek').textContent = Ek.toFixed(0);
+  document.getElementById('ke-d').textContent = d.toFixed(1);
+
+  // 木块位置：根据动能往右移动
+  var blockStartX = 320;
+  var maxD = 200;  // 像素：最大移动距离
+  var maxEk = 0.5 * 10 * 20 * 20;  // 最大动能 2000 J
+  var blockX = blockStartX + Math.min(d * 2.5, maxD);
+  document.getElementById('ke-block').setAttribute('x', blockX);
+  document.getElementById('ke-block-label').setAttribute('x', blockX + 25);
+
+  // 位移标注
+  var dLine = document.getElementById('ke-d-line');
+  dLine.setAttribute('x1', blockStartX + 25);
+  dLine.setAttribute('x2', blockX + 25);
+  dLine.setAttribute('y1', 218);
+  dLine.setAttribute('y2', 218);
+  document.getElementById('ke-d-label').setAttribute('x', (blockStartX + blockX) / 2 + 25);
+
+  // 提示
+  var tip;
+  if (v <= 5) {
+    tip = '速度较小时动能较小。试着把速度加倍，观察动能的变化！';
+  } else if (v <= 10) {
+    tip = '注意：速度对动能的影响更大——<strong>速度加倍，动能变成 4 倍</strong>（因为 v²）。';
+  } else if (v <= 15) {
+    tip = '现在速度很大！动能与速度是平方关系，所以高速时动能急剧增大——这就是汽车限速的原因。';
+  } else {
+    tip = '极高速度！动能 Eₖ = ½mv² = ½×' + m + '×' + v + '² = ' + Ek.toFixed(0) + ' J。速度加倍，动能变 4 倍！';
+  }
+  document.getElementById('ke-tip').innerHTML = tip;
+}
+
+// ===== 交互4：重力势能探索 =====
+function updatePotential() {
+  var m = parseInt(document.getElementById('pe-m').value);
+  var h = parseInt(document.getElementById('pe-h').value);
+  var g = 10;
+  var Ep = m * g * h;
+  // 沙坑深度与势能成正比（简化模型：0.01 cm/J）
+  var depth = Ep * 0.01;
+
+  document.getElementById('pe-m-val').textContent = m;
+  document.getElementById('pe-h-val').textContent = h;
+  document.getElementById('pe-ep').textContent = Ep.toFixed(0);
+  document.getElementById('pe-depth').textContent = depth.toFixed(1);
+
+  // 物体高度（SVG 中 y 坐标越小越高）
+  // h=1 → y=185；h=50 → y=50
+  var objY = 185 - (h / 50) * 135;
+  document.getElementById('pe-obj').setAttribute('y', objY);
+  document.getElementById('pe-obj-label').setAttribute('y', objY + 25);
+
+  // 重力箭头跟着物体
+  document.getElementById('pe-g-arrow').setAttribute('y1', objY + 45);
+  document.getElementById('pe-g-arrow').setAttribute('y2', objY + 75);
+
+  // 高度线
+  document.getElementById('pe-h-line').setAttribute('y1', objY + 20);
+  document.getElementById('pe-h-line').setAttribute('y2', objY + 20);
+  document.getElementById('pe-h-label').setAttribute('y', objY + 25);
+
+  // 沙坑深度（坑越深，颜色越深的矩形）
+  var maxDepth = 50 * 10 * 0.01;  // 最大 5 cm
+  var holeH = Math.min(depth * 6, 36);  // 像素
+  document.getElementById('pe-hole').setAttribute('height', holeH);
+  document.getElementById('pe-hole').setAttribute('y', 240 - holeH);
+
+  var tip;
+  if (h <= 10) {
+    tip = '物体的重力势能 Eₚ = mgh = ' + m + '×10×' + h + ' = ' + Ep + ' J。试着增加高度！';
+  } else if (h <= 25) {
+    tip = '高度增加，势能增大。<strong>质量加倍或高度加倍，势能都加倍</strong>（成正比关系）。';
+  } else if (h <= 40) {
+    tip = '势能与高度成正比，所以高处落下的物体重力势能很大——高空坠物很危险就是这个原因。';
+  } else {
+    tip = '极高的物体！Eₚ = mgh = ' + m + '×10×' + h + ' = ' + Ep + ' J。落下时全部转化为动能，撞击力极大。';
+  }
+  document.getElementById('pe-tip').innerHTML = tip;
+}
+
+// ===== 交互5：过山车 =====
+var COASTER = {
+  m: 6,           // 小车质量 kg
+  g: 10,          // N/kg
+  totalE: 600,    // 总机械能 J（m=6, h_max=10m → Ep=600J）
+  path: null,
+  pathLen: 0,
+  running: false,
+  rafId: null,
+  progress: 0,    // 0~1 在路径上的位置
+  speed: 0,       // 进度变化速度
+  heights: []     // 缓存路径上各点的高度
+};
+
+function initCoaster() {
+  COASTER.path = document.getElementById('track-path');
+  var len = COASTER.path.getTotalLength();
+  COASTER.pathLen = len;
+
+  // 采样路径上各点的 y 坐标（用于计算高度）
+  COASTER.heights = [];
+  var samples = 200;
+  for (var i = 0; i <= samples; i++) {
+    var pt = COASTER.path.getPointAtLength((i / samples) * len);
+    COASTER.heights.push({ x: pt.x, y: pt.y });
+  }
+
+  // 地面 y = 260，高度 h = 260 - y
+  // 计算最高点 h_max
+  var hMax = 0;
+  COASTER.heights.forEach(function(p) {
+    var h = 260 - p.y;
+    if (h > hMax) hMax = h;
+  });
+  COASTER.hMax = hMax;
+  // 总机械能 = mgh_max（设定为 600 J，通过调整 m 或缩放实现）
+  // 用相对高度计算能量，统一缩放到 600 J
+  COASTER.energyScale = COASTER.totalE / (COASTER.m * COASTER.g * hMax);
+
+  resetCoaster();
+}
+
+function getPointOnTrack(progress) {
+  // progress: 0~1
+  var idx = progress * (COASTER.heights.length - 1);
+  var i0 = Math.floor(idx);
+  var i1 = Math.min(i0 + 1, COASTER.heights.length - 1);
+  var frac = idx - i0;
+  return {
+    x: COASTER.heights[i0].x + (COASTER.heights[i1].x - COASTER.heights[i0].x) * frac,
+    y: COASTER.heights[i0].y + (COASTER.heights[i1].y - COASTER.heights[i0].y) * frac
+  };
+}
+
+function getCoasterState(progress) {
+  var pt = getPointOnTrack(progress);
+  var h = (260 - pt.y) * COASTER.energyScale;  // 当前相对高度
+  var Ep = COASTER.m * COASTER.g * h;
+  var Ek = Math.max(0, COASTER.totalE - Ep);
+  var v = Math.sqrt(2 * Ek / COASTER.m);
+  return { x: pt.x, y: pt.y, h: h, Ep: Ep, Ek: Ek, v: v };
+}
+
+function updateCoasterDisplay() {
+  var state = getCoasterState(COASTER.progress);
+  var car = document.getElementById('coaster-car');
+  car.setAttribute('transform', 'translate(' + state.x + ',' + state.y + ')');
+
+  // 显示数值
+  document.getElementById('co-ek').textContent = state.Ek.toFixed(0);
+  document.getElementById('co-ep').textContent = state.Ep.toFixed(0);
+  document.getElementById('co-total').textContent = (state.Ek + state.Ep).toFixed(0);
+  document.getElementById('co-v').textContent = state.v.toFixed(1);
+
+  // 能量条
+  var maxE = COASTER.totalE;
+  document.getElementById('bar-ke').style.width = (state.Ek / maxE * 100) + '%';
+  document.getElementById('bar-pe').style.width = (state.Ep / maxE * 100) + '%';
+  document.getElementById('bar-total').style.width = '100%';
+  document.getElementById('bar-ke-val').textContent = state.Ek.toFixed(0) + ' J';
+  document.getElementById('bar-pe-val').textContent = state.Ep.toFixed(0) + ' J';
+  document.getElementById('bar-total-val').textContent = (state.Ek + state.Ep).toFixed(0) + ' J';
+
+  // 提示
+  var tip;
+  if (COASTER.progress < 0.05) {
+    tip = '小车在最高点：势能最大（' + state.Ep.toFixed(0) + ' J），动能最小（0 J），速度为 0。';
+  } else if (COASTER.progress < 0.45) {
+    tip = '下坡中：高度减小，<strong>重力势能转化为动能</strong>，速度越来越快！';
+  } else if (COASTER.progress < 0.55) {
+    tip = '到达最低点：<strong>动能最大</strong>（' + state.Ek.toFixed(0) + ' J），势能最小，速度最快（' + state.v.toFixed(1) + ' m/s）。';
+  } else if (COASTER.progress < 0.95) {
+    tip = '上坡中：高度增大，<strong>动能转化为重力势能</strong>，速度逐渐减慢。';
+  } else {
+    tip = '到达对岸高点：动能减小，势能增大。若忽略摩擦，小车能到达与起点相同的高度。';
+  }
+  document.getElementById('co-tip').innerHTML = tip;
+}
+
+function resetCoaster() {
+  if (COASTER.rafId) cancelAnimationFrame(COASTER.rafId);
+  COASTER.running = false;
+  COASTER.progress = 0;
+  COASTER.speed = 0;
+  updateCoasterDisplay();
+  document.getElementById('co-release').textContent = '▶ 释放小车';
+  document.getElementById('co-release').disabled = false;
+}
+
+function animateCoaster() {
+  if (!COASTER.running) return;
+
+  // 根据当前速度 v 决定 progress 变化率
+  // 实际物理：dx/dt = v。这里把路径长度对应到实际"水平距离"
+  // 简化：progress 变化率 ∝ v
+  var state = getCoasterState(COASTER.progress);
+  // v 单位 m/s，progress 是 0~1，假设路径总长相当于 30 m
+  var dp = (state.v / 30) * 0.016;  // 0.016 ≈ 每帧时间
+  COASTER.progress += dp;
+
+  if (COASTER.progress >= 1) {
+    COASTER.progress = 1;
+    updateCoasterDisplay();
+    COASTER.running = false;
+    document.getElementById('co-release').textContent = '▶ 释放小车';
+    document.getElementById('co-release').disabled = false;
+    document.getElementById('co-tip').innerHTML = '小车到达终点。由于摩擦，实际中小车不会无限运动；若忽略摩擦，小车将永远来回运动（机械能守恒）。';
+    return;
+  }
+
+  updateCoasterDisplay();
+  COASTER.rafId = requestAnimationFrame(animateCoaster);
+}
+
+function startCoaster() {
+  if (COASTER.running) return;
+  if (COASTER.progress >= 1) {
+    COASTER.progress = 0;
+  }
+  COASTER.running = true;
+  document.getElementById('co-release').textContent = '⏸ 运行中…';
+  document.getElementById('co-release').disabled = true;
+  // 给一个初始小速度，避免在最高点静止无法启动
+  COASTER.speed = 0.001;
+  animateCoaster();
+}
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 生成地面线
+  makeGroundLines('ground-lines2', 50, 440, 170, 20);
+  makeGroundLines('ke-ground', 30, 450, 200, 20);
+
+  // 做功判断器
+  renderWorkCases();
+
+  // 功的计算器
+  document.getElementById('calc-f').addEventListener('input', updateCalcWork);
+  document.getElementById('calc-s').addEventListener('input', updateCalcWork);
+  updateCalcWork();
+
+  // 动能探索
+  document.getElementById('ke-m').addEventListener('input', updateKinetic);
+  document.getElementById('ke-v').addEventListener('input', updateKinetic);
+  updateKinetic();
+
+  // 重力势能探索
+  document.getElementById('pe-m').addEventListener('input', updatePotential);
+  document.getElementById('pe-h').addEventListener('input', updatePotential);
+  updatePotential();
+
+  // 过山车
+  initCoaster();
+  document.getElementById('co-release').addEventListener('click', startCoaster);
+  document.getElementById('co-reset').addEventListener('click', resetCoaster);
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 3,
+    explain: '做功的两个必要条件：① 受到力；② 在力的方向上移动了距离。<br>' +
+      'A：举着不动，s=0，不做功。<br>' +
+      'B：球离开脚后，脚对球不再施力（F=0），脚不做功（球继续滚动是由于惯性）。<br>' +
+      'C：提力竖直向上，水桶水平移动，力⊥距离，提力不做功。<br>' +
+      'D：推力水平，箱子水平移动，力与运动方向一致，<strong>做功 W = Fs</strong>。',
+    hint: '回忆不做功的三种情况：F=0、s=0、F⊥s。逐一检查每个选项。'
+  });
+
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: 'W = Fs = 50 N × 6 m = <strong>300 J</strong>。注意 s 必须是沿力方向的距离，这里推力水平、箱子水平移动，正好沿力方向。',
+    hint: '直接套公式 W = Fs，F = 50 N，s = 6 m。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 2,
+    explain: '动能 Eₖ = ½mv²，由质量和速度共同决定。<br>' +
+      'A 错：还要看速度（静止的物体质量再大动能也是 0）。<br>' +
+      'B 错：还要看质量。<br>' +
+      '<strong>C 对：质量加倍动能加倍；速度加倍动能变成 4 倍（因为 v²）</strong>。<br>' +
+      'D 错：静止的物体速度 v=0，动能为 0。',
+    hint: '动能公式 Eₖ = ½mv²，质量和速度都影响动能。注意 v 是平方项。'
+  });
+});
+</script>
+
 </body>
 </html>

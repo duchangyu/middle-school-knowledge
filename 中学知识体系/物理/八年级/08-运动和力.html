@@ -6,50 +6,317 @@
   <title>运动和力 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 18px;
+      min-width: 70px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 180px;
+      max-width: 300px;
+    }
+
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 17px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.9;
+    }
+
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 10px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-row .btn { min-width: 100px; }
+    .btn.active {
+      background: var(--primary-dark);
+      box-shadow: 0 0 0 3px rgba(74,144,217,0.25);
+    }
+
+    .effect-label {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 12px;
+      background: rgba(74,144,217,0.12);
+      color: var(--primary-dark);
+      transition: all 0.3s;
+    }
+    .effect-label.balance {
+      background: rgba(39,174,96,0.12);
+      color: var(--success);
+    }
+    .effect-label.unbalance {
+      background: rgba(231,76,60,0.12);
+      color: var(--danger);
+    }
+
+    .force-label {
+      font-size: 13px;
+      fill: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .example-card {
+      padding: 18px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border-top: 4px solid var(--primary);
+      text-align: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .example-card:hover { transform: translateY(-3px); }
+    .example-card .icon { font-size: 34px; }
+    .example-card h4 {
+      margin: 8px 0 6px;
+      color: var(--primary-dark);
+      font-size: 15px;
+    }
+    .example-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .example-card.selected {
+      border-top-color: var(--accent);
+      background: rgba(245,166,35,0.1);
+      box-shadow: 0 2px 10px rgba(245,166,35,0.2);
+    }
+
+    .scene-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .scene-tab {
+      padding: 8px 18px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .scene-tab:hover { border-color: var(--primary-light); }
+    .scene-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .balance-check-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .balance-check-row .btn { min-width: 130px; }
+
+    .balance-result {
+      margin-top: 16px;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      display: none;
+    }
+    .balance-result.show { display: block; animation: fadeIn 0.3s; }
+    .balance-result.balance {
+      background: rgba(39,174,96,0.12);
+      color: var(--success);
+      border: 2px solid var(--success);
+    }
+    .balance-result.unbalance {
+      background: rgba(231,76,60,0.12);
+      color: var(--danger);
+      border: 2px solid var(--danger);
+    }
+
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .condition-chip {
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: white;
+      border: 2px solid var(--border);
+      text-align: center;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .condition-chip.pass {
+      background: rgba(39,174,96,0.15);
+      border-color: var(--success);
+      color: var(--success);
+      font-weight: 600;
+    }
+    .condition-chip.fail {
+      background: rgba(231,76,60,0.15);
+      border-color: var(--danger);
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .phenomenon-card {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      margin: 12px 0;
+      border-left: 4px solid var(--accent);
+      transition: all 0.2s;
+    }
+    .phenomenon-card:hover { transform: translateX(4px); }
+    .phenomenon-card .phenomenon-title {
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .phenomenon-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .phenomenon-options .quiz-option {
+      padding: 8px 14px;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .quiz-feedback {
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .speed-display {
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary-dark);
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚡ 运动和力</div>
+  <div class="navbar-brand">🚗 运动和力</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
@@ -67,24 +334,1041 @@
     <span>运动和力</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>运动和力</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <!-- ===== 知识要点 ===== -->
+  <div class="card">
+    <div class="section-header">📖 知识要点</div>
+    <p>运动和力是经典力学的核心内容。本章从牛顿第一定律出发，揭示力与运动的真实关系——力是<strong>改变</strong>物体运动状态的原因，而不是<strong>维持</strong>运动的原因。掌握二力平衡条件，是分析静止和匀速直线运动状态的关键。</p>
+
+    <ul class="property-list">
+      <li><strong>1. 牛顿第一定律（惯性定律）：</strong>一切物体在没有受到力的作用时，总保持<strong>静止状态</strong>或<strong>匀速直线运动状态</strong>。该定律不能由实验直接验证（因为不存在完全不受力的物体），但通过科学推理（斜面小车实验）得出，是公认的物理学基本定律之一。</li>
+      <li><strong>2. 惯性：</strong>物体保持原有运动状态不变的性质。一切物体都有惯性，惯性的大小只与<strong>质量</strong>有关——质量越大，惯性越大。惯性是物体本身的属性，不是一种力，不能说"受惯性作用"或"惯性力"，应说"具有惯性"。</li>
+      <li><strong>3. 二力平衡：</strong>作用在<strong>同一物体</strong>上的两个力，如果<strong>大小相等、方向相反、作用在同一直线上</strong>，这两个力就彼此平衡。此时物体处于<strong>静止</strong>或<strong>匀速直线运动</strong>状态。</li>
+      <li><strong>4. 二力平衡条件（四要素）：</strong>① <strong>同物</strong>——作用在同一物体上；② <strong>等大</strong>——大小相等；③ <strong>反向</strong>——方向相反；④ <strong>共线</strong>——作用在同一直线上。四个条件缺一不可。</li>
+      <li><strong>5. 力和运动的关系：</strong>力是<strong>改变</strong>物体运动状态的原因，不是<strong>维持</strong>运动的原因。
+        <ul style="margin-top:6px; padding-left:20px;">
+          <li>不受力（或受平衡力）→ 静止或匀速直线运动（运动状态不变）</li>
+          <li>受非平衡力 → 运动状态改变（加速、减速或方向改变）</li>
+        </ul>
+      </li>
+      <li><strong>6. 平衡力与相互作用力的区别：</strong>平衡力作用在<strong>同一物体</strong>上，相互作用力作用在<strong>两个不同物体</strong>上。但二者都满足"等大、反向、共线"。</li>
+    </ul>
+
+    <div class="formula-box">
+      牛顿第一定律：一切物体在没有受到力的作用时，总保持静止状态或匀速直线运动状态<br>
+      <span style="font-size:14px; font-weight:400; color:var(--text-secondary);">（物体不受力时，原来静止的保持静止，原来运动的保持匀速直线运动）</span>
+    </div>
+
+    <div class="formula-box" style="background:rgba(245,166,35,0.08); border-color:rgba(245,166,35,0.25); color:var(--warning);">
+      二力平衡条件：同物 · 等大 · 反向 · 共线（四个条件缺一不可）
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 交互1：惯性实验模拟 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互1：惯性实验模拟</div>
+    <p>小车上放一木块。观察小车在不同运动状态下，木块由于<strong>惯性</strong>会发生什么现象。木块保持原有运动状态的性质就是惯性。</p>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="inertia-btn-start" onclick="setInertiaMode('start')">🚀 突然启动</button>
+      <button class="btn btn-primary" id="inertia-btn-brake" onclick="setInertiaMode('brake')">🛑 突然刹车</button>
+      <button class="btn btn-primary" id="inertia-btn-uniform" onclick="setInertiaMode('uniform')">🚗 匀速行驶</button>
+      <button class="btn btn-outline" onclick="resetInertia()">🔄 重置</button>
+    </div>
+
+    <div class="slider-row">
+      <label for="inertia-slider">车速变化程度：</label>
+      <input type="range" id="inertia-slider" min="1" max="10" value="6" step="1">
+      <span class="value-display">程度 <span id="inertia-val">6</span></span>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 260" width="600" height="260">
+        <!-- 天空背景 -->
+        <rect x="0" y="0" width="600" height="210" fill="#E8F4FC"/>
+        <!-- 地面 -->
+        <line x1="20" y1="210" x2="580" y2="210" stroke="#7F8C8D" stroke-width="2"/>
+        <g stroke="#BDC3C7" stroke-width="1">
+          <line x1="30" y1="210" x2="20" y2="220"/>
+          <line x1="80" y1="210" x2="70" y2="220"/>
+          <line x1="130" y1="210" x2="120" y2="220"/>
+          <line x1="180" y1="210" x2="170" y2="220"/>
+          <line x1="230" y1="210" x2="220" y2="220"/>
+          <line x1="280" y1="210" x2="270" y2="220"/>
+          <line x1="330" y1="210" x2="320" y2="220"/>
+          <line x1="380" y1="210" x2="370" y2="220"/>
+          <line x1="430" y1="210" x2="420" y2="220"/>
+          <line x1="480" y1="210" x2="470" y2="220"/>
+          <line x1="530" y1="210" x2="520" y2="220"/>
+          <line x1="570" y1="210" x2="560" y2="220"/>
+        </g>
+
+        <!-- 距离参考标尺 -->
+        <g id="inertia-ruler"></g>
+
+        <!-- 小车和木块组合 -->
+        <g id="inertia-car-group" transform="translate(180, 0)">
+          <!-- 木块（在车上方）默认直立 -->
+          <g id="inertia-block-group" transform="translate(0, 0)">
+            <!-- 木块底部铰链点 -->
+            <rect id="inertia-block" x="20" y="125" width="40" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/>
+            <text x="40" y="155" text-anchor="middle" fill="white" font-size="14" font-weight="700">木块</text>
+          </g>
+          <!-- 车身 -->
+          <rect x="0" y="175" width="100" height="35" fill="#4A90D9" stroke="#2E6BA8" stroke-width="2" rx="5"/>
+          <text x="50" y="198" text-anchor="middle" fill="white" font-size="14" font-weight="700">小车</text>
+          <!-- 车轮 -->
+          <circle cx="22" cy="210" r="10" fill="#2C3E50"/>
+          <circle cx="22" cy="210" r="4" fill="#7F8C8D"/>
+          <line x1="22" y1="206" x2="22" y2="214" stroke="#7F8C8D" stroke-width="1.5"/>
+          <line x1="18" y1="210" x2="26" y2="210" stroke="#7F8C8D" stroke-width="1.5"/>
+          <circle cx="78" cy="210" r="10" fill="#2C3E50"/>
+          <circle cx="78" cy="210" r="4" fill="#7F8C8D"/>
+          <line x1="78" y1="206" x2="78" y2="214" stroke="#7F8C8D" stroke-width="1.5"/>
+          <line x1="74" y1="210" x2="82" y2="210" stroke="#7F8C8D" stroke-width="1.5"/>
+        </g>
+
+        <!-- 速度方向箭头 -->
+        <g id="inertia-velocity-arrow" opacity="0">
+          <line x1="280" y1="240" x2="360" y2="240" stroke="#27AE60" stroke-width="3" marker-end="url(#arrow-green)"/>
+          <text x="320" y="256" text-anchor="middle" fill="#27AE60" font-size="12" font-weight="700">v（运动方向）</text>
+        </g>
+
+        <!-- 现象说明 -->
+        <text id="inertia-label-text" x="300" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#2E6BA8"></text>
+
+        <defs>
+          <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#27AE60"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">木块状态：</span><span class="value" id="inertia-block-state">直立</span></div>
+      <div class="readout-item"><span class="label">小车状态：</span><span class="value" id="inertia-car-state">静止</span></div>
+      <div class="readout-item"><span class="label">惯性现象：</span><span class="value" id="inertia-phenomenon">—</span></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 惯性现象的本质</div>
+      • <strong>突然启动</strong>：小车前进，木块由于惯性要保持原来的<strong>静止</strong>状态，所以相对小车<strong>向后倒</strong>。<br>
+      • <strong>突然刹车</strong>：小车停止，木块由于惯性要保持原来的<strong>运动</strong>状态，所以相对小车<strong>向前倒</strong>。<br>
+      • <strong>匀速行驶</strong>：小车和木块一起匀速运动，运动状态不变，木块<strong>不倒</strong>。<br>
+      • 一切物体都具有惯性，惯性不是力，其大小只与质量有关。
+    </div>
   </div>
+
+  <!-- ===== 交互2：二力平衡判断器 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互2：二力平衡判断器</div>
+    <p>判断下列四个场景中作用在物体上的两个力是否平衡。二力平衡需要同时满足四个条件：<strong>同物、等大、反向、共线</strong>，缺一不可。</p>
+
+    <div class="scene-tabs">
+      <div class="scene-tab active" data-bal="lamp" onclick="switchBalanceScene('lamp')">💡 悬挂的灯</div>
+      <div class="scene-tab" data-bal="book" onclick="switchBalanceScene('book')">📚 桌上的书</div>
+      <div class="scene-tab" data-bal="box" onclick="switchBalanceScene('box')">📦 同向推箱</div>
+      <div class="scene-tab" data-bal="rotate" onclick="switchBalanceScene('rotate')">🔄 不共线</div>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 500 280" width="500" height="280">
+        <defs>
+          <marker id="bal-arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#E74C3C"/>
+          </marker>
+          <marker id="bal-arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#2E6BA8"/>
+          </marker>
+          <marker id="bal-arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#9B59B6"/>
+          </marker>
+          <marker id="bal-arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#27AE60"/>
+          </marker>
+        </defs>
+        <g id="bal-scene-bg"></g>
+      </svg>
+    </div>
+
+    <div class="balance-check-row">
+      <button class="btn btn-success" onclick="judgeBalance(true)">✓ 我认为平衡</button>
+      <button class="btn btn-danger" onclick="judgeBalance(false)">✗ 我认为不平衡</button>
+      <button class="btn btn-outline" onclick="showBalanceAnswer()">👁️ 直接看答案</button>
+    </div>
+
+    <div class="balance-result" id="bal-result"></div>
+
+    <div class="conditions-grid" id="bal-conditions">
+      <div class="condition-chip" id="chip-tongwu">① 同物</div>
+      <div class="condition-chip" id="chip-dengda">② 等大</div>
+      <div class="condition-chip" id="chip-fanxiang">③ 反向</div>
+      <div class="condition-chip" id="chip-gongxian">④ 共线</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 二力平衡四条件</div>
+      作用在<strong>同一物体</strong>上的两个力，大小<strong>相等</strong>、方向<strong>相反</strong>、作用在<strong>同一直线</strong>上——四个条件<strong>同时满足</strong>才平衡，缺一不可。
+    </div>
+  </div>
+
+  <!-- ===== 交互3：力和运动关系探索 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互3：力和运动关系探索</div>
+    <p>木块在水平面上运动，改变受力情况，观察运动状态如何变化。注意：力改变的是<strong>运动状态</strong>（速度大小或方向），不是维持运动的原因。</p>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="force-btn-none" onclick="setForceMode('none')">🚫 无推力</button>
+      <button class="btn btn-primary" id="force-btn-greater" onclick="setForceMode('greater')">⚡ 恒定推力（推力>摩擦力）</button>
+      <button class="btn btn-primary" id="force-btn-less" onclick="setForceMode('less')">🐢 推力&lt;摩擦力</button>
+      <button class="btn btn-primary" id="force-btn-equal" onclick="setForceMode('equal')">⚖️ 推力=摩擦力（平衡）</button>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 260" width="600" height="260">
+        <!-- 地面 -->
+        <line x1="20" y1="210" x2="580" y2="210" stroke="#7F8C8D" stroke-width="2"/>
+        <g stroke="#BDC3C7" stroke-width="1">
+          <line x1="30" y1="210" x2="20" y2="220"/>
+          <line x1="80" y1="210" x2="70" y2="220"/>
+          <line x1="130" y1="210" x2="120" y2="220"/>
+          <line x1="180" y1="210" x2="170" y2="220"/>
+          <line x1="230" y1="210" x2="220" y2="220"/>
+          <line x1="280" y1="210" x2="270" y2="220"/>
+          <line x1="330" y1="210" x2="320" y2="220"/>
+          <line x1="380" y1="210" x2="370" y2="220"/>
+          <line x1="430" y1="210" x2="420" y2="220"/>
+          <line x1="480" y1="210" x2="470" y2="220"/>
+          <line x1="530" y1="210" x2="520" y2="220"/>
+          <line x1="570" y1="210" x2="560" y2="220"/>
+        </g>
+
+        <!-- 木块 -->
+        <g id="force-block-group" transform="translate(250, 0)">
+          <rect x="0" y="160" width="60" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="3"/>
+          <text x="30" y="190" text-anchor="middle" fill="white" font-size="14" font-weight="700">木块</text>
+          <circle cx="30" cy="185" r="2.5" fill="#F1C40F"/>
+        </g>
+
+        <!-- 力的箭头（动态生成） -->
+        <g id="force-arrows"></g>
+
+        <!-- 速度计 -->
+        <g transform="translate(490, 30)">
+          <circle cx="0" cy="0" r="38" fill="white" stroke="#BDC3C7" stroke-width="2"/>
+          <text x="0" y="-22" text-anchor="middle" font-size="11" fill="#7F8C8D">速度 v</text>
+          <text id="force-speed-text" x="0" y="8" text-anchor="middle" font-size="18" font-weight="700" fill="#2E6BA8">0</text>
+          <text x="0" y="24" text-anchor="middle" font-size="10" fill="#7F8C8D">m/s</text>
+        </g>
+
+        <!-- 状态说明 -->
+        <text id="force-label-text" x="300" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#2E6BA8"></text>
+
+        <!-- 运动方向箭头 -->
+        <g id="force-direction-arrow" opacity="0">
+          <line x1="200" y1="245" x2="280" y2="245" stroke="#27AE60" stroke-width="3" marker-end="url(#arrow-green2)"/>
+          <text x="240" y="258" text-anchor="middle" fill="#27AE60" font-size="11" font-weight="700">运动方向</text>
+        </g>
+
+        <defs>
+          <marker id="arrow-green2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#27AE60"/>
+          </marker>
+          <marker id="arrow-force-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrow-force-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0,0 10,3 0,6" fill="#F39C12"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">推力 F：</span><span class="value" id="force-push-display">0 N</span></div>
+      <div class="readout-item"><span class="label">摩擦力 f：</span><span class="value" id="force-friction-display">0 N</span></div>
+      <div class="readout-item"><span class="label">合力：</span><span class="value" id="force-net-display">0 N</span></div>
+      <div class="readout-item"><span class="label">运动状态：</span><span class="value" id="force-state-display">静止</span></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 力和运动的本质关系</div>
+      • <strong>不受力</strong>或<strong>受平衡力</strong>（合力为零）→ 运动状态<strong>不变</strong>（静止的保持静止，运动的保持匀速直线运动）<br>
+      • <strong>受非平衡力</strong>（合力不为零）→ 运动状态<strong>改变</strong>（加速、减速或方向改变）<br>
+      • 力是<strong>改变</strong>运动状态的原因，不是<strong>维持</strong>运动的原因——这是牛顿第一定律的核心思想。
+    </div>
+  </div>
+
+  <!-- ===== 交互4：惯性现象解释 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 交互4：惯性现象解释</div>
+    <p>生活中有许多惯性现象，每个现象都涉及物体由于惯性保持原有运动状态。请选择正确的解释。</p>
+
+    <div class="example-grid">
+      <div class="example-card" data-phen="brake" id="phen-card-brake" onclick="selectPhenomenon('brake')">
+        <div class="icon">🚗</div>
+        <h4>汽车急刹车人前倾</h4>
+        <p>乘车时，汽车急刹车，乘客会向前倾倒。</p>
+      </div>
+      <div class="example-card" data-phen="hammer" id="phen-card-hammer" onclick="selectPhenomenon('hammer')">
+        <div class="icon">🔨</div>
+        <h4>锤头松了撞击紧</h4>
+        <p>锤头松了，把锤柄在地上撞几下就紧了。</p>
+      </div>
+      <div class="example-card" data-phen="run" id="phen-card-run" onclick="selectPhenomenon('run')">
+        <div class="icon">🏃</div>
+        <h4>百米跑终点停不下</h4>
+        <p>百米赛跑到达终点后，人不能立即停下。</p>
+      </div>
+      <div class="example-card" data-phen="dust" id="phen-card-dust" onclick="selectPhenomenon('dust')">
+        <div class="icon">👕</div>
+        <h4>拍打衣服灰尘落</h4>
+        <p>拍打衣服，衣服上的灰尘会脱落。</p>
+      </div>
+    </div>
+
+    <div class="phenomenon-card" id="phen-detail" style="display:none;">
+      <div class="phenomenon-title" id="phen-detail-title"></div>
+      <div id="phen-detail-desc" style="font-size:14px; color:var(--text-secondary); margin-bottom:10px;"></div>
+      <div style="font-size:14px; font-weight:600; color:var(--primary-dark); margin-bottom:8px;">请选择正确的惯性解释：</div>
+      <div id="phen-options" class="phenomenon-options"></div>
+      <div id="phen-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 惯性现象解释三步法</div>
+      ① 说清原来两物体（或物体各部分）的运动状态；<br>
+      ② 说清其中一部分（或物体）运动状态发生了什么变化；<br>
+      ③ 另一部分（或物体）由于惯性要保持原来的运动状态，于是发生了什么现象。
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 练习题</div>
+    <p>检验你对"运动和力"的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 关于惯性，下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 速度大的物体惯性大</div>
+      <div class="quiz-option" data-idx="1">B. 静止的物体没有惯性</div>
+      <div class="quiz-option" data-idx="2">C. 一切物体都有惯性，惯性大小与质量有关</div>
+      <div class="quiz-option" data-idx="3">D. 汽车刹车时人才有惯性，匀速行驶时没有惯性</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 作用在某物体上的两个力，若它们是平衡力，则这两个力必须满足的条件是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 大小相等、方向相反、作用在同一直线上</div>
+      <div class="quiz-option" data-idx="1">B. 大小相等、方向相反、作用在同一物体上</div>
+      <div class="quiz-option" data-idx="2">C. 大小相等、方向相反、作用在同一直线上，且作用在同一物体上</div>
+      <div class="quiz-option" data-idx="3">D. 大小相等、方向相同、作用在同一直线上</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于力与运动的关系，下列说法正确的是（　）。</div>
+      <div class="quiz-option" data-idx="0">A. 力是维持物体运动的原因</div>
+      <div class="quiz-option" data-idx="1">B. 物体受力越大，运动得越快</div>
+      <div class="quiz-option" data-idx="2">C. 力是改变物体运动状态的原因，物体不受力时保持静止或匀速直线运动</div>
+      <div class="quiz-option" data-idx="3">D. 物体运动状态改变时一定受到力的作用，物体受力时运动状态一定改变</div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 二力平衡的分析 ↔ <a href="07-力.html">物理 · 力</a>（力的三要素、力的示意图是分析平衡的基础）</p>
+    <p>· 力与运动中的速度变化 ↔ <a href="../../数学/八年级/10-一次函数.html">数学 · 一次函数</a>（速度随时间的变化常用一次函数描述，如匀变速运动 v = v₀ + at）</p>
+    <p>· 后续学习 ↔ <a href="09-压强.html">物理 · 压强</a>（理解二力平衡是分析固体、液体、气体压强的基础）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="07-力.html" class="btn btn-outline">← 上一章：力</a>
+    <a href="09-压强.html" class="btn btn-primary">下一章：压强 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：惯性实验模拟
+// ============================================================
+var inertiaMode = 'start';
+var inertiaLevel = 6;
+var inertiaAnimId = null;
+var inertiaCarPos = 180;
+var inertiaBlockAngle = 0;  // 倾倒角度（正=向前倒，负=向后倒）
+
+function setInertiaMode(mode) {
+  inertiaMode = mode;
+  document.querySelectorAll('#inertia-btn-start, #inertia-btn-brake, #inertia-btn-uniform').forEach(function(b) { b.classList.remove('active'); });
+  var btnId = { start: 'inertia-btn-start', brake: 'inertia-btn-brake', uniform: 'inertia-btn-uniform' }[mode];
+  document.getElementById(btnId).classList.add('active');
+  runInertiaAnim();
+}
+
+function updateInertiaSlider() {
+  inertiaLevel = parseInt(document.getElementById('inertia-slider').value);
+  document.getElementById('inertia-val').textContent = inertiaLevel;
+}
+
+function resetInertia() {
+  if (inertiaAnimId) { cancelAnimationFrame(inertiaAnimId); inertiaAnimId = null; }
+  inertiaCarPos = 180;
+  inertiaBlockAngle = 0;
+  document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + inertiaCarPos + ', 0)');
+  document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(' + inertiaBlockAngle + ' 40 175)');
+  document.getElementById('inertia-velocity-arrow').setAttribute('opacity', 0);
+  document.getElementById('inertia-label-text').textContent = '点击按钮开始实验';
+  document.getElementById('inertia-block-state').textContent = '直立';
+  document.getElementById('inertia-car-state').textContent = '静止';
+  document.getElementById('inertia-phenomenon').textContent = '—';
+}
+
+function runInertiaAnim() {
+  if (inertiaAnimId) { cancelAnimationFrame(inertiaAnimId); inertiaAnimId = null; }
+  // 重置到起点
+  inertiaCarPos = 180;
+  inertiaBlockAngle = 0;
+  document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + inertiaCarPos + ', 0)');
+  document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(0 40 175)');
+
+  var label = document.getElementById('inertia-label-text');
+  var blockState = document.getElementById('inertia-block-state');
+  var carState = document.getElementById('inertia-car-state');
+  var phenom = document.getElementById('inertia-phenomenon');
+  var velArrow = document.getElementById('inertia-velocity-arrow');
+
+  var startTime = performance.now();
+  // 倾倒程度与滑块相关
+  var maxTilt = inertiaLevel * 4; // 4~40度
+  var carMoveDist = inertiaLevel * 18; // 18~180px
+
+  if (inertiaMode === 'start') {
+    // 突然启动：车前进，木块向后倒
+    label.textContent = '突然启动：小车前进，木块由于惯性保持静止 → 向后倒';
+    velArrow.setAttribute('opacity', 1);
+    carState.textContent = '加速前进';
+    phenom.textContent = '木块向后倒';
+    var duration = 1200;
+    function step(now) {
+      var elapsed = now - startTime;
+      var t = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      // 小车前进
+      inertiaCarPos = 180 + carMoveDist * eased;
+      document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + inertiaCarPos + ', 0)');
+      // 木块向后倒（负角度，绕底部铰链点）
+      inertiaBlockAngle = -maxTilt * eased;
+      document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(' + inertiaBlockAngle + ' 40 175)');
+      if (inertiaBlockAngle < -5) blockState.textContent = '向后倾倒';
+      if (t < 1) {
+        inertiaAnimId = requestAnimationFrame(step);
+      } else {
+        inertiaAnimId = null;
+      }
+    }
+    inertiaAnimId = requestAnimationFrame(step);
+
+  } else if (inertiaMode === 'brake') {
+    // 突然刹车：先匀速运动（让用户看出有速度），然后急停，木块向前倒
+    label.textContent = '匀速行驶→突然刹车：小车停止，木块由于惯性保持运动 → 向前倒';
+    velArrow.setAttribute('opacity', 1);
+    carState.textContent = '匀速→急停';
+    phenom.textContent = '木块向前倒';
+    // 阶段1：匀速前进
+    var phase1Dur = 800;
+    var phase2Dur = 500;
+    function phase1(now) {
+      var elapsed = now - startTime;
+      var t = Math.min(elapsed / phase1Dur, 1);
+      // 匀速：线性
+      var pos1 = 180 + (carMoveDist * 0.7) * t;
+      inertiaCarPos = pos1;
+      document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + pos1 + ', 0)');
+      inertiaBlockAngle = 0;
+      document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(0 40 175)');
+      blockState.textContent = '直立（随车匀速）';
+      if (t < 1) {
+        inertiaAnimId = requestAnimationFrame(phase1);
+      } else {
+        // 阶段2：刹车
+        var phase2Start = performance.now();
+        function phase2(now2) {
+          var e2 = now2 - phase2Start;
+          var t2 = Math.min(e2 / phase2Dur, 1);
+          var eased2 = 1 - Math.pow(1 - t2, 3);
+          // 车减速到停（在原位置附近微调）
+          var pos2 = (180 + carMoveDist * 0.7) + (carMoveDist * 0.1) * (1 - eased2);
+          inertiaCarPos = pos2;
+          document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + pos2 + ', 0)');
+          // 木块向前倒（正角度）
+          inertiaBlockAngle = maxTilt * eased2;
+          document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(' + inertiaBlockAngle + ' 40 175)');
+          if (inertiaBlockAngle > 5) blockState.textContent = '向前倾倒';
+          if (t2 < 1) {
+            inertiaAnimId = requestAnimationFrame(phase2);
+          } else {
+            carState.textContent = '停止';
+            velArrow.setAttribute('opacity', 0);
+            inertiaAnimId = null;
+          }
+        }
+        inertiaAnimId = requestAnimationFrame(phase2);
+      }
+    }
+    inertiaAnimId = requestAnimationFrame(phase1);
+
+  } else if (inertiaMode === 'uniform') {
+    // 匀速行驶：车和木块一起匀速运动，不倒
+    label.textContent = '匀速行驶：木块和小车一起匀速直线运动，运动状态不变 → 不倒';
+    velArrow.setAttribute('opacity', 1);
+    carState.textContent = '匀速直线运动';
+    blockState.textContent = '直立（运动状态不变）';
+    phenom.textContent = '木块不倒';
+    var uDuration = 2200;
+    var uStartPos = 180;
+    var uEndPos = 180 + carMoveDist * 2;
+    if (uEndPos > 460) uEndPos = 460;
+    function stepU(now) {
+      var elapsed = now - startTime;
+      var t = Math.min(elapsed / uDuration, 1);
+      // 匀速：线性
+      var pos = uStartPos + (uEndPos - uStartPos) * t;
+      inertiaCarPos = pos;
+      document.getElementById('inertia-car-group').setAttribute('transform', 'translate(' + pos + ', 0)');
+      // 木块保持直立
+      inertiaBlockAngle = 0;
+      document.getElementById('inertia-block-group').setAttribute('transform', 'rotate(0 40 175)');
+      if (t < 1) {
+        inertiaAnimId = requestAnimationFrame(stepU);
+      } else {
+        // 回到起点循环
+        setTimeout(function() {
+          if (inertiaMode === 'uniform') {
+            document.getElementById('inertia-car-group').setAttribute('transform', 'translate(180, 0)');
+            setTimeout(function() {
+              if (inertiaMode === 'uniform') runInertiaAnim();
+            }, 200);
+          }
+        }, 600);
+        inertiaAnimId = null;
+      }
+    }
+    inertiaAnimId = requestAnimationFrame(stepU);
+  }
+}
+
+// ============================================================
+// 交互2：二力平衡判断器
+// ============================================================
+var balScene = 'lamp';
+var balJudged = false;
+
+var balScenes = {
+  // 场景1：悬挂的灯——重力和拉力，等大反向共线 → 平衡
+  lamp: {
+    bg: function() {
+      return '' +
+        '<line x1="100" y1="30" x2="400" y2="30" stroke="#7F8C8D" stroke-width="3"/>' +
+        '<line x1="250" y1="30" x2="250" y2="120" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<rect x="240" y="118" width="20" height="8" fill="#7F8C8D"/>' +
+        '<ellipse cx="250" cy="160" rx="32" ry="30" fill="#F1C40F" stroke="#F39C12" stroke-width="2"/>' +
+        '<text x="250" y="166" text-anchor="middle" font-size="20">💡</text>' +
+        '<circle cx="250" cy="160" r="2.5" fill="#2C3E50"/>' +
+        // 重力箭头（竖直向下）
+        '<line x1="250" y1="160" x2="250" y2="225" stroke="#E74C3C" stroke-width="3" marker-end="url(#bal-arrow-red)"/>' +
+        '<rect x="266" y="190" width="50" height="18" fill="white" stroke="#E74C3C" rx="3"/>' +
+        '<text x="291" y="203" text-anchor="middle" fill="#E74C3C" font-size="11" font-weight="700">G=3N</text>' +
+        // 拉力箭头（竖直向上）
+        '<line x1="250" y1="160" x2="250" y2="95" stroke="#2E6BA8" stroke-width="3" marker-end="url(#bal-arrow-blue)"/>' +
+        '<rect x="184" y="105" width="50" height="18" fill="white" stroke="#2E6BA8" rx="3"/>' +
+        '<text x="209" y="118" text-anchor="middle" fill="#2E6BA8" font-size="11" font-weight="700">F=3N</text>';
+    },
+    isBalanced: true,
+    conditions: { tongwu: true, dengda: true, fanxiang: true, gongxian: true },
+    desc: '悬挂的灯泡受重力（竖直向下，3N）和绳的拉力（竖直向上，3N），两个力作用在同一个灯泡上。',
+    failReason: '四个条件都满足，二力平衡。'
+  },
+  // 场景2：桌上的书——重力和支持力 → 平衡
+  book: {
+    bg: function() {
+      return '' +
+        '<rect x="80" y="200" width="340" height="14" fill="#D4B896" stroke="#A0826D" stroke-width="1.5" rx="2"/>' +
+        '<rect x="100" y="214" width="10" height="40" fill="#A0826D"/>' +
+        '<rect x="390" y="214" width="10" height="40" fill="#A0826D"/>' +
+        '<rect x="200" y="150" width="100" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/>' +
+        '<text x="250" y="180" text-anchor="middle" fill="white" font-size="14" font-weight="700">书</text>' +
+        '<circle cx="250" cy="175" r="2.5" fill="#F1C40F"/>' +
+        // 重力箭头（竖直向下）
+        '<line x1="250" y1="175" x2="250" y2="245" stroke="#E74C3C" stroke-width="3" marker-end="url(#bal-arrow-red)"/>' +
+        '<rect x="266" y="210" width="50" height="18" fill="white" stroke="#E74C3C" rx="3"/>' +
+        '<text x="291" y="223" text-anchor="middle" fill="#E74C3C" font-size="11" font-weight="700">G=5N</text>' +
+        // 支持力箭头（竖直向上）
+        '<line x1="250" y1="175" x2="250" y2="115" stroke="#2E6BA8" stroke-width="3" marker-end="url(#bal-arrow-blue)"/>' +
+        '<rect x="184" y="125" width="50" height="18" fill="white" stroke="#2E6BA8" rx="3"/>' +
+        '<text x="209" y="138" text-anchor="middle" fill="#2E6BA8" font-size="11" font-weight="700">N=5N</text>';
+    },
+    isBalanced: true,
+    conditions: { tongwu: true, dengda: true, fanxiang: true, gongxian: true },
+    desc: '桌面上的书受重力（竖直向下，5N）和支持力（竖直向上，5N），两个力作用在同一本书上。',
+    failReason: '四个条件都满足，二力平衡。'
+  },
+  // 场景3：两个人推箱子同方向 → 不平衡（不满足反向）
+  box: {
+    bg: function() {
+      return '' +
+        '<line x1="30" y1="220" x2="470" y2="220" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<g stroke="#BDC3C7" stroke-width="1">' +
+        '<line x1="40" y1="220" x2="30" y2="230"/><line x1="80" y1="220" x2="70" y2="230"/>' +
+        '<line x1="120" y1="220" x2="110" y2="230"/><line x1="160" y1="220" x2="150" y2="230"/>' +
+        '<line x1="200" y1="220" x2="190" y2="230"/><line x1="240" y1="220" x2="230" y2="230"/>' +
+        '<line x1="280" y1="220" x2="270" y2="230"/><line x1="320" y1="220" x2="310" y2="230"/>' +
+        '<line x1="360" y1="220" x2="350" y2="230"/><line x1="400" y1="220" x2="390" y2="230"/>' +
+        '<line x1="440" y1="220" x2="430" y2="230"/></g>' +
+        '<rect x="200" y="170" width="100" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/>' +
+        '<text x="250" y="200" text-anchor="middle" fill="white" font-size="14" font-weight="700">箱</text>' +
+        '<circle cx="250" cy="195" r="2.5" fill="#F1C40F"/>' +
+        // 人A推力（向右）
+        '<text x="100" y="190" font-size="24">🧍</text>' +
+        '<line x1="160" y1="195" x2="220" y2="195" stroke="#E74C3C" stroke-width="3" marker-end="url(#bal-arrow-red)"/>' +
+        '<rect x="166" y="172" width="50" height="18" fill="white" stroke="#E74C3C" rx="3"/>' +
+        '<text x="191" y="185" text-anchor="middle" fill="#E74C3C" font-size="11" font-weight="700">F₁=10N</text>' +
+        // 人B推力（也向右）—— 同向！
+        '<text x="400" y="190" font-size="24">🧍</text>' +
+        '<line x1="280" y1="195" x2="340" y2="195" stroke="#2E6BA8" stroke-width="3" marker-end="url(#bal-arrow-blue)"/>' +
+        '<rect x="286" y="172" width="50" height="18" fill="white" stroke="#2E6BA8" rx="3"/>' +
+        '<text x="311" y="185" text-anchor="middle" fill="#2E6BA8" font-size="11" font-weight="700">F₂=10N</text>';
+    },
+    isBalanced: false,
+    conditions: { tongwu: true, dengda: true, fanxiang: false, gongxian: true },
+    desc: '两个人推箱子，F₁=10N 向右，F₂=10N 向右。两力大小相等、作用在同一箱子、同一直线上，但方向相同（不是相反）。',
+    failReason: '不满足"反向"——两个力方向相同（都向右），不是相反方向。'
+  },
+  // 场景4：两个力不共线 → 不平衡
+  rotate: {
+    bg: function() {
+      return '' +
+        '<line x1="30" y1="220" x2="470" y2="220" stroke="#7F8C8D" stroke-width="2"/>' +
+        '<g stroke="#BDC3C7" stroke-width="1">' +
+        '<line x1="40" y1="220" x2="30" y2="230"/><line x1="80" y1="220" x2="70" y2="230"/>' +
+        '<line x1="120" y1="220" x2="110" y2="230"/><line x1="160" y1="220" x2="150" y2="230"/>' +
+        '<line x1="200" y1="220" x2="190" y2="230"/><line x1="240" y1="220" x2="230" y2="230"/>' +
+        '<line x1="280" y1="220" x2="270" y2="230"/><line x1="320" y1="220" x2="310" y2="230"/>' +
+        '<line x1="360" y1="220" x2="350" y2="230"/><line x1="400" y1="220" x2="390" y2="230"/>' +
+        '<line x1="440" y1="220" x2="430" y2="230"/></g>' +
+        '<rect x="200" y="170" width="100" height="50" fill="#C0392B" stroke="#922B21" stroke-width="2" rx="2"/>' +
+        '<text x="250" y="200" text-anchor="middle" fill="white" font-size="14" font-weight="700">箱</text>' +
+        '<circle cx="250" cy="195" r="2.5" fill="#F1C40F"/>' +
+        // F1：向右（水平）
+        '<line x1="250" y1="195" x2="350" y2="195" stroke="#E74C3C" stroke-width="3" marker-end="url(#bal-arrow-red)"/>' +
+        '<rect x="296" y="172" width="50" height="18" fill="white" stroke="#E74C3C" rx="3"/>' +
+        '<text x="321" y="185" text-anchor="middle" fill="#E74C3C" font-size="11" font-weight="700">F₁=8N</text>' +
+        // F2：向上偏左（不共线）
+        '<line x1="250" y1="195" x2="170" y2="115" stroke="#2E6BA8" stroke-width="3" marker-end="url(#bal-arrow-blue)"/>' +
+        '<rect x="166" y="105" width="50" height="18" fill="white" stroke="#2E6BA8" rx="3"/>' +
+        '<text x="191" y="118" text-anchor="middle" fill="#2E6BA8" font-size="11" font-weight="700">F₂=8N</text>' +
+        // 标注旋转方向
+        '<path d="M 270 245 A 30 12 0 1 1 230 245" fill="none" stroke="#F39C12" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#bal-arrow-purple)"/>';
+    },
+    isBalanced: false,
+    conditions: { tongwu: true, dengda: true, fanxiang: false, gongxian: false },
+    desc: '箱子受 F₁=8N 水平向右和 F₂=8N 斜向上，两个力虽然大小相等、作用在同一物体上，但既不反向也不共线。',
+    failReason: '不满足"反向"且"共线"——两个力不在同一直线上（夹角不是180°）。'
+  }
+};
+
+function switchBalanceScene(scene) {
+  balScene = scene;
+  balJudged = false;
+  document.querySelectorAll('.scene-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('[data-bal="' + scene + '"]').classList.add('active');
+  document.getElementById('bal-scene-bg').innerHTML = balScenes[scene].bg();
+  // 重置条件显示
+  ['tongwu', 'dengda', 'fanxiang', 'gongxian'].forEach(function(k) {
+    var chip = document.getElementById('chip-' + k);
+    chip.classList.remove('pass', 'fail');
+  });
+  var result = document.getElementById('bal-result');
+  result.classList.remove('show', 'balance', 'unbalance');
+}
+
+function judgeBalance(judgeAsBalanced) {
+  var data = balScenes[balScene];
+  var correct = (judgeAsBalanced === data.isBalanced);
+  showBalanceResult(correct, data);
+  highlightConditions(data);
+}
+
+function showBalanceAnswer() {
+  var data = balScenes[balScene];
+  showBalanceResult(null, data);
+  highlightConditions(data);
+}
+
+function showBalanceResult(correct, data) {
+  var result = document.getElementById('bal-result');
+  result.classList.remove('balance', 'unbalance');
+  if (correct === null) {
+    // 直接看答案
+    if (data.isBalanced) {
+      result.classList.add('balance');
+      result.innerHTML = '👁️ 答案：二力<strong>平衡</strong>。' + data.failReason;
+    } else {
+      result.classList.add('unbalance');
+      result.innerHTML = '👁️ 答案：二力<strong>不平衡</strong>。' + data.failReason;
+    }
+  } else if (correct) {
+    if (data.isBalanced) {
+      result.classList.add('balance');
+      result.innerHTML = '✓ 正确！二力<strong>平衡</strong>。' + data.failReason;
+    } else {
+      result.classList.add('unbalance');
+      result.innerHTML = '✓ 正确！二力<strong>不平衡</strong>。' + data.failReason;
+    }
+  } else {
+    // 答错
+    if (data.isBalanced) {
+      result.classList.add('balance');
+      result.innerHTML = '✗ 再想想：此场景二力<strong>平衡</strong>。' + data.failReason;
+    } else {
+      result.classList.add('unbalance');
+      result.innerHTML = '✗ 再想想：此场景二力<strong>不平衡</strong>。' + data.failReason;
+    }
+  }
+  result.classList.add('show');
+}
+
+function highlightConditions(data) {
+  var labels = { tongwu: '① 同物', dengda: '② 等大', fanxiang: '③ 反向', gongxian: '④ 共线' };
+  ['tongwu', 'dengda', 'fanxiang', 'gongxian'].forEach(function(k) {
+    var chip = document.getElementById('chip-' + k);
+    chip.classList.remove('pass', 'fail');
+    if (data.conditions[k]) {
+      chip.classList.add('pass');
+      chip.textContent = labels[k] + ' ✓';
+    } else {
+      chip.classList.add('fail');
+      chip.textContent = labels[k] + ' ✗';
+    }
+  });
+}
+
+// ============================================================
+// 交互3：力和运动关系探索
+// ============================================================
+var forceMode = 'none';
+var forceAnimId = null;
+var forceBlockX = 250;
+var forceSpeed = 0;
+var forceDir = 0;  // +1向右, -1向左, 0静止
+var startTime = 0;
+
+function setForceMode(mode) {
+  forceMode = mode;
+  document.querySelectorAll('#force-btn-none, #force-btn-greater, #force-btn-less, #force-btn-equal').forEach(function(b) { b.classList.remove('active'); });
+  var btnId = { none: 'force-btn-none', greater: 'force-btn-greater', less: 'force-btn-less', equal: 'force-btn-equal' }[mode];
+  document.getElementById(btnId).classList.add('active');
+
+  if (forceAnimId) { cancelAnimationFrame(forceAnimId); forceAnimId = null; }
+
+  // 重置
+  forceBlockX = 250;
+  forceSpeed = 0;
+  forceDir = 0;
+  startTime = performance.now();
+
+  var labelText = document.getElementById('force-label-text');
+  var pushDisp = document.getElementById('force-push-display');
+  var fricDisp = document.getElementById('force-friction-display');
+  var netDisp = document.getElementById('force-net-display');
+  var stateDisp = document.getElementById('force-state-display');
+  var dirArrow = document.getElementById('force-direction-arrow');
+  var arrows = document.getElementById('force-arrows');
+
+  arrows.innerHTML = '';
+  dirArrow.setAttribute('opacity', 0);
+
+  if (mode === 'none') {
+    // 无推力：物体保持静止（或匀速直线运动，但本场景从静止开始）
+    labelText.textContent = '无推力（不受力）：物体保持静止状态';
+    pushDisp.textContent = '0 N';
+    fricDisp.textContent = '0 N';
+    netDisp.textContent = '0 N';
+    stateDisp.textContent = '保持静止';
+    // 木块静止
+    document.getElementById('force-block-group').setAttribute('transform', 'translate(250, 0)');
+    document.getElementById('force-speed-text').textContent = '0';
+
+  } else if (mode === 'greater') {
+    // 推力 > 摩擦力：加速运动
+    labelText.textContent = '推力 > 摩擦力：合力向右，物体加速运动';
+    pushDisp.textContent = '20 N';
+    fricDisp.textContent = '5 N';
+    netDisp.textContent = '15 N（向右）';
+    stateDisp.textContent = '加速运动（运动状态改变）';
+    drawForceArrows(20, 5);
+    dirArrow.setAttribute('opacity', 1);
+    forceDir = 1;
+    animateForceBlock('accelerate');
+
+  } else if (mode === 'less') {
+    // 推力 < 摩擦力：物体先有个初速度向右运动，但合力向左，减速
+    labelText.textContent = '推力 < 摩擦力：合力向左，物体减速运动';
+    pushDisp.textContent = '5 N';
+    fricDisp.textContent = '20 N';
+    netDisp.textContent = '15 N（向左）';
+    stateDisp.textContent = '减速运动（运动状态改变）';
+    drawForceArrows(5, 20);
+    dirArrow.setAttribute('opacity', 1);
+    forceDir = 1;  // 初速度向右
+    forceSpeed = 80; // 初速度
+    animateForceBlock('decelerate');
+
+  } else if (mode === 'equal') {
+    // 推力 = 摩擦力：平衡力，合力为零，保持匀速直线运动
+    labelText.textContent = '推力 = 摩擦力：二力平衡，物体匀速直线运动';
+    pushDisp.textContent = '10 N';
+    fricDisp.textContent = '10 N';
+    netDisp.textContent = '0 N';
+    stateDisp.textContent = '匀速直线运动（运动状态不变）';
+    drawForceArrows(10, 10);
+    dirArrow.setAttribute('opacity', 1);
+    forceDir = 1;
+    forceSpeed = 60;
+    animateForceBlock('uniform');
+  }
+}
+
+function drawForceArrows(push, friction) {
+  var arrows = document.getElementById('force-arrows');
+  arrows.innerHTML = '';
+  // 推力（向右，红色）
+  var pushLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  pushLine.setAttribute('x1', '250');
+  pushLine.setAttribute('y1', '195');
+  pushLine.setAttribute('x2', 250 + push * 4);
+  pushLine.setAttribute('y2', '195');
+  pushLine.setAttribute('stroke', '#E74C3C');
+  pushLine.setAttribute('stroke-width', '3');
+  pushLine.setAttribute('marker-end', 'url(#arrow-force-red)');
+  arrows.appendChild(pushLine);
+
+  var pushLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  pushLabel.setAttribute('x', 250 + push * 4 + 8);
+  pushLabel.setAttribute('y', '199');
+  pushLabel.setAttribute('fill', '#E74C3C');
+  pushLabel.setAttribute('font-size', '12');
+  pushLabel.setAttribute('font-weight', '700');
+  pushLabel.textContent = '推力 F=' + push + 'N';
+  arrows.appendChild(pushLabel);
+
+  // 摩擦力（向左，橙色）
+  var fricLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  fricLine.setAttribute('x1', '250');
+  fricLine.setAttribute('y1', '210');
+  fricLine.setAttribute('x2', 250 - friction * 4);
+  fricLine.setAttribute('y2', '210');
+  fricLine.setAttribute('stroke', '#F39C12');
+  fricLine.setAttribute('stroke-width', '3');
+  fricLine.setAttribute('marker-end', 'url(#arrow-force-orange)');
+  arrows.appendChild(fricLine);
+
+  var fricLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  fricLabel.setAttribute('x', 250 - friction * 4 - 8);
+  fricLabel.setAttribute('y', '225');
+  fricLabel.setAttribute('text-anchor', 'end');
+  fricLabel.setAttribute('fill', '#F39C12');
+  fricLabel.setAttribute('font-size', '12');
+  fricLabel.setAttribute('font-weight', '700');
+  fricLabel.textContent = '摩擦力 f=' + friction + 'N';
+  arrows.appendChild(fricLabel);
+}
+
+function animateForceBlock(type) {
+  var block = document.getElementById('force-block-group');
+  var speedText = document.getElementById('force-speed-text');
+  var stateDisp = document.getElementById('force-state-display');
+  var dirArrow = document.getElementById('force-direction-arrow');
+
+  var startX = 250;
+  var lastTime = performance.now();
+  var x = startX;
+  var v = forceSpeed; // 初速度（m/s 对应的视觉速度）
+  var stopped = false;
+
+  function step(now) {
+    var dt = (now - lastTime) / 1000; // 秒
+    lastTime = now;
+
+    if (type === 'accelerate') {
+      // 加速：a = 15/10 = 1.5（视觉化）
+      v += 30 * dt;
+      x += v * dt;
+      if (x > 460) { x = startX; v = 0; }  // 循环
+    } else if (type === 'decelerate') {
+      // 减速：a = -15/10
+      v -= 30 * dt;
+      if (v <= 0) {
+        v = 0;
+        if (!stopped) {
+          stopped = true;
+          stateDisp.textContent = '停止（运动状态改变完成）';
+          dirArrow.setAttribute('opacity', 0);
+        }
+      } else {
+        x += v * dt;
+      }
+      if (x > 460) { x = 460; }
+    } else if (type === 'uniform') {
+      // 匀速：v 不变
+      x += v * dt;
+      if (x > 460) { x = startX; }  // 循环
+    }
+
+    block.setAttribute('transform', 'translate(' + x + ', 0)');
+    speedText.textContent = (v / 10).toFixed(1);  // 显示为 m/s
+    forceAnimId = requestAnimationFrame(step);
+  }
+  forceAnimId = requestAnimationFrame(step);
+}
+
+// ============================================================
+// 交互4：惯性现象解释
+// ============================================================
+var currentPhen = null;
+
+var phenomena = {
+  brake: {
+    title: '汽车急刹车人前倾',
+    desc: '乘客坐在行驶的汽车里，汽车急刹车时，乘客会向前倾倒。',
+    options: [
+      { text: 'A. 乘客受到向前的力，被推向前', correct: false },
+      { text: 'B. 乘客和车一起运动，刹车时车停了，乘客由于惯性要保持原来的运动状态继续向前运动，所以前倾', correct: true },
+      { text: 'C. 刹车时惯性消失，乘客失去平衡', correct: false },
+      { text: 'D. 乘客的速度突然变大，所以前倾', correct: false }
+    ],
+    explain: '原来乘客和车一起向前运动，刹车时车减速停止，乘客由于惯性要保持原来的运动状态（继续向前运动），所以向前倾倒。'
+  },
+  hammer: {
+    title: '锤头松了撞击紧',
+    desc: '锤头松了，把锤柄在硬地上撞击几下，锤头就紧套在锤柄上了。',
+    options: [
+      { text: 'A. 锤头受到向下的重力，所以紧了', correct: false },
+      { text: 'B. 锤柄撞击地面停止运动，锤头由于惯性要保持原来的运动状态继续向下运动，于是紧套在锤柄上', correct: true },
+      { text: 'C. 撞击时锤头变大，所以紧了', correct: false },
+      { text: 'D. 锤柄变细了，锤头套得更紧', correct: false }
+    ],
+    explain: '锤头和锤柄一起向下运动，撞击地面时锤柄停止，锤头由于惯性要保持原来的运动状态继续向下运动，于是紧套在锤柄上。'
+  },
+  run: {
+    title: '百米跑终点停不下',
+    desc: '百米赛跑到达终点后，运动员不能立即停下来。',
+    options: [
+      { text: 'A. 运动员受到向前的力，所以停不下来', correct: false },
+      { text: 'B. 运动员到达终点时速度大，惯性也大', correct: false },
+      { text: 'C. 运动员由于惯性要保持原来的运动状态，所以到达终点后还要继续向前运动一段距离', correct: true },
+      { text: 'D. 地面摩擦力太小，不能让人停下', correct: false }
+    ],
+    explain: '运动员到达终点时仍在运动，由于惯性要保持原来的运动状态，所以不能立即停下来，还要继续向前跑一段距离才能停下。'
+  },
+  dust: {
+    title: '拍打衣服灰尘落',
+    desc: '衣服上有灰尘，用手拍打衣服，灰尘就会脱落。',
+    options: [
+      { text: 'A. 拍打时灰尘受到振动而掉下', correct: false },
+      { text: 'B. 拍打时衣服运动，灰尘由于惯性要保持原来的静止状态，所以从衣服上脱落', correct: true },
+      { text: 'C. 拍打产生风吹走了灰尘', correct: false },
+      { text: 'D. 灰尘受到重力加大，所以掉下', correct: false }
+    ],
+    explain: '原来衣服和灰尘都静止，拍打时衣服受力开始运动，灰尘由于惯性要保持原来的静止状态，没有随衣服一起运动，于是从衣服上脱落。'
+  }
+};
+
+function selectPhenomenon(key) {
+  currentPhen = key;
+  document.querySelectorAll('.example-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('phen-card-' + key).classList.add('selected');
+
+  var data = phenomena[key];
+  var detail = document.getElementById('phen-detail');
+  detail.style.display = 'block';
+  detail.classList.add('fade-in');
+  document.getElementById('phen-detail-title').textContent = '🔍 ' + data.title;
+  document.getElementById('phen-detail-desc').textContent = data.desc;
+
+  var optionsHtml = '';
+  data.options.forEach(function(opt, idx) {
+    optionsHtml += '<div class="quiz-option" data-idx="' + idx + '">' + opt.text + '</div>';
+  });
+  document.getElementById('phen-options').innerHTML = optionsHtml;
+  document.getElementById('phen-feedback').style.display = 'none';
+
+  // 绑定点击
+  var opts = document.querySelectorAll('#phen-options .quiz-option');
+  opts.forEach(function(opt, idx) {
+    opt.addEventListener('click', function() {
+      opts.forEach(function(o) { o.classList.remove('selected', 'correct-answer', 'wrong-answer'); });
+      opt.classList.add('selected');
+      var feedback = document.getElementById('phen-feedback');
+      if (data.options[idx].correct) {
+        opt.classList.add('correct-answer');
+        feedback.innerHTML = '<span style="color:#27AE60;">✓ 正确！</span> ' + data.explain;
+        feedback.style.display = 'block';
+      } else {
+        opt.classList.add('wrong-answer');
+        // 找到正确答案
+        var correctIdx = data.options.findIndex(function(o) { return o.correct; });
+        opts[correctIdx].classList.add('correct-answer');
+        feedback.innerHTML = '<span style="color:#E74C3C;">✗ 再想想</span> 惯性是物体保持原有运动状态的性质。' + data.explain;
+        feedback.style.display = 'block';
+      }
+    });
+  });
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  // 交互1
+  document.getElementById('inertia-slider').addEventListener('input', function() {
+    updateInertiaSlider();
+    if (inertiaMode) runInertiaAnim();
+  });
+  setInertiaMode('start');
+
+  // 交互2
+  switchBalanceScene('lamp');
+
+  // 交互3
+  setForceMode('none');
+
+  // 交互4
+  selectPhenomenon('brake');
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 2,
+    explain: '一切物体都有惯性，惯性是物体的固有属性，其大小只与质量有关，与速度、受力情况、运动状态等无关。',
+    hint: '想想惯性大小与什么有关——是质量，不是速度。'
+  });
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: '二力平衡必须同时满足四个条件：作用在同一物体上（同物）、大小相等（等大）、方向相反（反向）、作用在同一直线上（共线）。四个条件缺一不可。',
+    hint: '二力平衡需要同时满足"同物、等大、反向、共线"四个条件。'
+  });
+  initQuiz('quiz3', {
+    correct: 2,
+    explain: '力是改变物体运动状态的原因，不是维持运动的原因。物体不受力时保持静止或匀速直线运动状态（牛顿第一定律）。物体受平衡力时运动状态也不变（等效于不受力）。D选项错在"物体受力时运动状态一定改变"——受平衡力时运动状态不变。',
+    hint: '想想牛顿第一定律——力是改变运动状态的原因，不是维持运动的原因。'
+  });
+});
+</script>
+
 </body>
 </html>

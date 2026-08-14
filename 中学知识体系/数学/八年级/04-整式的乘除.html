@@ -6,57 +6,494 @@
   <title>整式的乘除 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 14px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 13px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .formula-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .formula-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.08), rgba(155,89,182,0.02));
+      border: 2px solid rgba(155,89,182,0.18);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .formula-card:hover {
+      border-color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .formula-card .f-name {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .formula-card .f-eq {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+    }
+    .formula-card .f-cond {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 50px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 标签页 ===== */
+    .tabs-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 18px;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      font-family: inherit;
+      border-radius: 6px 6px 0 0;
+    }
+    .tab-btn:hover { color: var(--math); background: rgba(155,89,182,0.06); }
+    .tab-btn.active {
+      color: var(--math);
+      border-bottom-color: var(--math);
+      background: rgba(155,89,182,0.08);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s; }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+      word-break: break-all;
+    }
+    .data-cell.highlight {
+      background: rgba(39,174,96,0.10);
+      border-color: rgba(39,174,96,0.4);
+    }
+    .data-cell.highlight .num { color: var(--success); }
+
+    /* ===== SVG 容器 ===== */
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 8px 0 4px;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 公式实时显示 ===== */
+    .live-formula {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(155,89,182,0.10), rgba(155,89,182,0.02));
+      border-radius: var(--radius-sm);
+      margin: 12px 0;
+      color: var(--math);
+      letter-spacing: 1px;
+    }
+    .live-formula .op { color: var(--text-secondary); margin: 0 6px; }
+    .live-formula .res { color: var(--success); }
+
+    /* ===== 多项式输入 ===== */
+    .poly-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 14px 0;
+    }
+    .poly-input {
+      width: 130px;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-family: Georgia, serif;
+      text-align: center;
       color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .poly-input:focus {
+      outline: none;
+      border-color: var(--math);
+    }
+    .poly-times {
+      font-size: 22px;
+      color: var(--math);
+      font-weight: 700;
+    }
+    .preset-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 10px 0;
+    }
+    .preset-btn {
+      padding: 6px 12px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: Georgia, serif;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .preset-btn:hover {
+      border-color: var(--math);
+      color: var(--math);
+      background: rgba(155,89,182,0.06);
+    }
+
+    /* ===== 展开步骤 ===== */
+    .expand-steps {
+      margin: 18px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .step-line {
+      padding: 12px 18px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+      font-size: 18px;
+      text-align: center;
+      border-left: 4px solid var(--text-light);
+      opacity: 0.4;
+      transition: all 0.4s;
+    }
+    .step-line.active {
+      opacity: 1;
+      border-left-color: var(--math);
+      background: rgba(155,89,182,0.08);
+    }
+    .step-line .term-a { color: #E74C3C; font-weight: 700; }
+    .step-line .term-b { color: #3498DB; font-weight: 700; }
+    .step-line .term-c { color: #E67E22; font-weight: 700; }
+    .step-line .term-d { color: #27AE60; font-weight: 700; }
+    .step-line .step-label {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-right: 10px;
+      font-family: -apple-system, sans-serif;
+      vertical-align: middle;
+    }
+    .step-line .arrow { color: var(--text-light); margin: 0 8px; }
+
+    /* ===== 面积模型 ===== */
+    .area-model-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 14px 0;
+    }
+    @media (max-width: 768px) {
+      .area-model-wrap { grid-template-columns: 1fr; }
+    }
+    .area-cell {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+    .area-cell h4 { color: var(--math); margin-bottom: 8px; font-size: 15px; }
+
+    /* ===== 公式匹配游戏 ===== */
+    .match-game {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin: 18px 0;
+    }
+    @media (max-width: 768px) {
+      .match-game { grid-template-columns: 1fr; }
+      .match-game .match-mid { display: none; }
+    }
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .match-col h4 {
+      text-align: center;
+      color: var(--math);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .match-item {
+      padding: 14px 16px;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: center;
+      font-family: Georgia, serif;
+      font-size: 17px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .match-item:hover { border-color: var(--math); transform: translateY(-1px); }
+    .match-item.selected {
+      border-color: var(--math);
+      background: rgba(155,89,182,0.10);
+      box-shadow: 0 2px 8px rgba(155,89,182,0.2);
+    }
+    .match-item.matched-correct {
+      border-color: var(--success);
+      background: rgba(39,174,96,0.15);
+      color: var(--success);
+      pointer-events: none;
+    }
+    .match-item.matched-wrong {
+      border-color: var(--danger);
+      background: rgba(231,76,60,0.15);
+      animation: shake 0.4s;
+    }
+    .match-item.disabled { pointer-events: none; opacity: 0.5; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-mid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--text-light);
+    }
+    .match-score {
+      text-align: center;
+      font-size: 16px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+    }
+
+    /* ===== 几何证明滑块 ===== */
+    .geo-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+    @media (max-width: 600px) {
+      .geo-controls { grid-template-columns: 1fr; }
+    }
+
+    /* ===== 平方差剪拼动画 ===== */
+    .diff-sq-stage {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .diff-sq-stage svg { max-width: 100%; height: auto; }
+    .cut-piece {
+      transition: transform 1.2s cubic-bezier(.6,.2,.3,1), opacity 0.6s;
+      transform-origin: center;
+    }
+
+    /* ===== 知识要点的列表 ===== */
+    .know-list { list-style: none; padding-left: 0; }
+    .know-list li {
+      padding: 10px 14px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      transition: transform 0.2s;
+    }
+    .know-list li:hover { transform: translateX(4px); }
+    .know-list li strong { color: var(--math); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .step-nav .btn-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📐 整式的乘除</div>
+  <div class="navbar-brand">🔢 整式的乘除</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>🔢 整式的乘除</h1>
+  <p>幂的运算 · 多项式展开 · 乘法公式 —— 代数变形的核心工具箱</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +504,1341 @@
     <span>整式的乘除</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>整式的乘除</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 幂的运算性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 幂的运算性质</h2>
+  <div class="card">
+    <p>幂的运算是整式乘除的基础。<strong class="math-accent">aⁿ</strong> 表示 <strong>n 个 a 相乘</strong>（n 为正整数），即 aⁿ = a · a · … · a。下面是五条基本运算性质：</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">① 同底数幂相乘</div>
+        <div class="f-eq">aᵐ · aⁿ = aᵐ⁺ⁿ</div>
+        <div class="f-cond">底数不变，指数相加</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">② 幂的乘方</div>
+        <div class="f-eq">(aᵐ)ⁿ = aᵐⁿ</div>
+        <div class="f-cond">底数不变，指数相乘</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">③ 积的乘方</div>
+        <div class="f-eq">(ab)ⁿ = aⁿbⁿ</div>
+        <div class="f-cond">每个因式分别乘方</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">④ 同底数幂相除</div>
+        <div class="f-eq">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</div>
+        <div class="f-cond">a≠0，底数不变指数相减</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">⑤ 零指数幂</div>
+        <div class="f-eq">a⁰ = 1</div>
+        <div class="f-cond">a≠0，任何非零数的 0 次幂等于 1</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 记忆口诀</div>
+      <strong>乘法加、乘方乘、除法减</strong> —— 同底数幂相乘指数相加；幂的乘方指数相乘；同底数幂相除指数相减。注意区分 <code>aᵐ · aⁿ</code>（指数加）与 <code>(aᵐ)ⁿ</code>（指数乘）。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 交互·幂的运算可视化 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 交互·幂的运算可视化</h2>
+  <div class="card">
+    <p>拖动滑块调节底数 a 和指数 m、n，下方 SVG 会用<strong>方块格子</strong>实时可视化幂的意义。切换标签页可查看四种运算的可视化方式。</p>
+
+    <div class="slider-row">
+      <label>底数 a</label>
+      <input type="range" id="slider-a" min="2" max="9" value="2" step="1">
+      <span class="value-badge" id="val-a">2</span>
+    </div>
+    <div class="slider-row">
+      <label>指数 m</label>
+      <input type="range" id="slider-m" min="1" max="6" value="3" step="1">
+      <span class="value-badge" id="val-m">3</span>
+    </div>
+    <div class="slider-row">
+      <label>指数 n</label>
+      <input type="range" id="slider-n" min="1" max="6" value="2" step="1">
+      <span class="value-badge" id="val-n">2</span>
+    </div>
+
+    <div class="tabs-bar" id="power-tabs">
+      <button class="tab-btn active" data-tab="mul">同底数乘法</button>
+      <button class="tab-btn" data-tab="pown">幂的乘方</button>
+      <button class="tab-btn" data-tab="prodn">积的乘方</button>
+      <button class="tab-btn" data-tab="div">同底数除法</button>
+    </div>
+
+    <div id="tab-mul" class="tab-panel active">
+      <div class="live-formula" id="live-mul"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">aᵐ</div><div class="num" id="dp-mul-am"></div></div>
+        <div class="data-cell"><div class="label">aⁿ</div><div class="num" id="dp-mul-an"></div></div>
+        <div class="data-cell highlight"><div class="label">aᵐ · aⁿ</div><div class="num" id="dp-mul-res"></div></div>
+        <div class="data-cell"><div class="label">aᵐ⁺ⁿ</div><div class="num" id="dp-mul-check"></div></div>
+      </div>
+      <div class="svg-wrap" id="svg-mul-wrap"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#9B59B6"></span>aᵐ 个格子（每组）</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#BB8FCE;opacity:0.6"></span>共 aⁿ 组</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#27AE60"></span>合并总数 = aᵐ⁺ⁿ</div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-title">📐 可视化含义</div>
+        aᵐ · aⁿ 表示 <strong>aⁿ 组</strong>，每组 <strong>aᵐ 个</strong>。所以总个数 = aᵐ × aⁿ = aᵐ⁺ⁿ。
+      </div>
+    </div>
+
+    <div id="tab-pown" class="tab-panel">
+      <div class="live-formula" id="live-pown"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">aᵐ</div><div class="num" id="dp-pown-am"></div></div>
+        <div class="data-cell"><div class="label">(aᵐ)ⁿ</div><div class="num" id="dp-pown-res"></div></div>
+        <div class="data-cell highlight"><div class="label">aᵐⁿ</div><div class="num" id="dp-pown-check"></div></div>
+      </div>
+      <div class="svg-wrap" id="svg-pown-wrap"></div>
+      <div class="tip-box">
+        <div class="tip-title">📐 可视化含义</div>
+        (aᵐ)ⁿ 表示 <strong>n 层嵌套</strong>：aᵐ 组，每组又是 aᵐ 个 …… 共 n 层。总个数 = aᵐ × aᵐ × … × aᵐ（n 个）= aᵐⁿ。注意是<strong>指数相乘</strong>，不是相加！
+      </div>
+    </div>
+
+    <div id="tab-prodn" class="tab-panel">
+      <div class="live-formula" id="live-prodn"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">ab</div><div class="num" id="dp-prodn-ab"></div></div>
+        <div class="data-cell"><div class="label">(ab)ⁿ</div><div class="num" id="dp-prodn-res"></div></div>
+        <div class="data-cell highlight"><div class="label">aⁿ · bⁿ</div><div class="num" id="dp-prodn-check"></div></div>
+      </div>
+      <div class="svg-wrap" id="svg-prodn-wrap"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#9B59B6"></span>宽 = aⁿ（横向 aⁿ 格）</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#E67E22"></span>高 = bⁿ（纵向 bⁿ 格）</div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-title">📐 可视化含义</div>
+        (ab)ⁿ = aⁿ · bⁿ。把 ab 看作一个 a×b 的矩形，那么 (ab)ⁿ 就是 aⁿ × bⁿ 个 1×1 小方格组成的大矩形。<strong>积的乘方 = 各因式分别乘方再相乘</strong>。
+      </div>
+    </div>
+
+    <div id="tab-div" class="tab-panel">
+      <div class="live-formula" id="live-div"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">aᵐ</div><div class="num" id="dp-div-am"></div></div>
+        <div class="data-cell"><div class="label">aⁿ</div><div class="num" id="dp-div-an"></div></div>
+        <div class="data-cell highlight"><div class="label">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</div><div class="num" id="dp-div-res"></div></div>
+        <div class="data-cell"><div class="label">组数验证</div><div class="num" id="dp-div-check"></div></div>
+      </div>
+      <div class="svg-wrap" id="svg-div-wrap"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#9B59B6"></span>每组 aⁿ 个</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#27AE60"></span>共 aᵐ⁻ⁿ 组</div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-title">📐 可视化含义</div>
+        aᵐ ÷ aⁿ 表示：<strong>把 aᵐ 个格子按每组 aⁿ 个分组</strong>，可以分成 aᵐ⁻ⁿ 组（前提 m≥n，a≠0）。当 m=n 时，aᵐ ÷ aᵐ = a⁰ = 1，即正好一组。
+      </div>
+    </div>
   </div>
+
+  <!-- ===== 3. 整式的乘法 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 整式的乘法</h2>
+  <div class="card">
+    <p>整式的乘法分三种情况，核心都是<strong class="math-accent">分配律</strong>的运用。</p>
+
+    <ul class="know-list">
+      <li><strong>① 单项式 × 单项式：</strong>系数相乘、同底数幂相乘、单独字母连同指数照抄。<br>
+        例：2x²y · 3xy² = (2×3) · x²⁺¹ · y¹⁺² = 6x³y³</li>
+      <li><strong>② 单项式 × 多项式：</strong>用单项式去乘多项式的每一项，再把积相加。<br>
+        公式：m(a + b + c) = ma + mb + mc</li>
+      <li><strong>③ 多项式 × 多项式：</strong>用一个多项式的每一项乘另一个多项式的每一项，再把积相加。<br>
+        公式：(a + b)(m + n) = am + an + bm + bn</li>
+    </ul>
+
+    <div class="formula-box">
+      <div class="formula">(a + b)(m + n) = am + an + bm + bn</div>
+      <div class="formula-note">多项式乘多项式：先展开再合并同类项</div>
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互·多项式乘法展开器 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 交互·多项式乘法展开器</h2>
+  <div class="card">
+    <p>在两个输入框中填入<strong>一次二项式</strong>（形如 ax+b），或点击下方预设按钮快速选择。点击"展开"按钮，逐步展示分配律展开与合并同类项的过程，并用<strong>面积模型</strong>直观对应四项乘积。</p>
+
+    <div class="poly-input-row">
+      <input type="text" class="poly-input" id="poly1" value="x+2" placeholder="如 x+2">
+      <span class="poly-times">×</span>
+      <input type="text" class="poly-input" id="poly2" value="x-3" placeholder="如 x-3">
+      <button class="btn btn-primary" id="btn-expand" style="background: var(--math);">展开</button>
+      <button class="btn btn-outline" id="btn-clear" style="border-color: var(--math); color: var(--math);">清空</button>
+    </div>
+
+    <div class="preset-row">
+      <button class="preset-btn" data-p1="x+2" data-p2="x-3">(x+2)(x-3)</button>
+      <button class="preset-btn" data-p1="x+1" data-p2="x+1">(x+1)²</button>
+      <button class="preset-btn" data-p1="x+5" data-p2="x-5">(x+5)(x-5)</button>
+      <button class="preset-btn" data-p1="2x+1" data-p2="x-3">(2x+1)(x-3)</button>
+      <button class="preset-btn" data-p1="x+3" data-p2="x+4">(x+3)(x+4)</button>
+      <button class="preset-btn" data-p1="2x-1" data-p2="3x+2">(2x-1)(3x+2)</button>
+    </div>
+
+    <div class="expand-steps" id="expand-steps">
+      <div class="step-line" id="step-0"><span class="step-label">原式</span><span id="step-0-content">—</span></div>
+      <div class="step-line" id="step-1"><span class="step-label">分配律展开</span><span id="step-1-content">—</span></div>
+      <div class="step-line" id="step-2"><span class="step-label">逐项相乘</span><span id="step-2-content">—</span></div>
+      <div class="step-line" id="step-3"><span class="step-label">合并同类项</span><span id="step-3-content">—</span></div>
+    </div>
+
+    <div class="area-model-wrap">
+      <div class="area-cell">
+        <h4>📐 面积模型（4 个小矩形 = 4 项）</h4>
+        <div class="svg-wrap" id="area-svg-wrap" style="margin:0;"></div>
+      </div>
+      <div class="area-cell">
+        <h4>📝 面积验证</h4>
+        <div id="area-verify" style="font-family:Georgia,serif; font-size:16px; line-height:2; text-align:left; padding:8px 14px;">点击"展开"开始</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 面积模型说明</div>
+      把两个二项式 (ax + b) 和 (cx + d) 看作矩形的长和宽：长被分成 ax 和 b 两段，宽被分成 cx 和 d 两段。矩形被切成 4 个小矩形，面积分别是 acx²、adx、bcx、bd，加起来就是展开后的四项。
+    </div>
+  </div>
+
+  <!-- ===== 5. 乘法公式 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 乘法公式</h2>
+  <div class="card">
+    <p>乘法公式是<strong class="math-accent">特殊形式的多项式乘法</strong>，熟记后可直接写出结果，不必再慢慢展开。本章学习两个最重要的公式：</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">平方差公式</div>
+        <div class="f-eq">(a + b)(a − b) = a² − b²</div>
+        <div class="f-cond">两数和 × 两数差 = 两数平方差</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">完全平方公式（和）</div>
+        <div class="f-eq">(a + b)² = a² + 2ab + b²</div>
+        <div class="f-cond">两数和的平方 = 平方和 + 两倍乘积</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">完全平方公式（差）</div>
+        <div class="f-eq">(a − b)² = a² − 2ab + b²</div>
+        <div class="f-cond">两数差的平方 = 平方和 − 两倍乘积</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">⚠ 易错提醒</div>
+      <strong>(a ± b)² ≠ a² ± b²</strong>！完全平方公式中间一定有 <strong>±2ab</strong> 这一项，是最容易遗漏的。口诀："首平方，尾平方，积的两倍在中央"。
+    </div>
+  </div>
+
+  <!-- ===== 6. 交互·乘法公式几何证明 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 交互·乘法公式几何证明</h2>
+  <div class="card">
+    <p>乘法公式不只是代数变形，它们都有<strong>直观的几何意义</strong>。拖动滑块改变 a、b 的值，图形与公式同步变化；点击"剪拼动画"看 L 形如何重排成长方形。</p>
+
+    <div class="tabs-bar" id="geo-tabs">
+      <button class="tab-btn active" data-tab="diffsq">平方差公式</button>
+      <button class="tab-btn" data-tab="fullsq">完全平方公式</button>
+    </div>
+
+    <div id="tab-diffsq" class="tab-panel active">
+      <div class="geo-controls">
+        <div class="slider-row">
+          <label>边长 a</label>
+          <input type="range" id="geo-a" min="3" max="9" value="6" step="0.5">
+          <span class="value-badge" id="geo-val-a">6</span>
+        </div>
+        <div class="slider-row">
+          <label>边长 b</label>
+          <input type="range" id="geo-b" min="1" max="7" value="2" step="0.5">
+          <span class="value-badge" id="geo-val-b">2</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin: 8px 0 14px;">
+        <button class="btn btn-primary" id="btn-cut-diff" style="background: var(--math);">✂ 播放剪拼动画</button>
+        <button class="btn btn-outline" id="btn-reset-diff" style="border-color: var(--math); color: var(--math);">重置</button>
+      </div>
+      <div class="diff-sq-stage" id="diff-sq-stage"></div>
+      <div class="live-formula" id="live-diffsq"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">大正方形面积 a²</div><div class="num" id="dp-diff-a2"></div></div>
+        <div class="data-cell"><div class="label">小正方形面积 b²</div><div class="num" id="dp-diff-b2"></div></div>
+        <div class="data-cell highlight"><div class="label">a² − b²</div><div class="num" id="dp-diff-minus"></div></div>
+        <div class="data-cell"><div class="label">(a+b)(a−b)</div><div class="num" id="dp-diff-prod"></div></div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-title">📐 几何意义</div>
+        边长 a 的大正方形挖去边长 b 的小正方形，剩下 L 形面积 = a² − b²。把 L 形沿拐角剪开，重排成一个长方形，长为 (a+b)，宽为 (a−b)，面积 = (a+b)(a−b)。所以 <strong>(a+b)(a−b) = a² − b²</strong>。
+      </div>
+    </div>
+
+    <div id="tab-fullsq" class="tab-panel">
+      <div class="geo-controls">
+        <div class="slider-row">
+          <label>边长 a</label>
+          <input type="range" id="geo2-a" min="2" max="8" value="5" step="0.5">
+          <span class="value-badge" id="geo2-val-a">5</span>
+        </div>
+        <div class="slider-row">
+          <label>边长 b</label>
+          <input type="range" id="geo2-b" min="1" max="6" value="3" step="0.5">
+          <span class="value-badge" id="geo2-val-b">3</span>
+        </div>
+      </div>
+      <div class="svg-wrap" id="fullsq-svg-wrap"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#9B59B6"></span>a²（左上）</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#E67E22"></span>ab（右上）</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#3498DB"></span>ab（左下）</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#27AE60"></span>b²（右下）</div>
+      </div>
+      <div class="live-formula" id="live-fullsq"></div>
+      <div class="data-panel">
+        <div class="data-cell"><div class="label">a²</div><div class="num" id="dp-full-a2"></div></div>
+        <div class="data-cell"><div class="label">2ab</div><div class="num" id="dp-full-2ab"></div></div>
+        <div class="data-cell"><div class="label">b²</div><div class="num" id="dp-full-b2"></div></div>
+        <div class="data-cell highlight"><div class="label">(a+b)²</div><div class="num" id="dp-full-sum"></div></div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-title">📐 几何意义</div>
+        边长 (a+b) 的大正方形被两条分割线切成 4 块：左上 a²、右下 b²、右上和左下都是 ab（共两块）。所以 <strong>(a+b)² = a² + ab + ab + b² = a² + 2ab + b²</strong>。这就是"首平方，尾平方，积的两倍在中央"的来历。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7. 整式的除法 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 整式的除法</h2>
+  <div class="card">
+    <p>整式的除法同样分两种情况，是乘法的逆运算。</p>
+
+    <ul class="know-list">
+      <li><strong>① 单项式 ÷ 单项式：</strong>系数相除、同底数幂相除（指数相减）、单独字母连同指数照抄。<br>
+        例：6x³y³ ÷ 2xy² = (6÷2) · x³⁻¹ · y³⁻² = 3x²y</li>
+      <li><strong>② 多项式 ÷ 单项式：</strong>把多项式的每一项分别除以单项式，再把商相加。<br>
+        公式：(am + bm + cm) ÷ m = a + b + c</li>
+    </ul>
+
+    <div class="formula-box">
+      <div class="formula">(ambmcm) ÷ m = ambmcm ÷ m = a + b + c</div>
+      <div class="formula-note">多项式除以单项式：先分配再分别相除</div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 注意</div>
+      <strong>多项式 ÷ 多项式</strong> 不在本章要求内（那是高中"长除法"的内容）。本章只学多项式 ÷ 单项式。
+    </div>
+  </div>
+
+  <!-- ===== 8. 交互·公式匹配游戏 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 交互·公式匹配游戏</h2>
+  <div class="card">
+    <p>左侧是乘法表达式，右侧是展开后的结果（顺序已打乱）。<strong>先点击左边一个表达式，再点击右边对应的展开式</strong>。配对正确变绿，错误闪红。把全部 4 组配对完成即可获胜！</p>
+
+    <div style="text-align:center; margin: 10px 0;">
+      <button class="btn btn-outline" id="btn-match-reset" style="border-color: var(--math); color: var(--math);">🔄 重新开始</button>
+    </div>
+
+    <div class="match-game" id="match-game">
+      <div class="match-col">
+        <h4>左边（表达式）</h4>
+        <div class="match-item" data-side="L" data-id="L1">(x+3)²</div>
+        <div class="match-item" data-side="L" data-id="L2">(x+5)(x−5)</div>
+        <div class="match-item" data-side="L" data-id="L3">(2x+1)²</div>
+        <div class="match-item" data-side="L" data-id="L4">(x+2)(x+3)</div>
+      </div>
+      <div class="match-mid">⇄</div>
+      <div class="match-col" id="match-right-col">
+        <h4>右边（展开结果，已打乱）</h4>
+        <div class="match-item" data-side="R" data-id="R3">4x² + 4x + 1</div>
+        <div class="match-item" data-side="R" data-id="R4">x² + 5x + 6</div>
+        <div class="match-item" data-side="R" data-id="R1">x² + 6x + 9</div>
+        <div class="match-item" data-side="R" data-id="R2">x² − 25</div>
+      </div>
+    </div>
+
+    <div class="match-score" id="match-score">配对进度：0 / 4　🎉 加油！</div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 答题策略</div>
+      看到 <strong>(a+b)²</strong> 想完全平方公式；看到 <strong>(a+b)(a−b)</strong> 想平方差公式（中间项抵消）；一般二项式乘二项式就用分配律慢慢展开再合并。
+    </div>
+  </div>
+
+  <!-- ===== 9. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 计算 (−2x²y)³ 的结果是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. −6x⁶y³</div>
+    <div class="quiz-option" data-idx="1">B. −8x⁶y³</div>
+    <div class="quiz-option" data-idx="2">C. 8x⁵y³</div>
+    <div class="quiz-option" data-idx="3">D. −8x⁵y³</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 下列运算结果正确的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. a² · a³ = a⁶</div>
+    <div class="quiz-option" data-idx="1">B. (a²)³ = a⁵</div>
+    <div class="quiz-option" data-idx="2">C. (2a)² = 2a²</div>
+    <div class="quiz-option" data-idx="3">D. a⁶ ÷ a² = a⁴ （a≠0）</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 若 (x+2)(x−3) = x² + kx − 6，则 k 的值为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 1</div>
+    <div class="quiz-option" data-idx="1">B. −1</div>
+    <div class="quiz-option" data-idx="2">C. 5</div>
+    <div class="quiz-option" data-idx="3">D. −5</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 10. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 整式乘除的延伸与应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        🔢 <a href="05-因式分解.html"><strong>数学·因式分解</strong></a>——
+        因式分解是整式乘法的<strong>逆运算</strong>！乘法公式 (a+b)(a−b)=a²−b² 反过来用，就是把 a²−b² 分解为 (a+b)(a−b)；完全平方公式反过来，就能识别 a²±2ab+b² 是完全平方式。
+        <span class="tag tag-math">互逆运算</span>
+      </li>
+      <li>
+        📐 <a href="06-分式.html"><strong>数学·分式</strong></a>——
+        分式的约分与通分核心就是<strong>同底数幂的除法</strong> aᵐ÷aⁿ=aᵐ⁻ⁿ。本章学好了，分式化简就水到渠成。
+        <span class="tag tag-math">代数基础</span>
+      </li>
+      <li>
+        📈 <a href="10-一次函数.html"><strong>数学·一次函数</strong></a>——
+        求直线 y=kx+b 与坐标轴围成三角形面积时，需要用整式乘法展开 (kx+b) 的相关表达式，再用乘法公式化简。
+        <span class="tag tag-cross">函数应用</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="03-轴对称.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：轴对称</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="05-因式分解.html" class="btn btn-primary" style="background: var(--math);">下一章：因式分解 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  工具函数
+ * ============================================================ */
+const $ = (id) => document.getElementById(id);
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function makeSvg(tag, attrs) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+// 上标数字
+const SUP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻' };
+function sup(n) { return String(n).split('').map(c => SUP[c] || c).join(''); }
+
+// 安全计算 a^n（避免溢出显示）
+function pow(a, n) {
+  let r = 1;
+  for (let i = 0; i < n; i++) r *= a;
+  return r;
+}
+
+// 格式化大数（避免太长）
+function fmtNum(n) {
+  if (n <= 99999) return String(n);
+  if (n <= 9999999) return n.toLocaleString();
+  return n.toExponential(2);
+}
+
+/* ============================================================
+ *  交互1：幂的运算可视化
+ * ============================================================ */
+const powerState = { a: 2, m: 3, n: 2, tab: 'mul' };
+
+function bindPowerSliders() {
+  ['a','m','n'].forEach(k => {
+    const sl = $('slider-' + k);
+    const va = $('val-' + k);
+    sl.addEventListener('input', () => {
+      powerState[k] = parseInt(sl.value);
+      va.textContent = sl.value;
+      renderPowerTab();
+    });
+  });
+  document.querySelectorAll('#power-tabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#power-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#power-tabs ~ .tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      powerState.tab = btn.dataset.tab;
+      $('tab-' + powerState.tab).classList.add('active');
+      renderPowerTab();
+    });
+  });
+}
+
+/* 绘制 a^m 个方块的网格（用最佳行列数排布） */
+function drawGridSquares(svg, count, color, maxW, maxH, cellMin = 6, cellMax = 28) {
+  // 选择合适的列数，使网格尽量接近正方形
+  let cols = Math.ceil(Math.sqrt(count));
+  let rows = Math.ceil(count / cols);
+  // 限制总尺寸
+  let cell = Math.min(cellMax, Math.floor(Math.min(maxW / cols, maxH / rows)));
+  cell = Math.max(cellMin, cell);
+  const gap = Math.max(1, Math.floor(cell * 0.12));
+  const step = cell + gap;
+  const W = cols * step + 4;
+  const H = rows * step + 4;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', Math.min(560, W));
+  svg.setAttribute('height', Math.min(360, H));
+  svg.innerHTML = '';
+  // 背景
+  svg.appendChild(makeSvg('rect', { x:0, y:0, width:W, height:H, fill:'#fff' }));
+  for (let i = 0; i < count; i++) {
+    const r = Math.floor(i / cols);
+    const c = i % cols;
+    svg.appendChild(makeSvg('rect', {
+      x: 2 + c * step, y: 2 + r * step,
+      width: cell, height: cell,
+      fill: color, stroke: 'rgba(0,0,0,0.15)', 'stroke-width': 0.8,
+      rx: 1
+    }));
+  }
+  return { cols, rows, cell, W, H };
+}
+
+/* 渲染当前标签页 */
+function renderPowerTab() {
+  const { a, m, n, tab } = powerState;
+  if (tab === 'mul') renderMul(a, m, n);
+  else if (tab === 'pown') renderPown(a, m, n);
+  else if (tab === 'prodn') renderProdn(a, m, n);
+  else if (tab === 'div') renderDiv(a, m, n);
+}
+
+function renderMul(a, m, n) {
+  const am = pow(a, m), an = pow(a, n), res = pow(a, m + n);
+  $('live-mul').innerHTML = `${a}${sup(m)} <span class="op">·</span> ${a}${sup(n)} <span class="op">=</span> ${a}${sup(m+n)} <span class="op">=</span> <span class="res">${fmtNum(res)}</span>`;
+  $('dp-mul-am').textContent = fmtNum(am);
+  $('dp-mul-an').textContent = fmtNum(an);
+  $('dp-mul-res').textContent = fmtNum(res);
+  $('dp-mul-check').textContent = fmtNum(res);
+  // 可视化：aⁿ 组，每组 aᵐ 个
+  const svg = $('svg-mul-wrap');
+  svg.innerHTML = '';
+  const wrap = makeSvg('svg', {});
+  svg.appendChild(wrap);
+  // 限制显示数量避免卡顿
+  const maxShow = 256;
+  const showCount = Math.min(am, maxShow);
+  const groupsToShow = Math.min(an, 8);
+  // 文字说明
+  const note = makeSvg('text', { x: 280, y: 24, 'text-anchor':'middle', 'font-size':14, fill:'#7F8C8D', 'font-family':'Georgia,serif' });
+  note.textContent = an <= 8 ? `${an} 组，每组 ${fmtNum(am)} 个` : `${fmtNum(an)} 组（示意 ${groupsToShow} 组），每组 ${fmtNum(am)} 个`;
+  // 单独绘制：先画 aᵐ 个格子
+  const inner = makeSvg('svg', { x: 30, y: 40, width: 240, height: 220 });
+  drawGridSquares(inner, showCount, '#9B59B6', 240, 220, 4, 22);
+  wrap.appendChild(inner);
+  // 标签
+  const lbl1 = makeSvg('text', { x: 30 + 120, y: 280, 'text-anchor':'middle', 'font-size':13, fill:'#9B59B6', 'font-weight':'bold' });
+  lbl1.textContent = `aᵐ = ${fmtNum(am)} 个`;
+  // 乘号
+  const times = makeSvg('text', { x: 290, y: 150, 'text-anchor':'middle', 'font-size':28, fill:'#7F8C8D', 'font-weight':'bold' });
+  times.textContent = '×';
+  // 右侧画 aⁿ 组的"组"图标
+  const rightSvg = makeSvg('svg', { x: 320, y: 40, width: 240, height: 220 });
+  // 画 groupsToShow 组小方块
+  const gCols = Math.min(groupsToShow, 4);
+  const gRows = Math.ceil(groupsToShow / gCols);
+  const gCell = 30;
+  const gStep = gCell + 12;
+  for (let i = 0; i < groupsToShow; i++) {
+    const r = Math.floor(i / gCols);
+    const c = i % gCols;
+    // 一组用一个 3x3 的小方块簇表示
+    const gx = 20 + c * gStep;
+    const gy = 20 + r * gStep;
+    for (let j = 0; j < 4; j++) {
+      const jr = Math.floor(j / 2);
+      const jc = j % 2;
+      rightSvg.appendChild(makeSvg('rect', {
+        x: gx + jc * 11, y: gy + jr * 11, width: 10, height: 10,
+        fill: '#BB8FCE', opacity: 0.7, stroke: 'rgba(0,0,0,0.1)', 'stroke-width': 0.5
+      }));
+    }
+  }
+  wrap.appendChild(rightSvg);
+  const lbl2 = makeSvg('text', { x: 320 + 120, y: 280, 'text-anchor':'middle', 'font-size':13, fill:'#BB8FCE', 'font-weight':'bold' });
+  lbl2.textContent = `${fmtNum(an)} 组`;
+  // 设置总 svg
+  wrap.setAttribute('viewBox', '0 0 580 300');
+  wrap.setAttribute('width', '100%');
+  wrap.setAttribute('height', '300');
+  wrap.appendChild(note);
+  wrap.appendChild(lbl1);
+  wrap.appendChild(lbl2);
+  // 结果文字
+  const resTxt = makeSvg('text', { x: 290, y: 295, 'text-anchor':'middle', 'font-size':15, fill:'#27AE60', 'font-weight':'bold' });
+  resTxt.textContent = `合并总数 = ${fmtNum(am)} × ${fmtNum(an)} = ${fmtNum(res)}`;
+  wrap.appendChild(resTxt);
+}
+
+function renderPown(a, m, n) {
+  const am = pow(a, m), res = pow(a, m * n);
+  $('live-pown').innerHTML = `(${a}${sup(m)})${sup(n)} <span class="op">=</span> ${a}${sup(m*n)} <span class="op">=</span> <span class="res">${fmtNum(res)}</span>`;
+  $('dp-pown-am').textContent = fmtNum(am);
+  $('dp-pown-res').textContent = fmtNum(res);
+  $('dp-pown-check').textContent = fmtNum(res);
+  const svg = $('svg-pown-wrap');
+  svg.innerHTML = '';
+  const wrap = makeSvg('svg', { viewBox: '0 0 580 280', width: '100%', height: '280' });
+  svg.appendChild(wrap);
+  // 嵌套可视化：n 层
+  // 用嵌套方框表示 (aᵐ)ⁿ
+  const padding = 20;
+  const colors = ['#9B59B6', '#BB8FCE', '#D2B4DE', '#EBDEF0', '#F4ECF7', '#F8F4F9'];
+  const layers = Math.min(n, 6);
+  const maxW = 520, maxH = 200;
+  const start = { x: 30, y: 40 };
+  const stepX = (maxW - 2 * padding) / Math.max(layers, 1);
+  const stepY = (maxH - 2 * padding) / Math.max(layers, 1);
+  // 外层
+  for (let i = layers; i >= 1; i--) {
+    const w = stepX * i + 40;
+    const h = stepY * i + 30;
+    const x = start.x + (maxW - w) / 2;
+    const y = start.y + (maxH - h) / 2 + 20;
+    wrap.appendChild(makeSvg('rect', {
+      x, y, width: w, height: h,
+      fill: colors[i - 1] || '#F4ECF7',
+      stroke: '#9B59B6', 'stroke-width': 1.5, opacity: 0.5,
+      rx: 4
+    }));
+    if (i === 1) {
+      // 最内层画 aᵐ 个小格子
+      const showCount = Math.min(am, 64);
+      const cellW = Math.min(12, Math.floor((w - 8) / Math.ceil(Math.sqrt(showCount))));
+      const cols = Math.max(1, Math.floor((w - 8) / cellW));
+      const cellH = cellW;
+      for (let j = 0; j < showCount; j++) {
+        const r = Math.floor(j / cols);
+        const c = j % cols;
+        wrap.appendChild(makeSvg('rect', {
+          x: x + 4 + c * cellW, y: y + 4 + r * cellH,
+          width: cellW - 1, height: cellH - 1,
+          fill: '#9B59B6', stroke: '#fff', 'stroke-width': 0.5
+        }));
+      }
+    }
+  }
+  // 说明
+  const note = makeSvg('text', { x: 290, y: 30, 'text-anchor':'middle', 'font-size':14, fill:'#7F8C8D', 'font-family':'Georgia,serif' });
+  note.textContent = `嵌套 ${n} 层，每层 ${fmtNum(am)}，共 ${fmtNum(am)} × ... × ${fmtNum(am)}（${n} 个）= ${fmtNum(res)}`;
+  wrap.appendChild(note);
+  const lbl = makeSvg('text', { x: 290, y: 265, 'text-anchor':'middle', 'font-size':14, fill:'#27AE60', 'font-weight':'bold' });
+  lbl.textContent = `指数相乘：m × n = ${m} × ${n} = ${m * n}`;
+  wrap.appendChild(lbl);
+}
+
+function renderProdn(a, m, n) {
+  // 这里 b 用 m 当作底数 b（即第二个因子），n 是指数
+  // 实际上是 (ab)ⁿ，但用户只有 a、m、n 三个滑块
+  // 重新解释：a=a, b=m, 指数=n
+  const b = m;
+  const an = pow(a, n), bn = pow(b, n);
+  const ab = a * b;
+  const res = pow(ab, n);
+  const check = an * bn;
+  $('live-prodn').innerHTML = `(${a}·${b})${sup(n)} <span class="op">=</span> ${a}${sup(n)}·${b}${sup(n)} <span class="op">=</span> ${fmtNum(an)}·${fmtNum(bn)} <span class="op">=</span> <span class="res">${fmtNum(res)}</span>`;
+  $('dp-prodn-ab').textContent = fmtNum(ab);
+  $('dp-prodn-res').textContent = fmtNum(res);
+  $('dp-prodn-check').textContent = fmtNum(check);
+  const svg = $('svg-prodn-wrap');
+  svg.innerHTML = '';
+  // 画 aⁿ × bⁿ 的矩形（如果不太大）
+  const total = an * bn;
+  const wrap = makeSvg('svg', { viewBox: '0 0 580 280', width: '100%', height: '280' });
+  svg.appendChild(wrap);
+  const note = makeSvg('text', { x: 290, y: 28, 'text-anchor':'middle', 'font-size':14, fill:'#7F8C8D', 'font-family':'Georgia,serif' });
+  note.textContent = `矩形宽 ${fmtNum(an)} 格（aⁿ），高 ${fmtNum(bn)} 格（bⁿ）`;
+  wrap.appendChild(note);
+  const maxW = 520, maxH = 200;
+  const drawCols = Math.min(an, 50);
+  const drawRows = Math.min(bn, 30);
+  const cellW = Math.max(3, Math.min(20, Math.floor(maxW / drawCols)));
+  const cellH = Math.max(3, Math.min(20, Math.floor(maxH / drawRows)));
+  const W = drawCols * cellW;
+  const H = drawRows * cellH;
+  const ox = 30 + (maxW - W) / 2;
+  const oy = 50 + (maxH - H) / 2;
+  // 用 pattern 或直接画格子（如果太多就用色块）
+  if (drawCols * drawRows <= 800) {
+    for (let r = 0; r < drawRows; r++) {
+      for (let c = 0; c < drawCols; c++) {
+        const color = (c < an && r < bn) ? '#9B59B6' : '#E67E22';
+        // 简化：左 aⁿ 列用紫色，右 bⁿ 列用橙色——实际是 aⁿ × bⁿ 矩形
+        // 我们用：宽 = aⁿ，高 = bⁿ，全部紫色
+        wrap.appendChild(makeSvg('rect', {
+          x: ox + c * cellW, y: oy + r * cellH,
+          width: cellW - 0.5, height: cellH - 0.5,
+          fill: '#9B59B6', opacity: 0.6, stroke: 'rgba(0,0,0,0.1)', 'stroke-width': 0.3
+        }));
+      }
+    }
+  } else {
+    wrap.appendChild(makeSvg('rect', { x: ox, y: oy, width: W, height: H, fill: '#9B59B6', opacity: 0.5 }));
+  }
+  // 标注（用单独语句，避免链式调用出错）
+  const lblW = makeSvg('text', { x: ox + W / 2, y: oy - 8, 'text-anchor':'middle', 'font-size':13, fill:'#9B59B6', 'font-weight':'bold' });
+  lblW.textContent = `宽 aⁿ = ${fmtNum(an)}`;
+  wrap.appendChild(lblW);
+  const lblH = makeSvg('text', { x: ox + W + 10, y: oy + H / 2, 'text-anchor':'start', 'font-size':13, fill:'#E67E22', 'font-weight':'bold' });
+  lblH.textContent = `高 bⁿ = ${fmtNum(bn)}`;
+  wrap.appendChild(lblH);
+  const resTxt = makeSvg('text', { x: 290, y: 265, 'text-anchor':'middle', 'font-size':14, fill:'#27AE60', 'font-weight':'bold' });
+  resTxt.textContent = `面积 = ${fmtNum(an)} × ${fmtNum(bn)} = ${fmtNum(res)} = (a·b)ⁿ`;
+  wrap.appendChild(resTxt);
+}
+
+function renderDiv(a, m, n) {
+  const am = pow(a, m), an = pow(a, n);
+  // 只在 m >= n 时有意义（本章范围）
+  const valid = m >= n;
+  const res = valid ? pow(a, m - n) : '—';
+  $('live-div').innerHTML = valid
+    ? `${a}${sup(m)} <span class="op">÷</span> ${a}${sup(n)} <span class="op">=</span> ${a}${sup(m-n)} <span class="op">=</span> <span class="res">${fmtNum(res)}</span>`
+    : `<span style="color:var(--danger)">m &lt; n，已超出本章范围（结果为分数）</span>`;
+  $('dp-div-am').textContent = fmtNum(am);
+  $('dp-div-an').textContent = fmtNum(an);
+  $('dp-div-res').textContent = valid ? fmtNum(res) : '—';
+  $('dp-div-check').textContent = valid ? `${fmtNum(am)} ÷ ${fmtNum(an)} = ${fmtNum(Math.floor(am / an))}` : '—';
+  const svg = $('svg-div-wrap');
+  svg.innerHTML = '';
+  const wrap = makeSvg('svg', { viewBox: '0 0 580 280', width: '100%', height: '280' });
+  svg.appendChild(wrap);
+  if (!valid) {
+    const t = makeSvg('text', { x: 290, y: 140, 'text-anchor':'middle', 'font-size':16, fill:'#E74C3C' });
+    t.textContent = '请调整 m ≥ n（本章只学指数非负的情况）';
+    wrap.appendChild(t);
+    return;
+  }
+  // 可视化：aᵐ 个格子，按每组 aⁿ 个分组，共 aᵐ⁻ⁿ 组
+  const groups = pow(a, m - n);
+  const note = makeSvg('text', { x: 290, y: 28, 'text-anchor':'middle', 'font-size':14, fill:'#7F8C8D', 'font-family':'Georgia,serif' });
+  note.textContent = `每组 ${fmtNum(an)} 个，共 ${fmtNum(groups)} 组`;
+  wrap.appendChild(note);
+  // 限制显示
+  const showGroups = Math.min(groups, 16);
+  const showPerGroup = Math.min(an, 16);
+  const gCols = Math.min(showGroups, 4);
+  const gRows = Math.ceil(showGroups / gCols);
+  const cellW = Math.max(4, Math.min(14, Math.floor(40 / Math.sqrt(showPerGroup))));
+  const groupW = Math.ceil(Math.sqrt(showPerGroup)) * cellW + 6;
+  const groupH = Math.ceil(showPerGroup / Math.ceil(Math.sqrt(showPerGroup))) * cellW + 6;
+  const totalW = gCols * (groupW + 12);
+  const totalH = gRows * (groupH + 12);
+  const ox = (580 - totalW) / 2;
+  const oy = 50;
+  for (let g = 0; g < showGroups; g++) {
+    const gr = Math.floor(g / gCols);
+    const gc = g % gCols;
+    const gx = ox + gc * (groupW + 12);
+    const gy = oy + gr * (groupH + 12);
+    // 组背景
+    wrap.appendChild(makeSvg('rect', { x: gx, y: gy, width: groupW, height: groupH, fill: 'rgba(155,89,182,0.08)', stroke: '#9B59B6', 'stroke-width': 1, rx: 3 }));
+    // 画格子
+    const innerCols = Math.ceil(Math.sqrt(showPerGroup));
+    for (let i = 0; i < showPerGroup; i++) {
+      const ir = Math.floor(i / innerCols);
+      const ic = i % innerCols;
+      wrap.appendChild(makeSvg('rect', {
+        x: gx + 3 + ic * cellW, y: gy + 3 + ir * cellW,
+        width: cellW - 1, height: cellW - 1,
+        fill: '#9B59B6', opacity: 0.75
+      }));
+    }
+  }
+  const resTxt = makeSvg('text', { x: 290, y: 265, 'text-anchor':'middle', 'font-size':14, fill:'#27AE60', 'font-weight':'bold' });
+  resTxt.textContent = `${fmtNum(am)} ÷ ${fmtNum(an)} = ${fmtNum(groups)} = ${a}${sup(m-n)}`;
+  wrap.appendChild(resTxt);
+}
+
+/* ============================================================
+ *  交互2：多项式乘法展开器
+ * ============================================================ */
+
+// 解析一次二项式 ax+b，返回 {a, b}
+// 支持格式：x+2, x-3, 2x+1, -x+5, 3x-1, x, 5 等
+function parseBinomial(s) {
+  s = s.trim().replace(/\s/g, '').replace(/×/g, '*');
+  if (!s) return null;
+  // 移除外层括号
+  while (s[0] === '(' && s[s.length-1] === ')') s = s.slice(1, -1);
+  // 用正则匹配 ax + b
+  // 可能形式：[coeff]x[+/-term]  或  纯常数
+  const m = s.match(/^(-?\d*)(?:\*?x|x)(?:([+\-])(\d+))?$/);
+  if (m) {
+    let coef = m[1];
+    if (coef === '' || coef === '+') coef = 1;
+    else if (coef === '-') coef = -1;
+    else coef = parseInt(coef);
+    let b = 0;
+    if (m[2] && m[3]) {
+      b = parseInt(m[3]);
+      if (m[2] === '-') b = -b;
+    }
+    return { a: coef, b: b };
+  }
+  // 纯常数
+  const c = s.match(/^(-?\d+)$/);
+  if (c) return { a: 0, b: parseInt(c[1]) };
+  return null;
+}
+
+// 格式化单项式 ax^n
+function fmtTerm(coef, power, isFirst) {
+  if (coef === 0) return '';
+  let sign = '';
+  if (isFirst) {
+    sign = coef < 0 ? '−' : '';
+  } else {
+    sign = coef < 0 ? ' − ' : ' + ';
+  }
+  let abs = Math.abs(coef);
+  let body = '';
+  if (power === 0) {
+    body = String(abs);
+  } else if (power === 1) {
+    body = (abs === 1 ? '' : abs) + 'x';
+  } else {
+    body = (abs === 1 ? '' : abs) + 'x' + sup(power);
+  }
+  return sign + body;
+}
+
+// 格式化多项式（系数数组，按降幂）
+function fmtPoly(terms) {
+  // terms: [{c, p}]
+  let parts = [];
+  for (let i = 0; i < terms.length; i++) {
+    const t = fmtTerm(terms[i].c, terms[i].p, parts.length === 0);
+    if (t) parts.push(t);
+  }
+  if (parts.length === 0) return '0';
+  return parts.join('');
+}
+
+// 合并同类项
+function combineTerms(terms) {
+  const map = {};
+  terms.forEach(t => {
+    map[t.p] = (map[t.p] || 0) + t.c;
+  });
+  const keys = Object.keys(map).map(Number).sort((a,b) => b - a);
+  return keys.map(p => ({ c: map[p], p: p })).filter(t => t.c !== 0);
+}
+
+let expandTimer = null;
+
+function expandPoly() {
+  if (expandTimer) { clearTimeout(expandTimer); expandTimer = null; }
+  const s1 = $('poly1').value;
+  const s2 = $('poly2').value;
+  const p1 = parseBinomial(s1);
+  const p2 = parseBinomial(s2);
+  // 重置步骤显示
+  for (let i = 0; i < 4; i++) {
+    $('step-' + i).classList.remove('active');
+  }
+  if (!p1 || !p2) {
+    $('step-0-content').innerHTML = '<span style="color:var(--danger)">⚠ 输入格式有误！请使用形如 "x+2"、"2x-1" 的一次二项式。</span>';
+    $('step-0').classList.add('active');
+    $('area-svg-wrap').innerHTML = '';
+    $('area-verify').innerHTML = '请检查输入格式';
+    return;
+  }
+  // 计算四项
+  const a1 = p1.a, b1 = p1.b, a2 = p2.a, b2 = p2.b;
+  // (a1 x + b1)(a2 x + b2) = a1*a2 x² + (a1*b2 + b1*a2) x + b1*b2
+  const t1 = { c: a1 * a2, p: 2 }; // x²
+  const t2 = { c: a1 * b2, p: 1 }; // x
+  const t3 = { c: b1 * a2, p: 1 }; // x
+  const t4 = { c: b1 * b2, p: 0 }; // 常数
+  const expanded = [t1, t2, t3, t4];
+  const combined = combineTerms([...expanded]);
+
+  // 步骤0：原式
+  const orig = `(${fmtPoly([{c:a1,p:1},{c:b1,p:0}])})(${fmtPoly([{c:a2,p:1},{c:b2,p:0}])})`;
+  $('step-0-content').textContent = orig;
+  $('step-0').classList.add('active');
+
+  // 步骤1：分配律展开（4项，带颜色）
+  const s1html = `<span class="term-a">${fmtTerm(a1*a2, 2, true)}</span> <span class="term-b">${fmtTerm(a1*b2, 1, false)}</span> <span class="term-c">${fmtTerm(b1*a2, 1, false)}</span> <span class="term-d">${fmtTerm(b1*b2, 0, false)}</span>`;
+  // 步骤2：逐项相乘（保留原形式）
+  const a1str = (a1 === 1 ? '' : a1 === -1 ? '−' : a1) + 'x';
+  const a2str = (a2 === 1 ? '' : a2 === -1 ? '−' : a2) + 'x';
+  const b1str = b1 === 0 ? '0' : String(b1);
+  const b2str = b2 === 0 ? '0' : String(b2);
+  const s2html = `<span class="term-a">(${a1str})·(${a2str})</span> <span class="term-b">+ (${a1str})·(${b2str})</span> <span class="term-c">+ (${b1str})·(${a2str})</span> <span class="term-d">+ (${b1str})·(${b2str})</span>`;
+  // 步骤3：合并同类项
+  const s3html = `<span class="res" style="color:var(--success)">${fmtPoly(combined)}</span>`;
+
+  // 动画展开
+  expandTimer = setTimeout(() => {
+    $('step-1-content').innerHTML = s2html;
+    $('step-1').classList.add('active');
+    expandTimer = setTimeout(() => {
+      $('step-2-content').innerHTML = s1html;
+      $('step-2').classList.add('active');
+      expandTimer = setTimeout(() => {
+        $('step-3-content').innerHTML = s3html;
+        $('step-3').classList.add('active');
+        drawAreaModel(p1, p2, expanded, combined);
+        expandTimer = null;
+      }, 800);
+    }, 800);
+  }, 400);
+}
+
+function drawAreaModel(p1, p2, expanded, combined) {
+  // 面积模型：长 = a1 x + b1，宽 = a2 x + b2
+  // 四个小矩形：a1*a2 x², a1*b2 x, b1*a2 x, b1*b2
+  const a1 = p1.a, b1 = p1.b, a2 = p2.a, b2 = p2.b;
+  const svg = $('area-svg-wrap');
+  svg.innerHTML = '';
+  // 用归一化的尺寸（不按实际数值，按比例感）
+  const W = 280, H = 200;
+  const splitX = W * 0.6; // 左侧 a1 x 占 60%
+  const splitY = H * 0.6; // 上侧 a2 x 占 60%
+  const ox = 30, oy = 20;
+  const wrap = makeSvg('svg', { viewBox: `0 0 ${W + ox * 2} ${H + oy * 2 + 30}`, width: '100%', height: H + oy * 2 + 30 });
+  svg.appendChild(wrap);
+  // 4 个小矩形
+  const colors = ['#9B59B6', '#E67E22', '#3498DB', '#27AE60'];
+  const rects = [
+    { x: ox, y: oy, w: splitX, h: splitY, c: colors[0], label: fmtTerm(a1*a2, 2, true) || '0' }, // 左上 a²
+    { x: ox + splitX, y: oy, w: W - splitX, h: splitY, c: colors[1], label: fmtTerm(a1*b2, 1, true) || '0' }, // 右上 ab
+    { x: ox, y: oy + splitY, w: splitX, h: H - splitY, c: colors[2], label: fmtTerm(b1*a2, 1, true) || '0' }, // 左下 ab
+    { x: ox + splitX, y: oy + splitY, w: W - splitX, h: H - splitY, c: colors[3], label: fmtTerm(b1*b2, 0, true) || '0' } // 右下 b²
+  ];
+  rects.forEach(r => {
+    wrap.appendChild(makeSvg('rect', { x: r.x, y: r.y, width: r.w, height: r.h, fill: r.c, opacity: 0.55, stroke: '#fff', 'stroke-width': 2 }));
+    const t = makeSvg('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 'bold', fill: '#fff', 'font-family': 'Georgia,serif' });
+    t.textContent = r.label;
+    wrap.appendChild(t);
+  });
+  // 外框
+  wrap.appendChild(makeSvg('rect', { x: ox, y: oy, width: W, height: H, fill: 'none', stroke: '#2C3E50', 'stroke-width': 2 }));
+  // 标注长宽
+  const lblTop = makeSvg('text', { x: ox + splitX / 2, y: oy - 8, 'text-anchor':'middle', 'font-size':13, fill:'#9B59B6', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+  lblTop.textContent = (a1 === 1 ? '' : a1 === -1 ? '−' : a1) + 'x';
+  wrap.appendChild(lblTop);
+  const lblTop2 = makeSvg('text', { x: ox + splitX + (W - splitX) / 2, y: oy - 8, 'text-anchor':'middle', 'font-size':13, fill:'#E67E22', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+  lblTop2.textContent = String(b1);
+  wrap.appendChild(lblTop2);
+  const lblLeft = makeSvg('text', { x: ox - 10, y: oy + splitY / 2 + 4, 'text-anchor':'middle', 'font-size':13, fill:'#3498DB', 'font-weight':'bold', 'font-family':'Georgia,serif', transform: `rotate(-90 ${ox-10} ${oy+splitY/2+4})` });
+  lblLeft.textContent = (a2 === 1 ? '' : a2 === -1 ? '−' : a2) + 'x';
+  wrap.appendChild(lblLeft);
+  const lblLeft2 = makeSvg('text', { x: ox - 10, y: oy + splitY + (H - splitY) / 2 + 4, 'text-anchor':'middle', 'font-size':13, fill:'#27AE60', 'font-weight':'bold', 'font-family':'Georgia,serif', transform: `rotate(-90 ${ox-10} ${oy+splitY+(H-splitY)/2+4})` });
+  lblLeft2.textContent = String(b2);
+  wrap.appendChild(lblLeft2);
+
+  // 验证
+  $('area-verify').innerHTML = `
+    <div>左上（紫）= ${fmtTerm(a1*a2, 2, true) || '0'}</div>
+    <div>右上（橙）= ${fmtTerm(a1*b2, 1, true) || '0'}</div>
+    <div>左下（蓝）= ${fmtTerm(b1*a2, 1, true) || '0'}</div>
+    <div>右下（绿）= ${fmtTerm(b1*b2, 0, true) || '0'}</div>
+    <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #ccc; color:var(--success); font-weight:bold;">四项之和 = ${fmtPoly(combined)}</div>
+  `;
+}
+
+function bindExpander() {
+  $('btn-expand').addEventListener('click', expandPoly);
+  $('btn-clear').addEventListener('click', () => {
+    if (expandTimer) { clearTimeout(expandTimer); expandTimer = null; }
+    $('poly1').value = '';
+    $('poly2').value = '';
+    for (let i = 0; i < 4; i++) {
+      $('step-' + i).classList.remove('active');
+      $('step-' + i + '-content').textContent = '—';
+    }
+    $('area-svg-wrap').innerHTML = '';
+    $('area-verify').innerHTML = '点击"展开"开始';
+  });
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $('poly1').value = btn.dataset.p1;
+      $('poly2').value = btn.dataset.p2;
+      expandPoly();
+    });
+  });
+  // 初始展开一次
+  expandPoly();
+}
+
+/* ============================================================
+ *  交互3：乘法公式几何证明
+ * ============================================================ */
+const geoState = { a: 6, b: 2, cutState: 'orig' }; // 'orig' | 'cut' | 'rearranged'
+const geoState2 = { a: 5, b: 3 };
+
+function bindGeoTabs() {
+  document.querySelectorAll('#geo-tabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#geo-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#geo-tabs ~ .tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+function bindDiffSqSliders() {
+  $('geo-a').addEventListener('input', () => {
+    geoState.a = parseFloat($('geo-a').value);
+    $('geo-val-a').textContent = geoState.a;
+    // 自动调整 b 的上限
+    if (geoState.b >= geoState.a) {
+      geoState.b = geoState.a - 0.5;
+      $('geo-b').value = geoState.b;
+      $('geo-val-b').textContent = geoState.b;
+    }
+    $('geo-b').max = geoState.a - 0.5;
+    renderDiffSq();
+  });
+  $('geo-b').addEventListener('input', () => {
+    geoState.b = parseFloat($('geo-b').value);
+    $('geo-val-b').textContent = geoState.b;
+    renderDiffSq();
+  });
+  $('btn-cut-diff').addEventListener('click', playDiffCut);
+  $('btn-reset-diff').addEventListener('click', () => { geoState.cutState = 'orig'; renderDiffSq(); });
+}
+
+function renderDiffSq() {
+  const a = geoState.a, b = geoState.b;
+  const a2 = a * a, b2 = b * b;
+  $('live-diffsq').innerHTML = `(a+b)(a−b) <span class="op">=</span> (${a}+${b})(${a}−${b}) <span class="op">=</span> ${a+b} × ${a-b} <span class="op">=</span> <span class="res">${(a+b)*(a-b)}</span> <span class="op">=</span> a²−b² <span class="op">=</span> ${a2}−${b2} <span class="op">=</span> <span class="res">${a2-b2}</span>`;
+  $('dp-diff-a2').textContent = a2;
+  $('dp-diff-b2').textContent = b2;
+  $('dp-diff-minus').textContent = a2 - b2;
+  $('dp-diff-prod').textContent = (a + b) * (a - b);
+  drawDiffSq();
+}
+
+function drawDiffSq() {
+  const stage = $('diff-sq-stage');
+  stage.innerHTML = '';
+  const a = geoState.a, b = geoState.b;
+  // 像素比例
+  const scale = 28; // 每单位 28px
+  const pa = a * scale;
+  const pb = b * scale;
+  const W = 560, H = 320;
+  const ox = (W - pa) / 2;
+  const oy = (H - pa) / 2;
+  const svg = makeSvg('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: H });
+  stage.appendChild(svg);
+
+  const state = geoState.cutState;
+  // 大正方形 a×a
+  // 小正方形 b×b 在左上角
+  if (state === 'orig') {
+    // 大正方形
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy, width: pa, height: pa, fill: '#9B59B6', opacity: 0.25, stroke: '#9B59B6', 'stroke-width': 2 }));
+    // 小正方形（挖空）
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy, width: pb, height: pb, fill: '#fff', stroke: '#E74C3C', 'stroke-width': 2 }));
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy, width: pb, height: pb, fill: '#E74C3C', opacity: 0.15, stroke: '#E74C3C', 'stroke-width': 2, 'stroke-dasharray': '4,2' }));
+    // 标注
+    const lblA = makeSvg('text', { x: ox + pa / 2, y: oy + pa + 22, 'text-anchor':'middle', 'font-size':15, fill:'#9B59B6', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+    lblA.textContent = `a = ${a}`;
+    svg.appendChild(lblA);
+    const lblB = makeSvg('text', { x: ox + pb / 2, y: oy + pb + 18, 'text-anchor':'middle', 'font-size':13, fill:'#E74C3C', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+    lblB.textContent = `b = ${b}`;
+    svg.appendChild(lblB);
+    // 说明
+    const note = makeSvg('text', { x: W / 2, y: 28, 'text-anchor':'middle', 'font-size':14, fill:'#2C3E50' });
+    note.textContent = `L 形面积 = a² − b² = ${a*a} − ${b*b} = ${a*a - b*b}`;
+    svg.appendChild(note);
+  } else if (state === 'cut') {
+    // 沿 L 形拐角剪开：从 (ox+pb, oy) 到 (ox+pb, oy+pa) 已经是边界
+    // 实际上 L 形 = 大正方形 - 左上小正方形
+    // 把 L 形分成两部分：
+    //   部分1：右上的矩形 (ox+pb, oy) 到 (ox+pa, oy+pb) ——宽 (a-b)，高 b
+    //   部分2：下方的大矩形 (ox, oy+pb) 到 (ox+pa, oy+pa) ——宽 a，高 (a-b)
+    // 重排：把部分1 旋转/平移到部分2 右侧，形成 (a+b)×(a-b) 长方形
+    // 这里显示"已剪开"状态
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy, width: pa, height: pa, fill: '#9B59B6', opacity: 0.10, stroke: 'none' }));
+    // 部分1：右上 (a-b) × b
+    svg.appendChild(makeSvg('rect', { x: ox + pb, y: oy, width: pa - pb, height: pb, fill: '#BB8FCE', opacity: 0.6, stroke: '#fff', 'stroke-width': 2, class: 'cut-piece', id: 'piece1' }));
+    // 部分2：下方 a × (a-b)
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy + pb, width: pa, height: pa - pb, fill: '#9B59B6', opacity: 0.5, stroke: '#fff', 'stroke-width': 2, class: 'cut-piece', id: 'piece2' }));
+    // 小正方形虚框（表示已移除）
+    svg.appendChild(makeSvg('rect', { x: ox, y: oy, width: pb, height: pb, fill: 'none', stroke: '#E74C3C', 'stroke-width': 1.5, 'stroke-dasharray': '4,2' }));
+    const note = makeSvg('text', { x: W / 2, y: 28, 'text-anchor':'middle', 'font-size':14, fill:'#2C3E50' });
+    note.textContent = '沿拐角剪开，L 形分成两块';
+    svg.appendChild(note);
+  } else if (state === 'rearranged') {
+    // 重排为 (a+b) × (a-b) 长方形
+    const newW = (a + b) * scale;
+    const newH = (a - b) * scale;
+    const nox = (W - newW) / 2;
+    const noy = (H - newH) / 2;
+    // 部分2：a × (a-b) 横放（原图就是横向）
+    svg.appendChild(makeSvg('rect', { x: nox, y: noy, width: pa, height: pa - pb, fill: '#9B59B6', opacity: 0.5, stroke: '#fff', 'stroke-width': 2 }));
+    // 部分1：(a-b) × b 旋转 90° 后放在右侧：宽 b，高 (a-b)
+    svg.appendChild(makeSvg('rect', { x: nox + pa, y: noy, width: pb, height: pa - pb, fill: '#BB8FCE', opacity: 0.6, stroke: '#fff', 'stroke-width': 2 }));
+    // 外框
+    svg.appendChild(makeSvg('rect', { x: nox, y: noy, width: newW, height: newH, fill: 'none', stroke: '#2C3E50', 'stroke-width': 2 }));
+    // 标注
+    const lblW = makeSvg('text', { x: nox + newW / 2, y: noy + newH + 22, 'text-anchor':'middle', 'font-size':15, fill:'#27AE60', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+    lblW.textContent = `(a+b) = ${a+b}`;
+    svg.appendChild(lblW);
+    const lblH = makeSvg('text', { x: nox + newW + 16, y: noy + newH / 2 + 4, 'text-anchor':'start', 'font-size':13, fill:'#27AE60', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+    lblH.textContent = `(a−b)=${a-b}`;
+    svg.appendChild(lblH);
+    const note = makeSvg('text', { x: W / 2, y: 28, 'text-anchor':'middle', 'font-size':14, fill:'#2C3E50' });
+    note.textContent = `重排为长方形：面积 = (a+b)(a−b) = ${a+b}×${a-b} = ${(a+b)*(a-b)}`;
+    svg.appendChild(note);
+  }
+}
+
+function playDiffCut() {
+  geoState.cutState = 'cut';
+  drawDiffSq();
+  setTimeout(() => {
+    geoState.cutState = 'rearranged';
+    drawDiffSq();
+  }, 1200);
+}
+
+function bindFullSqSliders() {
+  $('geo2-a').addEventListener('input', () => {
+    geoState2.a = parseFloat($('geo2-a').value);
+    $('geo2-val-a').textContent = geoState2.a;
+    renderFullSq();
+  });
+  $('geo2-b').addEventListener('input', () => {
+    geoState2.b = parseFloat($('geo2-b').value);
+    $('geo2-val-b').textContent = geoState2.b;
+    renderFullSq();
+  });
+}
+
+function renderFullSq() {
+  const a = geoState2.a, b = geoState2.b;
+  const a2 = a * a, b2 = b * b, ab = a * b;
+  $('live-fullsq').innerHTML = `(a+b)² <span class="op">=</span> (${a}+${b})² <span class="op">=</span> a²+2ab+b² <span class="op">=</span> ${a2}+${2*ab}+${b2} <span class="op">=</span> <span class="res">${a2 + 2*ab + b2}</span>`;
+  $('dp-full-a2').textContent = a2;
+  $('dp-full-2ab').textContent = 2 * ab;
+  $('dp-full-b2').textContent = b2;
+  $('dp-full-sum').textContent = a2 + 2 * ab + b2;
+  drawFullSq();
+}
+
+function drawFullSq() {
+  const svg = $('fullsq-svg-wrap');
+  svg.innerHTML = '';
+  const a = geoState2.a, b = geoState2.b;
+  const scale = 28;
+  const pa = a * scale, pb = b * scale;
+  const total = pa + pb;
+  const W = 480, H = 360;
+  const ox = (W - total) / 2;
+  const oy = (H - total) / 2 + 10;
+  const wrap = makeSvg('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: H });
+  svg.appendChild(wrap);
+  // 4 个区域
+  // 左上 a²
+  wrap.appendChild(makeSvg('rect', { x: ox, y: oy, width: pa, height: pa, fill: '#9B59B6', opacity: 0.55, stroke: '#fff', 'stroke-width': 2 }));
+  // 右上 ab
+  wrap.appendChild(makeSvg('rect', { x: ox + pa, y: oy, width: pb, height: pa, fill: '#E67E22', opacity: 0.55, stroke: '#fff', 'stroke-width': 2 }));
+  // 左下 ab
+  wrap.appendChild(makeSvg('rect', { x: ox, y: oy + pa, width: pa, height: pb, fill: '#3498DB', opacity: 0.55, stroke: '#fff', 'stroke-width': 2 }));
+  // 右下 b²
+  wrap.appendChild(makeSvg('rect', { x: ox + pa, y: oy + pa, width: pb, height: pb, fill: '#27AE60', opacity: 0.55, stroke: '#fff', 'stroke-width': 2 }));
+  // 外框
+  wrap.appendChild(makeSvg('rect', { x: ox, y: oy, width: total, height: total, fill: 'none', stroke: '#2C3E50', 'stroke-width': 2 }));
+  // 标注
+  const labels = [
+    { x: ox + pa/2, y: oy + pa/2 + 5, t: `a²=${a2}`, c: '#fff' },
+    { x: ox + pa + pb/2, y: oy + pa/2 + 5, t: `ab=${ab}`, c: '#fff' },
+    { x: ox + pa/2, y: oy + pa + pb/2 + 5, t: `ab=${ab}`, c: '#fff' },
+    { x: ox + pa + pb/2, y: oy + pa + pb/2 + 5, t: `b²=${b2}`, c: '#fff' }
+  ];
+  labels.forEach(l => {
+    const t = makeSvg('text', { x: l.x, y: l.y, 'text-anchor':'middle', 'font-size':14, 'font-weight':'bold', fill: l.c, 'font-family':'Georgia,serif' });
+    t.textContent = l.t;
+    wrap.appendChild(t);
+  });
+  // 边长标注
+  const lblTop = makeSvg('text', { x: ox + pa/2, y: oy - 8, 'text-anchor':'middle', 'font-size':13, fill:'#9B59B6', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+  lblTop.textContent = `a=${a}`;
+  wrap.appendChild(lblTop);
+  const lblTop2 = makeSvg('text', { x: ox + pa + pb/2, y: oy - 8, 'text-anchor':'middle', 'font-size':13, fill:'#27AE60', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+  lblTop2.textContent = `b=${b}`;
+  wrap.appendChild(lblTop2);
+  const lblLeft = makeSvg('text', { x: ox - 12, y: oy + pa/2 + 4, 'text-anchor':'middle', 'font-size':13, fill:'#9B59B6', 'font-weight':'bold', 'font-family':'Georgia,serif', transform: `rotate(-90 ${ox-12} ${oy+pa/2+4})` });
+  lblLeft.textContent = `a=${a}`;
+  wrap.appendChild(lblLeft);
+  const lblLeft2 = makeSvg('text', { x: ox - 12, y: oy + pa + pb/2 + 4, 'text-anchor':'middle', 'font-size':13, fill:'#27AE60', 'font-weight':'bold', 'font-family':'Georgia,serif', transform: `rotate(-90 ${ox-12} ${oy+pa+pb/2+4})` });
+  lblLeft2.textContent = `b=${b}`;
+  wrap.appendChild(lblLeft2);
+  // 总边长
+  const lblTotal = makeSvg('text', { x: ox + total + 12, y: oy + total/2 + 4, 'text-anchor':'start', 'font-size':14, fill:'#2C3E50', 'font-weight':'bold', 'font-family':'Georgia,serif' });
+  lblTotal.textContent = `(a+b)=${a+b}`;
+  wrap.appendChild(lblTotal);
+  // 顶部公式
+  const note = makeSvg('text', { x: W / 2, y: 24, 'text-anchor':'middle', 'font-size':14, fill:'#2C3E50' });
+  note.textContent = `(a+b)² = a² + ab + ab + b² = ${a2} + ${ab} + ${ab} + ${b2} = ${a2 + 2*ab + b2}`;
+  wrap.appendChild(note);
+}
+
+/* ============================================================
+ *  交互4：公式匹配游戏
+ * ============================================================ */
+// 正确配对：L1-R1, L2-R2, L3-R3, L4-R4
+const matchState = { selected: null, matched: 0, total: 4 };
+
+function bindMatchGame() {
+  document.querySelectorAll('#match-game .match-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched-correct') || item.classList.contains('disabled')) return;
+      const side = item.dataset.side;
+      const id = item.dataset.id;
+      if (!matchState.selected) {
+        // 第一次选择
+        if (side !== 'L') return; // 必须先选左边
+        document.querySelectorAll('#match-game .match-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+        matchState.selected = { side, id };
+      } else {
+        // 第二次选择
+        if (side === 'L') {
+          // 重新选左边
+          document.querySelectorAll('#match-game .match-item').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          matchState.selected = { side, id };
+          return;
+        }
+        // 右边
+        const leftId = matchState.selected.id;
+        const rightId = id;
+        const isCorrect = leftId.charAt(1) === rightId.charAt(1);
+        const leftEl = document.querySelector(`#match-game .match-item[data-id="${leftId}"]`);
+        if (isCorrect) {
+          leftEl.classList.remove('selected');
+          leftEl.classList.add('matched-correct');
+          item.classList.add('matched-correct');
+          matchState.matched++;
+          matchState.selected = null;
+          updateMatchScore(true);
+          if (matchState.matched === matchState.total) {
+            $('match-score').innerHTML = '🎉 太棒了！全部配对正确！点击"重新开始"再玩一次。';
+            $('match-score').style.background = 'rgba(39,174,96,0.15)';
+            $('match-score').style.color = 'var(--success)';
+          }
+        } else {
+          item.classList.add('matched-wrong');
+          setTimeout(() => {
+            item.classList.remove('matched-wrong');
+          }, 600);
+          updateMatchScore(false);
+        }
+      }
+    });
+  });
+  $('btn-match-reset').addEventListener('click', resetMatchGame);
+}
+
+function updateMatchScore(correct) {
+  const score = $('match-score');
+  score.style.background = 'var(--bg-soft)';
+  score.style.color = 'var(--text-main)';
+  if (correct) {
+    score.innerHTML = `配对进度：${matchState.matched} / ${matchState.total}　✓ 正确！`;
+  } else {
+    score.innerHTML = `配对进度：${matchState.matched} / ${matchState.total}　✗ 不对，再试试`;
+  }
+}
+
+function resetMatchGame() {
+  matchState.matched = 0;
+  matchState.selected = null;
+  document.querySelectorAll('#match-game .match-item').forEach(i => {
+    i.classList.remove('selected', 'matched-correct', 'matched-wrong', 'disabled');
+  });
+  // 打乱右边顺序
+  const rightCol = $('match-right-col');
+  const items = Array.from(rightCol.querySelectorAll('.match-item'));
+  const h4 = rightCol.querySelector('h4');
+  items.sort(() => Math.random() - 0.5);
+  // 重新插入
+  rightCol.innerHTML = '';
+  rightCol.appendChild(h4);
+  items.forEach(i => rightCol.appendChild(i));
+  // 重新绑定（因为 DOM 重新插入，事件还在元素上，不用重绑）
+  $('match-score').innerHTML = '配对进度：0 / 4　🎉 加油！';
+  $('match-score').style.background = 'var(--bg-soft)';
+  $('match-score').style.color = 'var(--text-main)';
+}
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+function initQuizzes() {
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: '(−2x²y)³ = (−2)³ · (x²)³ · y³ = −8x⁶y³。积的乘方：每个因式分别乘方；幂的乘方：指数相乘。',
+    hint: '积的乘方要把 −2、x²、y 分别乘方。(−2)³ = ?，(x²)³ 用幂的乘方。'
+  });
+  initQuiz('quiz2', {
+    correct: 3,
+    explain: 'A 应为 a⁵（指数加）；B 应为 a⁶（指数乘）；C 应为 4a²（系数也要平方）；D 正确，a⁶÷a²=a⁶⁻²=a⁴。',
+    hint: '逐项检查：A 是同底数幂乘法（指数加）；B 是幂的乘方（指数乘）；C 是积的乘方（系数也乘方）。'
+  });
+  initQuiz('quiz3', {
+    correct: 1,
+    explain: '(x+2)(x−3) = x·x + x·(−3) + 2·x + 2·(−3) = x² − 3x + 2x − 6 = x² − x − 6，所以 k = −1。',
+    hint: '用分配律展开：(x+2)(x−3) = x² −3x +2x −6，合并同类项后 x 的系数就是 k。'
+  });
+}
+
+/* ============================================================
+ *  初始化
+ * ============================================================ */
+function init() {
+  bindPowerSliders();
+  bindExpander();
+  bindGeoTabs();
+  bindDiffSqSliders();
+  bindFullSqSliders();
+  bindMatchGame();
+  initQuizzes();
+  // 初始渲染
+  renderPowerTab();
+  renderDiffSq();
+  renderFullSq();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>

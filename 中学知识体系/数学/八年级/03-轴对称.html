@@ -6,44 +6,214 @@
   <title>轴对称 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row label {
+      font-weight: 600;
+      min-width: 110px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== SVG 容器 ===== */
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 16px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0 4px;
+      font-size: 14px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 图形选择按钮（交互1） ===== */
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .shape-btn {
+      padding: 12px 8px;
+      border: 2px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: inherit;
+    }
+    .shape-btn:hover { border-color: var(--math); transform: translateY(-2px); }
+    .shape-btn.active {
+      border-color: var(--math);
+      background: rgba(155,89,182,0.12);
+      color: var(--math);
+      box-shadow: 0 3px 12px rgba(155,89,182,0.2);
+    }
+    .shape-btn .shape-count {
+      display: block;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ===== 信息面板 ===== */
+    .info-panel {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 14px 18px;
+      margin: 12px 0;
+      font-size: 15px;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .info-panel .info-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 0;
+      font-family: Georgia, serif;
     }
+    .info-panel .info-line strong { color: var(--math); }
+
+    .verify-line {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 14px;
+      font-family: Georgia, serif;
+    }
+    .verify-line.ok { background: rgba(39,174,96,0.14); color: var(--success); }
+    .verify-line.bad { background: rgba(231,76,60,0.14); color: var(--danger); }
+    .verify-line.warn { background: rgba(243,156,18,0.14); color: var(--warning); }
+
+    /* ===== 按钮组 ===== */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 14px 0;
+    }
+    .btn-math {
+      background: var(--math);
+      color: #fff;
+    }
+    .btn-math:hover { background: #7D3C98; }
+    .btn-outline-math {
+      background: transparent;
+      border: 2px solid var(--math);
+      color: var(--math);
+    }
+    .btn-outline-math:hover { background: var(--math); color: #fff; }
+    .btn-outline-math.active {
+      background: var(--math);
+      color: #fff;
+    }
+
+    .cross-ref-list { list-style: none; padding-left: 0; }
+    .cross-ref-list li { padding: 8px 0; line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -53,10 +223,19 @@
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📐 轴对称</h1>
+  <p>折叠、重合、对称轴——探索轴对称图形、垂直平分线，以及等腰三角形"三线合一"的奥秘</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +246,931 @@
     <span>轴对称</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>轴对称</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 轴对称图形 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 轴对称图形</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>如果一个图形沿一条直线折叠，直线两旁的部分能够<strong>互相重合</strong>，这个图形就叫做<strong>轴对称图形</strong>，这条直线就是它的<strong>对称轴</strong>。</p>
+    <div class="tip-box">
+      <div class="tip-title">📌 关键理解</div>
+      轴对称图形说的是<strong>一个图形本身</strong>的性质——它能被一条直线分成能够完全重合的两半。对称轴可能不止一条，也可能一条也没有（如一般的平行四边形）。
+    </div>
+
+    <h3 style="margin:18px 0 6px; color: var(--math);">🔍 交互：点击图形，探索对称轴</h3>
+    <div class="shape-grid" id="shape-grid">
+      <button class="shape-btn" data-shape="square">正方形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="rectangle">长方形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="circle">圆形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="isosceles">等腰三角形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="equilateral">等边三角形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="parallelogram">平行四边形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="pentagon">正五边形<span class="shape-count">对称轴 ?</span></button>
+      <button class="shape-btn" data-shape="hexagon">正六边形<span class="shape-count">对称轴 ?</span></button>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="svg1" viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="slider-row">
+      <label>折叠演示</label>
+      <input type="range" id="fold1" min="0" max="100" value="0">
+      <span class="value-badge" id="fold1-val">0%</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-sm btn-outline-math" id="fold1-auto">▶ 自动折叠</button>
+      <button class="btn btn-sm btn-outline-math" id="fold1-reset">重置</button>
+    </div>
+
+    <div class="info-panel" id="info1">
+      <div class="info-line"><span>当前图形</span><strong>请点击上方按钮选择图形</strong></div>
+      <div class="info-line"><span>对称轴数量</span><strong>—</strong></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 折叠演示说明</div>
+      拖动"折叠演示"滑块，观察图形右半部分沿竖直对称轴翻折的过程。当折叠到 100% 时，右半部分与左半部分<strong>完全重合</strong>——这正是"轴对称图形"的定义。平行四边形没有对称轴，无法重合。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 轴对称 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 轴对称（两个图形）</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>把一个图形沿某一条直线折叠，如果它能够与<strong>另一个图形</strong>重合，那么就说这两个图形关于这条直线对称。这条直线叫做<strong>对称轴</strong>，折叠后重合的点叫做<strong>对应点</strong>（如 A 与 A'）。</p>
+
+    <div class="formula-box">
+      <div class="formula">对应点连线 AA' ⊥ 对称轴 l，且 AA' 的中点在对称轴 l 上</div>
+      <div class="formula-note">即：对称轴垂直平分每一对对应点的连线</div>
+    </div>
+
+    <h3 style="margin:18px 0 6px; color: var(--math);">🔍 交互：轴对称作图器</h3>
+    <div class="svg-wrap">
+      <svg id="svg2" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="slider-row">
+      <label>对称轴角度</label>
+      <input type="range" id="axis2" min="0" max="180" value="90">
+      <span class="value-badge" id="axis2-val">90°</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-math" id="btn2-fold">🔄 翻折</button>
+      <button class="btn btn-outline-math" id="btn2-reset">重置</button>
+    </div>
+
+    <div class="info-panel" id="info2">
+      <div class="info-line"><span>AA' 与对称轴 l</span><strong>—</strong></div>
+      <div class="info-line"><span>AA' 中点位置</span><strong>—</strong></div>
+      <div class="info-line"><span>d(A, l) 与 d(A', l)</span><strong>—</strong></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 观察要点</div>
+      点击"翻折"后，观察每个顶点 A→A'、B→B'、C→C' 的运动：连线 AA'、BB'、CC' 都<strong>垂直于</strong>对称轴 l，且它们的中点都<strong>落在</strong> l 上。这说明对称轴 l 垂直平分每一对对应点的连线。拖动滑块旋转对称轴，性质始终成立。
+    </div>
   </div>
+
+  <!-- ===== 3. 垂直平分线 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 线段垂直平分线（中垂线）</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>经过线段中点并且<strong>垂直于</strong>这条线段的直线，叫做这条线段的<strong>垂直平分线</strong>（也叫<strong>中垂线</strong>）。</p>
+
+    <div class="formula-box">
+      <div class="formula">线段垂直平分线上的点到线段两端点的距离相等</div>
+      <div class="formula-note">若 P 在 AB 的垂直平分线上，则 PA = PB</div>
+    </div>
+
+    <h3 style="margin:18px 0 6px; color: var(--math);">🔍 交互：拖动点 P，验证性质</h3>
+    <div class="svg-wrap">
+      <svg id="svg3" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="info-panel" id="info3">
+      <div class="info-line"><span>PA</span><strong id="pa3">—</strong></div>
+      <div class="info-line"><span>PB</span><strong id="pb3">—</strong></div>
+      <div class="info-line"><span>PA 与 PB</span><strong id="cmp3">—</strong></div>
+    </div>
+
+    <div id="verify3" class="verify-line ok">✓ 点 P 在垂直平分线上 → PA = PB</div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 动手试一试</div>
+      拖动紫色点 P 到垂直平分线<strong>以外</strong>的位置，观察 PA 与 PB 的长度：它们不再相等！只有垂直平分线<strong>上</strong>的点到两端距离才相等。
+    </div>
+  </div>
+
+  <!-- ===== 4. 等腰三角形 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 等腰三角形与"三线合一"</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>有两条边相等的三角形叫做<strong>等腰三角形</strong>。相等的两边叫做<strong>腰</strong>，另一边叫做<strong>底边</strong>，两腰的夹角叫做<strong>顶角</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">等腰三角形性质：等边对等角</div>
+      <div class="formula-note">AB = AC ⇒ ∠B = ∠C（底角相等）</div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula">三线合一：顶角平分线 = 底边中线 = 底边上的高</div>
+      <div class="formula-note">在等腰 △ABC（AB=AC）中，顶角平分线、底边上的中线、底边上的高三条线段重合为同一条线</div>
+    </div>
+
+    <h3 style="margin:18px 0 6px; color: var(--math);">🔍 交互：三线合一验证</h3>
+    <div class="svg-wrap">
+      <svg id="svg4" viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="slider-row">
+      <label>顶角大小</label>
+      <input type="range" id="apex4" min="20" max="150" value="60">
+      <span class="value-badge" id="apex4-val">60°</span>
+    </div>
+    <div class="btn-group" id="btns4">
+      <button class="btn btn-sm btn-outline-math" data-role="bisect">顶角平分线</button>
+      <button class="btn btn-sm btn-outline-math" data-role="median">底边中线</button>
+      <button class="btn btn-sm btn-outline-math" data-role="height">底边上的高</button>
+      <button class="btn btn-sm btn-outline-math" data-role="all">三线合一</button>
+    </div>
+
+    <div id="verify4" class="verify-line ok">三条线实际上是同一条线！</div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 三线合一的证明思路</div>
+      在等腰 △ABC（AB = AC）中，设 M 为 BC 中点。由 AB = AC、BM = CM、AM = AM（公共边），得 △ABM ≅ △ACM（<strong>SSS</strong>）。所以 ∠BAM = ∠CAM（AM 是<strong>顶角平分线</strong>），∠AMB = ∠AMC = 90°（AM 是<strong>底边上的高</strong>），而 M 本就是 BC 中点（AM 是<strong>底边中线</strong>）。三条线合而为一。等腰三角形是轴对称图形，对称轴就是这条线所在的直线。
+    </div>
+  </div>
+
+  <!-- ===== 5. 等边三角形 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 等边三角形</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>三条边都相等的三角形叫做<strong>等边三角形</strong>。它是<strong>特殊的等腰三角形</strong>（腰和底边相等）。</p>
+
+    <div class="formula-box">
+      <div class="formula">等边三角形的三个内角都等于 60°</div>
+      <div class="formula-note">且有三条对称轴（每条从一个顶点到对边中点）</div>
+    </div>
+
+    <h3 style="margin:18px 0 6px; color: var(--math);">🔍 交互：等边三角形的三条对称轴</h3>
+    <div class="svg-wrap">
+      <svg id="svg5" viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="btn-group" id="btns5">
+      <button class="btn btn-sm btn-outline-math" data-axis="0">对称轴 ①</button>
+      <button class="btn btn-sm btn-outline-math" data-axis="1">对称轴 ②</button>
+      <button class="btn btn-sm btn-outline-math" data-axis="2">对称轴 ③</button>
+      <button class="btn btn-sm btn-outline-math" data-axis="all">全部显示</button>
+      <button class="btn btn-sm btn-outline-math" data-axis="rotate">🔄 旋转演示</button>
+    </div>
+    <div class="info-panel">
+      <div class="info-line"><span>对称轴数量</span><strong>3 条</strong></div>
+      <div class="info-line"><span>每条对称轴</span><strong>从一个顶点到对边中点</strong></div>
+      <div class="info-line"><span>内角</span><strong>三个角都是 60°</strong></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔄 旋转演示的奥秘</div>
+      点击"旋转演示"，观察一条对称轴旋转 120° 后与下一条对称轴重合。这说明等边三角形的三条对称轴在<strong>旋转意义下等价</strong>——这正是等边三角形具有更高对称性的体现。
+    </div>
+  </div>
+
+  <!-- ===== 6. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列图形中，对称轴最多的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 正方形</div>
+    <div class="quiz-option" data-idx="1">B. 长方形</div>
+    <div class="quiz-option" data-idx="2">C. 等边三角形</div>
+    <div class="quiz-option" data-idx="3">D. 圆形</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 在等腰 △ABC（AB = AC）中，顶角平分线、底边上的中线、底边上的高三条线段的关系是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 三条不同的线，互不重合</div>
+    <div class="quiz-option" data-idx="1">B. 互相垂直</div>
+    <div class="quiz-option" data-idx="2">C. 三线合一（重合为同一条线）</div>
+    <div class="quiz-option" data-idx="3">D. 交于三个不同的点</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 下列说法正确的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 轴对称图形是指两个图形之间的位置关系</div>
+    <div class="quiz-option" data-idx="1">B. 成轴对称的两个图形中，对应点的连线平行于对称轴</div>
+    <div class="quiz-option" data-idx="2">C. 线段垂直平分线上的点到这条线段两个端点的距离相等</div>
+    <div class="quiz-option" data-idx="3">D. 等边三角形有 4 条对称轴</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 7. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 轴对称在其它章节与学科中的联系</div>
+    <ul class="cross-ref-list">
+      <li>
+        📐 <a href="02-全等三角形.html"><strong>数学·全等三角形</strong></a>——
+        把一个图形沿对称轴翻折后与另一个图形重合，本质就是两个图形<strong>全等</strong>。作一个点关于直线的对称点，靠的是构造一对全等直角三角形；轴对称的诸多性质（如对应线段相等、对应角相等）都由<strong>全等三角形</strong>作支撑。
+        <span class="tag tag-math">全等与对称</span>
+      </li>
+      <li>
+        📐 <a href="04-整式的乘除.html"><strong>数学·整式的乘除</strong></a>——
+        本章后续将学到完全平方公式 (a±b)²，其展开图在几何上呈现<strong>对称</strong>结构；多项式的配方过程也常常借助对称中心来理解。代数式的对称美与几何轴对称一脉相承。
+        <span class="tag tag-math">代数对称</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/04-光现象.html"><strong>物理·光现象</strong></a>——
+        <strong>平面镜成像就是轴对称</strong>！物与像关于镜面对称，镜面就是对称轴：物到镜面的距离等于像到镜面的距离，物像连线垂直于镜面。轴对称的"对应点连线被对称轴垂直平分"，正是平面镜成像规律的数学本质。
+        <span class="tag tag-cross">平面镜成像</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="02-全等三角形.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：全等三角形</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="04-整式的乘除.html" class="btn btn-primary" style="background: var(--math);">下一章：整式的乘除 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  通用工具
+ * ============================================================ */
+const D2R = Math.PI / 180;
+const R2D = 180 / Math.PI;
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+function el(tag, attrs) {
+  const e = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function ptsStr(arr){ return arr.map(p => p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '); }
+function dist(a, b){ const dx=a[0]-b[0], dy=a[1]-b[1]; return Math.sqrt(dx*dx+dy*dy); }
+function mid(a, b){ return [(a[0]+b[0])/2, (a[1]+b[1])/2]; }
+
+// 点 P 关于过 C、方向角 angDeg 的直线的对称点
+function reflect(P, C, angDeg){
+  const a = angDeg * D2R;
+  const ux = Math.cos(a), uy = Math.sin(a);
+  const dx = P[0]-C[0], dy = P[1]-C[1];
+  const d = dx*ux + dy*uy;
+  const px = C[0] + d*ux, py = C[1] + d*uy;   // 投影点
+  return [2*px - P[0], 2*py - P[1]];
+}
+// 点 P 到该直线的距离
+function distToLine(P, C, angDeg){
+  const a = angDeg * D2R;
+  const ux = Math.cos(a), uy = Math.sin(a);
+  const dx = P[0]-C[0], dy = P[1]-C[1];
+  const d = dx*ux + dy*uy;
+  const px = C[0] + d*ux, py = C[1] + d*uy;
+  return dist(P, [px, py]);
+}
+// 点 P 到该直线的投影点
+function projOnLine(P, C, angDeg){
+  const a = angDeg * D2R;
+  const ux = Math.cos(a), uy = Math.sin(a);
+  const dx = P[0]-C[0], dy = P[1]-C[1];
+  const d = dx*ux + dy*uy;
+  return [C[0] + d*ux, C[1] + d*uy];
+}
+// 翻折动画：P 绕其投影点旋转角 phi（弧度），phi=0 原位，phi=π 到达对称点
+function foldPoint(P, C, angDeg, phi){
+  const a = angDeg * D2R;
+  const ux = Math.cos(a), uy = Math.sin(a);
+  const dx = P[0]-C[0], dy = P[1]-C[1];
+  const d = dx*ux + dy*uy;
+  const proj = [C[0]+d*ux, C[1]+d*uy];
+  const rx = P[0]-proj[0], ry = P[1]-proj[1];
+  const c = Math.cos(phi), s = Math.sin(phi);
+  return [proj[0] + rx*c - ry*s, proj[1] + rx*s + ry*c];
+}
+
+/* ============================================================
+ *  交互 1：轴对称图形探索
+ * ============================================================ */
+const SVG1 = document.getElementById('svg1');
+const C1 = [210, 165];      // 画布中心
+const R1 = 88;              // 基准半径
+
+const SHAPES = {
+  square:      { name:'正方形',     count:4,   axes:[0,45,90,135],                 axisLen:1.25, verts: R=>[[-R,-R],[R,-R],[R,R],[-R,R]] },
+  rectangle:   { name:'长方形',     count:2,   axes:[0,90],                        axisLen:1.7,  verts: R=>[[-1.45*R,-0.8*R],[1.45*R,-0.8*R],[1.45*R,0.8*R],[-1.45*R,0.8*R]] },
+  circle:      { name:'圆形',       count:'∞', axes:[0,22.5,45,67.5,90,112.5,135,157.5], axisLen:1.15, type:'circle' },
+  isosceles:   { name:'等腰三角形', count:1,   axes:[90],                          axisLen:1.25, verts: R=>[[0,-R],[1.15*R,0.85*R],[-1.15*R,0.85*R]] },
+  equilateral: { name:'等边三角形', count:3,   axes:[90,30,150],                   axisLen:1.2,  verts: R=>regVerts(R,3,-90) },
+  parallelogram:{name:'平行四边形', count:0,   axes:[],                            axisLen:1.5,  verts: R=>[[-0.5*R+0.5*R,-0.7*R],[1.0*R+0.5*R,-0.7*R],[1.0*R-0.5*R,0.7*R],[-0.5*R-0.5*R,0.7*R]] },
+  pentagon:    { name:'正五边形',   count:5,   axes:[-90,-18,54,126,198],          axisLen:1.2,  verts: R=>regVerts(R,5,-90) },
+  hexagon:     { name:'正六边形',   count:6,   axes:[0,30,60,90,120,150],          axisLen:1.2,  verts: R=>regVerts(R,6,-90) }
+};
+function regVerts(R, n, startDeg){
+  const v=[]; for(let i=0;i<n;i++){ const a=(startDeg+i*360/n)*D2R; v.push([R*Math.cos(a), R*Math.sin(a)]); } return v;
+}
+
+let curShape = null;
+let fold1Val = 0;   // 0..100
+
+function renderShape1(){
+  SVG1.innerHTML = '';
+  if(!curShape){ return; }
+  const s = SHAPES[curShape];
+  const [cx, cy] = C1;
+
+  // 对称轴（虚线）
+  s.axes.forEach(ang=>{
+    const a = ang*D2R;
+    const L = R1 * s.axisLen;
+    const x1 = cx - L*Math.cos(a), y1 = cy - L*Math.sin(a);
+    const x2 = cx + L*Math.cos(a), y2 = cy + L*Math.sin(a);
+    SVG1.appendChild(el('line',{x1,y1,x2,y2,stroke:'#E74C3C','stroke-width':1.5,'stroke-dasharray':'6 4',opacity:0.85}));
+  });
+
+  // 绘制图形（含折叠）
+  if(s.type === 'circle'){
+    drawCircle1(cx, cy, R1);
+  } else {
+    const verts = s.verts(R1).map(v=>[cx+v[0], cy+v[1]]);
+    drawPoly1(cx, verts);
+  }
+
+  // 平行四边形提示
+  if(curShape === 'parallelogram'){
+    SVG1.appendChild(el('text',{x:cx, y:cy+R1+34, 'text-anchor':'middle','font-size':14, fill:'#E74C3C','font-weight':700}, '平行四边形不是轴对称图形（无对称轴）'));
+  }
+}
+
+function drawPoly1(cx, verts){
+  // 左半（静态）：clip 到 x<=cx
+  const left = clipHalf(verts, cx, true);
+  if(left.length >= 3){
+    SVG1.appendChild(el('polygon',{points:ptsStr(left), fill:'rgba(155,89,182,0.18)', stroke:'#7D3C98','stroke-width':2.5, 'stroke-linejoin':'round'}));
+  }
+  // 右半（折叠）：clip 到 x>=cx，套用翻折 transform
+  const right = clipHalf(verts, cx, false);
+  if(right.length >= 3){
+    const phi = (fold1Val/100) * Math.PI;
+    const cosf = Math.cos(phi);
+    const g = el('g',{ transform:`translate(${cx} 0) scale(${cosf.toFixed(4)} 1) translate(${-cx} 0)` });
+    g.appendChild(el('polygon',{points:ptsStr(right), fill:'rgba(231,76,60,0.35)', stroke:'#C0392B','stroke-width':2.5,'stroke-linejoin':'round','stroke-dasharray': phi>Math.PI/2 ? '0' : '0'}));
+    SVG1.appendChild(g);
+  }
+}
+function drawCircle1(cx, cy, r){
+  // 左半圆（静态）
+  SVG1.appendChild(el('path',{
+    d:`M ${cx} ${cy-r} A ${r} ${r} 0 0 0 ${cx} ${cy+r} Z`,
+    fill:'rgba(155,89,182,0.18)', stroke:'#7D3C98','stroke-width':2.5
+  }));
+  // 右半圆（折叠）
+  const phi = (fold1Val/100) * Math.PI;
+  const cosf = Math.cos(phi);
+  const g = el('g',{ transform:`translate(${cx} 0) scale(${cosf.toFixed(4)} 1) translate(${-cx} 0)` });
+  g.appendChild(el('path',{
+    d:`M ${cx} ${cy-r} A ${r} ${r} 0 0 1 ${cx} ${cy+r} Z`,
+    fill:'rgba(231,76,60,0.35)', stroke:'#C0392B','stroke-width':2.5
+  }));
+  SVG1.appendChild(g);
+}
+
+// Sutherland-Hodgman 单边裁剪：keepRight=true 保留 x>=axisX，false 保留 x<=axisX
+function clipHalf(poly, axisX, keepLeft){
+  const out = [];
+  const inside = p => keepLeft ? p[0] <= axisX + 1e-6 : p[0] >= axisX - 1e-6;
+  for(let i=0;i<poly.length;i++){
+    const A = poly[i], B = poly[(i+1)%poly.length];
+    const aIn = inside(A), bIn = inside(B);
+    if(aIn) out.push(A);
+    if(aIn !== bIn){
+      const t = (axisX - A[0]) / (B[0] - A[0]);
+      out.push([axisX, A[1] + t*(B[1]-A[1])]);
+    }
+  }
+  return out;
+}
+
+function updateInfo1(){
+  const panel = document.getElementById('info1');
+  if(!curShape){
+    panel.innerHTML = '<div class="info-line"><span>当前图形</span><strong>请点击上方按钮选择图形</strong></div><div class="info-line"><span>对称轴数量</span><strong>—</strong></div>';
+    return;
+  }
+  const s = SHAPES[curShape];
+  const cntTxt = s.count === '∞' ? '无数条' : (s.count + ' 条');
+  panel.innerHTML =
+    `<div class="info-line"><span>当前图形</span><strong>${s.name}</strong></div>`+
+    `<div class="info-line"><span>对称轴数量</span><strong>${cntTxt}</strong></div>`;
+}
+
+// 按钮事件
+document.querySelectorAll('#shape-grid .shape-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#shape-grid .shape-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    curShape = btn.dataset.shape;
+    fold1Val = 0;
+    document.getElementById('fold1').value = 0;
+    document.getElementById('fold1-val').textContent = '0%';
+    renderShape1();
+    updateInfo1();
+  });
+});
+const fold1 = document.getElementById('fold1');
+fold1.addEventListener('input', ()=>{
+  fold1Val = parseFloat(fold1.value);
+  document.getElementById('fold1-val').textContent = fold1Val + '%';
+  renderShape1();
+});
+document.getElementById('fold1-reset').addEventListener('click', ()=>{
+  fold1Val = 0; fold1.value = 0; document.getElementById('fold1-val').textContent = '0%'; renderShape1();
+});
+document.getElementById('fold1-auto').addEventListener('click', ()=>{
+  let start = null; const dur = 1400;
+  const from = fold1Val, to = (from < 50 ? 100 : 0);
+  function step(ts){
+    if(!start) start = ts;
+    const p = Math.min((ts-start)/dur, 1);
+    const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2; // easeInOut
+    fold1Val = from + (to-from)*e;
+    fold1.value = Math.round(fold1Val);
+    document.getElementById('fold1-val').textContent = Math.round(fold1Val) + '%';
+    renderShape1();
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+});
+
+// 默认选中正方形
+document.querySelector('#shape-grid .shape-btn[data-shape="square"]').click();
+
+/* ============================================================
+ *  交互 2：轴对称作图器
+ * ============================================================ */
+const SVG2 = document.getElementById('svg2');
+const C2 = [300, 210];
+// 原三角形 ABC（在对称轴默认竖直时位于左侧）
+const TRI2 = { A:[170,140], B:[90,255], C:[200,300] };
+let axis2Ang = 90;
+let folded2 = false;   // 是否已翻折（显示对称图形与连线）
+
+function render2(movingPhi){
+  // movingPhi: 动画过程中的翻折角（弧度），undefined 表示非动画
+  SVG2.innerHTML = '';
+  const ang = axis2Ang;
+  const a = ang*D2R;
+  const L = 250;
+  // 对称轴 l
+  const lx1 = C2[0] - L*Math.cos(a), ly1 = C2[1] - L*Math.sin(a);
+  const lx2 = C2[0] + L*Math.cos(a), ly2 = C2[1] + L*Math.sin(a);
+  SVG2.appendChild(el('line',{x1:lx1,y1:ly1,x2:lx2,y2:ly2, stroke:'#7D3C98','stroke-width':2.5, 'stroke-dasharray':'8 5'}));
+  SVG2.appendChild(el('text',{x:lx2+10, y:ly2-6, 'font-size':18, fill:'#7D3C98','font-weight':700, 'font-style':'italic'}, 'l'));
+
+  const A=TRI2.A, B=TRI2.B, Cv=TRI2.C;
+  const Ap=reflect(A,C2,ang), Bp=reflect(B,C2,ang), Cp=reflect(Cv,C2,ang);
+
+  const animating = (movingPhi !== undefined);
+
+  if(animating){
+    // 动画：翻折中的三角形
+    const f = p => foldPoint(p, C2, ang, movingPhi);
+    const Am=f(A), Bm=f(B), Cm=f(Cv);
+    // 原三角形淡显
+    drawTri2([A,B,Cv], 'rgba(155,89,182,0.25)', '#9B59B6', 1.5, true);
+    // 翻折中三角形
+    drawTri2([Am,Bm,Cm], 'rgba(231,76,60,0.3)', '#C0392B', 2.5, false);
+    // 顶点
+    labelPt2(A,'A','#7D3C98'); labelPt2(B,'B','#7D3C98'); labelPt2(Cv,'C','#7D3C98');
+  } else {
+    // 原三角形
+    drawTri2([A,B,Cv], 'rgba(155,89,182,0.22)', '#7D3C98', 2.5, false);
+    labelPt2(A,'A','#7D3C98'); labelPt2(B,'B','#7D3C98'); labelPt2(Cv,'C','#7D3C98');
+
+    if(folded2){
+      // 对称三角形 A'B'C'
+      drawTri2([Ap,Bp,Cp], 'rgba(39,174,96,0.18)', '#27AE60', 2.5, false);
+      labelPt2(Ap,"A'",'#27AE60'); labelPt2(Bp,"B'",'#27AE60'); labelPt2(Cp,"C'",'#27AE60');
+      // 对应点连线
+      [[A,Ap],[B,Bp],[Cv,Cp]].forEach(([p,q])=>{
+        SVG2.appendChild(el('line',{x1:p[0],y1:p[1],x2:q[0],y2:q[1], stroke:'#7F8C8D','stroke-width':1.4,'stroke-dasharray':'4 3'}));
+        // 中点（在 l 上）
+        const m = mid(p,q);
+        SVG2.appendChild(el('circle',{cx:m[0],cy:m[1],r:3.5, fill:'#E67E22'}));
+        // 直角标记（在投影点处）
+        rightAngleMark2(m, ang);
+      });
+      // 距离标注（A 与 A'）
+      const dA = distToLine(A,C2,ang).toFixed(0);
+      const dAp = distToLine(Ap,C2,ang).toFixed(0);
+      SVG2.appendChild(el('text',{x:A[0]-8, y:A[1]-10, 'font-size':12, fill:'#7D3C98'}, `d=${dA}`));
+      SVG2.appendChild(el('text',{x:Ap[0]-8, y:Ap[1]-10, 'font-size':12, fill:'#27AE60'}, `d=${dAp}`));
+    }
+  }
+  updateInfo2();
+}
+function drawTri2(v, fill, stroke, sw, faded){
+  SVG2.appendChild(el('polygon',{points:ptsStr(v), fill, stroke, 'stroke-width':sw, 'stroke-linejoin':'round', opacity: faded?0.6:1}));
+}
+function labelPt2(p, lab, color){
+  SVG2.appendChild(el('circle',{cx:p[0],cy:p[1],r:4.5, fill:color}));
+  SVG2.appendChild(el('text',{x:p[0]+8, y:p[1]-8, 'font-size':15, fill:color, 'font-weight':700}, lab));
+}
+function rightAngleMark2(at, ang){
+  const a = ang*D2R;
+  const ux = Math.cos(a), uy = Math.sin(a);          // 沿轴方向
+  const nx = -uy, ny = ux;                            // 垂直轴方向
+  const s = 9;
+  const p1 = [at[0]+ux*s, at[1]+uy*s];
+  const p2 = [at[0]+ux*s+nx*s, at[1]+uy*s+ny*s];
+  const p3 = [at[0]+nx*s, at[1]+ny*s];
+  SVG2.appendChild(el('polyline',{points:ptsStr([p1,p2,p3]), fill:'none', stroke:'#E67E22','stroke-width':1.3}));
+}
+function updateInfo2(){
+  const panel = document.getElementById('info2');
+  if(!folded2){
+    panel.innerHTML = '<div class="info-line"><span>提示</span><strong>点击"翻折"按钮，观察 △ABC 关于直线 l 的对称图形</strong></div>';
+    return;
+  }
+  const A=TRI2.A, Ap=reflect(A,C2,axis2Ang);
+  const m = mid(A,Ap);
+  const dA = distToLine(A,C2,axis2Ang).toFixed(1);
+  const onAxis = (Math.abs(Math.cos(axis2Ang*D2R)) < 1e-6) ? (Math.abs(m[0]-C2[0])<0.5) : true; // 中点必在l上
+  panel.innerHTML =
+    `<div class="info-line"><span>AA' 与对称轴 l</span><strong>互相垂直 (AA' ⊥ l)</strong></div>`+
+    `<div class="info-line"><span>AA' 中点位置</span><strong>在对称轴 l 上</strong></div>`+
+    `<div class="info-line"><span>d(A, l) 与 d(A', l)</span><strong>${dA} = ${dA}（相等）</strong></div>`;
+}
+
+const axis2 = document.getElementById('axis2');
+axis2.addEventListener('input', ()=>{
+  axis2Ang = parseFloat(axis2.value);
+  document.getElementById('axis2-val').textContent = axis2Ang + '°';
+  render2();
+});
+document.getElementById('btn2-fold').addEventListener('click', ()=>{
+  // 动画 0 -> π
+  let start=null; const dur=1200;
+  function step(ts){
+    if(!start) start=ts;
+    const p = Math.min((ts-start)/dur, 1);
+    const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+    const phi = e * Math.PI;
+    render2(phi);
+    if(p<1) requestAnimationFrame(step);
+    else { folded2 = true; render2(); }
+  }
+  requestAnimationFrame(step);
+});
+document.getElementById('btn2-reset').addEventListener('click', ()=>{
+  folded2 = false; render2();
+});
+render2();
+
+/* ============================================================
+ *  交互 3：垂直平分线性质验证
+ * ============================================================ */
+const SVG3 = document.getElementById('svg3');
+const A3 = [110, 250], B3 = [410, 250];
+const M3 = mid(A3, B3);   // (260,250) 中点
+let P3 = [260, 110];      // 点 P 初始在垂直平分线上
+
+function render3(){
+  SVG3.innerHTML = '';
+  // 线段 AB
+  SVG3.appendChild(el('line',{x1:A3[0],y1:A3[1],x2:B3[0],y2:B3[1], stroke:'#2C3E50','stroke-width':3}));
+  // 垂直平分线
+  SVG3.appendChild(el('line',{x1:M3[0],y1:40,x2:M3[0],y2:360, stroke:'#9B59B6','stroke-width':2, 'stroke-dasharray':'8 5'}));
+  SVG3.appendChild(el('text',{x:M3[0]+8, y:54, 'font-size':13, fill:'#9B59B6','font-weight':700}, '垂直平分线'));
+  // 中点 M
+  SVG3.appendChild(el('circle',{cx:M3[0],cy:M3[1],r:4, fill:'#7D3C98'}));
+  SVG3.appendChild(el('text',{x:M3[0]-6, y:M3[1]+20, 'font-size':13, fill:'#7D3C98','font-weight':700}, 'M'));
+  // 直角标记（在 M 处，垂直平分线 ⊥ AB）
+  rightAngleMark3(M3, 'horizontal');
+  // A、B
+  [['A',A3],['B',B3]].forEach(([lab,p])=>{
+    SVG3.appendChild(el('circle',{cx:p[0],cy:p[1],r:5, fill:'#2C3E50'}));
+    SVG3.appendChild(el('text',{x:p[0]-6, y:p[1]+22, 'font-size':15, fill:'#2C3E50','font-weight':700}, lab));
+  });
+
+  const onLine = Math.abs(P3[0] - M3[0]) < 1.5;
+  const pa = dist(P3, A3), pb = dist(P3, B3);
+
+  // 连线 PA、PB
+  const col = onLine ? '#E74C3C' : '#95A5A6';
+  SVG3.appendChild(el('line',{x1:P3[0],y1:P3[1],x2:A3[0],y2:A3[1], stroke:col,'stroke-width':2}));
+  SVG3.appendChild(el('line',{x1:P3[0],y1:P3[1],x2:B3[0],y2:B3[1], stroke:col,'stroke-width':2}));
+  // 等长刻度标记（onLine 时画在中点附近表示 PA=PB）
+  if(onLine){
+    tickMark3(P3, A3, '#E74C3C');
+    tickMark3(P3, B3, '#E74C3C');
+  }
+  // 距离标签
+  const midA = mid(P3,A3), midB = mid(P3,B3);
+  SVG3.appendChild(el('text',{x:midA[0]-30, y:midA[1]-6, 'font-size':13, fill:col,'font-weight':700}, `PA=${pa.toFixed(1)}`));
+  SVG3.appendChild(el('text',{x:midB[0]+6, y:midB[1]-6, 'font-size':13, fill:col,'font-weight':700}, `PB=${pb.toFixed(1)}`));
+
+  // 点 P
+  SVG3.appendChild(el('circle',{cx:P3[0],cy:P3[1],r:8, fill:'#9B59B6', stroke:'#fff','stroke-width':2, style:'cursor:grab'}));
+  SVG3.appendChild(el('text',{x:P3[0]+12, y:P3[1]-10, 'font-size':15, fill:'#9B59B6','font-weight':700}, 'P'));
+
+  // 信息与提示
+  document.getElementById('pa3').textContent = pa.toFixed(2);
+  document.getElementById('pb3').textContent = pb.toFixed(2);
+  const verify = document.getElementById('verify3');
+  if(onLine){
+    document.getElementById('cmp3').textContent = 'PA = PB ✓';
+    document.getElementById('cmp3').style.color = 'var(--success)';
+    verify.className = 'verify-line ok';
+    verify.textContent = '✓ 点 P 在垂直平分线上 → PA = PB';
+  } else {
+    document.getElementById('cmp3').textContent = `PA ≠ PB（差 ${Math.abs(pa-pb).toFixed(2)})`;
+    document.getElementById('cmp3').style.color = 'var(--danger)';
+    verify.className = 'verify-line bad';
+    verify.textContent = '✗ 点 P 不在垂直平分线上 → PA ≠ PB。只有垂直平分线上的点才到两端等距';
+  }
+}
+function rightAngleMark3(at, dir){
+  const s=8;
+  if(dir==='horizontal'){
+    SVG3.appendChild(el('polyline',{points:`${at[0]-s},${at[1]} ${at[0]-s},${at[1]-s} ${at[0]},${at[1]-s}`, fill:'none', stroke:'#7D3C98','stroke-width':1.3}));
+  }
+}
+function tickMark3(p, q, color){
+  const m = mid(p,q);
+  const dx=q[0]-p[0], dy=q[1]-p[1];
+  const len=Math.hypot(dx,dy)||1;
+  const nx=-dy/len, ny=dx/len; const s=6;
+  SVG3.appendChild(el('line',{x1:m[0]-nx*s,y1:m[1]-ny*s,x2:m[0]+nx*s,y2:m[1]+ny*s, stroke:color,'stroke-width':2}));
+}
+// 拖动 P
+let dragging3 = false;
+SVG3.addEventListener('pointerdown', e=>{
+  const [x,y] = clientToSvg(SVG3, e);
+  if(dist([x,y], P3) < 16){ dragging3 = true; SVG3.setPointerCapture(e.pointerId); }
+});
+SVG3.addEventListener('pointermove', e=>{
+  if(!dragging3) return;
+  const [x,y] = clientToSvg(SVG3, e);
+  P3 = [Math.max(30, Math.min(490, x)), Math.max(40, Math.min(360, y))];
+  render3();
+});
+SVG3.addEventListener('pointerup', ()=>{ dragging3=false; });
+SVG3.addEventListener('pointercancel', ()=>{ dragging3=false; });
+function clientToSvg(svg, evt){
+  const pt = svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+  return [p.x, p.y];
+}
+render3();
+
+/* ============================================================
+ *  交互 4：等腰三角形三线合一
+ * ============================================================ */
+const SVG4 = document.getElementById('svg4');
+const C4 = [230, 215];      // 底边中点附近
+let apex4 = 60;             // 顶角度数
+let role4 = 'bisect';       // bisect / median / height / all
+
+function tri4(){
+  const alpha = (apex4/2) * D2R;       // 半顶角
+  const side = 145;                    // 腰长
+  const baseY = C4[1] + 60;
+  const h = side * Math.cos(alpha);    // 顶角平分线长度（A 到 M）
+  const b = side * Math.sin(alpha);    // 底边半长
+  const A = [C4[0], baseY - h];
+  const B = [C4[0] - b, baseY];
+  const C = [C4[0] + b, baseY];
+  const M = [C4[0], baseY];
+  return {A,B,C,M};
+}
+function render4(){
+  SVG4.innerHTML = '';
+  const {A,B,C,M} = tri4();
+  // 三角形
+  SVG4.appendChild(el('polygon',{points:ptsStr([A,B,C]), fill:'rgba(155,89,182,0.12)', stroke:'#7D3C98','stroke-width':2.5,'stroke-linejoin':'round'}));
+  // AM 线（三线合一）
+  SVG4.appendChild(el('line',{x1:A[0],y1:A[1],x2:M[0],y2:M[1], stroke:'#9B59B6','stroke-width':3}));
+  // 顶点标签
+  [['A',A,-6,-12],['B',B,-14,18],['C',C,6,18]].forEach(([lab,p,dx,dy])=>{
+    SVG4.appendChild(el('circle',{cx:p[0],cy:p[1],r:4, fill:'#2C3E50'}));
+    SVG4.appendChild(el('text',{x:p[0]+dx, y:p[1]+dy, 'font-size':15, fill:'#2C3E50','font-weight':700}, lab));
+  });
+  // M 点（底边中点）
+  SVG4.appendChild(el('circle',{cx:M[0],cy:M[1],r:4, fill:'#E67E22'}));
+  SVG4.appendChild(el('text',{x:M[0]+8, y:M[1]+18, 'font-size':13, fill:'#E67E22','font-weight':700}, 'M'));
+
+  // 等边标记（AB=AC）
+  tickOnSeg4(A,B,'#7D3C98',1);
+  tickOnSeg4(A,C,'#7D3C98',1);
+  // 底边等长标记（BM=CM）
+  tickOnSeg4(B,M,'#E67E22',2);
+  tickOnSeg4(C,M,'#E67E22',2);
+
+  // 根据角色显示不同注解（AM 为竖直线，标签放右侧）
+  if(role4 === 'all'){
+    drawAngleBisect4(A, B, C);       // 顶角平分弧
+    rightAngleMark4(M, 'up');         // 直角标记
+    // 三条标签沿 AM 线自上而下排列，强调"同一条线"
+    labelOnLine4(A, M, 0.20, '顶角平分线', '#9B59B6');
+    labelOnLine4(A, M, 0.50, '底边中线', '#E67E22');
+    labelOnLine4(A, M, 0.80, '底边上的高', '#27AE60');
+    SVG4.appendChild(el('text',{x:C4[0], y:30, 'text-anchor':'middle','font-size':16, fill:'#E74C3C','font-weight':700}, '三线合一：同一条线！'));
+  } else if(role4 === 'bisect'){
+    drawAngleBisect4(A, B, C);
+    labelOnLine4(A, M, 0.5, '顶角平分线', '#9B59B6');
+  } else if(role4 === 'median'){
+    labelOnLine4(A, M, 0.5, '底边中线', '#E67E22');
+  } else if(role4 === 'height'){
+    rightAngleMark4(M, 'up');
+    labelOnLine4(A, M, 0.5, '底边上的高', '#27AE60');
+  }
+}
+function tickOnSeg4(p,q,color,n){
+  const m=mid(p,q); const dx=q[0]-p[0], dy=q[1]-p[1];
+  const len=Math.hypot(dx,dy)||1; const nx=-dy/len, ny=dx/len; const s=5;
+  if(n===1){
+    SVG4.appendChild(el('line',{x1:m[0]-nx*s,y1:m[1]-ny*s,x2:m[0]+nx*s,y2:m[1]+ny*s, stroke:color,'stroke-width':2.5}));
+  } else {
+    SVG4.appendChild(el('line',{x1:m[0]-nx*s-2,y1:m[1]-ny*s,x2:m[0]+nx*s-2,y2:m[1]+ny*s, stroke:color,'stroke-width':2.5}));
+    SVG4.appendChild(el('line',{x1:m[0]-nx*s+2,y1:m[1]-ny*s,x2:m[0]+nx*s+2,y2:m[1]+ny*s, stroke:color,'stroke-width':2.5}));
+  }
+}
+function drawAngleBisect4(A, B, C){
+  // 在 A 处，从 AB 方向到 AM 方向、从 AM 方向到 AC 方向各画一段弧
+  const angB = Math.atan2(B[1]-A[1], B[0]-A[0]);
+  const angC = Math.atan2(C[1]-A[1], C[0]-A[0]);
+  const angM = Math.atan2(0, 1); // AM 竖直向下 = π/2
+  // AM 实际方向：M-A = (0, +) → atan2(+,0)=π/2
+  const r = 26;
+  const arc1 = arcPath4(A, r, angB, Math.PI/2);
+  const arc2 = arcPath4(A, r, Math.PI/2, angC);
+  SVG4.appendChild(el('path',{d:arc1, fill:'none', stroke:'#9B59B6','stroke-width':1.5}));
+  SVG4.appendChild(el('path',{d:arc2, fill:'none', stroke:'#9B59B6','stroke-width':1.5}));
+}
+function arcPath4(c, r, a1, a2){
+  // 从 a1 到 a2 画弧（取较短的弧）
+  let da = a2 - a1;
+  while(da > Math.PI) da -= 2*Math.PI;
+  while(da < -Math.PI) da += 2*Math.PI;
+  const sweep = da > 0 ? 1 : 0;
+  const x1 = c[0] + r*Math.cos(a1), y1 = c[1] + r*Math.sin(a1);
+  const x2 = c[0] + r*Math.cos(a2), y2 = c[1] + r*Math.sin(a2);
+  return `M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}`;
+}
+function rightAngleMark4(at, dir){
+  const s=9;
+  if(dir==='up'){
+    SVG4.appendChild(el('polyline',{points:`${at[0]},${at[1]-s} ${at[0]-s},${at[1]-s} ${at[0]-s},${at[1]}`, fill:'none', stroke:'#27AE60','stroke-width':1.5}));
+  }
+}
+function labelOnLine4(p, q, frac, text, color){
+  // 在 p→q 连线上 frac 比例处放标签（AM 竖直，标签置于线右侧）
+  const x = p[0] + (q[0]-p[0])*frac;
+  const y = p[1] + (q[1]-p[1])*frac;
+  SVG4.appendChild(el('rect',{x:x+8, y:y-11, width:text.length*14+8, height:18, rx:4, fill:'#fff', stroke:color, 'stroke-width':1, opacity:0.95}));
+  SVG4.appendChild(el('text',{x:x+12, y:y+3, 'font-size':13, fill:color,'font-weight':700}, text));
+}
+
+document.getElementById('apex4').addEventListener('input', e=>{
+  apex4 = parseFloat(e.target.value);
+  document.getElementById('apex4-val').textContent = apex4 + '°';
+  render4();
+});
+document.querySelectorAll('#btns4 button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#btns4 button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    role4 = btn.dataset.role;
+    render4();
+  });
+});
+document.querySelector('#btns4 button[data-role="bisect"]').classList.add('active');
+render4();
+
+/* ============================================================
+ *  交互 5：等边三角形对称轴
+ * ============================================================ */
+const SVG5 = document.getElementById('svg5');
+const C5 = [210, 200];
+const R5 = 130;
+const VERTS5 = regVerts(R5, 3, -90).map(v=>[C5[0]+v[0], C5[1]+v[1]]);  // 三个顶点
+// 三条对称轴：每个顶点到对边中点
+const AXES5 = (function(){
+  const mid01 = mid(VERTS5[0], VERTS5[1]);
+  const mid12 = mid(VERTS5[1], VERTS5[2]);
+  const mid20 = mid(VERTS5[2], VERTS5[0]);
+  return [
+    {from: VERTS5[2], to: mid01},  // 顶点2 → 对边(0-1)中点
+    {from: VERTS5[0], to: mid12},  // 顶点0 → 对边(1-2)中点
+    {from: VERTS5[1], to: mid20},  // 顶点1 → 对边(2-0)中点
+  ];
+})();
+let axis5Sel = 'all';
+let rotate5Anim = null;
+
+function render5(rotDeg){
+  SVG5.innerHTML = '';
+  const rot = rotDeg || 0;
+  // 三角形
+  if(rot){
+    const g = el('g',{ transform:`rotate(${rot} ${C5[0]} ${C5[1]})` });
+    g.appendChild(el('polygon',{points:ptsStr(VERTS5), fill:'rgba(155,89,182,0.12)', stroke:'#7D3C98','stroke-width':2.5,'stroke-linejoin':'round'}));
+    SVG5.appendChild(g);
+  } else {
+    SVG5.appendChild(el('polygon',{points:ptsStr(VERTS5), fill:'rgba(155,89,182,0.12)', stroke:'#7D3C98','stroke-width':2.5,'stroke-linejoin':'round'}));
+  }
+
+  // 顶点
+  VERTS5.forEach((p,i)=>{
+    SVG5.appendChild(el('circle',{cx:p[0],cy:p[1],r:4, fill:'#2C3E50'}));
+    SVG5.appendChild(el('text',{x:p[0]-6, y:p[1] + (i===0 ? -10 : 18), 'font-size':15, fill:'#2C3E50','font-weight':700}, 'ABC'[i]));
+  });
+
+  // 对称轴绘制
+  const drawAxis = (ax, highlight) => {
+    const p1 = ax.from, p2 = ax.to;
+    const attrs = highlight
+      ? {stroke:'#E74C3C','stroke-width':3}
+      : {stroke:'#E74C3C','stroke-width':2, 'stroke-dasharray':'6 4', opacity:0.55};
+    if(rot){
+      const g = el('g',{ transform:`rotate(${rot} ${C5[0]} ${C5[1]})` });
+      g.appendChild(el('line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1], ...attrs}));
+      SVG5.appendChild(g);
+    } else {
+      SVG5.appendChild(el('line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1], ...attrs}));
+    }
+  };
+
+  if(axis5Sel === 'all'){
+    AXES5.forEach(ax=>drawAxis(ax, false));
+    SVG5.appendChild(el('text',{x:C5[0], y:C5[1]+6, 'text-anchor':'middle','font-size':14, fill:'#E74C3C','font-weight':700}, '3 条对称轴'));
+  } else if(axis5Sel === 'rotate'){
+    // 旋转演示：只画第一条，旋转
+    drawAxis(AXES5[0], true);
+  } else {
+    const idx = parseInt(axis5Sel);
+    AXES5.forEach((ax,i)=>{ if(i===idx) drawAxis(ax, true); });
+  }
+
+  // 对边中点小圆点
+  const mids = [mid(VERTS5[0],VERTS5[1]), mid(VERTS5[1],VERTS5[2]), mid(VERTS5[2],VERTS5[0])];
+  mids.forEach(m=>{
+    if(rot){
+      const g = el('g',{ transform:`rotate(${rot} ${C5[0]} ${C5[1]})` });
+      g.appendChild(el('circle',{cx:m[0],cy:m[1],r:3, fill:'#E67E22'}));
+      SVG5.appendChild(g);
+    } else {
+      SVG5.appendChild(el('circle',{cx:m[0],cy:m[1],r:3, fill:'#E67E22'}));
+    }
+  });
+}
+document.querySelectorAll('#btns5 button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const sel = btn.dataset.axis;
+    if(rotate5Anim){ cancelAnimationFrame(rotate5Anim); rotate5Anim=null; }
+    document.querySelectorAll('#btns5 button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    axis5Sel = sel;
+    if(sel === 'rotate'){
+      // 旋转 0 -> 120 动画，展示一条轴依次与另两条重合
+      let start=null; const dur=2200;
+      function step(ts){
+        if(!start) start=ts;
+        const p = Math.min((ts-start)/dur, 1);
+        const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+        const rot = e * 120;
+        render5(rot);
+        if(p<1) rotate5Anim = requestAnimationFrame(step);
+        else { rotate5Anim = null; render5(0); }
+      }
+      rotate5Anim = requestAnimationFrame(step);
+    } else {
+      render5(0);
+    }
+  });
+});
+document.querySelector('#btns5 button[data-axis="all"]').classList.add('active');
+render5();
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+initQuiz('quiz1', {
+  correct: 3,
+  explain: '圆形有无数条对称轴（每条过圆心的直线都是）；正方形 4 条，等边三角形 3 条，长方形 2 条。',
+  hint: '想想"对称轴最多"——哪种图形无论怎么画过中心的直线都是对称轴？'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '等腰三角形（AB=AC）的顶角平分线、底边上的中线、底边上的高三线合一，这是等腰三角形的重要性质。',
+  hint: '回忆"三线合一"——这是等腰三角形独有的性质。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: 'C 正确：线段垂直平分线上的点到两端距离相等。A 错（轴对称图形是一个图形的性质）；B 错（对应点连线垂直于对称轴，被对称轴垂直平分）；D 错（等边三角形有 3 条对称轴）。',
+  hint: '逐项判断：A 把"轴对称图形"和"轴对称"混淆了；B 对应点连线与对称轴是什么关系？D 数一数等边三角形的对称轴。'
+});
+</script>
 </body>
 </html>

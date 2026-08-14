@@ -6,85 +6,1215 @@
   <title>旋转 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-header .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 24px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 90px;
+      color: var(--math);
+      font-size: 16px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row .value-display {
+      min-width: 64px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 演示容器 ===== */
+    .demo-container {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container canvas {
+      max-width: 100%;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .demo-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* ===== 数据读数面板 ===== */
+    .info-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .readout-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid rgba(155,89,182,0.25);
+    }
+    .readout-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .readout-cell .num {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+    }
+    .readout-cell .num.green { color: var(--success); }
+
+    /* ===== 模式切换按钮 ===== */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .mode-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      border: 2px solid rgba(155,89,182,0.4);
+      background: #fff;
+      color: var(--math);
       transition: all 0.2s;
+      user-select: none;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .mode-btn:hover { background: rgba(155,89,182,0.08); }
+    .mode-btn.active {
+      background: var(--math);
+      color: #fff;
+      border-color: var(--math);
     }
+
+    /* ===== 性质列表 ===== */
+    .property-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0;
+    }
+    .property-list li {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    .property-list li .prop-tag {
+      display: inline-block;
+      background: var(--math);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-right: 8px;
+    }
+    .property-list li .prop-formula {
+      font-family: Georgia, serif;
+      color: var(--math);
+      font-weight: 700;
+    }
+
+    /* ===== 生活实例卡片 ===== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+      text-align: center;
+    }
+    .example-card .emoji { font-size: 40px; margin-bottom: 8px; }
+    .example-card h4 { color: var(--math); margin-bottom: 6px; font-size: 16px; }
+    .example-card p { font-size: 13px; color: var(--text-secondary); }
+
+    /* ===== 中心对称判断器 ===== */
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .shape-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .shape-card.judged-right { border-color: var(--success); background: rgba(39,174,96,0.06); }
+    .shape-card.judged-wrong { border-color: var(--danger); background: rgba(231,76,60,0.06); }
+    .shape-card .shape-name { font-weight: 700; font-size: 15px; margin: 6px 0 10px; }
+    .shape-card svg { display: block; margin: 0 auto; }
+    .cs-btns { display: flex; gap: 6px; justify-content: center; }
+    .cs-btn {
+      flex: 1;
+      padding: 6px 0;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1.5px solid var(--math);
+      background: #fff;
+      color: var(--math);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cs-btn:hover:not(:disabled) { background: rgba(155,89,182,0.1); }
+    .cs-btn:disabled { opacity: 0.45; cursor: default; }
+    .cs-btn.picked-right { background: var(--success); border-color: var(--success); color: #fff; opacity: 1; }
+    .cs-btn.picked-wrong { background: var(--danger); border-color: var(--danger); color: #fff; opacity: 1; }
+    .cs-feedback { font-size: 12px; margin-top: 8px; min-height: 32px; color: var(--text-secondary); line-height: 1.5; }
+
+    .score-bar {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--math);
+      background: rgba(155,89,182,0.1);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); line-height: 1.8; }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 旋转</div>
+  <div class="navbar-brand">🌀 旋转</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理九年级</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>🌀 旋转</h1>
+  <p>图形运动的第三种基本方式——绕一个点，转出全新的世界</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">数学</a>
+    <span>数学</span>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>旋转</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>旋转</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 引入 ===== -->
+  <h2 class="section-header"><span class="step-badge">1</span> 引入：生活中的旋转</h2>
+  <div class="card">
+    <p>我们已经学过两种图形运动：<strong>平移</strong>和<strong>轴对称（翻折）</strong>。生活中还有第三种常见的运动——绕着一个点转动：</p>
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="emoji">🕐</div>
+        <h4>钟表指针</h4>
+        <p>时针、分针、秒针都绕着表盘中心不停转动，每根针转过的角度不同。</p>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🎡</div>
+        <h4>摩天轮</h4>
+        <p>座舱绕中心轴匀速转动，每个座舱到中心的距离始终不变。</p>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🌀</div>
+        <h4>风车与风扇</h4>
+        <p>叶片绕中心旋转，相邻叶片之间的夹角相等——这就是旋转对称。</p>
+      </div>
+      <div class="example-card">
+        <div class="emoji">🚪</div>
+        <h4>开门关门</h4>
+        <p>门绕着门轴转动，门上的每一点都画出一小段圆弧。</p>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 共同特征</div>
+      这些现象中，图形都<strong>绕着一个固定的点</strong>，<strong>朝某个方向</strong>，<strong>转动了一定的角度</strong>。这正是本章要研究的<strong class="math-accent">旋转</strong>。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 概念与三要素 ===== -->
+  <h2 class="section-header"><span class="step-badge">2</span> 旋转的概念与三要素</h2>
+  <div class="card">
+    <p>把一个平面图形绕着平面内某一点 <strong>O</strong> 转动一个角度，叫做图形的<strong class="math-accent">旋转</strong>。点 O 叫做<strong class="math-accent">旋转中心</strong>，转动的角叫做<strong class="math-accent">旋转角</strong>。</p>
+    <p>如果图形上的点 P 经过旋转后变为点 P′，那么这两个点叫做这个旋转的<strong class="math-accent">对应点</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">旋转三要素：旋转中心 · 旋转方向 · 旋转角</div>
+      <div class="formula-note">三者缺一不可——中心不同、方向不同或角度不同，旋转的结果都不同</div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">① 旋转中心</div>
+        <div class="num" style="font-size:16px;">固定点 O</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">② 旋转方向</div>
+        <div class="num" style="font-size:16px;">顺时针 / 逆时针</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">③ 旋转角</div>
+        <div class="num" style="font-size:16px;">转动的角度 θ</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ 易错提醒</strong>：描述一个旋转时，必须同时说明<strong>旋转中心、旋转方向和旋转角</strong>。只说"旋转 60°"是不完整的——还要说清绕哪个点、向哪个方向转！
+    </div>
   </div>
+
+  <!-- ===== 交互探索1：旋转实验室 ===== -->
+  <h2 class="section-header"><span class="step-badge">3</span> 交互探索①：旋转实验室</h2>
+  <div class="card">
+    <p>拖动滑块改变<strong class="math-accent">旋转角</strong>，观察 △ABC 绕点 O <strong>逆时针</strong>旋转的过程。还可以<strong>用鼠标拖动旋转中心 O</strong>，看看改变中心会发生什么。</p>
+
+    <div class="slider-row" style="margin-top:20px;">
+      <label>旋转角 θ</label>
+      <input type="range" id="slider-angle" min="0" max="360" value="90" step="5">
+      <span class="value-display" id="display-angle">90°</span>
+    </div>
+
+    <div class="mode-toggle">
+      <span class="mode-btn active" id="btn-trace">⭕ 轨迹圆：开</span>
+      <span class="mode-btn active" id="btn-lines">📏 对应点连线：开</span>
+      <span class="mode-btn" id="btn-spin">▶️ 自动旋转</span>
+    </div>
+
+    <div class="demo-container">
+      <canvas id="canvas-rot" width="560" height="420"></canvas>
+      <div class="demo-hint">🖱️ 拖动橙色圆点 O 可以改变旋转中心；灰色虚线圆是点 A 的旋转轨迹</div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">旋转角 ∠AOA′</div>
+        <div class="num" id="rot-theta">90°</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">OA（旋转前）</div>
+        <div class="num" id="rot-oa">—</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">OA′（旋转后）</div>
+        <div class="num green" id="rot-oap">—</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">两三角形关系</div>
+        <div class="num green" style="font-size:16px;">全等 ≌</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔍 动手观察</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>无论 θ 怎么变，<strong>OA 与 OA′ 始终相等</strong>——对应点到旋转中心的距离相等；</li>
+        <li>∠AOA′ 始终<strong>等于旋转角 θ</strong>；</li>
+        <li>旋转前后的三角形<strong>形状、大小完全相同</strong>（全等）；</li>
+        <li>把中心 O 拖到三角形<strong>顶点上</strong>或<strong>内部</strong>，旋转效果大不一样！</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 旋转的性质 ===== -->
+  <h2 class="section-header"><span class="step-badge">4</span> 旋转的性质（三条黄金结论）</h2>
+  <div class="card">
+    <p>从上面的实验中，可以总结出旋转的三条基本性质：</p>
+    <ul class="property-list">
+      <li>
+        <span class="prop-tag">性质 1</span>
+        对应点到旋转中心的<strong>距离相等</strong>：
+        <span class="prop-formula">OA = OA′，OB = OB′，OC = OC′</span>
+      </li>
+      <li>
+        <span class="prop-tag">性质 2</span>
+        对应点与旋转中心所连线段的<strong>夹角等于旋转角</strong>：
+        <span class="prop-formula">∠AOA′ = ∠BOB′ = ∠COC′ = 旋转角 θ</span>
+      </li>
+      <li>
+        <span class="prop-tag">性质 3</span>
+        旋转前、后的图形<strong>全等</strong>：
+        <span class="prop-formula">△ABC ≌ △A′B′C′</span>（旋转不改变图形的形状和大小）
+      </li>
+    </ul>
+    <div class="tip-box">
+      <div class="tip-title">📝 与平移、轴对称对比</div>
+      平移、轴对称、旋转都是<strong>全等变换</strong>——变换前后图形全等。区别在于：平移沿直线移动，轴对称沿直线翻折，旋转绕定点转动。解决几何题时，常常通过旋转把分散的条件"转"到一起。
+    </div>
+  </div>
+
+  <!-- ===== 中心对称 ===== -->
+  <h2 class="section-header"><span class="step-badge">5</span> 中心对称：旋转 180° 的特例</h2>
+  <div class="card">
+    <p>把一个图形绕着某一点旋转 <strong class="math-accent">180°</strong>，如果它能够与另一个图形重合，那么就说这两个图形关于这个点<strong class="math-accent">中心对称</strong>，这个点叫做<strong class="math-accent">对称中心</strong>。</p>
+    <p>如果一个图形绕某点旋转 180° 后与<strong>它自身</strong>重合，这个图形就叫做<strong class="math-accent">中心对称图形</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">中心对称 ⟺ 旋转角 θ = 180° 的旋转</div>
+      <div class="formula-note">常见的中心对称图形：线段、平行四边形、矩形、菱形、正方形、圆、正六边形等</div>
+    </div>
+
+    <p><strong>🎮 小游戏：中心对称判断器</strong>——下面的图形是中心对称图形吗？点击"是"或"否"来挑战：</p>
+    <div class="score-bar" id="cs-score">已判断 0 / 8 个，答对 0 个</div>
+    <div class="shape-grid" id="cs-grid"><!-- JS 动态生成图形卡片 --></div>
+    <div style="text-align:center;">
+      <span class="mode-btn" id="cs-reset">🔄 重新开始</span>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 判断口诀</div>
+      <p style="margin-top:4px;">把图形在脑中<strong>"转半圈"（180°）</strong>：转完后能和原来重合的就是中心对称图形。注意：<strong>等边三角形、等腰梯形、正五边形</strong>只是轴对称图形，<strong>不是</strong>中心对称图形——"轴对称"和"中心对称"别混淆！</p>
+    </div>
+  </div>
+
+  <!-- ===== 关于原点对称 ===== -->
+  <h2 class="section-header"><span class="step-badge">6</span> 交互探索②：关于原点对称的点的坐标</h2>
+  <div class="card">
+    <p>在平面直角坐标系中，点 P(x, y) 绕<strong>原点 O</strong> 旋转 180° 后得到点 P′，P′ 就是 P 关于原点的对称点。</p>
+    <div class="formula-box">
+      <div class="formula">P(x, y) ——关于原点对称——→ P′(−x, −y)</div>
+      <div class="formula-note">横、纵坐标都变为相反数</div>
+    </div>
+
+    <p>在坐标系中<strong>拖动红色点 P</strong>（自动吸附到整数点），观察蓝色对称点 P′ 的坐标变化。还可以切换对称方式对比：</p>
+
+    <div class="mode-toggle">
+      <span class="mode-btn active" data-sym="origin">关于原点对称</span>
+      <span class="mode-btn" data-sym="xaxis">关于 x 轴对称</span>
+      <span class="mode-btn" data-sym="yaxis">关于 y 轴对称</span>
+    </div>
+
+    <div class="demo-container">
+      <canvas id="canvas-sym" width="480" height="380"></canvas>
+      <div class="demo-hint">🖱️ 拖动红点 P，蓝点 P′ 是它的对称点</div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-cell">
+        <div class="label">点 P</div>
+        <div class="num" id="sym-p">(3, 2)</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label" id="sym-mode-label">关于原点对称点 P′</div>
+        <div class="num green" id="sym-pp">(−3, −2)</div>
+      </div>
+      <div class="readout-cell">
+        <div class="label">规律</div>
+        <div class="num" style="font-size:15px;" id="sym-rule">(x,y) → (−x,−y)</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 三种对称坐标规律对比</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>关于 <strong>x 轴</strong>对称：(x, y) → (x, −y) —— 横不变，纵变号</li>
+        <li>关于 <strong>y 轴</strong>对称：(x, y) → (−x, y) —— 纵不变，横变号</li>
+        <li>关于 <strong>原点</strong>对称：(x, y) → (−x, −y) —— 横纵都变号（相当于先对 x 轴再对 y 轴各对称一次）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 图案设计 ===== -->
+  <h2 class="section-header"><span class="step-badge">7</span> 交互探索③：旋转图案设计师</h2>
+  <div class="card">
+    <p>许多美丽的图案（窗花、风车、万花筒）都是把一个<strong>基本图形绕中心旋转若干次</strong>得到的。选择基本图形和旋转份数，设计你自己的旋转图案吧！</p>
+
+    <div class="mode-toggle">
+      <span class="mode-btn active" data-motif="tri">🔺 三角瓣</span>
+      <span class="mode-btn" data-motif="diamond">🔷 菱形瓣</span>
+      <span class="mode-btn" data-motif="leaf">🍃 叶片瓣</span>
+    </div>
+
+    <div class="slider-row">
+      <label>旋转份数 n</label>
+      <input type="range" id="slider-n" min="2" max="12" value="6" step="1">
+      <span class="value-display" id="display-n">6</span>
+    </div>
+
+    <div style="text-align:center; margin-bottom:8px;">
+      <span class="mode-btn" id="btn-generate">🎨 生成图案</span>
+      <span style="margin-left:14px; color:var(--text-secondary); font-size:14px;">每次旋转角 = 360° ÷ n = <strong class="math-accent" id="pattern-angle">60°</strong></span>
+    </div>
+
+    <div class="demo-container">
+      <canvas id="canvas-pattern" width="420" height="420"></canvas>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🌸 图案中的数学</div>
+      <p style="margin-top:4px;">基本图形每次绕中心旋转 <strong>360°/n</strong>，旋转 (n−1) 次后正好铺满一圈。这样的图案绕中心旋转 360°/n 的整数倍后都能与自身重合——它们是<strong>旋转对称图形</strong>；当 n ≥ 2 时，旋转 180° 能重合的（n 为偶数）还是<strong>中心对称图形</strong>。</p>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-header"><span class="step-badge">8</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 将 △ABC 绕点 O 顺时针旋转 60° 得到 △A′B′C′，则下列结论<strong>错误</strong>的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. OA = OA′</div>
+    <div class="quiz-option" data-idx="1">B. ∠AOA′ = 60°</div>
+    <div class="quiz-option" data-idx="2">C. △ABC ≌ △A′B′C′</div>
+    <div class="quiz-option" data-idx="3">D. AB = A′C′</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 下列图形中，<strong>不是</strong>中心对称图形的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 平行四边形</div>
+    <div class="quiz-option" data-idx="1">B. 线段</div>
+    <div class="quiz-option" data-idx="2">C. 等边三角形</div>
+    <div class="quiz-option" data-idx="3">D. 圆</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 在平面直角坐标系中，点 P(−3, 2) 关于原点对称的点的坐标是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. (3, −2)</div>
+    <div class="quiz-option" data-idx="1">B. (−3, −2)</div>
+    <div class="quiz-option" data-idx="2">C. (3, 2)</div>
+    <div class="quiz-option" data-idx="3">D. (−2, 3)</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-header"><span class="step-badge">9</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 旋转与相关知识的联系</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/01-机械运动.html"><strong>物理·机械运动</strong></a>——
+        物理中的"转动"与平动并列：车轮、滑轮、杠杆都绕固定点（轴）转动。旋转角对应转过的角度，旋转中心对应转轴——数学中的旋转是描述这类运动的精确语言。
+        <span class="tag tag-cross">转动</span>
+      </li>
+      <li>
+        📐 <a href="../../数学/八年级/09-平行四边形.html"><strong>数学·平行四边形</strong></a>——
+        平行四边形是中心对称图形，对角线的交点就是它的对称中心。利用中心对称可以简洁地证明"对角线互相平分"。
+        <span class="tag tag-cross">中心对称图形</span>
+      </li>
+      <li>
+        ⭕ <a href="04-圆.html"><strong>数学·圆（下一章）</strong></a>——
+        圆既是轴对称图形（任意直径所在直线都是对称轴），也是中心对称图形（圆心是对称中心），还具有旋转不变性：绕圆心旋转任意角度都与自身重合。
+        <span class="tag tag-cross">旋转不变性</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="02-二次函数.html" class="btn btn-outline">← 上一章：二次函数</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="04-圆.html" class="btn btn-primary" style="background: var(--math);">下一章：圆 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 交互1：旋转实验室
+ * ======================================== */
+(function () {
+  var canvas = document.getElementById('canvas-rot');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  // 旋转中心（可拖动）与三角形（相对中心的局部坐标）
+  var center = { x: 210, y: 220 };
+  var tri = [
+    { x: 90, y: -40, label: 'A' },
+    { x: 150, y: 45, label: 'B' },
+    { x: 45, y: 60, label: 'C' }
+  ];
+  var showTrace = true;
+  var showLines = true;
+  var spinning = false;
+  var spinId = null;
+
+  function getAngle() {
+    return parseFloat(document.getElementById('slider-angle').value);
+  }
+
+  // 逆时针旋转 deg 度（画布 y 轴向下，故取负号）
+  function rotatePt(p, deg) {
+    var rad = -deg * Math.PI / 180;
+    var c = Math.cos(rad), s = Math.sin(rad);
+    return { x: p.x * c - p.y * s, y: p.x * s + p.y * c };
+  }
+
+  function drawRot() {
+    var deg = getAngle();
+    ctx.clearRect(0, 0, W, H);
+
+    var oa = Math.sqrt(tri[0].x * tri[0].x + tri[0].y * tri[0].y);
+
+    // 轨迹圆（点 A 绕 O 的轨迹）
+    if (showTrace) {
+      ctx.strokeStyle = 'rgba(127,140,141,0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      ctx.arc(center.x, center.y, oa, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // 原三角形（半透明）
+    ctx.beginPath();
+    tri.forEach(function (p, i) {
+      var px = center.x + p.x, py = center.y + p.y;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(155,89,182,0.06)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(127,140,141,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 原顶点标注
+    ctx.font = 'bold 13px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    tri.forEach(function (p) {
+      var px = center.x + p.x, py = center.y + p.y;
+      ctx.fillStyle = '#7F8C8D';
+      ctx.fillText(p.label, px + 12, py - 10);
+    });
+
+    // 旋转后三角形
+    var rotPts = tri.map(function (p) { return rotatePt(p, deg); });
+    ctx.beginPath();
+    rotPts.forEach(function (p, i) {
+      var px = center.x + p.x, py = center.y + p.y;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(155,89,182,0.25)';
+    ctx.fill();
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // 旋转后顶点标注
+    rotPts.forEach(function (p) {
+      var px = center.x + p.x, py = center.y + p.y;
+      ctx.fillStyle = '#9B59B6';
+      ctx.fillText(p === rotPts[0] ? "A′" : (p === rotPts[1] ? "B′" : "C′"), px + 14, py - 12);
+    });
+
+    // 对应点连线 O-A 与 O-A′
+    if (showLines) {
+      var a0 = tri[0], a1 = rotPts[0];
+      ctx.strokeStyle = '#27AE60';
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(center.x, center.y);
+      ctx.lineTo(center.x + a0.x, center.y + a0.y);
+      ctx.moveTo(center.x, center.y);
+      ctx.lineTo(center.x + a1.x, center.y + a1.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 旋转角弧线（半径 42）
+      if (deg > 0) {
+        var startA = Math.atan2(a0.y, a0.x);
+        var endA = startA - deg * Math.PI / 180;
+        ctx.strokeStyle = '#E67E22';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, 42, Math.min(startA, endA), Math.max(startA, endA));
+        ctx.stroke();
+        // 角度标签
+        var midA = (startA + endA) / 2;
+        var lx = center.x + 58 * Math.cos(midA);
+        var ly = center.y + 58 * Math.sin(midA);
+        ctx.fillStyle = '#E67E22';
+        ctx.font = 'bold 15px Georgia, serif';
+        ctx.fillText(deg + '°', lx, ly);
+      }
+    }
+
+    // 旋转中心 O
+    ctx.fillStyle = '#E67E22';
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#E67E22';
+    ctx.font = 'bold 14px Georgia, serif';
+    ctx.fillText('O', center.x + 16, center.y + 16);
+
+    // 更新读数
+    document.getElementById('rot-theta').textContent = deg + '°';
+    document.getElementById('rot-oa').textContent = oa.toFixed(1);
+    document.getElementById('rot-oap').textContent = oa.toFixed(1);
+  }
+
+  document.getElementById('slider-angle').addEventListener('input', function () {
+    document.getElementById('display-angle').textContent = this.value + '°';
+    drawRot();
+  });
+
+  // 模式开关
+  document.getElementById('btn-trace').addEventListener('click', function () {
+    showTrace = !showTrace;
+    this.classList.toggle('active', showTrace);
+    this.textContent = showTrace ? '⭕ 轨迹圆：开' : '⭕ 轨迹圆：关';
+    drawRot();
+  });
+  document.getElementById('btn-lines').addEventListener('click', function () {
+    showLines = !showLines;
+    this.classList.toggle('active', showLines);
+    this.textContent = showLines ? '📏 对应点连线：开' : '📏 对应点连线：关';
+    drawRot();
+  });
+  document.getElementById('btn-spin').addEventListener('click', function () {
+    var slider = document.getElementById('slider-angle');
+    if (spinning) {
+      spinning = false;
+      cancelAnimationFrame(spinId);
+      this.classList.remove('active');
+      this.textContent = '▶️ 自动旋转';
+      return;
+    }
+    spinning = true;
+    this.classList.add('active');
+    this.textContent = '⏸️ 暂停';
+    var deg = parseFloat(slider.value);
+    (function step() {
+      if (!spinning) return;
+      deg = (deg + 1) % 361;
+      slider.value = deg;
+      document.getElementById('display-angle').textContent = deg + '°';
+      drawRot();
+      spinId = requestAnimationFrame(step);
+    })();
+  });
+
+  // 拖动旋转中心
+  var dragging = false;
+  function toCanvas(e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left) * (canvas.width / rect.width),
+      y: (e.clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+  canvas.addEventListener('mousedown', function (e) {
+    var m = toCanvas(e);
+    var d = Math.sqrt((m.x - center.x) * (m.x - center.x) + (m.y - center.y) * (m.y - center.y));
+    if (d < 18) dragging = true;
+  });
+  canvas.addEventListener('mousemove', function (e) {
+    if (!dragging) return;
+    var m = toCanvas(e);
+    center.x = Math.max(20, Math.min(W - 20, m.x));
+    center.y = Math.max(20, Math.min(H - 20, m.y));
+    drawRot();
+  });
+  window.addEventListener('mouseup', function () { dragging = false; });
+
+  drawRot();
+})();
+
+/* ========================================
+ * 交互2：中心对称判断器
+ * ======================================== */
+(function () {
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  var shapes = [
+    {
+      name: '平行四边形', isCS: true,
+      svg: '<polygon points="18,52 42,12 86,12 62,52" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>',
+      explain: '绕对角线交点旋转 180° 后与自身重合。'
+    },
+    {
+      name: '等边三角形', isCS: false,
+      svg: '<polygon points="50,10 88,54 12,54" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>',
+      explain: '旋转 180° 后顶点朝下，无法与自身重合（它是轴对称图形）。'
+    },
+    {
+      name: '线段', isCS: true,
+      svg: '<line x1="15" y1="32" x2="85" y2="32" stroke="#9B59B6" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="32" r="4" fill="#E67E22"/>',
+      explain: '绕中点旋转 180° 后与自身重合，中点即对称中心。'
+    },
+    {
+      name: '圆', isCS: true,
+      svg: '<circle cx="50" cy="32" r="22" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/><circle cx="50" cy="32" r="3.5" fill="#E67E22"/>',
+      explain: '绕圆心旋转任意角度都与自身重合。'
+    },
+    {
+      name: '正五边形', isCS: false,
+      svg: '<polygon points="50,8 73,25 64,52 36,52 27,25" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>',
+      explain: '边数为奇数，旋转 180° 后顶点对不到顶点（72° 的整数倍才行）。'
+    },
+    {
+      name: '字母 S', isCS: true,
+      svg: '<text x="50" y="46" font-size="44" font-weight="bold" fill="#9B59B6" text-anchor="middle" font-family="Georgia,serif">S</text>',
+      explain: '把"S"转半圈，形状不变——它是中心对称的。'
+    },
+    {
+      name: '等腰梯形', isCS: false,
+      svg: '<polygon points="32,16 68,16 84,50 16,50" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>',
+      explain: '旋转 180° 后长底边跑到上方，无法重合（它是轴对称图形）。'
+    },
+    {
+      name: '正方形', isCS: true,
+      svg: '<rect x="27" y="9" width="46" height="46" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>',
+      explain: '绕对角线交点旋转 90°、180° 都能重合。'
+    }
+  ];
+
+  var grid = document.getElementById('cs-grid');
+  var scoreEl = document.getElementById('cs-score');
+  var judged = 0, correctCnt = 0;
+
+  function updateScore() {
+    scoreEl.textContent = '已判断 ' + judged + ' / ' + shapes.length + ' 个，答对 ' + correctCnt + ' 个';
+    if (judged === shapes.length) {
+      scoreEl.textContent += correctCnt === shapes.length ? ' 🎉 全部答对，太棒了！' : '，再复习一下判断口诀吧！';
+    }
+  }
+
+  function buildGrid() {
+    grid.innerHTML = '';
+    judged = 0;
+    correctCnt = 0;
+    updateScore();
+    shapes.forEach(function (sh) {
+      var card = document.createElement('div');
+      card.className = 'shape-card';
+      card.innerHTML =
+        '<svg width="100" height="64" viewBox="0 0 100 64">' + sh.svg + '</svg>' +
+        '<div class="shape-name">' + sh.name + '</div>' +
+        '<div class="cs-btns">' +
+        '<button class="cs-btn" data-ans="yes">✔ 是</button>' +
+        '<button class="cs-btn" data-ans="no">✘ 否</button>' +
+        '</div>' +
+        '<div class="cs-feedback"></div>';
+      grid.appendChild(card);
+
+      var btns = card.querySelectorAll('.cs-btn');
+      var fb = card.querySelector('.cs-feedback');
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var userYes = this.dataset.ans === 'yes';
+          var right = userYes === sh.isCS;
+          judged++;
+          if (right) {
+            correctCnt++;
+            card.classList.add('judged-right');
+            this.classList.add('picked-right');
+            fb.innerHTML = '<span style="color:var(--success);font-weight:700;">✓ 正确！</span>' + sh.explain;
+          } else {
+            card.classList.add('judged-wrong');
+            this.classList.add('picked-wrong');
+            fb.innerHTML = '<span style="color:var(--danger);font-weight:700;">✗ 答错啦。</span>' + sh.explain;
+          }
+          btns.forEach(function (b) { b.disabled = true; });
+          updateScore();
+        });
+      });
+    });
+  }
+
+  document.getElementById('cs-reset').addEventListener('click', buildGrid);
+  buildGrid();
+})();
+
+/* ========================================
+ * 交互3：关于原点对称的点的坐标
+ * ======================================== */
+(function () {
+  var canvas = document.getElementById('canvas-sym');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var range = 6;
+  var pad = 40;
+  var originX = W / 2, originY = H / 2;
+  var scale = (Math.min(W, H) - 2 * pad) / (2 * range);
+
+  var P = { x: 3, y: 2 };
+  var mode = 'origin';
+
+  function symOf(p, m) {
+    if (m === 'origin') return { x: -p.x, y: -p.y };
+    if (m === 'xaxis') return { x: p.x, y: -p.y };
+    return { x: -p.x, y: p.y };
+  }
+  function fmt(n) { return n < 0 ? '−' + Math.abs(n) : '' + n; }
+
+  function toPx(p) {
+    return { x: originX + p.x * scale, y: originY - p.y * scale };
+  }
+
+  function drawSym() {
+    ctx.clearRect(0, 0, W, H);
+
+    // 网格
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    for (var i = -range; i <= range; i++) {
+      if (i === 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(originX + i * scale, pad - 10);
+      ctx.lineTo(originX + i * scale, H - pad + 10);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pad - 10, originY + i * scale);
+      ctx.lineTo(W - pad + 10, originY + i * scale);
+      ctx.stroke();
+    }
+    // 坐标轴
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(pad - 10, originY); ctx.lineTo(W - pad + 10, originY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(originX, pad - 10); ctx.lineTo(originX, H - pad + 10); ctx.stroke();
+    // 刻度
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (var k = -range; k <= range; k++) {
+      if (k === 0) continue;
+      ctx.fillText(k, originX + k * scale, originY + 4);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(k, originX - 6, originY - k * scale);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    }
+    ctx.fillText('O', originX - 10, originY + 4);
+    ctx.font = 'italic 14px Georgia, serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('x', W - pad + 14, originY);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('y', originX, pad - 14);
+
+    var Q = symOf(P, mode);
+    var p1 = toPx(P), p2 = toPx(Q);
+
+    // 对称参考线（原点：连线过 O；x 轴：竖直虚线；y 轴：水平虚线）
+    ctx.setLineDash([6, 5]);
+    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = mode === 'origin' ? '#E67E22' : '#3498DB';
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 对称轴高亮
+    if (mode === 'xaxis') {
+      ctx.strokeStyle = 'rgba(230,126,34,0.6)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(pad - 10, originY); ctx.lineTo(W - pad + 10, originY); ctx.stroke();
+    } else if (mode === 'yaxis') {
+      ctx.strokeStyle = 'rgba(230,126,34,0.6)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(originX, pad - 10); ctx.lineTo(originX, H - pad + 10); ctx.stroke();
+    } else {
+      ctx.fillStyle = '#E67E22';
+      ctx.beginPath(); ctx.arc(originX, originY, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // 点 P（红，可拖动）
+    ctx.fillStyle = '#E74C3C';
+    ctx.beginPath(); ctx.arc(p1.x, p1.y, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(p1.x, p1.y, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 14px Georgia, serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('P(' + fmt(P.x) + ', ' + fmt(P.y) + ')', p1.x + 10, p1.y - 6);
+
+    // 点 P′（蓝）
+    ctx.fillStyle = '#3498DB';
+    ctx.beginPath(); ctx.arc(p2.x, p2.y, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(p2.x, p2.y, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#3498DB';
+    ctx.fillText("P′(" + fmt(Q.x) + ', ' + fmt(Q.y) + ')', p2.x + 10, p2.y - 6);
+
+    // 更新读数
+    var modeNames = { origin: '关于原点对称点 P′', xaxis: '关于 x 轴对称点 P′', yaxis: '关于 y 轴对称点 P′' };
+    var rules = { origin: '(x,y) → (−x,−y)', xaxis: '(x,y) → (x,−y)', yaxis: '(x,y) → (−x,y)' };
+    document.getElementById('sym-p').textContent = '(' + fmt(P.x) + ', ' + fmt(P.y) + ')';
+    document.getElementById('sym-pp').textContent = '(' + fmt(Q.x) + ', ' + fmt(Q.y) + ')';
+    document.getElementById('sym-mode-label').textContent = modeNames[mode];
+    document.getElementById('sym-rule').textContent = rules[mode];
+  }
+
+  // 模式切换
+  document.querySelectorAll('[data-sym]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('[data-sym]').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      mode = this.dataset.sym;
+      drawSym();
+    });
+  });
+
+  // 拖动点 P
+  var dragging = false;
+  function toCanvasPt(e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left) * (canvas.width / rect.width),
+      y: (e.clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+  canvas.addEventListener('mousedown', function (e) {
+    var m = toCanvasPt(e);
+    var p1 = toPx(P);
+    if (Math.hypot(m.x - p1.x, m.y - p1.y) < 16) dragging = true;
+  });
+  canvas.addEventListener('mousemove', function (e) {
+    if (!dragging) return;
+    var m = toCanvasPt(e);
+    var gx = Math.round((m.x - originX) / scale);
+    var gy = Math.round((originY - m.y) / scale);
+    P.x = Math.max(-5, Math.min(5, gx));
+    P.y = Math.max(-4, Math.min(4, gy));
+    drawSym();
+  });
+  window.addEventListener('mouseup', function () { dragging = false; });
+
+  drawSym();
+})();
+
+/* ========================================
+ * 交互4：旋转图案设计师
+ * ======================================== */
+(function () {
+  var canvas = document.getElementById('canvas-pattern');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var CX = W / 2, CY = H / 2;
+  var motif = 'tri';
+  var palette = ['#9B59B6', '#3498DB', '#E74C3C', '#F39C12', '#27AE60', '#1ABC9C', '#E91E63', '#8E44AD', '#16A085', '#D35400', '#2C3E50', '#C0392B'];
+  var animId = null;
+
+  function getN() { return parseInt(document.getElementById('slider-n').value, 10); }
+
+  function drawMotif(color) {
+    // 在中心原点、朝正上方绘制一个基本图形（局部坐标）
+    ctx.fillStyle = color;
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    if (motif === 'tri') {
+      ctx.moveTo(0, -58);
+      ctx.lineTo(-24, -132);
+      ctx.lineTo(24, -132);
+      ctx.closePath();
+    } else if (motif === 'diamond') {
+      ctx.moveTo(0, -54);
+      ctx.lineTo(-20, -98);
+      ctx.lineTo(0, -142);
+      ctx.lineTo(20, -98);
+      ctx.closePath();
+    } else {
+      // 叶片：两条二次曲线
+      ctx.moveTo(0, -54);
+      ctx.quadraticCurveTo(-34, -88, 0, -144);
+      ctx.quadraticCurveTo(34, -88, 0, -54);
+      ctx.closePath();
+    }
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function renderPattern(count) {
+    var n = getN();
+    ctx.clearRect(0, 0, W, H);
+    // 中心花蕊
+    ctx.fillStyle = '#F5B7B1';
+    ctx.beginPath();
+    ctx.arc(CX, CY, 30, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    for (var i = 0; i < count; i++) {
+      ctx.save();
+      ctx.translate(CX, CY);
+      ctx.rotate(i * 2 * Math.PI / n);
+      drawMotif(palette[i % palette.length]);
+      ctx.restore();
+    }
+
+    // 标注旋转角
+    ctx.fillStyle = '#5D6D7E';
+    ctx.font = 'bold 14px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    if (count >= n) {
+      ctx.fillText('完成！' + n + ' 个基本图形，每次旋转 ' + (360 / n) + '°', CX, H - 10);
+    } else {
+      ctx.fillText('绘制中… ' + count + ' / ' + n, CX, H - 10);
+    }
+  }
+
+  function generate() {
+    if (animId) cancelAnimationFrame(animId);
+    var n = getN();
+    document.getElementById('pattern-angle').textContent = (360 / n) + '°';
+    var shown = 0;
+    var last = 0;
+    function step(ts) {
+      if (ts - last > 130) {
+        shown++;
+        last = ts;
+        renderPattern(shown);
+      }
+      if (shown < n) animId = requestAnimationFrame(step);
+    }
+    renderPattern(0);
+    animId = requestAnimationFrame(step);
+  }
+
+  document.getElementById('btn-generate').addEventListener('click', generate);
+  document.getElementById('slider-n').addEventListener('input', function () {
+    document.getElementById('display-n').textContent = this.value;
+    document.getElementById('pattern-angle').textContent = (360 / parseInt(this.value, 10)) + '°';
+    generate();
+  });
+  document.querySelectorAll('[data-motif]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('[data-motif]').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      motif = this.dataset.motif;
+      generate();
+    });
+  });
+
+  generate();
+})();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 3,
+  explain: '旋转后对应边相等：AB = A′B′，而不是 A′C′。A、B、C 三项分别对应旋转的三条性质，均正确。',
+  hint: '旋转的三条性质：对应点到中心距离相等、夹角等于旋转角、前后图形全等。注意"对应"关系：A↔A′、B↔B′、C↔C′。'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '等边三角形绕中心旋转 180° 后顶点朝下，不能与自身重合，它不是中心对称图形（旋转 120° 才能重合）。其余三个都是中心对称图形。',
+  hint: '把每个图形在脑中"转半圈"试试看——转完能和原图重合吗？'
+});
+initQuiz('quiz3', {
+  correct: 0,
+  explain: '关于原点对称：横、纵坐标都变为相反数。P(−3, 2) → P′(3, −2)。',
+  hint: '记口诀：(x, y) 关于原点对称的点是 (−x, −y)，两个坐标都要变号。'
+});
+</script>
 </body>
 </html>

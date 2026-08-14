@@ -3,60 +3,564 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>化学是什么？——从厨房说起 · 八年级化学</title>
+  <title>化学是什么？ · 八年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 章节主题色：化学红 ===== */
+    :root {
+      --chem: #E74C3C;
+      --chem-dark: #C0392B;
+      --chem-light: #FF7B6B;
+      --phys: #3498DB;
+      --phys-light: #5DADE2;
+      --warm: #F39C12;
+      --warm-light: #F5B041;
     }
-    .placeholder .emoji {
-      font-size: 72px;
+
+    /* ===== 页面标题区 ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #E74C3C, #C0392B);
+      color: white;
+      border-radius: var(--radius);
+      padding: 32px 28px;
       margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      box-shadow: 0 4px 20px rgba(231,76,60,0.3);
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+    .page-hero h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .page-hero p {
+      opacity: 0.92;
+      font-size: 15px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 知识对比卡片 ===== */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .compare-card {
       border-radius: var(--radius-sm);
-      text-decoration: none;
+      padding: 18px;
+      border-top: 4px solid;
+    }
+    .compare-card.phys {
+      background: rgba(52,152,219,0.08);
+      border-color: var(--phys);
+    }
+    .compare-card.chem {
+      background: rgba(231,76,60,0.08);
+      border-color: var(--chem);
+    }
+    .compare-card h4 {
+      font-size: 17px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .compare-card.phys h4 { color: var(--phys); }
+    .compare-card.chem h4 { color: var(--chem); }
+    .compare-card ul {
+      list-style: none;
+      font-size: 14px;
       color: var(--text-main);
+    }
+    .compare-card ul li {
+      padding: 3px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+    .compare-card ul li::before {
+      content: '•';
+      position: absolute;
+      left: 4px;
+      font-weight: bold;
+    }
+    .compare-card.phys ul li::before { color: var(--phys); }
+    .compare-card.chem ul li::before { color: var(--chem); }
+
+    /* ===== 模块标题 ===== */
+    .module-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      padding-left: 12px;
+      border-left: 5px solid var(--chem);
+      color: var(--text-main);
+    }
+    .module-title .emoji {
+      margin-right: 6px;
+    }
+
+    /* ===== 交互1：变化分类挑战 ===== */
+    .game-stage {
+      background: linear-gradient(135deg, #fff5f4, #ffeae8);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      border: 2px solid rgba(231,76,60,0.2);
+    }
+    .game-score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .score-badge {
+      background: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      font-size: 15px;
+    }
+    .score-badge .num { color: var(--chem); font-size: 18px; }
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: all 0.3s;
+    }
+    .progress-dot.done { background: var(--success); }
+    .progress-dot.wrong { background: var(--danger); }
+    .progress-dot.current { background: var(--chem); transform: scale(1.3); }
+
+    .phenomenon-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin: 16px auto;
+      max-width: 480px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+    }
+    .phenomenon-card .phen-emoji {
+      font-size: 56px;
+      margin-bottom: 12px;
+    }
+    .phenomenon-card .phen-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .phenomenon-card .phen-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .phenomenon-card.correct { border: 3px solid var(--success); background: rgba(39,174,96,0.05); }
+    .phenomenon-card.wrong { border: 3px solid var(--danger); background: rgba(231,76,60,0.05); animation: shake 0.4s; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .choice-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .choice-btn {
+      padding: 14px 36px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      color: white;
+      min-width: 160px;
+    }
+    .choice-btn.phys-btn { background: var(--phys); }
+    .choice-btn.chem-btn { background: var(--chem); }
+    .choice-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .feedback-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      display: none;
+      text-align: left;
+    }
+    .feedback-box.show { display: block; animation: fadeIn 0.3s; }
+    .feedback-box.right { background: rgba(39,174,96,0.12); border-left: 4px solid var(--success); }
+    .feedback-box.wrong-fb { background: rgba(231,76,60,0.12); border-left: 4px solid var(--danger); }
+
+    .game-result {
+      display: none;
+      padding: 24px;
+    }
+    .game-result.show { display: block; }
+    .game-result .stars {
+      font-size: 36px;
+      margin: 10px 0;
+    }
+
+    /* ===== 交互2：蜡烛燃烧 ===== */
+    .candle-lab {
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      color: #eee;
+    }
+    .candle-lab .lab-title {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #FFD700;
+    }
+    .candle-svg-wrap {
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .step-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    .step-btn {
+      padding: 8px 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: transparent;
+      color: #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .step-btn:hover { border-color: #FFD700; color: #FFD700; }
+    .step-btn.active { background: #FFD700; color: #1a1a2e; border-color: #FFD700; font-weight: 700; }
+
+    .step-info {
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 12px;
+      min-height: 100px;
+    }
+    .step-info .step-label {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step-label.phys { background: var(--phys); color: white; }
+    .step-label.chem { background: var(--chem); color: white; }
+    .step-info .step-desc {
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .step-info .step-formula {
+      font-family: monospace;
+      background: rgba(0,0,0,0.3);
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #FFD700;
+      display: inline-block;
+    }
+
+    /* ===== 交互3：性质分类器（拖拽） ===== */
+    .sort-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .sort-pool {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 80px;
+    }
+    .sort-pool-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .sort-item {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      cursor: grab;
+      font-size: 14px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .sort-item:hover { border-color: var(--chem); box-shadow: var(--shadow); }
+    .sort-item.dragging { opacity: 0.5; cursor: grabbing; }
+    .sort-item.placed-right { border-color: var(--success); background: rgba(39,174,96,0.08); }
+    .sort-item.placed-wrong { border-color: var(--danger); background: rgba(231,76,60,0.08); }
+
+    .drop-zone {
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 160px;
+      border: 3px dashed;
+      transition: all 0.2s;
+    }
+    .drop-zone.phys-zone { border-color: var(--phys); background: rgba(52,152,219,0.05); }
+    .drop-zone.chem-zone { border-color: var(--chem); background: rgba(231,76,60,0.05); }
+    .drop-zone.drag-over { background: rgba(245,166,35,0.12); border-color: var(--warm); transform: scale(1.01); }
+    .drop-zone-title {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid;
+    }
+    .drop-zone.phys-zone .drop-zone-title { color: var(--phys); border-color: rgba(52,152,219,0.3); }
+    .drop-zone.chem-zone .drop-zone-title { color: var(--chem); border-color: rgba(231,76,60,0.3); }
+
+    .sort-progress {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+
+    /* ===== 交互4：厨房化学实验室 ===== */
+    .kitchen-lab {
+      background: linear-gradient(135deg, #FFF8E7, #FFEEDD);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid rgba(243,156,18,0.2);
+    }
+    .kitchen-lab .lab-header {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #D35400;
+      margin-bottom: 16px;
+    }
+    .kitchen-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+    }
+    .material-shelf {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .material-item {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .material-item:hover { border-color: var(--warm); }
+    .material-item.selected {
+      border-color: var(--warm);
+      background: rgba(243,156,18,0.1);
+      box-shadow: 0 2px 8px rgba(243,156,18,0.2);
+    }
+    .material-item .mat-emoji { font-size: 28px; display: block; margin-bottom: 4px; }
+    .material-item .mat-name { font-weight: 600; }
+    .material-item .mat-tag { font-size: 11px; color: var(--text-secondary); }
+
+    .mix-area {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+    .mix-svg-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+    .mix-info {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .mix-result-label {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .mix-result-label.chem { background: var(--chem); color: white; }
+    .mix-result-label.phys { background: var(--phys); color: white; }
+    .mix-btn {
+      display: block;
+      margin: 10px auto 0;
+      padding: 8px 24px;
+      background: var(--warm);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+    }
+    .mix-btn:hover { background: #D35400; }
+    .mix-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .selected-display {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    /* ===== 交互5：现象识别 ===== */
+    .phenom-identify {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .reaction-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .reaction-tab {
+      padding: 8px 16px;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .reaction-tab:hover { border-color: var(--chem); }
+    .reaction-tab.active { background: var(--chem); color: white; border-color: var(--chem); }
+
+    .reaction-display {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .reaction-svg-wrap {
+      display: flex;
+      justify-content: center;
+    }
+    .reaction-desc h4 {
+      font-size: 17px;
+      color: var(--chem);
+      margin-bottom: 8px;
+    }
+    .reaction-desc p {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+    .phenom-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .phenom-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .phenom-check:hover { background: #DCEAF5; }
+    .phenom-check input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--chem); }
+    .phenom-check.checked-right { border-color: var(--success); background: rgba(39,174,96,0.1); }
+    .phenom-check.checked-wrong { border-color: var(--danger); background: rgba(231,76,60,0.1); }
+    .check-btn-row {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .phenom-feedback {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      display: none;
+    }
+    .phenom-feedback.show { display: block; }
+
+    /* ===== 练习题反馈 ===== */
+    .quiz-feedback {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      display: none;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .compare-grid, .sort-area, .kitchen-layout, .reaction-display {
+        grid-template-columns: 1fr;
+      }
+      .choice-btn { min-width: 130px; padding: 12px 20px; font-size: 15px; }
     }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">🧪 化学是什么？——从厨房说起</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">🧪 化学是什么？</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">八年级化学目录</a></li>
+    <li><a href="index.html">八年级化学</a></li>
+    <li><a href="../九年级/index.html">九年级化学 →</a></li>
   </ul>
 </nav>
 
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -64,27 +568,1059 @@
     <span class="separator">/</span>
     <span>八年级</span>
     <span class="separator">/</span>
-    <span>化学是什么？——从厨房说起</span>
+    <span>化学是什么</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🧪</div>
-    <h2>化学是什么？——从厨房说起</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级化学目录</a>
+  <!-- 页面标题 -->
+  <div class="page-hero">
+    <h1>🧪 化学是什么？</h1>
+    <p>从厨房到实验室，揭开物质变化的奥秘——为九年级系统化学打基础</p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- 知识引入 -->
+  <div class="card">
+    <div class="card-title">🔬 化学是研究什么的科学？</div>
+    <p><strong>化学（Chemistry）</strong>是一门研究物质的<strong>组成、结构、性质和变化规律</strong>的科学。</p>
+    <p style="margin-top:8px;">我们周围的世界——空气、水、食物、衣服、手机……一切由物质构成的东西，都是化学研究的对象。化学无处不在，从厨房里食盐溶解，到工厂里炼钢，再到人体内消化食物，都涉及化学变化。</p>
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 核心问题</div>
+      要理解化学，先搞懂两个最基本的概念：<strong>物理变化 vs 化学变化</strong>、<strong>物理性质 vs 化学性质</strong>。下面我们就来一一闯关！
+    </div>
   </div>
+
+  <!-- 知识对比：物理变化 vs 化学变化 -->
+  <div class="card">
+    <div class="card-title">⚡ 物理变化 vs 化学变化</div>
+    <p style="margin-bottom:12px;">判断一个变化属于哪种，<strong>唯一依据是：是否生成了新物质</strong>。</p>
+    <div class="compare-grid">
+      <div class="compare-card phys">
+        <h4>🔵 物理变化</h4>
+        <ul>
+          <li><strong>没有</strong>生成新物质</li>
+          <li>物质的形态、大小改变，但本质不变</li>
+          <li>例：冰融化、水蒸发、纸撕碎、玻璃破碎</li>
+          <li>例：汽油挥发、衣服晾干、金属拉成丝</li>
+        </ul>
+      </div>
+      <div class="compare-card chem">
+        <h4>🔴 化学变化</h4>
+        <ul>
+          <li><strong>生成了</strong>新物质（也叫化学反应）</li>
+          <li>常伴随：发光、放热、变色、产生气体、生成沉淀</li>
+          <li>例：燃烧、铁生锈、食物消化、牛奶变质</li>
+          <li>例：镁条燃烧、铜片加热变黑、蜡烛燃烧</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warning-box" style="margin-top:12px;">
+      <strong>⚠️ 易错点：</strong>发光放热不一定都是化学变化！例如灯泡通电发光是物理变化（电能→光能和热能），判断的关键始终是"有没有新物质生成"。
+    </div>
+  </div>
+
+  <!-- 知识对比：物理性质 vs 化学性质 -->
+  <div class="card">
+    <div class="card-title">🏷️ 物理性质 vs 化学性质</div>
+    <p style="margin-bottom:12px;"><strong>性质</strong>是物质本身的属性，<strong>变化</strong>是性质的具体表现。性质分为两类：</p>
+    <div class="compare-grid">
+      <div class="compare-card phys">
+        <h4>🔵 物理性质</h4>
+        <ul>
+          <li>不需要发生化学变化就能表现出来的性质</li>
+          <li>颜色、状态（固/液/气）、气味、味道</li>
+          <li>密度、熔点、沸点、硬度</li>
+          <li>溶解性、导电性、导热性、磁性</li>
+          <li>例：铁是银白色金属、水在0°C结冰</li>
+        </ul>
+      </div>
+      <div class="compare-card chem">
+        <h4>🔴 化学性质</h4>
+        <ul>
+          <li>物质在化学变化中表现出来的性质</li>
+          <li>可燃性、氧化性、还原性</li>
+          <li>酸碱性、稳定性</li>
+          <li>腐蚀性、毒性</li>
+          <li>例：铁在潮湿空气中会生锈、酒精可以燃烧</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 交互1：变化分类挑战 ========== -->
+  <h2 class="module-title"><span class="emoji">🎮</span>交互1：变化分类挑战</h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">屏幕上会出现一个生活现象，请你判断它是<strong>物理变化</strong>还是<strong>化学变化</strong>。共10题，随机出题，看你能得几分！</p>
+    <div class="game-stage" id="gameStage">
+      <div class="game-score-bar">
+        <div class="score-badge">得分：<span class="num" id="gameScore">0</span> / 10</div>
+        <div class="progress-dots" id="progressDots"></div>
+        <div class="score-badge">第 <span class="num" id="gameQNum">1</span> / 10 题</div>
+      </div>
+
+      <div id="gamePlayArea">
+        <div class="phenomenon-card" id="phenCard">
+          <div class="phen-emoji" id="phenEmoji">🔥</div>
+          <div class="phen-name" id="phenName">蜡烛燃烧</div>
+          <div class="phen-desc" id="phenDesc">点击下方按钮判断这是哪种变化</div>
+        </div>
+        <div class="choice-btns">
+          <button class="choice-btn phys-btn" id="btnPhys">🔵 物理变化</button>
+          <button class="choice-btn chem-btn" id="btnChem">🔴 化学变化</button>
+        </div>
+        <div class="feedback-box" id="gameFeedback"></div>
+        <div style="margin-top:14px;">
+          <button class="btn btn-outline" id="nextQBtn" style="display:none;">下一题 →</button>
+        </div>
+      </div>
+
+      <div class="game-result" id="gameResult">
+        <div style="font-size:22px; font-weight:700;">🎉 挑战完成！</div>
+        <div class="stars" id="resultStars">⭐⭐⭐</div>
+        <div style="font-size:18px; margin:8px 0;">你的得分：<strong id="finalScore" style="color:var(--chem);font-size:24px;">0</strong> / 10</div>
+        <div id="resultComment" style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;"></div>
+        <button class="btn btn-primary" id="restartBtn">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 交互2：蜡烛燃烧实验观察台 ========== -->
+  <h2 class="module-title"><span class="emoji">🕯️</span>交互2：实验观察台——蜡烛燃烧</h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">蜡烛燃烧看似简单，其实同时包含了<strong>物理变化</strong>和<strong>化学变化</strong>！点击下方按钮，分步观察蜡烛燃烧的全过程。</p>
+    <div class="candle-lab">
+      <div class="lab-title">🔬 蜡烛燃烧过程实验台</div>
+      <div class="candle-svg-wrap">
+        <svg id="candleSvg" width="320" height="280" viewBox="0 0 320 280">
+          <!-- 桌面 -->
+          <rect x="20" y="240" width="280" height="6" fill="#8B7355" rx="2"/>
+          <!-- 蜡烛主体 -->
+          <rect id="candleBody" x="140" y="120" width="40" height="120" fill="#F5E6D3" stroke="#D4B896" stroke-width="1.5" rx="3"/>
+          <!-- 蜡烛芯 -->
+          <line id="wick" x1="160" y1="115" x2="160" y2="125" stroke="#3E2723" stroke-width="2"/>
+          <!-- 蜡油（液态，步骤1显示） -->
+          <ellipse id="waxLiquid" cx="160" cy="120" rx="20" ry="4" fill="#E8D5B7" opacity="0"/>
+          <path id="waxDrip" d="M150,124 Q148,140 150,155" stroke="#E8D5B7" stroke-width="4" fill="none" opacity="0" stroke-linecap="round"/>
+          <!-- 气化箭头（步骤2显示） -->
+          <g id="vaporGroup" opacity="0">
+            <path d="M160,115 Q150,90 160,70 Q170,50 160,30" stroke="#B0BEC5" stroke-width="2" fill="none" stroke-dasharray="4,3" stroke-linecap="round"/>
+            <path d="M155,35 L160,28 L165,35" stroke="#B0BEC5" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <text x="175" y="80" fill="#90A4AE" font-size="11">蜡油蒸气</text>
+          </g>
+          <!-- 火焰（步骤3显示） -->
+          <g id="flameGroup" opacity="0">
+            <path d="M160,115 Q152,95 160,75 Q168,95 160,115" fill="#FF6F00" opacity="0.9"/>
+            <path d="M160,115 Q155,100 160,85 Q165,100 160,115" fill="#FFC107" opacity="0.95"/>
+            <path d="M160,112 Q158,105 160,98 Q162,105 160,112" fill="#FFF9C4"/>
+          </g>
+          <!-- 生成物标注（步骤3显示） -->
+          <g id="productsGroup" opacity="0">
+            <text x="40" y="80" fill="#81C784" font-size="12">CO₂ ↑</text>
+            <text x="40" y="100" fill="#64B5F6" font-size="12">H₂O ↑</text>
+            <path d="M70,75 L130,95" stroke="#81C784" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+            <path d="M70,95 L130,105" stroke="#64B5F6" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+            <!-- 光芒 -->
+            <g opacity="0.6">
+              <line x1="190" y1="70" x2="200" y2="60" stroke="#FFD700" stroke-width="1.5"/>
+              <line x1="130" y1="70" x2="120" y2="60" stroke="#FFD700" stroke-width="1.5"/>
+              <line x1="195" y1="85" x2="208" y2="85" stroke="#FFD700" stroke-width="1.5"/>
+              <line x1="125" y1="85" x2="112" y2="85" stroke="#FFD700" stroke-width="1.5"/>
+            </g>
+          </g>
+          <!-- 初始状态标注 -->
+          <text id="initLabel" x="200" y="180" fill="#FFD700" font-size="12">固态蜡烛（石蜡）</text>
+        </svg>
+      </div>
+
+      <div class="step-controls">
+        <button class="step-btn active" data-step="0">初始状态</button>
+        <button class="step-btn" data-step="1">步骤1：熔化</button>
+        <button class="step-btn" data-step="2">步骤2：气化</button>
+        <button class="step-btn" data-step="3">步骤3：燃烧</button>
+        <button class="step-btn" data-step="4">🔄 重置</button>
+      </div>
+
+      <div class="step-info" id="stepInfo">
+        <div style="color:#FFD700; font-weight:700; margin-bottom:6px;">初始状态</div>
+        <div class="step-desc">这是一支普通的蜡烛，主要成分是<strong>石蜡</strong>（固体）。点击上方按钮开始观察燃烧过程。</div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 重要结论</div>
+      蜡烛燃烧的过程中，<strong>熔化和气化是物理变化</strong>（没有新物质生成，只是状态改变），而<strong>石蜡蒸气燃烧是化学变化</strong>（生成了二氧化碳和水等新物质）。可见，<strong>同一个过程中可能同时包含物理变化和化学变化</strong>，化学变化中往往伴随物理变化。
+    </div>
+  </div>
+
+  <!-- ========== 交互3：性质分类器 ========== -->
+  <h2 class="module-title"><span class="emoji">🏷️</span>交互3：性质分类器（拖一拖）</h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">下面有5条关于物质性质的描述，请把它们<strong>拖到</strong>"物理性质"或"化学性质"对应的框中。</p>
+    <div class="sort-pool" id="sortPool">
+      <div class="sort-pool-title">📋 待分类描述（按住拖动）</div>
+      <div id="sortItems"></div>
+    </div>
+    <div class="sort-area">
+      <div class="drop-zone phys-zone" id="dropPhys" data-type="phys">
+        <div class="drop-zone-title">🔵 物理性质</div>
+      </div>
+      <div class="drop-zone chem-zone" id="dropChem" data-type="chem">
+        <div class="drop-zone-title">🔴 化学性质</div>
+      </div>
+    </div>
+    <div class="sort-progress" id="sortProgress">已分类：0 / 5</div>
+    <div style="text-align:center; margin-top:12px;">
+      <button class="btn btn-outline btn-sm" id="resetSortBtn">🔄 重置分类</button>
+    </div>
+  </div>
+
+  <!-- ========== 交互4：厨房化学实验室 ========== -->
+  <h2 class="module-title"><span class="emoji">🍳</span>交互4：厨房化学实验室</h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">虚拟厨房里有4种材料：<strong>白醋、小苏打、食盐、水</strong>。选择两种材料混合，观察现象，判断是物理变化还是化学变化！</p>
+    <div class="kitchen-lab">
+      <div class="lab-header">🍳 虚拟厨房实验台</div>
+      <div class="kitchen-layout">
+        <div class="material-shelf" id="materialShelf">
+          <div class="material-item" data-mat="vinegar">
+            <span class="mat-emoji">🫗</span>
+            <span class="mat-name">白醋</span>
+            <span class="mat-tag">酸性液体</span>
+          </div>
+          <div class="material-item" data-mat="baking">
+            <span class="mat-emoji">🧂</span>
+            <span class="mat-name">小苏打</span>
+            <span class="mat-tag">碳酸氢钠</span>
+          </div>
+          <div class="material-item" data-mat="salt">
+            <span class="mat-emoji">🧂</span>
+            <span class="mat-name">食盐</span>
+            <span class="mat-tag">氯化钠</span>
+          </div>
+          <div class="material-item" data-mat="water">
+            <span class="mat-emoji">💧</span>
+            <span class="mat-name">水</span>
+            <span class="mat-tag">H₂O</span>
+          </div>
+        </div>
+        <div class="mix-area">
+          <div class="selected-display" id="selectedDisplay">请从左侧选择 <strong>2种</strong> 材料</div>
+          <div class="mix-svg-wrap" id="mixSvgWrap">
+            <svg id="kitchenSvg" width="240" height="200" viewBox="0 0 240 200">
+              <!-- 烧杯 -->
+              <path d="M60,60 L60,170 Q60,180 70,180 L170,180 Q180,180 180,170 L180,60" fill="none" stroke="#888" stroke-width="2"/>
+              <line x1="55" y1="60" x2="185" y2="60" stroke="#888" stroke-width="2"/>
+              <text x="100" y="50" fill="#999" font-size="11">烧杯</text>
+              <!-- 液体（动态） -->
+              <path id="liquidPath" d="M62,120 L62,170 Q62,178 70,178 L170,178 Q178,178 178,170 L178,120 Z" fill="rgba(52,152,219,0.3)" opacity="0"/>
+              <!-- 气泡（动态） -->
+              <g id="bubbleGroup"></g>
+              <!-- 食盐颗粒（动态） -->
+              <g id="saltGroup"></g>
+              <text x="120" y="100" text-anchor="middle" fill="#aaa" font-size="13" id="emptyHint">等待实验…</text>
+            </svg>
+          </div>
+          <div class="mix-info" id="mixInfo"></div>
+          <button class="mix-btn" id="mixBtn" disabled>🧪 开始混合</button>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 知识点</div>
+      <strong>白醋 + 小苏打</strong>会发生化学反应，产生二氧化碳气体（冒气泡），这是化学变化。而<strong>食盐 + 水</strong>只是食盐溶解，没有新物质生成，是物理变化。
+    </div>
+  </div>
+
+  <!-- ========== 交互5：化学变化现象识别 ========== -->
+  <h2 class="module-title"><span class="emoji">👁️</span>交互5：化学变化现象识别</h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">化学变化常伴随：<strong>发光、放热、变色、产生气体、生成沉淀</strong>。下面有4个化学反应，请观察后勾选你认为发生的现象。</p>
+    <div class="phenom-identify">
+      <div class="reaction-tabs" id="reactionTabs">
+        <button class="reaction-tab active" data-r="0">① 镁条燃烧</button>
+        <button class="reaction-tab" data-r="1">② 铜片加热</button>
+        <button class="reaction-tab" data-r="2">③ 石灰水通CO₂</button>
+        <button class="reaction-tab" data-r="3">④ 锌粒+稀盐酸</button>
+      </div>
+      <div class="reaction-display">
+        <div class="reaction-svg-wrap" id="reactionSvgWrap"></div>
+        <div class="reaction-desc" id="reactionDesc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="module-title"><span class="emoji">✏️</span>课堂练习</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列变化中，属于化学变化的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 冰融化成水</div>
+    <div class="quiz-option" data-idx="1">B. 纸张撕成碎片</div>
+    <div class="quiz-option" data-idx="2">C. 铁钉在潮湿空气中生锈</div>
+    <div class="quiz-option" data-idx="3">D. 酒精挥发</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 下列性质中，属于化学性质的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 铜是紫红色固体</div>
+    <div class="quiz-option" data-idx="1">B. 酒精可以燃烧</div>
+    <div class="quiz-option" data-idx="2">C. 水的沸点是100°C</div>
+    <div class="quiz-option" data-idx="3">D. 铁的密度为7.9g/cm³</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 蜡烛燃烧的过程中，下列说法正确的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 只有物理变化</div>
+    <div class="quiz-option" data-idx="1">B. 只有化学变化</div>
+    <div class="quiz-option" data-idx="2">C. 既有物理变化，又有化学变化</div>
+    <div class="quiz-option" data-idx="3">D. 既没有物理变化，也没有化学变化</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- 学科交叉 -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉</div>
+    <p>· 物理变化 ↔ <a href="../../物理/八年级/03-物态变化.html">物理·八年级·物态变化</a>（熔化、汽化也是物理变化，从物理角度理解状态改变）</p>
+    <p>· 系统学习 ↔ <a href="../九年级/01-物质的变化和性质.html">化学·九年级·物质的变化和性质</a>（九年级正式版，更深入系统）</p>
+    <p>· 厨房化学 ↔ <a href="03-身边的化学物质.html">化学·八年级·身边的化学物质</a>（继续探索生活中的化学物质）</p>
+  </div>
+
+  <!-- 章节导航 -->
+  <div class="step-nav">
+    <span style="color: var(--text-secondary); font-size: 14px;">📖 第一章 · 化学是什么</span>
+    <a href="02-物质的三态.html" class="btn btn-primary">下一章：物质的三态 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================================
+ *  交互1：变化分类挑战
+ * ====================================================== */
+const allPhenomena = [
+  { name: '蜡烛燃烧', emoji: '🕯️', desc: '蜡烛燃烧生成二氧化碳和水', answer: 'chem', explain: '蜡烛燃烧生成了二氧化碳和水等新物质，是化学变化。' },
+  { name: '冰融化成水', emoji: '🧊', desc: '冰块在室温下变成水', answer: 'phys', explain: '冰融化只是水从固态变成液态，没有新物质生成，是物理变化。' },
+  { name: '铁钉生锈', emoji: '🔩', desc: '铁钉在潮湿空气中慢慢变红', answer: 'chem', explain: '铁生锈生成了氧化铁（铁锈），是新物质，属于化学变化。' },
+  { name: '纸张折叠', emoji: '📄', desc: '把一张纸折成纸飞机', answer: 'phys', explain: '纸张折叠只改变形状，没有新物质生成，是物理变化。' },
+  { name: '木材燃烧', emoji: '🪵', desc: '木柴在火中燃烧成灰烬', answer: 'chem', explain: '木材燃烧生成灰烬、二氧化碳等新物质，是化学变化。' },
+  { name: '水烧开', emoji: '♨️', desc: '水沸腾变成水蒸气', answer: 'phys', explain: '水沸腾汽化只是水从液态变成气态，没有新物质生成，是物理变化。' },
+  { name: '玻璃破碎', emoji: '🪟', desc: '玻璃杯掉在地上碎了', answer: 'phys', explain: '玻璃破碎只改变形状大小，没有新物质生成，是物理变化。' },
+  { name: '食物消化', emoji: '🍚', desc: '米饭在肠胃中被消化', answer: 'chem', explain: '食物消化过程中淀粉、蛋白质等被分解为新物质，是化学变化。' },
+  { name: '汽油挥发', emoji: '⛽', desc: '敞口的汽油越来越少', answer: 'phys', explain: '汽油挥发是汽油从液态变成气态，没有新物质生成，是物理变化。' },
+  { name: '镁条燃烧', emoji: '✨', desc: '镁条在空气中点燃发出耀眼白光', answer: 'chem', explain: '镁条燃烧生成氧化镁（白色固体），是新物质，属于化学变化。' },
+  { name: '牛奶变质', emoji: '🥛', desc: '牛奶放久了变酸结块', answer: 'chem', explain: '牛奶变质生成了酸性物质等新物质，是化学变化。' },
+  { name: '衣服晾干', emoji: '👕', desc: '湿衣服在太阳下慢慢变干', answer: 'phys', explain: '衣服晾干是水蒸发，没有新物质生成，是物理变化。' },
+  { name: '铜片加热变黑', emoji: '🟤', desc: '紫红色铜片加热后表面变黑', answer: 'chem', explain: '铜加热生成氧化铜（黑色），是新物质，属于化学变化。' },
+  { name: '香水扩散', emoji: '🌸', desc: '喷了香水后整个房间变香', answer: 'phys', explain: '香水扩散是香水分子运动，没有新物质生成，是物理变化。' }
+];
+
+const gameState = {
+  questions: [],
+  current: 0,
+  score: 0,
+  answered: false,
+  results: [] // 'done' or 'wrong'
+};
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderProgressDots() {
+  const wrap = document.getElementById('progressDots');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'progress-dot';
+    if (gameState.results[i] === 'done') dot.classList.add('done');
+    else if (gameState.results[i] === 'wrong') dot.classList.add('wrong');
+    else if (i === gameState.current) dot.classList.add('current');
+    wrap.appendChild(dot);
+  }
+}
+
+function loadQuestion() {
+  if (gameState.current >= 10) {
+    showResult();
+    return;
+  }
+  const q = gameState.questions[gameState.current];
+  document.getElementById('phenEmoji').textContent = q.emoji;
+  document.getElementById('phenName').textContent = q.name;
+  document.getElementById('phenDesc').textContent = q.desc;
+  document.getElementById('gameQNum').textContent = gameState.current + 1;
+  document.getElementById('phenCard').className = 'phenomenon-card';
+  document.getElementById('btnPhys').disabled = false;
+  document.getElementById('btnChem').disabled = false;
+  document.getElementById('gameFeedback').className = 'feedback-box';
+  document.getElementById('nextQBtn').style.display = 'none';
+  gameState.answered = false;
+  renderProgressDots();
+}
+
+function answerQuestion(choice) {
+  if (gameState.answered) return;
+  gameState.answered = true;
+  const q = gameState.questions[gameState.current];
+  const card = document.getElementById('phenCard');
+  const fb = document.getElementById('gameFeedback');
+  const isRight = choice === q.answer;
+
+  document.getElementById('btnPhys').disabled = true;
+  document.getElementById('btnChem').disabled = true;
+
+  if (isRight) {
+    card.classList.add('correct');
+    gameState.score++;
+    gameState.results[gameState.current] = 'done';
+    fb.className = 'feedback-box show right';
+    fb.innerHTML = '<strong style="color:#27AE60;">✓ 答对了！</strong> ' + q.explain;
+  } else {
+    card.classList.add('wrong');
+    gameState.results[gameState.current] = 'wrong';
+    const rightText = q.answer === 'phys' ? '物理变化' : '化学变化';
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = '<strong style="color:#E74C3C;">✗ 答错了</strong> 正确答案是<strong>' + rightText + '</strong>。' + q.explain;
+  }
+  document.getElementById('gameScore').textContent = gameState.score;
+  document.getElementById('nextQBtn').style.display = 'inline-block';
+  renderProgressDots();
+}
+
+function showResult() {
+  document.getElementById('gamePlayArea').style.display = 'none';
+  const result = document.getElementById('gameResult');
+  result.classList.add('show');
+  document.getElementById('finalScore').textContent = gameState.score;
+  const stars = document.getElementById('resultStars');
+  const comment = document.getElementById('resultComment');
+  if (gameState.score >= 9) {
+    stars.textContent = '⭐⭐⭐';
+    comment.textContent = '太棒了！你已经完全掌握物理变化和化学变化的区别！';
+  } else if (gameState.score >= 7) {
+    stars.textContent = '⭐⭐';
+    comment.textContent = '不错哦！再复习一下判断依据：是否生成新物质。';
+  } else if (gameState.score >= 5) {
+    stars.textContent = '⭐';
+    comment.textContent = '及格啦！建议重看上面的知识卡片，再挑战一次。';
+  } else {
+    stars.textContent = '💫';
+    comment.textContent = '别灰心，记住关键：有没有新物质生成！再试一次吧。';
+  }
+}
+
+function startGame() {
+  gameState.questions = shuffleArray(allPhenomena).slice(0, 10);
+  gameState.current = 0;
+  gameState.score = 0;
+  gameState.results = [];
+  document.getElementById('gameScore').textContent = '0';
+  document.getElementById('gamePlayArea').style.display = 'block';
+  document.getElementById('gameResult').classList.remove('show');
+  loadQuestion();
+}
+
+document.getElementById('btnPhys').addEventListener('click', () => answerQuestion('phys'));
+document.getElementById('btnChem').addEventListener('click', () => answerQuestion('chem'));
+document.getElementById('nextQBtn').addEventListener('click', () => {
+  gameState.current++;
+  loadQuestion();
+});
+document.getElementById('restartBtn').addEventListener('click', startGame);
+
+startGame();
+
+
+/* ========================================================
+ *  交互2：蜡烛燃烧实验台
+ * ====================================================== */
+const candleSteps = [
+  {
+    title: '初始状态',
+    desc: '这是一支普通的蜡烛，主要成分是<strong>石蜡</strong>（固体）。点击上方按钮开始观察燃烧过程。',
+    label: null
+  },
+  {
+    title: '步骤1：蜡烛受热熔化',
+    desc: '蜡烛受热后，顶部的石蜡由<strong>固态熔化成液态</strong>（蜡油）。这是<strong>物理变化</strong>——只是状态改变，没有新物质生成。',
+    label: 'phys',
+    formula: '固态石蜡 → 液态石蜡（状态改变，无新物质）'
+  },
+  {
+    title: '步骤2：蜡油气化',
+    desc: '液态蜡油继续受热，<strong>气化成石蜡蒸气</strong>（气体）。这依然是<strong>物理变化</strong>——液态变气态，没有新物质生成。',
+    label: 'phys',
+    formula: '液态石蜡 → 气态石蜡蒸气（状态改变，无新物质）'
+  },
+  {
+    title: '步骤3：石蜡蒸气燃烧',
+    desc: '石蜡蒸气与空气中的氧气反应，<strong>燃烧</strong>生成<strong>二氧化碳和水</strong>等新物质，同时发光、放热。这是<strong>化学变化</strong>！',
+    label: 'chem',
+    formula: '石蜡 + O₂ → CO₂ + H₂O（生成新物质，化学变化）'
+  }
+];
+
+function showCandleStep(step) {
+  const info = document.getElementById('stepInfo');
+  const s = candleSteps[step];
+  let html = '<div style="color:#FFD700; font-weight:700; margin-bottom:6px;">' + s.title + '</div>';
+  if (s.label) {
+    html += '<span class="step-label ' + s.label + '">' + (s.label === 'phys' ? '物理变化' : '化学变化') + '</span><br>';
+  }
+  html += '<div class="step-desc">' + s.desc + '</div>';
+  if (s.formula) {
+    html += '<div class="step-formula">' + s.formula + '</div>';
+  }
+  info.innerHTML = html;
+
+  // SVG 元素控制
+  const waxLiquid = document.getElementById('waxLiquid');
+  const waxDrip = document.getElementById('waxDrip');
+  const vaporGroup = document.getElementById('vaporGroup');
+  const flameGroup = document.getElementById('flameGroup');
+  const productsGroup = document.getElementById('productsGroup');
+  const initLabel = document.getElementById('initLabel');
+
+  // 重置
+  waxLiquid.setAttribute('opacity', '0');
+  waxDrip.setAttribute('opacity', '0');
+  vaporGroup.setAttribute('opacity', '0');
+  flameGroup.setAttribute('opacity', '0');
+  productsGroup.setAttribute('opacity', '0');
+  initLabel.setAttribute('opacity', '1');
+
+  if (step === 1) {
+    waxLiquid.setAttribute('opacity', '1');
+    waxDrip.setAttribute('opacity', '0.8');
+    initLabel.setAttribute('opacity', '0');
+  } else if (step === 2) {
+    waxLiquid.setAttribute('opacity', '1');
+    waxDrip.setAttribute('opacity', '0.5');
+    vaporGroup.setAttribute('opacity', '1');
+    initLabel.setAttribute('opacity', '0');
+  } else if (step === 3) {
+    waxLiquid.setAttribute('opacity', '1');
+    waxDrip.setAttribute('opacity', '0.3');
+    vaporGroup.setAttribute('opacity', '0.4');
+    flameGroup.setAttribute('opacity', '1');
+    productsGroup.setAttribute('opacity', '1');
+    initLabel.setAttribute('opacity', '0');
+  }
+
+  // 按钮状态
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (parseInt(btn.dataset.step) === step) btn.classList.add('active');
+  });
+}
+
+document.querySelectorAll('.step-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const step = parseInt(btn.dataset.step);
+    if (step === 4) {
+      showCandleStep(0);
+    } else {
+      showCandleStep(step);
+    }
+  });
+});
+
+
+/* ========================================================
+ *  交互3：性质分类器（拖拽）
+ * ====================================================== */
+const sortData = [
+  { text: '铁是银白色金属', type: 'phys' },
+  { text: '铁在潮湿空气中会生锈', type: 'chem' },
+  { text: '水在0°C结冰', type: 'phys' },
+  { text: '酒精可以燃烧', type: 'chem' },
+  { text: '铜的密度是8.9g/cm³', type: 'phys' }
+];
+
+let sortPlaced = 0;
+
+function renderSortItems() {
+  const container = document.getElementById('sortItems');
+  container.innerHTML = '';
+  sortData.forEach((item, idx) => {
+    if (item.placed) return;
+    const div = document.createElement('div');
+    div.className = 'sort-item';
+    div.draggable = true;
+    div.dataset.idx = idx;
+    div.textContent = item.text;
+    div.addEventListener('dragstart', (e) => {
+      div.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', idx);
+    });
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+    container.appendChild(div);
+  });
+  if (container.children.length === 0) {
+    container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:13px; padding:10px;">全部已分类完毕 👍</div>';
+  }
+}
+
+function initDropZones() {
+  ['dropPhys', 'dropChem'].forEach(id => {
+    const zone = document.getElementById(id);
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const idx = parseInt(e.dataTransfer.getData('text/plain'));
+      const item = sortData[idx];
+      if (item.placed) return;
+      const targetType = zone.dataset.type;
+      const isRight = item.type === targetType;
+
+      const placed = document.createElement('div');
+      placed.className = 'sort-item ' + (isRight ? 'placed-right' : 'placed-wrong');
+      placed.textContent = (isRight ? '✓ ' : '✗ ') + item.text;
+      placed.style.cursor = 'default';
+      zone.appendChild(placed);
+
+      item.placed = true;
+      sortPlaced++;
+      document.getElementById('sortProgress').textContent = '已分类：' + sortPlaced + ' / 5';
+      renderSortItems();
+
+      if (sortPlaced === 5) {
+        setTimeout(() => {
+          const wrongCount = document.querySelectorAll('.sort-item.placed-wrong').length;
+          if (wrongCount === 0) {
+            document.getElementById('sortProgress').innerHTML = '🎉 <strong style="color:var(--success);">全部正确！</strong>你已经分清物理性质和化学性质了。';
+          } else {
+            document.getElementById('sortProgress').innerHTML = '⚠️ 有 <strong style="color:var(--danger);">' + wrongCount + '</strong> 个分类错误，红色项请重新思考。点击"重置分类"再试。';
+          }
+        }, 200);
+      }
+    });
+  });
+}
+
+document.getElementById('resetSortBtn').addEventListener('click', () => {
+  sortData.forEach(item => item.placed = false);
+  sortPlaced = 0;
+  document.getElementById('sortProgress').textContent = '已分类：0 / 5';
+  document.getElementById('dropPhys').innerHTML = '<div class="drop-zone-title">🔵 物理性质</div>';
+  document.getElementById('dropChem').innerHTML = '<div class="drop-zone-title">🔴 化学性质</div>';
+  renderSortItems();
+});
+
+renderSortItems();
+initDropZones();
+
+
+/* ========================================================
+ *  交互4：厨房化学实验室
+ * ====================================================== */
+const kitchenState = {
+  selected: [],
+  mixed: false
+};
+
+const kitchenResults = {
+  'vinegar+baking': {
+    type: 'chem',
+    name: '白醋 + 小苏打',
+    desc: '冒出大量气泡！这是化学反应，产生了二氧化碳气体（CO₂）。',
+    formula: '醋酸 + 碳酸氢钠 → 醋酸钠 + 水 + 二氧化碳↑',
+    color: 'rgba(243,156,18,0.3)',
+    bubble: true
+  },
+  'baking+vinegar': {
+    type: 'chem',
+    name: '小苏打 + 白醋',
+    desc: '冒出大量气泡！这是化学反应，产生了二氧化碳气体（CO₂）。',
+    formula: '碳酸氢钠 + 醋酸 → 二氧化碳↑ + 水 + 醋酸钠',
+    color: 'rgba(243,156,18,0.3)',
+    bubble: true
+  },
+  'salt+water': {
+    type: 'phys',
+    name: '食盐 + 水',
+    desc: '食盐慢慢溶解在水中，形成无色透明的食盐水。没有新物质生成，是物理变化。',
+    formula: 'NaCl（固）→ NaCl（溶解，以离子形式分散）',
+    color: 'rgba(52,152,219,0.2)',
+    salt: true
+  },
+  'water+salt': {
+    type: 'phys',
+    name: '水 + 食盐',
+    desc: '食盐慢慢溶解在水中，形成无色透明的食盐水。没有新物质生成，是物理变化。',
+    formula: '食盐溶解（物理变化，无新物质）',
+    color: 'rgba(52,152,219,0.2)',
+    salt: true
+  },
+  'vinegar+water': {
+    type: 'phys',
+    name: '白醋 + 水',
+    desc: '白醋和水互溶，形成稀释的醋溶液。没有新物质生成，是物理变化。',
+    formula: '醋酸 + 水 → 稀醋酸溶液（混合，无新物质）',
+    color: 'rgba(241,196,15,0.2)'
+  },
+  'water+vinegar': {
+    type: 'phys',
+    name: '水 + 白醋',
+    desc: '白醋和水互溶，形成稀释的醋溶液。没有新物质生成，是物理变化。',
+    formula: '水 + 醋酸 → 稀醋酸溶液（混合，无新物质）',
+    color: 'rgba(241,196,15,0.2)'
+  }
+};
+
+const matNames = { vinegar: '白醋', baking: '小苏打', salt: '食盐', water: '水' };
+
+document.querySelectorAll('.material-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (kitchenState.mixed) return;
+    const mat = item.dataset.mat;
+    if (kitchenState.selected.includes(mat)) {
+      kitchenState.selected = kitchenState.selected.filter(m => m !== mat);
+      item.classList.remove('selected');
+    } else {
+      if (kitchenState.selected.length >= 2) {
+        // 替换第一个
+        const first = kitchenState.selected.shift();
+        document.querySelector('.material-item[data-mat="' + first + '"]').classList.remove('selected');
+      }
+      kitchenState.selected.push(mat);
+      item.classList.add('selected');
+    }
+    updateSelectedDisplay();
+  });
+});
+
+function updateSelectedDisplay() {
+  const disp = document.getElementById('selectedDisplay');
+  const btn = document.getElementById('mixBtn');
+  if (kitchenState.selected.length === 0) {
+    disp.innerHTML = '请从左侧选择 <strong>2种</strong> 材料';
+    btn.disabled = true;
+  } else if (kitchenState.selected.length === 1) {
+    disp.innerHTML = '已选：' + matNames[kitchenState.selected[0]] + '，再选 <strong>1种</strong>';
+    btn.disabled = true;
+  } else {
+    disp.innerHTML = '已选：<strong>' + matNames[kitchenState.selected[0]] + '</strong> + <strong>' + matNames[kitchenState.selected[1]] + '</strong>';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('mixBtn').addEventListener('click', () => {
+  if (kitchenState.selected.length !== 2) return;
+  const key = kitchenState.selected[0] + '+' + kitchenState.selected[1];
+  const result = kitchenResults[key];
+  const info = document.getElementById('mixInfo');
+  const liquid = document.getElementById('liquidPath');
+  const emptyHint = document.getElementById('emptyHint');
+  const bubbleGroup = document.getElementById('bubbleGroup');
+  const saltGroup = document.getElementById('saltGroup');
+
+  emptyHint.setAttribute('opacity', '0');
+  bubbleGroup.innerHTML = '';
+  saltGroup.innerHTML = '';
+
+  if (!result) {
+    // 未定义的组合（如小苏打+食盐、白醋+食盐等无特殊反应）
+    liquid.setAttribute('fill', 'rgba(200,200,200,0.3)');
+    liquid.setAttribute('opacity', '1');
+    info.innerHTML = '<div>这两种材料混合后没有明显反应。</div><div class="mix-result-label phys">无明显化学变化</div>';
+    kitchenState.mixed = true;
+    document.getElementById('mixBtn').disabled = true;
+    return;
+  }
+
+  liquid.setAttribute('fill', result.color);
+  liquid.setAttribute('opacity', '1');
+
+  if (result.bubble) {
+    // 生成气泡动画
+    let bubbleCount = 0;
+    const bubbleInterval = setInterval(() => {
+      if (bubbleCount >= 20) {
+        clearInterval(bubbleInterval);
+        return;
+      }
+      const cx = 70 + Math.random() * 100;
+      const r = 3 + Math.random() * 4;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', 170);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', 'rgba(255,255,255,0.7)');
+      circle.setAttribute('stroke', '#fff');
+      bubbleGroup.appendChild(circle);
+      // 上升动画
+      let y = 170;
+      const rise = setInterval(() => {
+        y -= 2;
+        circle.setAttribute('cy', y);
+        circle.setAttribute('opacity', Math.max(0, y / 170));
+        if (y < 70) {
+          clearInterval(rise);
+          circle.remove();
+        }
+      }, 40);
+      bubbleCount++;
+    }, 200);
+  }
+
+  if (result.salt) {
+    // 食盐溶解动画
+    for (let i = 0; i < 8; i++) {
+      const cx = 80 + Math.random() * 80;
+      const cy = 90 + Math.random() * 20;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', cx);
+      rect.setAttribute('y', cy);
+      rect.setAttribute('width', 4);
+      rect.setAttribute('height', 4);
+      rect.setAttribute('fill', '#fff');
+      rect.setAttribute('stroke', '#ccc');
+      saltGroup.appendChild(rect);
+      // 溶解：向下移动并变透明
+      setTimeout(() => {
+        let t = 0;
+        const dissolve = setInterval(() => {
+          t += 1;
+          rect.setAttribute('y', parseFloat(rect.getAttribute('y')) + 1.5);
+          rect.setAttribute('opacity', Math.max(0, 1 - t / 30));
+          if (t >= 30) {
+            clearInterval(dissolve);
+            rect.remove();
+          }
+        }, 60);
+      }, i * 200);
+    }
+  }
+
+  const labelClass = result.type === 'chem' ? 'chem' : 'phys';
+  const labelText = result.type === 'chem' ? '化学变化（产生新物质）' : '物理变化（无新物质）';
+  info.innerHTML = '<strong>' + result.name + '</strong><br>' +
+    result.desc + '<br>' +
+    '<code style="font-size:12px; color:var(--text-secondary); display:block; margin:6px 0;">' + result.formula + '</code>' +
+    '<div class="mix-result-label ' + labelClass + '">' + labelText + '</div>';
+
+  kitchenState.mixed = true;
+  document.getElementById('mixBtn').disabled = true;
+  document.getElementById('selectedDisplay').innerHTML += ' · <a href="#" id="resetKitchen" style="color:var(--warm);">🔄 重置实验</a>';
+  document.getElementById('resetKitchen').addEventListener('click', (e) => {
+    e.preventDefault();
+    resetKitchen();
+  });
+});
+
+function resetKitchen() {
+  kitchenState.selected = [];
+  kitchenState.mixed = false;
+  document.querySelectorAll('.material-item').forEach(i => i.classList.remove('selected'));
+  document.getElementById('liquidPath').setAttribute('opacity', '0');
+  document.getElementById('bubbleGroup').innerHTML = '';
+  document.getElementById('saltGroup').innerHTML = '';
+  document.getElementById('emptyHint').setAttribute('opacity', '1');
+  document.getElementById('mixInfo').innerHTML = '';
+  document.getElementById('mixBtn').disabled = true;
+  updateSelectedDisplay();
+}
+
+
+/* ========================================================
+ *  交互5：化学变化现象识别
+ * ====================================================== */
+const reactions = [
+  {
+    name: '镁条燃烧',
+    svg: '<svg width="180" height="180" viewBox="0 0 180 180">' +
+      '<rect x="80" y="100" width="20" height="60" fill="#BDBDBD" stroke="#757575"/>' +
+      '<path d="M90,100 Q78,70 90,40 Q102,70 90,100" fill="#FFD700"/>' +
+      '<path d="M90,100 Q84,80 90,55 Q96,80 90,100" fill="#FFF59D"/>' +
+      '<g stroke="#FFD700" stroke-width="2" opacity="0.7">' +
+        '<line x1="60" y1="50" x2="48" y2="40"/>' +
+        '<line x1="120" y1="50" x2="132" y2="40"/>' +
+        '<line x1="55" y1="70" x2="40" y2="70"/>' +
+        '<line x1="125" y1="70" x2="140" y2="70"/>' +
+      '</g>' +
+      '<text x="40" y="130" fill="#9E9E9E" font-size="11">镁条</text>' +
+      '<text x="120" y="140" fill="#FFD700" font-size="11">耀眼白光</text>' +
+    '</svg>',
+    desc: '镁条在空气中点燃，发出耀眼的白光，放出大量热，最后生成白色固体（氧化镁）。',
+    correct: ['light', 'heat', 'color'],
+    phenomena: {
+      light: '发光（耀眼白光）',
+      heat: '放热',
+      color: '变色（生成白色固体）',
+      gas: '产生气体',
+      precip: '生成沉淀'
+    }
+  },
+  {
+    name: '铜片加热',
+    svg: '<svg width="180" height="180" viewBox="0 0 180 180">' +
+      '<rect x="40" y="80" width="100" height="20" fill="#B87333" rx="2"/>' +
+      '<rect x="40" y="80" width="100" height="10" fill="#2C3E50" rx="2" opacity="0.8"/>' +
+      '<g stroke="#F39C12" stroke-width="2" opacity="0.6">' +
+        '<line x1="60" y1="70" x2="55" y2="55"/>' +
+        '<line x1="80" y1="70" x2="80" y2="55"/>' +
+        '<line x1="100" y1="70" x2="105" y2="55"/>' +
+        '<line x1="120" y1="70" x2="125" y2="55"/>' +
+      '</g>' +
+      '<text x="45" y="75" fill="#B87333" font-size="10">紫红色</text>' +
+      '<text x="110" y="75" fill="#2C3E50" font-size="10">→变黑</text>' +
+      '<text x="60" y="130" fill="#999" font-size="11">铜片加热</text>' +
+    '</svg>',
+    desc: '紫红色的铜片在空气中加热后，表面逐渐变成黑色（生成了氧化铜）。',
+    correct: ['color'],
+    phenomena: {
+      light: '发光',
+      heat: '放热',
+      color: '变色（紫红→黑色）',
+      gas: '产生气体',
+      precip: '生成沉淀'
+    }
+  },
+  {
+    name: '石灰水通入CO₂',
+    svg: '<svg width="180" height="180" viewBox="0 0 180 180">' +
+      '<path d="M60,60 L60,150 Q60,158 68,158 L112,158 Q120,158 120,150 L120,60" fill="none" stroke="#888" stroke-width="2"/>' +
+      '<line x1="55" y1="60" x2="125" y2="60" stroke="#888" stroke-width="2"/>' +
+      '<path d="M62,90 L62,150 Q62,156 68,156 L112,156 Q118,156 118,150 L118,90 Z" fill="rgba(255,255,255,0.5)"/>' +
+      '<circle cx="75" cy="110" r="3" fill="#fff" opacity="0.8"/>' +
+      '<circle cx="90" cy="120" r="2" fill="#fff" opacity="0.7"/>' +
+      '<circle cx="105" cy="115" r="2.5" fill="#fff" opacity="0.6"/>' +
+      '<circle cx="82" cy="135" r="2" fill="#fff" opacity="0.5"/>' +
+      '<line x1="90" y1="20" x2="90" y2="55" stroke="#aaa" stroke-width="2" stroke-dasharray="3,2"/>' +
+      '<polygon points="86,50 90,58 94,50" fill="#aaa"/>' +
+      '<text x="95" y="35" fill="#aaa" font-size="10">CO₂</text>' +
+      '<text x="55" y="175" fill="#999" font-size="10">澄清石灰水变浑浊</text>' +
+    '</svg>',
+    desc: '向澄清石灰水（氢氧化钙溶液）中通入二氧化碳，溶液变浑浊，生成了白色的碳酸钙沉淀。',
+    correct: ['precip'],
+    phenomena: {
+      light: '发光',
+      heat: '放热',
+      color: '变色',
+      gas: '产生气体',
+      precip: '生成沉淀（变浑浊）'
+    }
+  },
+  {
+    name: '锌粒+稀盐酸',
+    svg: '<svg width="180" height="180" viewBox="0 0 180 180">' +
+      '<path d="M55,65 L55,150 Q55,158 63,158 L117,158 Q125,158 125,150 L125,65" fill="none" stroke="#888" stroke-width="2"/>' +
+      '<line x1="50" y1="65" x2="130" y2="65" stroke="#888" stroke-width="2"/>' +
+      '<path d="M57,100 L57,150 Q57,156 63,156 L117,156 Q123,156 123,150 L123,100 Z" fill="rgba(52,152,219,0.3)"/>' +
+      '<circle cx="70" cy="150" r="6" fill="#A1887F"/>' +
+      '<circle cx="90" cy="152" r="7" fill="#8D6E63"/>' +
+      '<circle cx="108" cy="150" r="5" fill="#A1887F"/>' +
+      '<circle cx="78" cy="130" r="3" fill="rgba(255,255,255,0.8)"/>' +
+      '<circle cx="95" cy="120" r="2.5" fill="rgba(255,255,255,0.7)"/>' +
+      '<circle cx="110" cy="135" r="3" fill="rgba(255,255,255,0.8)"/>' +
+      '<line x1="90" y1="30" x2="90" y2="60" stroke="#fff" stroke-width="2" stroke-dasharray="3,2"/>' +
+      '<text x="95" y="45" fill="#aaa" font-size="10">H₂↑</text>' +
+      '<text x="55" y="175" fill="#999" font-size="10">锌粒 + 稀盐酸</text>' +
+    '</svg>',
+    desc: '锌粒加入稀盐酸中，锌粒表面有气泡冒出，生成氢气，同时得到氯化锌溶液。',
+    correct: ['gas'],
+    phenomena: {
+      light: '发光',
+      heat: '放热',
+      color: '变色',
+      gas: '产生气体（气泡）',
+      precip: '生成沉淀'
+    }
+  }
+];
+
+let currentReaction = 0;
+const phenomChecks = ['light', 'heat', 'color', 'gas', 'precip'];
+const phenomLabels = { light: '发光', heat: '放热', color: '变色', gas: '产生气体', precip: '生成沉淀' };
+
+function renderReaction(idx) {
+  currentReaction = idx;
+  const r = reactions[idx];
+  document.querySelectorAll('.reaction-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.reaction-tab[data-r="' + idx + '"]').classList.add('active');
+  document.getElementById('reactionSvgWrap').innerHTML = r.svg;
+
+  let checklistHtml = '<h4>' + r.name + '</h4><p>' + r.desc + '</p>';
+  checklistHtml += '<div class="phenom-checklist">';
+  phenomChecks.forEach(key => {
+    checklistHtml += '<label class="phenom-check"><input type="checkbox" data-phen="' + key + '">' + (r.phenomena[key] || phenomLabels[key]) + '</label>';
+  });
+  checklistHtml += '</div>';
+  checklistHtml += '<div class="check-btn-row"><button class="btn btn-primary btn-sm" id="checkPhenomBtn">提交答案</button></div>';
+  checklistHtml += '<div class="phenom-feedback" id="phenomFeedback"></div>';
+  document.getElementById('reactionDesc').innerHTML = checklistHtml;
+
+  document.getElementById('checkPhenomBtn').addEventListener('click', () => {
+    const checks = document.querySelectorAll('.phenom-check');
+    let allRight = true;
+    checks.forEach(c => {
+      const cb = c.querySelector('input');
+      const phen = cb.dataset.phen;
+      const shouldCheck = r.correct.includes(phen);
+      c.classList.remove('checked-right', 'checked-wrong');
+      if (cb.checked && shouldCheck) {
+        c.classList.add('checked-right');
+      } else if (cb.checked && !shouldCheck) {
+        c.classList.add('checked-wrong');
+        allRight = false;
+      } else if (!cb.checked && shouldCheck) {
+        c.classList.add('checked-wrong');
+        allRight = false;
+      }
+    });
+    const fb = document.getElementById('phenomFeedback');
+    fb.className = 'phenom-feedback show';
+    if (allRight) {
+      fb.style.background = 'rgba(39,174,96,0.12)';
+      fb.style.borderLeft = '4px solid var(--success)';
+      const correctNames = r.correct.map(k => r.phenomena[k] || phenomLabels[k]).join('、');
+      fb.innerHTML = '<strong style="color:var(--success);">✓ 完全正确！</strong> 本反应的现象是：' + correctNames + '。';
+    } else {
+      fb.style.background = 'rgba(231,76,60,0.12)';
+      fb.style.borderLeft = '4px solid var(--danger)';
+      const correctNames = r.correct.map(k => r.phenomena[k] || phenomLabels[k]).join('、');
+      fb.innerHTML = '<strong style="color:var(--danger);">部分有误。</strong> 正确现象是：<strong>' + correctNames + '</strong>。绿色=正确，红色=错误或遗漏。';
+    }
+  });
+}
+
+document.querySelectorAll('.reaction-tab').forEach(tab => {
+  tab.addEventListener('click', () => renderReaction(parseInt(tab.dataset.r)));
+});
+
+renderReaction(0);
+
+
+/* ========================================================
+ *  练习题
+ * ====================================================== */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '铁钉生锈生成了铁锈（氧化铁），是新物质，属于化学变化。冰融化、纸撕碎、酒精挥发都没有新物质生成，是物理变化。',
+  hint: '看哪种变化生成了新物质。铁锈和铁是不同的物质。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '"酒精可以燃烧"描述的是酒精在化学变化（燃烧）中表现出来的性质，属于化学性质。其余选项都是颜色、沸点、密度等物理性质。',
+  hint: '化学性质是物质在化学变化中表现出来的性质，如可燃性、氧化性等。'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '蜡烛燃烧时，石蜡熔化、气化是物理变化（状态改变），而石蜡蒸气燃烧生成二氧化碳和水是化学变化。所以蜡烛燃烧既有物理变化又有化学变化。',
+  hint: '回忆刚才的蜡烛实验：熔化、气化是物理变化，燃烧是化学变化。'
+});
+</script>
 </body>
 </html>

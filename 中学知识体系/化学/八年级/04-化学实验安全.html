@@ -6,50 +6,405 @@
   <title>化学实验安全入门 · 八年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 章节主题色：化学红 ===== */
+    :root {
+      --chem: #E74C3C;
+      --chem-dark: #C0392B;
+      --chem-light: #FF7B6B;
+      --safe-green: #27AE60;
+      --warn-amber: #F39C12;
     }
-    .placeholder .emoji {
-      font-size: 72px;
+
+    /* ===== 页面标题区 ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #E74C3C, #C0392B);
+      color: white;
+      border-radius: var(--radius);
+      padding: 32px 28px;
       margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      box-shadow: 0 4px 20px rgba(231,76,60,0.3);
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+    .page-hero h1 { font-size: 26px; margin-bottom: 8px; }
+    .page-hero p { opacity: 0.92; font-size: 15px; }
+    .page-hero .badges { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .page-hero .badge {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 14px;
+      font-size: 13px;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
-      border-radius: var(--radius-sm);
-      text-decoration: none;
+
+    /* ===== 模块标题 ===== */
+    .module-title {
+      font-size: 20px; font-weight: 700;
+      margin: 28px 0 12px;
+      padding-left: 12px;
+      border-left: 5px solid var(--chem);
       color: var(--text-main);
-      transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .module-title .emoji { margin-right: 6px; }
+    .module-title .sub {
+      font-size: 13px; font-weight: 400; color: var(--text-secondary); margin-left: 8px;
+    }
+
+    /* ===== 安全规则卡片 ===== */
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .rule-card {
+      background: white;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--chem);
+      transition: transform 0.2s;
+    }
+    .rule-card:hover { transform: translateY(-3px); }
+    .rule-card .rule-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+    .rule-card .rule-title { font-weight: 700; color: var(--text-main); font-size: 15px; margin-bottom: 4px; }
+    .rule-card .rule-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ===== 通用交互舞台 ===== */
+    .sim-stage {
+      background: linear-gradient(135deg, #fff5f4, #ffeae8);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid rgba(231,76,60,0.2);
+    }
+    .sim-stage h3 {
+      color: var(--chem-dark);
+      margin-bottom: 12px;
+      font-size: 17px;
+    }
+    .sim-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    /* ===== 隐患检查 ===== */
+    .hazard-svg-wrap {
+      background: #FAF7F5;
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      margin-bottom: 12px;
+    }
+    .hazard-status {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(231,76,60,0.06);
+      border-radius: var(--radius-sm);
+      min-height: 56px;
+    }
+    .hazard-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .hazard-chip.found {
+      background: rgba(231,76,60,0.15);
+      border-color: var(--chem);
+      color: var(--chem-dark);
+      font-weight: 600;
+    }
+    .hazard-explain {
+      margin-top: 12px;
+      padding: 14px;
+      background: rgba(231,76,60,0.08);
+      border-left: 4px solid var(--chem);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      display: none;
+    }
+    .hazard-explain.show { display: block; animation: fadeIn 0.3s; }
+
+    /* ===== 仪器配对 ===== */
+    .match-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 14px;
+    }
+    .match-col-title {
+      font-weight: 600;
+      color: var(--chem-dark);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .match-list { display: flex; flex-direction: column; gap: 8px; }
+    .match-item {
+      background: white;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .match-item:hover { border-color: var(--chem-light); }
+    .match-item.selected {
+      border-color: var(--chem);
+      background: rgba(231,76,60,0.08);
+    }
+    .match-item.matched {
+      background: rgba(39,174,96,0.12);
+      border-color: var(--safe-green);
+      cursor: default;
+    }
+    .match-item.matched .check-mark { color: var(--safe-green); font-weight: 700; }
+    .match-svg-thumb {
+      width: 50px;
+      height: 36px;
+      flex-shrink: 0;
+      background: #FAF7F5;
+      border-radius: 4px;
+    }
+    .match-tooltip {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: rgba(39,174,96,0.08);
+      border-left: 4px solid var(--safe-green);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      display: none;
+    }
+    .match-tooltip.show { display: block; animation: fadeIn 0.3s; }
+
+    /* ===== 酒精灯模拟 ===== */
+    .alcohol-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 14px;
+    }
+    .alcohol-svg-wrap {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      background: #FAF7F5;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+    .control-block {
+      background: white;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+    .control-block .ctl-title {
+      font-weight: 600;
+      color: var(--chem-dark);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .alcohol-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+    }
+    .alcohol-slider-wrap input { flex: 1; }
+    .alcohol-value {
+      font-weight: 700;
+      color: var(--chem);
+      min-width: 48px;
+      text-align: right;
+    }
+    .option-btn-group { display: flex; flex-direction: column; gap: 6px; }
+    .option-btn {
+      padding: 8px 12px;
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      text-align: left;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .option-btn:hover { border-color: var(--chem-light); }
+    .option-btn.correct {
+      background: rgba(39,174,96,0.12);
+      border-color: var(--safe-green);
+      color: var(--safe-green);
+      font-weight: 600;
+    }
+    .option-btn.wrong {
+      background: rgba(231,76,60,0.1);
+      border-color: var(--chem);
+      color: var(--chem-dark);
+      font-weight: 600;
+    }
+    .alcohol-feedback {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      display: none;
+    }
+    .alcohol-feedback.show { display: block; animation: fadeIn 0.3s; }
+    .alcohol-feedback.good {
+      background: rgba(39,174,96,0.1);
+      color: var(--safe-green);
+      border-left: 4px solid var(--safe-green);
+    }
+    .alcohol-feedback.bad {
+      background: rgba(231,76,60,0.1);
+      color: var(--chem-dark);
+      border-left: 4px solid var(--chem);
+    }
+
+    /* ===== 排序拖拽 ===== */
+    .sort-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .sort-item {
+      background: white;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .sort-item:hover { border-color: var(--chem-light); }
+    .sort-item.dragging { opacity: 0.5; border-color: var(--chem); }
+    .sort-item .drag-handle { color: var(--text-light); cursor: grab; }
+    .sort-item .order-num {
+      width: 28px;
+      height: 28px;
+      background: var(--chem);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .sort-result {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      display: none;
+    }
+    .sort-result.show { display: block; animation: fadeIn 0.3s; }
+    .sort-result.correct {
+      background: rgba(39,174,96,0.1);
+      color: var(--safe-green);
+      border-left: 4px solid var(--safe-green);
+    }
+    .sort-result.wrong {
+      background: rgba(231,76,60,0.08);
+      color: var(--chem-dark);
+      border-left: 4px solid var(--chem);
+    }
+
+    /* ===== 过滤操作 ===== */
+    .filter-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .filter-q {
+      background: white;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+    .filter-q .q-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .filter-q .q-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-feedback {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      display: none;
+    }
+    .filter-feedback.show { display: block; animation: fadeIn 0.3s; }
+    .filter-feedback.good {
+      background: rgba(39,174,96,0.1);
+      color: var(--safe-green);
+      border-left: 4px solid var(--safe-green);
+    }
+    .filter-feedback.bad {
+      background: rgba(231,76,60,0.1);
+      color: var(--chem-dark);
+      border-left: 4px solid var(--chem);
+    }
+
+    /* ===== 知识卡片 ===== */
+    .knowledge-card {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border-top: 3px solid var(--chem);
+      margin-bottom: 12px;
+    }
+    .knowledge-card h4 {
+      color: var(--chem-dark);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .knowledge-card p { font-size: 13px; color: var(--text-secondary); }
+    .knowledge-card .key-point {
+      background: rgba(231,76,60,0.08);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--chem-dark);
+      font-weight: 600;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .match-area, .alcohol-controls { grid-template-columns: 1fr; }
+      .page-hero h1 { font-size: 22px; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">🧪 化学实验安全入门</div>
+  <div class="navbar-brand">🧪 化学实验安全</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级化学目录</a></li>
@@ -64,27 +419,995 @@
     <span class="separator">/</span>
     <span>八年级</span>
     <span class="separator">/</span>
-    <span>化学实验安全入门</span>
+    <span>化学实验安全</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🧪</div>
-    <h2>化学实验安全入门</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级化学目录</a>
+  <div class="page-hero">
+    <h1>🧪 化学实验安全入门</h1>
+    <p>化学实验是探索物质变化的钥匙，但安全永远是第一位。本节通过5个交互环节，让你掌握实验室安全规则、常用仪器、基本操作和酒精灯使用方法，为九年级正式化学实验打下坚实基础。</p>
+    <div class="badges">
+      <span class="badge">八年级化学</span>
+      <span class="badge">实验基础</span>
+      <span class="badge">安全第一</span>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
+  <!-- ==================== 模块1：实验室安全规则 ==================== -->
+  <div class="module-title">
+    <span class="emoji">📋</span>实验室安全规则
+    <span class="sub">做好实验的前提是守规则</span>
+  </div>
+
+  <div class="rule-grid">
+    <div class="rule-card">
+      <span class="rule-icon">🥼</span>
+      <div class="rule-title">穿戴防护装备</div>
+      <div class="rule-desc">进实验室必须穿实验服、戴护目镜，防止药品溅到皮肤或眼睛。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🚫🍎</span>
+      <div class="rule-title">禁带食物</div>
+      <div class="rule-desc">不在实验室吃东西、喝水，避免药品误入口中。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">⚗️</span>
+      <div class="rule-title">不随意混合药品</div>
+      <div class="rule-desc">不同药品混合可能产生有毒气体、爆炸等危险，严格按实验步骤操作。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">👃</span>
+      <div class="rule-title">扇闻法闻气味</div>
+      <div class="rule-desc">闻气体气味时，用手在瓶口轻轻扇动，让少量气体飘入鼻孔，不可直接凑近闻。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🔥</span>
+      <div class="rule-title">试管口不朝人</div>
+      <div class="rule-desc">加热试管时，管口不能对着自己或他人，防止液体飞溅造成烫伤。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🧤</span>
+      <div class="rule-title">不用手接触药品</div>
+      <div class="rule-desc">取用药品用药匙、镊子或滴管，不可直接用手，避免腐蚀或中毒。</div>
+    </div>
+  </div>
+
+  <!-- ==================== 交互1：安全隐患检查 ==================== -->
+  <div class="card">
+    <div class="card-title">🔍 交互1：实验室安全隐患检查</div>
+    <p class="sim-hint">下方是一幅实验室场景图，图中有 <strong>5个安全隐患</strong>。点击你认为有问题的部位，找出全部隐患。</p>
+
+    <div class="sim-stage">
+      <div class="hazard-svg-wrap">
+        <svg id="lab-scene" viewBox="0 0 700 380" style="width:100%;max-width:700px;display:block;margin:0 auto;">
+          <!-- 背景：实验室墙面 -->
+          <rect x="0" y="0" width="700" height="280" fill="#FAF3E8" />
+          <rect x="0" y="280" width="700" height="100" fill="#D4B894" />
+          <!-- 实验台桌面 -->
+          <rect x="40" y="240" width="620" height="60" fill="#8B6F47" />
+          <rect x="40" y="240" width="620" height="8" fill="#6B5337" />
+
+          <!-- 窗户 -->
+          <rect x="40" y="40" width="160" height="120" fill="#B8DCE8" stroke="#5A4A3A" stroke-width="3" />
+          <line x1="120" y1="40" x2="120" y2="160" stroke="#5A4A3A" stroke-width="2" />
+          <line x1="40" y1="100" x2="200" y2="100" stroke="#5A4A3A" stroke-width="2" />
+
+          <!-- 隐患1：没戴护目镜的学生 -->
+          <g id="hazard-goggles" class="clickable" data-hazard="goggles">
+            <!-- 学生头 -->
+            <circle cx="340" cy="180" r="28" fill="#FFD9B3" />
+            <!-- 头发 -->
+            <path d="M 312 165 Q 340 145 368 165 L 365 175 Q 340 160 315 175 Z" fill="#5A3A2A" />
+            <!-- 眼睛（没有护目镜） -->
+            <circle cx="330" cy="180" r="3" fill="#333" />
+            <circle cx="350" cy="180" r="3" fill="#333" />
+            <!-- 嘴 -->
+            <path d="M 332 195 Q 340 200 348 195" stroke="#8B5A3C" stroke-width="2" fill="none" />
+            <!-- 身体（实验服） -->
+            <path d="M 320 205 L 305 250 L 375 250 L 360 205 Z" fill="#FFFFFF" stroke="#CCC" stroke-width="1.5" />
+            <line x1="340" y1="205" x2="340" y2="250" stroke="#CCC" stroke-width="1.5" />
+            <!-- 标记圆 -->
+            <circle cx="340" cy="180" r="30" fill="none" stroke="#E74C3C" stroke-width="3" opacity="0" class="danger-ring" />
+          </g>
+
+          <!-- 隐患2：试管口对着人（学生2 + 试管） -->
+          <g id="hazard-tube-toward" class="clickable" data-hazard="tube-toward">
+            <!-- 学生2头 -->
+            <circle cx="540" cy="180" r="26" fill="#FFD9B3" />
+            <path d="M 514 168 Q 540 150 566 168 L 563 178 Q 540 165 517 178 Z" fill="#3A2A1A" />
+            <circle cx="530" cy="180" r="3" fill="#333" />
+            <circle cx="550" cy="180" r="3" fill="#333" />
+            <path d="M 532 195 Q 540 200 548 195" stroke="#8B5A3C" stroke-width="2" fill="none" />
+            <!-- 身体 -->
+            <path d="M 522 202 L 510 250 L 570 250 L 558 202 Z" fill="#FFFFFF" stroke="#CCC" stroke-width="1.5" />
+            <!-- 试管：口对着学生2 -->
+            <rect x="475" y="195" width="14" height="50" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.5" transform="rotate(-15 482 220)" />
+            <!-- 试管口方向箭头 -->
+            <path d="M 470 185 L 490 195" stroke="#E74C3C" stroke-width="1" stroke-dasharray="3,2" opacity="0" class="danger-arrow" />
+            <circle cx="482" cy="220" r="35" fill="none" stroke="#E74C3C" stroke-width="3" opacity="0" class="danger-ring" />
+          </g>
+
+          <!-- 隐患3：桌上有食物（苹果） -->
+          <g id="hazard-food" class="clickable" data-hazard="food">
+            <!-- 苹果 -->
+            <circle cx="220" cy="245" r="16" fill="#E74C3C" />
+            <circle cx="215" cy="240" r="4" fill="#FF7B6B" opacity="0.6" />
+            <rect x="218" y="226" width="4" height="8" fill="#5A3A2A" />
+            <ellipse cx="225" cy="231" rx="6" ry="3" fill="#27AE60" />
+            <circle cx="220" cy="245" r="22" fill="none" stroke="#E74C3C" stroke-width="3" opacity="0" class="danger-ring" />
+            <!-- 食物标签 -->
+            <text x="220" y="278" text-anchor="middle" font-size="11" fill="#666" opacity="0" class="danger-label">食物</text>
+          </g>
+
+          <!-- 隐患4：酒精灯被嘴吹灭 -->
+          <g id="hazard-blow" class="clickable" data-hazard="blow">
+            <!-- 酒精灯灯体 -->
+            <rect x="380" y="210" width="36" height="40" fill="#FFD9B3" stroke="#8B5A3C" stroke-width="2" />
+            <!-- 灯芯 -->
+            <rect x="392" y="200" width="12" height="14" fill="#5A3A2A" />
+            <!-- 火焰（被吹弯） -->
+            <path d="M 398 200 Q 410 195 415 180 Q 420 190 410 200 Z" fill="#F39C12" />
+            <path d="M 398 200 Q 408 197 412 188 Q 415 195 408 200 Z" fill="#E74C3C" />
+            <!-- 嘴吹气箭头（学生头部转向酒精灯） -->
+            <path d="M 470 180 Q 440 175 420 190" stroke="#3498DB" stroke-width="2" stroke-dasharray="4,3" fill="none" />
+            <text x="455" y="172" font-size="11" fill="#3498DB">呼~</text>
+            <circle cx="398" cy="225" r="30" fill="none" stroke="#E74C3C" stroke-width="3" opacity="0" class="danger-ring" />
+          </g>
+
+          <!-- 隐患5：用手直接拿药品 -->
+          <g id="hazard-touch" class="clickable" data-hazard="touch">
+            <!-- 手臂 + 手掌 -->
+            <ellipse cx="120" cy="245" rx="22" ry="10" fill="#FFD9B3" stroke="#8B5A3C" stroke-width="1.5" />
+            <!-- 药品块（在手中） -->
+            <circle cx="105" cy="244" r="5" fill="#9B59B6" />
+            <circle cx="115" cy="246" r="4" fill="#9B59B6" />
+            <circle cx="125" cy="244" r="6" fill="#9B59B6" />
+            <text x="120" y="225" text-anchor="middle" font-size="11" fill="#666">直接拿</text>
+            <circle cx="118" cy="245" r="28" fill="none" stroke="#E74C3C" stroke-width="3" opacity="0" class="danger-ring" />
+          </g>
+
+          <!-- 正常物品：烧杯、玻璃棒、铁架台作为背景 -->
+          <!-- 铁架台 -->
+          <rect x="260" y="180" width="4" height="60" fill="#444" />
+          <rect x="240" y="235" width="44" height="6" fill="#333" />
+          <circle cx="262" cy="200" r="4" fill="#666" />
+          <!-- 烧杯 -->
+          <rect x="240" y="215" width="24" height="25" fill="none" stroke="#3498DB" stroke-width="2" />
+          <rect x="240" y="225" width="24" height="15" fill="#E3F2FD" />
+          <!-- 玻璃棒 -->
+          <line x1="430" y1="195" x2="445" y2="245" stroke="#BDC3C7" stroke-width="2" />
+        </svg>
+      </div>
+
+      <div class="hazard-status" id="hazard-status">
+        <span style="font-weight:600;color:var(--text-main);">已发现：<span id="hazard-count">0</span> / 5</span>
+        <span class="hazard-chip" data-hazard="goggles">未戴护目镜</span>
+        <span class="hazard-chip" data-hazard="tube-toward">试管口朝人</span>
+        <span class="hazard-chip" data-hazard="food">桌上有食物</span>
+        <span class="hazard-chip" data-hazard="blow">嘴吹酒精灯</span>
+        <span class="hazard-chip" data-hazard="touch">手拿药品</span>
+      </div>
+
+      <div class="hazard-explain" id="hazard-explain"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 模块2：常用仪器认识 ==================== -->
+  <div class="module-title">
+    <span class="emoji">🔬</span>常用仪器认识
+    <span class="sub">认识它们是做实验的第一步</span>
+  </div>
+
+  <div class="rule-grid">
+    <div class="rule-card">
+      <span class="rule-icon">🧪</span>
+      <div class="rule-title">试管 / 烧杯 / 量筒 / 锥形瓶</div>
+      <div class="rule-desc">试管用于少量物质反应；烧杯用于较大量反应或配制溶液；量筒用于量取液体体积；锥形瓶用于滴定或加热液体。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🔥</span>
+      <div class="rule-title">酒精灯 / 试管夹 / 铁架台</div>
+      <div class="rule-desc">酒精灯是常用加热源；试管夹用于夹持试管加热；铁架台用于固定和支持仪器。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🥄</span>
+      <div class="rule-title">玻璃棒 / 胶头滴管 / 漏斗</div>
+      <div class="rule-desc">玻璃棒用于搅拌、引流；胶头滴管用于滴加少量液体；漏斗用于过滤分离。</div>
+    </div>
+  </div>
+
+  <!-- ==================== 交互2：仪器配对 ==================== -->
+  <div class="card">
+    <div class="card-title">🔗 交互2：仪器认识配对</div>
+    <p class="sim-hint">先点击左侧的<strong>仪器图片</strong>，再点击右侧对应的<strong>仪器名称</strong>进行配对。配对成功后会显示用途说明。</p>
+
+    <div class="sim-stage">
+      <div class="match-area">
+        <div>
+          <div class="match-col-title">仪器图片</div>
+          <div class="match-list" id="match-pics">
+            <div class="match-item" data-key="test-tube">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <rect x="20" y="4" width="10" height="28" rx="5" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.5"/>
+                <rect x="20" y="4" width="10" height="6" fill="none" stroke="#3498DB" stroke-width="1.5"/>
+                <rect x="20" y="25" width="10" height="7" fill="#BBDEFB"/>
+              </svg>
+              <span>仪器 A</span>
+            </div>
+            <div class="match-item" data-key="beaker">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <rect x="12" y="8" width="26" height="24" rx="2" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.5"/>
+                <rect x="12" y="20" width="26" height="12" fill="#BBDEFB"/>
+                <line x1="15" y1="14" x2="20" y2="14" stroke="#3498DB"/>
+                <line x1="15" y1="20" x2="20" y2="20" stroke="#3498DB"/>
+              </svg>
+              <span>仪器 B</span>
+            </div>
+            <div class="match-item" data-key="cylinder">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <rect x="18" y="3" width="14" height="30" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.5"/>
+                <rect x="18" y="18" width="14" height="15" fill="#BBDEFB"/>
+                <line x1="32" y1="10" x2="36" y2="10" stroke="#3498DB"/>
+                <line x1="32" y1="16" x2="36" y2="16" stroke="#3498DB"/>
+                <line x1="32" y1="22" x2="36" y2="22" stroke="#3498DB"/>
+              </svg>
+              <span>仪器 C</span>
+            </div>
+            <div class="match-item" data-key="alcohol-lamp">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <rect x="16" y="18" width="18" height="16" rx="1" fill="#FFD9B3" stroke="#8B5A3C" stroke-width="1.5"/>
+                <rect x="22" y="13" width="6" height="6" fill="#5A3A2A"/>
+                <path d="M 25 13 Q 28 5 25 1 Q 22 5 25 13 Z" fill="#F39C12"/>
+              </svg>
+              <span>仪器 D</span>
+            </div>
+            <div class="match-item" data-key="funnel">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <path d="M 8 5 L 42 5 L 28 22 L 28 32 L 22 32 L 22 22 Z" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.5"/>
+              </svg>
+              <span>仪器 E</span>
+            </div>
+            <div class="match-item" data-key="dropper">
+              <svg class="match-svg-thumb" viewBox="0 0 50 36">
+                <ellipse cx="25" cy="8" rx="6" ry="5" fill="#FFB3B3" stroke="#E74C3C" stroke-width="1.2"/>
+                <rect x="22" y="12" width="6" height="14" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.2"/>
+                <path d="M 25 26 L 23 32 L 27 32 Z" fill="#E3F2FD" stroke="#3498DB" stroke-width="1.2"/>
+              </svg>
+              <span>仪器 F</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="match-col-title">仪器名称</div>
+          <div class="match-list" id="match-names">
+            <div class="match-item" data-key="beaker">
+              <span>烧杯</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+            <div class="match-item" data-key="funnel">
+              <span>漏斗</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+            <div class="match-item" data-key="alcohol-lamp">
+              <span>酒精灯</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+            <div class="match-item" data-key="test-tube">
+              <span>试管</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+            <div class="match-item" data-key="dropper">
+              <span>胶头滴管</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+            <div class="match-item" data-key="cylinder">
+              <span>量筒</span>
+              <span class="check-mark" style="margin-left:auto;">✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="match-tooltip" id="match-tooltip"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 模块3：基本操作 ==================== -->
+  <div class="module-title">
+    <span class="emoji">🛠️</span>基本操作要点
+    <span class="sub">规范操作才能保证实验成功和安全</span>
+  </div>
+
+  <div class="rule-grid">
+    <div class="rule-card">
+      <span class="rule-icon">🥄</span>
+      <div class="rule-title">取用药品</div>
+      <div class="rule-desc">固体用药匙或纸条；液体用滴管或倾倒法。取量要少，没说用量时液体取1~2mL，固体盖满试管底。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🔥</span>
+      <div class="rule-title">加热试管</div>
+      <div class="rule-desc">试管夹夹在距管口1/3处；先在酒精灯外焰来回移动预热，再固定加热液体中部；液体不超过试管容积1/3。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">⏳</span>
+      <div class="rule-title">过滤操作</div>
+      <div class="rule-desc">"一贴二低三靠"：滤纸紧贴漏斗壁；液面低于滤纸边缘、滤纸低于漏斗口；玻璃棒靠在三层滤纸一侧。</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">💨</span>
+      <div class="rule-title">蒸发操作</div>
+      <div class="rule-desc">用蒸发皿盛装液体，用玻璃棒不断搅拌防止局部过热液体飞溅；出现较多固体时停止加热，用余热蒸干。</div>
+    </div>
+  </div>
+
+  <!-- ==================== 交互3：酒精灯使用模拟 ==================== -->
+  <div class="card">
+    <div class="card-title">🔥 交互3：酒精灯使用模拟</div>
+    <p class="sim-hint">通过三个操作环节掌握酒精灯的正确使用方法。每个错误操作都会显示后果。</p>
+
+    <div class="sim-stage">
+      <div class="alcohol-svg-wrap">
+        <svg id="alcohol-lamp-svg" viewBox="0 0 280 220" style="width:280px;">
+          <!-- 灯体 -->
+          <rect id="lamp-body" x="80" y="100" width="120" height="80" rx="6" fill="#FFE0C2" stroke="#8B5A3C" stroke-width="2"/>
+          <!-- 酒精液位（动态） -->
+          <rect id="alcohol-level" x="82" y="140" width="116" height="38" fill="#FFC107" opacity="0.6"/>
+          <!-- 灯颈 -->
+          <rect x="120" y="80" width="40" height="22" fill="#8B5A3C"/>
+          <!-- 灯芯 -->
+          <rect id="lamp-wick" x="135" y="65" width="10" height="18" fill="#5A3A2A"/>
+          <!-- 灯帽（默认放在右侧，盖灭时移动过来） -->
+          <rect id="lamp-cap" x="210" y="75" width="20" height="35" rx="3" fill="#5A3A2A"/>
+          <!-- 火焰（默认不显示，点燃后显示） -->
+          <g id="flame" opacity="0">
+            <path d="M 140 65 Q 148 45 140 30 Q 132 45 140 65 Z" fill="#F39C12"/>
+            <path d="M 140 62 Q 145 48 140 38 Q 135 48 140 62 Z" fill="#E74C3C"/>
+            <path d="M 140 58 Q 143 50 140 44 Q 137 50 140 58 Z" fill="#FFF59D"/>
+          </g>
+          <!-- 标尺标注 -->
+          <line x1="210" y1="100" x2="210" y2="180" stroke="#999" stroke-dasharray="2,2"/>
+          <text x="215" y="145" font-size="10" fill="#666">2/3</text>
+          <line x1="210" y1="160" x2="210" y2="180" stroke="#999" stroke-dasharray="2,2"/>
+          <text x="215" y="174" font-size="10" fill="#666">1/4</text>
+          <text x="140" y="210" text-anchor="middle" font-size="13" fill="#666" font-weight="600">酒精灯</text>
+        </svg>
+      </div>
+
+      <div class="alcohol-controls">
+        <!-- 操作1：酒精量调节 -->
+        <div class="control-block">
+          <div class="ctl-title">① 调节酒精量</div>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">安全范围：<strong>1/4 ~ 2/3 容积</strong></p>
+          <div class="alcohol-slider-wrap">
+            <input type="range" id="alcohol-slider" min="0" max="100" value="50">
+            <span class="alcohol-value" id="alcohol-value">50%</span>
+          </div>
+          <div class="alcohol-feedback" id="alcohol-amount-fb"></div>
+        </div>
+
+        <!-- 操作2：点火方式 -->
+        <div class="control-block">
+          <div class="ctl-title">② 选择点火方式</div>
+          <div class="option-btn-group">
+            <button class="option-btn" data-ignite="match">🔥 用火柴点燃</button>
+            <button class="option-btn" data-ignite="lamp">🕯️ 用另一只燃着的酒精灯引燃</button>
+            <button class="option-btn" data-ignite="lighter">💨 用打火机点燃</button>
+          </div>
+          <div class="alcohol-feedback" id="alcohol-ignite-fb"></div>
+        </div>
+
+        <!-- 操作3：熄灭方式 -->
+        <div class="control-block" style="grid-column: 1 / -1;">
+          <div class="ctl-title">③ 选择熄灭方式</div>
+          <div class="option-btn-group" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <button class="option-btn" data-extinguish="cap">🛑 用灯帽盖灭</button>
+            <button class="option-btn" data-extinguish="blow">🌬️ 用嘴吹灭</button>
+            <button class="option-btn" data-extinguish="water">💧 用水泼灭</button>
+          </div>
+          <div class="alcohol-feedback" id="alcohol-extinguish-fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 交互4：加热操作步骤排序 ==================== -->
+  <div class="card">
+    <div class="card-title">📝 交互4：加热试管步骤排序</div>
+    <p class="sim-hint">下方是加热试管的7个步骤，顺序被打乱了。请<strong>拖拽</strong>将它们排成正确顺序，然后点击"检查"。</p>
+
+    <div class="sim-stage">
+      <div class="sort-list" id="sort-list">
+        <div class="sort-item" draggable="true" data-correct="5">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>固定在液体中部加热</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="3">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>用试管夹夹在距管口1/3处</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="1">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>检查试管是否完好无损</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="7">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>加热完毕用灯帽盖灭酒精灯</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="2">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>装入药品（液体不超过试管容积1/3）</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="4">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>先在酒精灯外焰来回移动预热</span>
+        </div>
+        <div class="sort-item" draggable="true" data-correct="6">
+          <span class="drag-handle">⠿</span>
+          <span class="order-num"></span>
+          <span>管口斜向上，不朝向自己或他人</span>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:8px;">
+        <button class="btn btn-primary" id="sort-check">✓ 检查顺序</button>
+        <button class="btn btn-outline" id="sort-reset">↻ 重新打乱</button>
+      </div>
+
+      <div class="sort-result" id="sort-result"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 交互5：过滤操作模拟 ==================== -->
+  <div class="card">
+    <div class="card-title">⏳ 交互5：过滤操作模拟</div>
+    <p class="sim-hint">过滤操作要遵循"<strong>一贴二低三靠</strong>"。请逐一回答下方问题，观察装置的变化。</p>
+
+    <div class="sim-stage">
+      <div style="display:flex;justify-content:center;background:#FAF7F5;border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;">
+        <svg id="filter-svg" viewBox="0 0 320 280" style="width:100%;max-width:320px;">
+          <!-- 铁架台支架 -->
+          <rect x="20" y="40" width="4" height="220" fill="#444"/>
+          <rect x="10" y="255" width="40" height="6" fill="#333"/>
+          <circle cx="22" cy="80" r="4" fill="#666"/>
+          <!-- 铁夹（夹住漏斗） -->
+          <rect x="24" y="75" width="80" height="4" fill="#666"/>
+          <!-- 漏斗 -->
+          <path id="funnel-shape" d="M 100 80 L 200 80 L 160 140 L 160 175 L 140 175 L 140 140 Z" fill="#E3F2FD" stroke="#3498DB" stroke-width="2"/>
+          <!-- 滤纸（动态颜色） -->
+          <path id="filter-paper" d="M 108 84 L 192 84 L 158 138 L 158 170 L 142 170 L 142 138 Z" fill="#FFFDE7" stroke="#CCC" stroke-width="1"/>
+          <!-- 三层滤纸一侧标记（左侧） -->
+          <text x="100" y="120" font-size="9" fill="#E74C3C" id="layer-label">三层</text>
+          <!-- 玻璃棒（动态位置） -->
+          <line id="glass-rod" x1="110" y1="40" x2="115" y2="100" stroke="#BDC3C7" stroke-width="3"/>
+          <!-- 液体（动态显示） -->
+          <path id="liquid-in-funnel" d="" fill="#90CAF9" opacity="0.6"/>
+          <!-- 烧杯接液 -->
+          <rect x="110" y="200" width="80" height="50" rx="2" fill="none" stroke="#3498DB" stroke-width="2"/>
+          <rect id="beaker-liquid" x="112" y="225" width="76" height="23" fill="#BBDEFB"/>
+          <!-- 漏斗下端位置标记 -->
+          <text x="150" y="195" font-size="9" fill="#999">下端位置</text>
+        </svg>
+      </div>
+
+      <div class="filter-controls">
+        <div class="filter-q" id="filter-q1">
+          <div class="q-text">问题1：玻璃棒应当靠在滤纸的哪一层？</div>
+          <div class="q-options">
+            <button class="option-btn" data-fq="1" data-fans="three">三层滤纸一侧（✓）</button>
+            <button class="option-btn" data-fq="1" data-fans="one">一层滤纸一侧（✗）</button>
+          </div>
+          <div class="filter-feedback" id="filter-fb-1"></div>
+        </div>
+
+        <div class="filter-q" id="filter-q2">
+          <div class="q-text">问题2：漏斗下端应当靠在哪里？</div>
+          <div class="q-options">
+            <button class="option-btn" data-fq="2" data-fans="wall">靠在烧杯内壁上（✓）</button>
+            <button class="option-btn" data-fq="2" data-fans="center">悬在烧杯中心（✗）</button>
+          </div>
+          <div class="filter-feedback" id="filter-fb-2"></div>
+        </div>
+
+        <div class="filter-q" id="filter-q3">
+          <div class="q-text">问题3：过滤时液面应当如何？</div>
+          <div class="q-options">
+            <button class="option-btn" data-fq="3" data-fans="below">低于滤纸边缘（✓）</button>
+            <button class="option-btn" data-fq="3" data-fans="above">高于滤纸边缘（✗）</button>
+          </div>
+          <div class="filter-feedback" id="filter-fb-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 知识总结卡片 ==================== -->
+  <div class="module-title">
+    <span class="emoji">📌</span>核心知识点回顾
+  </div>
+
+  <div class="rule-grid">
+    <div class="knowledge-card">
+      <h4>酒精灯使用三要点</h4>
+      <p>点燃用火柴、熄灭用灯帽盖灭、酒精量在1/4~2/3之间。</p>
+      <div class="key-point">口诀：火柴点、灯帽灭、量适中、外焰热</div>
+    </div>
+    <div class="knowledge-card">
+      <h4>加热试管三要点</h4>
+      <p>试管夹夹在距管口1/3处；先预热再固定加热；液体不超过试管1/3。</p>
+      <div class="key-point">口诀：夹三分之一、先预热、量少三分之一</div>
+    </div>
+    <div class="knowledge-card">
+      <h4>过滤操作"一贴二低三靠"</h4>
+      <p>一贴：滤纸紧贴漏斗壁；二低：滤纸低于漏斗口、液面低于滤纸边缘；三靠：烧杯口靠玻璃棒、玻璃棒靠三层滤纸、漏斗下端靠烧杯壁。</p>
+      <div class="key-point">口诀：一贴二低三靠</div>
+    </div>
+  </div>
+
+  <!-- ==================== 练习题 ==================== -->
+  <div class="module-title">
+    <span class="emoji">✏️</span>练习题
+    <span class="sub">检测你的掌握情况</span>
+  </div>
+
+  <div class="card" id="quiz1">
+    <div class="question-text" style="font-size:16px;font-weight:500;margin-bottom:12px;">
+      1. 实验室里熄灭酒精灯的正确方法是？
+    </div>
+    <div class="quiz-option" data-idx="0">A. 用嘴吹灭</div>
+    <div class="quiz-option" data-idx="1">B. 用灯帽盖灭</div>
+    <div class="quiz-option" data-idx="2">C. 用水泼灭</div>
+    <div class="quiz-option" data-idx="3">D. 用湿抹布捂灭</div>
+    <div class="quiz-feedback" style="margin-top:10px;font-size:14px;display:none;"></div>
+  </div>
+
+  <div class="card" id="quiz2">
+    <div class="question-text" style="font-size:16px;font-weight:500;margin-bottom:12px;">
+      2. 下列关于试管夹夹持试管的描述，正确的是？
+    </div>
+    <div class="quiz-option" data-idx="0">A. 夹在试管底部</div>
+    <div class="quiz-option" data-idx="1">B. 夹在试管中部</div>
+    <div class="quiz-option" data-idx="2">C. 夹在距管口1/3处</div>
+    <div class="quiz-option" data-idx="3">D. 夹在管口处</div>
+    <div class="quiz-feedback" style="margin-top:10px;font-size:14px;display:none;"></div>
+  </div>
+
+  <div class="card" id="quiz3">
+    <div class="question-text" style="font-size:16px;font-weight:500;margin-bottom:12px;">
+      3. 过滤操作中，玻璃棒应当靠在滤纸的哪一层？
+    </div>
+    <div class="quiz-option" data-idx="0">A. 一层滤纸一侧</div>
+    <div class="quiz-option" data-idx="1">B. 三层滤纸一侧</div>
+    <div class="quiz-option" data-idx="2">C. 滤纸正中央</div>
+    <div class="quiz-option" data-idx="3">D. 不需要靠在滤纸上</div>
+    <div class="quiz-feedback" style="margin-top:10px;font-size:14px;display:none;"></div>
+  </div>
+
+  <!-- ==================== 学科交叉参考 ==================== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">📚 学科交叉参考</div>
+    <p style="margin-bottom:8px;">
+      <span class="tag tag-chemistry">化学</span>
+      <a href="03-身边的化学物质.html">← 03-身边的化学物质</a>：化学物质的状态与性质，为理解药品取用做准备。
     </p>
+    <p style="margin-bottom:8px;">
+      <span class="tag tag-cross">化学九年级</span>
+      化学九年级正式实验 → <a href="../九年级/index.html">化学九年级 index.html</a>：本节是九年级化学实验课的前置基础。
+    </p>
+    <p>
+      <span class="tag tag-physics">物理</span>
+      <a href="../../物理/八年级/03-物态变化.html">← 物理 03-物态变化</a>：物态变化中的"汽化""液化"与蒸发操作、酒精灯加热原理相通，可对照学习。
+    </p>
+  </div>
+
+  <!-- ==================== 步骤导航 ==================== -->
+  <div class="step-nav">
+    <a href="03-身边的化学物质.html" class="btn btn-outline">← 上一章：03-身边的化学物质</a>
+    <a href="../九年级/index.html" class="btn btn-primary">下一章：化学九年级 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ * 交互1：实验室安全隐患检查
+ * ============================================================ */
+(function() {
+  const explanations = {
+    'goggles': '❌ 学生没有佩戴护目镜！化学药品溅入眼睛会造成严重伤害，进实验室必须全程佩戴护目镜。',
+    'tube-toward': '❌ 试管口正对着同学！加热时液体可能沸腾飞溅，试管口绝不能朝向自己或他人。',
+    'food': '❌ 实验桌上有食物！实验室药品可能残留有毒物质，严禁在实验室饮食。',
+    'blow': '❌ 用嘴吹灭酒精灯！这样会把火焰压入灯内引燃酒精蒸气，造成爆炸。必须用灯帽盖灭。',
+    'touch': '❌ 用手直接拿取药品！药品可能有腐蚀性或毒性，必须用药匙或镊子取用。'
+  };
+  const found = new Set();
+  const statusEl = document.getElementById('hazard-status');
+  const countEl = document.getElementById('hazard-count');
+  const explainEl = document.getElementById('hazard-explain');
+
+  document.querySelectorAll('#lab-scene .clickable').forEach(el => {
+    el.addEventListener('click', function() {
+      const key = this.dataset.hazard;
+      if (found.has(key)) return;
+      found.add(key);
+
+      // 显示红色危险圈
+      const ring = this.querySelector('.danger-ring');
+      if (ring) ring.setAttribute('opacity', '1');
+
+      // 更新状态chip
+      const chip = statusEl.querySelector('.hazard-chip[data-hazard="' + key + '"]');
+      if (chip) chip.classList.add('found');
+
+      countEl.textContent = found.size;
+      explainEl.innerHTML = explanations[key] +
+        (found.size === 5 ? '<br><br>🎉 太棒了！5个安全隐患全部找到。记住这些规则，实验时绝不犯错！' : '');
+      explainEl.classList.add('show');
+    });
+  });
+})();
+
+/* ============================================================
+ * 交互2：仪器认识配对
+ * ============================================================ */
+(function() {
+  const usage = {
+    'test-tube': '🧪 <strong>试管</strong>：用于少量物质的化学反应或加热，是化学实验室最常用的仪器之一。',
+    'beaker': '⚗️ <strong>烧杯</strong>：用于较大量物质的反应、配制溶液或加热液体，容积通常为50mL~1000mL。',
+    'cylinder': '📏 <strong>量筒</strong>：用于量取一定体积的液体。读数时视线应与液体凹液面最低处保持水平。',
+    'alcohol-lamp': '🔥 <strong>酒精灯</strong>：化学实验室常用的加热仪器，火焰分为外焰、内焰、焰心，外焰温度最高。',
+    'funnel': '⏳ <strong>漏斗</strong>：用于过滤分离不溶性固体和液体，也可用于向小口容器中转移液体。',
+    'dropper': '💧 <strong>胶头滴管</strong>：用于滴加少量液体药品。使用时不能平放或倒置，不能伸入试管内。'
+  };
+
+  let selectedPic = null;
+  const tooltip = document.getElementById('match-tooltip');
+  const pics = document.querySelectorAll('#match-pics .match-item');
+  const names = document.querySelectorAll('#match-names .match-item');
+
+  pics.forEach(pic => {
+    pic.addEventListener('click', function() {
+      if (this.classList.contains('matched')) return;
+      // 取消之前选中
+      pics.forEach(p => p.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedPic = this.dataset.key;
+    });
+  });
+
+  names.forEach(name => {
+    name.addEventListener('click', function() {
+      if (this.classList.contains('matched') || !selectedPic) return;
+      const nameKey = this.dataset.key;
+      if (nameKey === selectedPic) {
+        // 配对成功
+        const picEl = document.querySelector('#match-pics .match-item[data-key="' + nameKey + '"]');
+        picEl.classList.remove('selected');
+        picEl.classList.add('matched');
+        this.classList.add('matched');
+        tooltip.innerHTML = usage[nameKey];
+        tooltip.classList.add('show');
+        selectedPic = null;
+
+        // 检查是否全部配对完成
+        const allMatched = document.querySelectorAll('#match-pics .match-item.matched').length === pics.length;
+        if (allMatched) {
+          setTimeout(() => {
+            tooltip.innerHTML = '🎉 全部配对成功！你已经认识了6种常用化学仪器。<br>' + tooltip.innerHTML;
+          }, 200);
+        }
+      } else {
+        // 配对错误
+        tooltip.innerHTML = '❌ 配对错误，再试试看。仔细观察仪器的形状特征。';
+        tooltip.classList.add('show');
+        tooltip.style.background = 'rgba(231,76,60,0.08)';
+        tooltip.style.borderLeftColor = 'var(--chem)';
+        setTimeout(() => {
+          tooltip.style.background = '';
+          tooltip.style.borderLeftColor = '';
+        }, 1500);
+      }
+    });
+  });
+})();
+
+/* ============================================================
+ * 交互3：酒精灯使用模拟
+ * ============================================================ */
+(function() {
+  const slider = document.getElementById('alcohol-slider');
+  const valueEl = document.getElementById('alcohol-value');
+  const levelEl = document.getElementById('alcohol-level');
+  const amountFb = document.getElementById('alcohol-amount-fb');
+  const igniteFb = document.getElementById('alcohol-ignite-fb');
+  const extinguishFb = document.getElementById('alcohol-extinguish-fb');
+  const flame = document.getElementById('flame');
+  const cap = document.getElementById('lamp-cap');
+  const wick = document.getElementById('lamp-wick');
+
+  let alcoholOK = false;
+  let ignited = false;
+
+  // 操作1：调节酒精量
+  function updateAlcohol(val) {
+    valueEl.textContent = val + '%';
+    // 灯体内酒精液位：y从180(空)到100(满)
+    // 灯体范围 y=100~180, height=80
+    const fillH = 80 * val / 100;
+    const y = 180 - fillH;
+    levelEl.setAttribute('y', y);
+    levelEl.setAttribute('height', fillH);
+
+    // 判断范围：25%(1/4) ~ 67%(2/3)
+    if (val < 25) {
+      amountFb.className = 'alcohol-feedback bad show';
+      amountFb.innerHTML = '⚠️ 酒精量不足1/4！灯内酒精蒸气过多，点燃时易引起爆炸，必须添加酒精后再用。';
+      alcoholOK = false;
+    } else if (val > 67) {
+      amountFb.className = 'alcohol-feedback bad show';
+      amountFb.innerHTML = '⚠️ 酒精量超过2/3！加热时酒精易溢出引起火灾，必须倒出部分酒精。';
+      alcoholOK = false;
+    } else {
+      amountFb.className = 'alcohol-feedback good show';
+      amountFb.innerHTML = '✓ 酒精量适中（1/4 ~ 2/3），可以安全使用。';
+      alcoholOK = true;
+    }
+  }
+  slider.addEventListener('input', () => updateAlcohol(parseInt(slider.value)));
+  updateAlcohol(50);
+
+  // 操作2：点火方式
+  document.querySelectorAll('[data-ignite]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const way = this.dataset.ignite;
+      document.querySelectorAll('[data-ignite]').forEach(b => b.classList.remove('correct', 'wrong'));
+
+      if (way === 'match') {
+        this.classList.add('correct');
+        igniteFb.className = 'alcohol-feedback good show';
+        igniteFb.innerHTML = '✓ 正确！用火柴点燃酒精灯是安全规范的操作。';
+        flame.setAttribute('opacity', '1');
+        ignited = true;
+      } else if (way === 'lamp') {
+        this.classList.add('wrong');
+        igniteFb.className = 'alcohol-feedback bad show';
+        igniteFb.innerHTML = '❌ 错误！不能用燃着的酒精灯引燃另一只酒精灯，否则酒精倾洒会引起火灾。正确方法：用火柴点燃。';
+        flame.setAttribute('opacity', '0');
+        ignited = false;
+      } else if (way === 'lighter') {
+        this.classList.add('correct');
+        igniteFb.className = 'alcohol-feedback good show';
+        igniteFb.innerHTML = '✓ 可以。打火机与火柴一样属于安全点火方式。火柴更常用、更经典。';
+        flame.setAttribute('opacity', '1');
+        ignited = true;
+      }
+    });
+  });
+
+  // 操作3：熄灭方式
+  document.querySelectorAll('[data-extinguish]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const way = this.dataset.extinguish;
+      document.querySelectorAll('[data-extinguish]').forEach(b => b.classList.remove('correct', 'wrong'));
+
+      if (way === 'cap') {
+        this.classList.add('correct');
+        extinguishFb.className = 'alcohol-feedback good show';
+        extinguishFb.innerHTML = '✓ 正确！用灯帽盖灭是唯一规范的熄灭方法。盖灭后需轻提灯帽再盖上，释放内部蒸气压力。';
+        flame.setAttribute('opacity', '0');
+        // 灯帽移动到灯芯上方再移回
+        cap.setAttribute('x', '130');
+        cap.setAttribute('y', '60');
+        setTimeout(() => {
+          cap.setAttribute('x', '210');
+          cap.setAttribute('y', '75');
+        }, 800);
+      } else if (way === 'blow') {
+        this.classList.add('wrong');
+        extinguishFb.className = 'alcohol-feedback bad show';
+        extinguishFb.innerHTML = '❌ 严重错误！用嘴吹灭会把火焰压入灯内，引燃酒精蒸气造成爆炸。正确方法：用灯帽盖灭。';
+        // 火焰被吹弯后变大（模拟危险）
+        flame.setAttribute('opacity', '1');
+      } else if (way === 'water') {
+        this.classList.add('wrong');
+        extinguishFb.className = 'alcohol-feedback bad show';
+        extinguishFb.innerHTML = '❌ 错误！用水泼灭会使酒精浮在水面上扩散燃烧，扩大火势。正确方法：用灯帽盖灭。';
+        flame.setAttribute('opacity', '1');
+      }
+    });
+  });
+})();
+
+/* ============================================================
+ * 交互4：加热试管步骤排序（拖拽）
+ * ============================================================ */
+(function() {
+  const list = document.getElementById('sort-list');
+  const items = Array.from(list.querySelectorAll('.sort-item'));
+  const result = document.getElementById('sort-result');
+  let dragEl = null;
+
+  function updateOrderNums() {
+    list.querySelectorAll('.sort-item').forEach((item, i) => {
+      item.querySelector('.order-num').textContent = i + 1;
+    });
+  }
+
+  function shuffle() {
+    // Fisher-Yates 打乱
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      list.appendChild(items[j]);
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    // 重新排列 DOM
+    items.sort(() => Math.random() - 0.5).forEach(it => list.appendChild(it));
+    updateOrderNums();
+    result.classList.remove('show');
+  }
+
+  list.addEventListener('dragstart', function(e) {
+    dragEl = e.target.closest('.sort-item');
+    if (dragEl) dragEl.classList.add('dragging');
+  });
+  list.addEventListener('dragend', function(e) {
+    const el = e.target.closest('.sort-item');
+    if (el) el.classList.remove('dragging');
+    dragEl = null;
+    updateOrderNums();
+  });
+  list.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    const after = getDragAfter(e.clientY);
+    if (dragEl && after) {
+      list.insertBefore(dragEl, after);
+    } else if (dragEl && !after) {
+      list.appendChild(dragEl);
+    }
+    updateOrderNums();
+  });
+
+  function getDragAfter(y) {
+    const els = [...list.querySelectorAll('.sort-item:not(.dragging)')];
+    return els.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: -Infinity }).element;
+  }
+
+  document.getElementById('sort-check').addEventListener('click', function() {
+    const ordered = [...list.querySelectorAll('.sort-item')];
+    let correct = true;
+    ordered.forEach((item, i) => {
+      const expected = i + 1;
+      const actual = parseInt(item.dataset.correct);
+      if (actual !== expected) correct = false;
+    });
+
+    if (correct) {
+      result.className = 'sort-result correct show';
+      result.innerHTML = '🎉 完全正确！加热试管的7个步骤顺序你掌握了。<br>关键点：检查试管 → 装药品 → 夹试管夹 → 预热 → 固定加热 → 管口斜向上 → 盖灭酒精灯。';
+    } else {
+      result.className = 'sort-result wrong show';
+      result.innerHTML = '❌ 顺序有误，请再调整。提示：第一步应该先<strong>检查试管是否完好</strong>，最后一步是<strong>用灯帽盖灭酒精灯</strong>。';
+    }
+  });
+
+  document.getElementById('sort-reset').addEventListener('click', shuffle);
+
+  // 初始打乱
+  items.sort(() => Math.random() - 0.5).forEach(it => list.appendChild(it));
+  updateOrderNums();
+})();
+
+/* ============================================================
+ * 交互5：过滤操作模拟
+ * ============================================================ */
+(function() {
+  const rod = document.getElementById('glass-rod');
+  const funnelShape = document.getElementById('funnel-shape');
+  const filterPaper = document.getElementById('filter-paper');
+  const liquidInFunnel = document.getElementById('liquid-in-funnel');
+  const beakerLiquid = document.getElementById('beaker-liquid');
+  const layerLabel = document.getElementById('layer-label');
+
+  function showFb(id, ok, msg) {
+    const fb = document.getElementById('filter-fb-' + id);
+    fb.className = 'filter-feedback ' + (ok ? 'good' : 'bad') + ' show';
+    fb.innerHTML = msg;
+  }
+
+  document.querySelectorAll('[data-fq="1"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('[data-fq="1"]').forEach(b => b.classList.remove('correct', 'wrong'));
+      if (this.dataset.fans === 'three') {
+        this.classList.add('correct');
+        showFb(1, true, '✓ 正确！玻璃棒应靠在<strong>三层滤纸</strong>一侧，因为三层滤纸更厚、更结实，不易被玻璃棒戳破。');
+        // 玻璃棒靠到左侧三层处
+        rod.setAttribute('x1', '110');
+        rod.setAttribute('y1', '40');
+        rod.setAttribute('x2', '115');
+        rod.setAttribute('y2', '100');
+        layerLabel.setAttribute('fill', '#27AE60');
+      } else {
+        this.classList.add('wrong');
+        showFb(1, false, '❌ 错误！一层滤纸太薄，玻璃棒靠在上面容易戳破滤纸，导致滤液浑浊。应靠在<strong>三层滤纸</strong>一侧。');
+        rod.setAttribute('x1', '185');
+        rod.setAttribute('y1', '40');
+        rod.setAttribute('x2', '180');
+        rod.setAttribute('y2', '100');
+        layerLabel.setAttribute('fill', '#E74C3C');
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-fq="2"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('[data-fq="2"]').forEach(b => b.classList.remove('correct', 'wrong'));
+      if (this.dataset.fans === 'wall') {
+        this.classList.add('correct');
+        showFb(2, true, '✓ 正确！漏斗下端应靠在<strong>烧杯内壁</strong>上，使滤液沿烧杯壁流下，避免液体飞溅。');
+        // 漏斗下端靠到烧杯壁（不动SVG，但改变标记位置）
+      } else {
+        this.classList.add('wrong');
+        showFb(2, false, '❌ 错误！漏斗下端悬空时，滤液滴落会飞溅出烧杯。应靠在<strong>烧杯内壁</strong>上引流。');
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-fq="3"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('[data-fq="3"]').forEach(b => b.classList.remove('correct', 'wrong'));
+      if (this.dataset.fans === 'below') {
+        this.classList.add('correct');
+        showFb(3, true, '✓ 正确！液面必须<strong>低于滤纸边缘</strong>，否则液体会从滤纸与漏斗壁的缝隙直接流下，达不到过滤效果。');
+        // 液体在滤纸内，正常
+        liquidInFunnel.setAttribute('d', 'M 110 90 L 190 90 L 158 138 L 142 138 Z');
+        filterPaper.setAttribute('fill', '#FFFDE7');
+      } else {
+        this.classList.add('wrong');
+        showFb(3, false, '❌ 严重错误！液面超过滤纸边缘时，液体从滤纸与漏斗壁缝隙流下，<strong>滤液浑浊</strong>，过滤失败。');
+        // 液体溢出，滤纸变浑浊色
+        liquidInFunnel.setAttribute('d', 'M 100 80 L 200 80 L 165 140 L 135 140 Z');
+        filterPaper.setAttribute('fill', '#D7CCC8');
+      }
+    });
+  });
+})();
+
+/* ============================================================
+ * 练习题初始化
+ * ============================================================ */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '酒精灯必须用灯帽盖灭，不能用嘴吹，否则会把火焰压入灯内引起爆炸。',
+  hint: '想想嘴吹灭会导致酒精蒸气怎样？'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '试管夹应夹在距管口1/3处，既稳固又便于加热操作。',
+  hint: '距管口1/3处是标准位置，便于手持且远离加热部位。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: '玻璃棒应靠在三层滤纸一侧，三层滤纸较厚不易被戳破。',
+  hint: '哪一侧的滤纸更厚、更结实？'
+});
+
+// 保存学习进度
+Progress.save('chemistry', '04-化学实验安全', 'done');
+</script>
+
 </body>
 </html>

@@ -6,85 +6,2040 @@
   <title>数据的分析 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 24px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
+    .formula-box .formula {
       font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
     }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 90px;
+      color: var(--math);
+      font-size: 16px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      background: var(--math);
+    }
+    .slider-row .value-badge {
+      min-width: 56px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== Canvas 容器 ===== */
+    .canvas-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .canvas-wrap canvas {
+      max-width: 100%;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .data-cell.math-color { border-color: rgba(155,89,182,0.3); }
+    .data-cell.math-color .num { color: var(--math); }
+
+    /* ===== 步骤展示 ===== */
+    .step-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 16px 0;
+    }
+    .step-flow-item {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+    }
+    .step-flow-item .step-num {
+      display: inline-block;
+      background: var(--math);
+      color: #fff;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+    .step-flow-item .calc {
+      font-family: Georgia, serif;
+      margin-top: 8px;
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    /* ===== 数据输入区 ===== */
+    .data-input-area {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .data-input-area input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: Georgia, serif;
+    }
+    .data-input-area input[type="text"]:focus {
+      outline: none;
+      border-color: var(--math);
+    }
+    .data-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+      min-height: 40px;
+    }
+    .data-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(155,89,182,0.12);
+      color: var(--math);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      font-size: 16px;
+    }
+    .data-tag .remove-btn {
+      cursor: pointer;
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .data-tag .remove-btn:hover { opacity: 0.6; }
+
+    /* ===== 对比表格 ===== */
+    .compare-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .compare-tab {
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid transparent;
+      background: var(--bg-soft);
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .compare-tab.active {
+      background: var(--math);
+      color: #fff;
+    }
+    .compare-panel { display: none; }
+    .compare-panel.active { display: block; }
+
+    /* ===== 生活实例卡片 ===== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+    }
+    .example-card h4 { color: var(--math); margin-bottom: 8px; font-size: 17px; }
+    .example-card p { font-size: 14px; color: var(--text-secondary); }
+    .example-card .formula-inline {
+      font-family: Georgia, serif;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--math);
+    }
+
+    /* ===== 权重行 ===== */
+    .weight-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    @media (max-width: 768px) {
+      .weight-row { grid-template-columns: 1fr; }
+    }
+    .weight-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .weight-card .wc-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+    .weight-card .wc-score {
+      font-size: 32px; font-weight: 700; font-family: Georgia, serif; color: var(--math);
+    }
+    .weight-card .wc-weight {
+      font-size: 14px; margin-top: 6px; color: var(--text-secondary);
+    }
+    .weight-card .wc-weight-input {
+      width: 60px; padding: 4px 8px; text-align: center;
+      border: 2px solid var(--border); border-radius: 6px;
+      font-size: 15px; font-family: Georgia, serif;
+    }
+    .weight-card .wc-weight-input:focus { outline: none; border-color: var(--math); }
+
+    /* ===== 对比结果框 ===== */
+    .result-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    @media (max-width: 768px) {
+      .result-compare { grid-template-columns: 1fr; }
+    }
+    .result-box {
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .result-box.weighted {
+      background: linear-gradient(135deg, rgba(155,89,182,0.12), rgba(155,89,182,0.04));
+      border: 2px solid rgba(155,89,182,0.3);
+    }
+    .result-box.simple {
+      background: rgba(127,140,141,0.1);
+      border: 2px solid rgba(127,140,141,0.2);
+    }
+    .result-box .rb-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+    .result-box .rb-value {
+      font-size: 36px; font-weight: 700; font-family: Georgia, serif;
+    }
+    .result-box.weighted .rb-value { color: var(--math); }
+    .result-box.simple .rb-value { color: var(--text-secondary); }
+
+    /* ===== 图表切换 ===== */
+    .chart-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      justify-content: center;
+    }
+    .chart-tab {
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid var(--border);
+      background: #fff;
+      transition: all 0.2s;
+    }
+    .chart-tab.active {
+      background: var(--math);
+      color: #fff;
+      border-color: var(--math);
+    }
+
+    /* ===== 两组对比 ===== */
+    .group-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    @media (max-width: 768px) {
+      .group-compare { grid-template-columns: 1fr; }
+    }
+    .group-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .group-card .gc-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .group-card .gc-data { font-family: Georgia, serif; font-size: 18px; margin-bottom: 8px; }
+    .group-card .gc-var { font-size: 14px; margin-top: 6px; }
+    .group-card .gc-var .var-num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .group-card.stable { border: 2px solid var(--success); }
+    .group-card.unstable { border: 2px solid var(--danger); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+
+    /* ===== 排序动画 ===== */
+    .sort-display {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 16px 0;
+      min-height: 70px;
+      align-items: flex-end;
+    }
+    .sort-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.4s ease;
+    }
+    .sort-bar .bar-rect {
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding-bottom: 4px;
+      min-width: 40px;
+    }
+    .sort-bar .bar-label {
+      font-size: 13px;
+      font-family: Georgia, serif;
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📐 数据的分析</div>
+  <div class="navbar-brand">📊 数据的分析</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📊 数据的分析</h1>
+  <p>用数字读懂世界——平均数、中位数、众数、方差的智慧</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">数学</a>
+    <span>数学</span>
     <span class="separator">/</span>
-    <span>八年级</span>
+    <a href="index.html">八年级</a>
     <span class="separator">/</span>
     <span>数据的分析</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>数据的分析</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 引入 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：生活中的数据</h2>
+  <div class="card">
+    <p>生活中我们经常需要处理数据：考试成绩、气温变化、比赛得分……如何从一堆数据中获取有用信息？<strong class="math-accent">数据的分析</strong>就是用数学方法来描述和概括数据的特征。</p>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>📈 成绩分析</h4>
+        <p>5 次测试：85, 90, 78, 92, 88。平均多少？哪次最接近水平？</p>
+        <div class="formula-inline">平均数 = 86.6</div>
+      </div>
+      <div class="example-card">
+        <h4>🏀 球员身高</h4>
+        <p>一支球队 12 人的身高，哪个身高出现最多？中间身高是多少？</p>
+        <div class="formula-inline">众数 / 中位数</div>
+      </div>
+      <div class="example-card">
+        <h4>🎯 射击稳定性</h4>
+        <p>两名射手平均成绩相同，谁发挥更稳定？看方差！</p>
+        <div class="formula-inline">方差越小越稳定</div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 核心问题</div>
+      <p>数据的分析要回答三个核心问题：数据的<strong>集中趋势</strong>（平均数、中位数、众数）、数据的<strong>离散程度</strong>（极差、方差）、以及<strong>用样本估计总体</strong>。</p>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 平均数 + 交互1 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 平均数（算术平均数）</h2>
+  <div class="card">
+    <p>一般地，对于 n 个数据 x₁, x₂, ..., xₙ，它们的<strong class="math-accent">算术平均数</strong>（简称平均数）为：</p>
+    <div class="formula-box">
+      <div class="formula">x̄ = (x₁ + x₂ + ... + xₙ) / n</div>
+      <div class="formula-note">平均数反映了一组数据的"一般水平"，它利用了所有数据的信息</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">📐 注意</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>平均数<strong>受极端值（特大或特小的值）影响较大</strong></li>
+        <li>平均数不一定是数据中的某个值</li>
+        <li>平均数的单位与原数据相同</li>
+      </ul>
+    </div>
   </div>
+
+  <!-- ===== 交互1：平均数计算器 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互探索①：平均数计算器</h2>
+  <div class="card">
+    <p>输入一组数据（用英文逗号分隔），系统会实时计算平均数、中位数、众数、极差和方差，并绘制数据点图。</p>
+
+    <div class="data-input-area">
+      <input type="text" id="input-data-1" value="85, 90, 78, 92, 88" placeholder="如：85, 90, 78, 92, 88">
+      <button class="btn btn-primary btn-sm" id="btn-update-1" style="background:var(--math);">更新数据</button>
+      <button class="btn btn-outline btn-sm" id="btn-add-1" style="border-color:var(--math);color:var(--math);">+ 添加随机数</button>
+    </div>
+
+    <div class="data-tag-list" id="tag-list-1"></div>
+
+    <div class="data-panel" id="stats-panel-1">
+      <div class="data-cell math-color"><div class="label">平均数 x̄</div><div class="num" id="stat-mean">—</div></div>
+      <div class="data-cell math-color"><div class="label">中位数</div><div class="num" id="stat-median">—</div></div>
+      <div class="data-cell math-color"><div class="label">众数</div><div class="num" id="stat-mode" style="font-size:18px;">—</div></div>
+      <div class="data-cell math-color"><div class="label">极差</div><div class="num" id="stat-range">—</div></div>
+      <div class="data-cell math-color"><div class="label">方差 s²</div><div class="num" id="stat-variance">—</div></div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-stats" width="680" height="340"></canvas>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 图中说明</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>每个<strong>蓝色圆点</strong>代表一个数据</li>
+        <li><strong>红色虚线</strong>标注平均数的位置</li>
+        <li><strong>绿色虚线</strong>标注中位数的位置</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 加权平均数 + 交互2 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 加权平均数</h2>
+  <div class="card">
+    <p>若 n 个数据中，x₁ 出现 f₁ 次，x₂ 出现 f₂ 次，……，xₖ 出现 fₖ 次（f₁ + f₂ + ... + fₖ = n），则这组数据的<strong class="math-accent">加权平均数</strong>为：</p>
+    <div class="formula-box">
+      <div class="formula">x̄ = (x₁f₁ + x₂f₂ + ... + xₖfₖ) / (f₁ + f₂ + ... + fₖ)</div>
+      <div class="formula-note">其中 f₁, f₂, ..., fₖ 称为<strong>权</strong>（weight），它反映了各数据在总体中的重要程度</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 理解"权"</div>
+      <p style="margin-top:4px;">"权"越大，说明该数据在总体中占的比重越大，对平均数的影响也越大。算术平均数是加权平均数的特殊情况——每个数据的"权"都相等（都是 1）。</p>
+    </div>
+  </div>
+
+  <!-- ===== 交互2：加权平均数演示 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 交互探索②：加权平均数演示</h2>
+  <div class="card">
+    <p>学期总评成绩 = 平时成绩 × w₁ + 期中成绩 × w₂ + 期末成绩 × w₃。拖动滑块调节三项成绩，修改权重，对比<strong class="math-accent">加权平均数</strong>与<strong>普通平均数</strong>的差异。</p>
+
+    <div class="slider-row">
+      <label>平时成绩</label>
+      <input type="range" id="slider-pingshi" min="0" max="100" value="85" step="1">
+      <span class="value-badge" id="display-pingshi">85</span>
+    </div>
+    <div class="slider-row">
+      <label>期中成绩</label>
+      <input type="range" id="slider-qizhong" min="0" max="100" value="78" step="1">
+      <span class="value-badge" id="display-qizhong">78</span>
+    </div>
+    <div class="slider-row">
+      <label>期末成绩</label>
+      <input type="range" id="slider-qimo" min="0" max="100" value="92" step="1">
+      <span class="value-badge" id="display-qimo">92</span>
+    </div>
+
+    <div class="weight-row">
+      <div class="weight-card">
+        <div class="wc-label">平时成绩</div>
+        <div class="wc-score" id="wc-score-1">85</div>
+        <div class="wc-weight">权 w₁ = <input type="number" class="wc-weight-input" id="weight-1" value="30" min="0" max="100">%</div>
+      </div>
+      <div class="weight-card">
+        <div class="wc-label">期中成绩</div>
+        <div class="wc-score" id="wc-score-2">78</div>
+        <div class="wc-weight">权 w₂ = <input type="number" class="wc-weight-input" id="weight-2" value="30" min="0" max="100">%</div>
+      </div>
+      <div class="weight-card">
+        <div class="wc-label">期末成绩</div>
+        <div class="wc-score" id="wc-score-3">92</div>
+        <div class="wc-weight">权 w₃ = <input type="number" class="wc-weight-input" id="weight-3" value="40" min="0" max="100">%</div>
+      </div>
+    </div>
+
+    <div class="result-compare">
+      <div class="result-box weighted">
+        <div class="rb-label">加权平均数（考虑权重）</div>
+        <div class="rb-value" id="weighted-avg">—</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;" id="weighted-calc"></div>
+      </div>
+      <div class="result-box simple">
+        <div class="rb-label">普通平均数（权重相同）</div>
+        <div class="rb-value" id="simple-avg">—</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;" id="simple-calc"></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-weighted" width="680" height="300"></canvas>
+    </div>
+
+    <div class="tip-box" id="weight-tip">
+      <div class="tip-title">💡 权重的意义</div>
+      <p style="margin-top:4px;" id="weight-tip-text">期末考试权重大（40%），所以期末成绩对总评影响最大。这就是"加权"的意义——重要的项目"说话权"更大。</p>
+    </div>
+  </div>
+
+  <!-- ===== 中位数和众数 + 交互3 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 中位数和众数</h2>
+  <div class="card">
+    <h3 style="color:var(--math);margin-bottom:8px;">中位数</h3>
+    <p>将一组数据按从小到大（或从大到小）的顺序排列后，处在<strong>最中间位置</strong>的一个数据（或最中间两个数据的平均值），叫做这组数据的<strong class="math-accent">中位数</strong>。</p>
+    <div class="data-panel">
+      <div class="data-cell math-color"><div class="label">n 为奇数</div><div class="num" style="font-size:15px;">最中间的那一个</div></div>
+      <div class="data-cell math-color"><div class="label">n 为偶数</div><div class="num" style="font-size:15px;">最中间两个的平均</div></div>
+    </div>
+
+    <h3 style="color:var(--math);margin:16px 0 8px;">众数</h3>
+    <p>一组数据中出现次数<strong>最多</strong>的数据叫做这组数据的<strong class="math-accent">众数</strong>。</p>
+    <div class="tip-box">
+      <div class="tip-title">📐 众数的特点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>众数可能<strong>有一个</strong>、<strong>多个</strong>，也可能<strong>没有</strong>（当所有数据出现次数相同时）</li>
+        <li>众数是数据中的原始值，而不是出现的次数</li>
+        <li>众数常用于描述"最常见"的情况</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 交互3：中位数和众数探索 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 交互探索③：中位数和众数探索</h2>
+  <div class="card">
+    <p>输入一组数据，点击"排序"按钮观察排序动画，系统会自动标注中位数和众数。</p>
+
+    <div class="data-input-area">
+      <input type="text" id="input-data-3" value="7, 3, 9, 3, 5, 8, 3, 6" placeholder="如：7, 3, 9, 3, 5, 8, 3, 6">
+      <button class="btn btn-primary btn-sm" id="btn-sort" style="background:var(--math);">🔄 排序动画</button>
+      <button class="btn btn-outline btn-sm" id="btn-update-3" style="border-color:var(--math);color:var(--math);">更新数据</button>
+    </div>
+
+    <div style="margin:12px 0;">
+      <strong style="color:var(--text-secondary);font-size:14px;">原始数据：</strong>
+      <span id="raw-data-3" style="font-family:Georgia,serif;font-size:16px;"></span>
+    </div>
+
+    <div class="sort-display" id="sort-display"></div>
+
+    <div style="margin:12px 0;">
+      <strong style="color:var(--text-secondary);font-size:14px;">排序结果：</strong>
+      <span id="sorted-data-3" style="font-family:Georgia,serif;font-size:16px;"></span>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell math-color"><div class="label">数据个数 n</div><div class="num" id="median-count">—</div></div>
+      <div class="data-cell math-color"><div class="label">中位数</div><div class="num" id="median-value">—</div></div>
+      <div class="data-cell math-color"><div class="label">众数</div><div class="num" id="mode-value" style="font-size:18px;">—</div></div>
+      <div class="data-cell math-color"><div class="label">奇偶性</div><div class="num" id="parity" style="font-size:16px;">—</div></div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-median-mode" width="680" height="320"></canvas>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🎨 颜色说明</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong style="color:var(--success);">绿色</strong>条形 = 中位数对应的数据</li>
+        <li><strong style="color:var(--danger);">红色</strong>条形 = 众数对应的数据</li>
+        <li><strong style="color:var(--math);">紫色</strong>条形 = 普通数据</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 极差和方差 + 交互4 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 极差和方差</h2>
+  <div class="card">
+    <h3 style="color:var(--math);margin-bottom:8px;">极差</h3>
+    <p>一组数据中的<strong>最大值</strong>与<strong>最小值</strong>的差，叫做这组数据的<strong class="math-accent">极差</strong>。</p>
+    <div class="formula-box">
+      <div class="formula" style="font-size:24px;">极差 = 最大值 − 最小值</div>
+      <div class="formula-note">极差反映数据的变化范围，简单但只利用了两个数据</div>
+    </div>
+
+    <h3 style="color:var(--math);margin:16px 0 8px;">方差</h3>
+    <p>设 n 个数据 x₁, x₂, ..., xₙ 的平均数为 x̄，则这组数据的<strong class="math-accent">方差</strong>为：</p>
+    <div class="formula-box">
+      <div class="formula">s² = [(x₁−x̄)² + (x₂−x̄)² + ... + (xₙ−x̄)²] / n</div>
+      <div class="formula-note">方差反映数据的离散程度。<strong>方差越小，数据越稳定</strong>；方差越大，数据波动越大</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 方差的意义</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>方差是各数据与平均数之差的平方的平均数</li>
+        <li>方差≥0；当且仅当所有数据相等时，方差=0</li>
+        <li>方差的单位是原数据单位的平方</li>
+        <li>比较两组数据的稳定性时，方差小的更稳定</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 交互4：方差与稳定性比较 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 交互探索④：方差与稳定性比较</h2>
+  <div class="card">
+    <p>甲、乙两名射击运动员各射击 5 次，比较谁的成绩更稳定。</p>
+
+    <div class="data-input-area" style="margin-top:16px;">
+      <label style="font-weight:600;color:var(--math);min-width:60px;">甲组：</label>
+      <input type="text" id="input-group-a" value="8, 9, 7, 10, 8" style="flex:1;min-width:150px;">
+    </div>
+    <div class="data-input-area">
+      <label style="font-weight:600;color:var(--danger);min-width:60px;">乙组：</label>
+      <input type="text" id="input-group-b" value="5, 10, 6, 10, 9" style="flex:1;min-width:150px;">
+      <button class="btn btn-primary btn-sm" id="btn-update-4" style="background:var(--math);">更新对比</button>
+    </div>
+
+    <div class="group-compare">
+      <div class="group-card" id="group-a-card">
+        <div class="gc-title" style="color:var(--math);">甲组射击成绩</div>
+        <div class="gc-data" id="group-a-data">8, 9, 7, 10, 8</div>
+        <div class="data-panel" style="margin:8px 0;">
+          <div class="data-cell math-color"><div class="label">平均数</div><div class="num" id="group-a-mean" style="font-size:20px;">—</div></div>
+          <div class="data-cell math-color"><div class="label">方差</div><div class="num" id="group-a-var" style="font-size:20px;">—</div></div>
+        </div>
+      </div>
+      <div class="group-card" id="group-b-card">
+        <div class="gc-title" style="color:var(--danger);">乙组射击成绩</div>
+        <div class="gc-data" id="group-b-data">5, 10, 6, 10, 9</div>
+        <div class="data-panel" style="margin:8px 0;">
+          <div class="data-cell"><div class="label">平均数</div><div class="num" id="group-b-mean" style="font-size:20px;color:var(--danger);">—</div></div>
+          <div class="data-cell"><div class="label">方差</div><div class="num" id="group-b-var" style="font-size:20px;color:var(--danger);">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-variance" width="680" height="340"></canvas>
+    </div>
+
+    <div class="tip-box" id="variance-conclusion">
+      <div class="tip-title">🎯 结论</div>
+      <p style="margin-top:4px;" id="variance-conclusion-text"></p>
+    </div>
+  </div>
+
+  <!-- ===== 用样本估计总体 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 用样本估计总体</h2>
+  <div class="card">
+    <p>在现实生活中，当总体包含的个体数目很多甚至无限时，我们通常无法对每个个体进行调查。这时可以从总体中抽取一个<strong class="math-accent">样本</strong>，用样本的特征来估计总体的特征。</p>
+    <div class="formula-box">
+      <div class="formula" style="font-size:22px;">样本平均数 → 估计 → 总体平均数<br>样本方差 → 估计 → 总体方差</div>
+      <div class="formula-note">样本量越大，样本对总体的估计越准确</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 抽样调查</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>总体</strong>：所要考察的全体对象</li>
+        <li><strong>个体</strong>：组成总体的每一个考察对象</li>
+        <li><strong>样本</strong>：从总体中抽取的一部分个体</li>
+        <li><strong>样本容量</strong>：样本中个体的数目</li>
+        <li>抽样时要注意样本的<strong>代表性</strong>和<strong>广泛性</strong></li>
+      </ul>
+    </div>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>🏭 灯泡寿命</h4>
+        <p>某厂生产 10000 只灯泡，从中抽取 50 只测试平均寿命，用这 50 只的平均寿命估计全部灯泡的平均寿命。</p>
+        <div class="formula-inline">样本 → 总体</div>
+      </div>
+      <div class="example-card">
+        <h4>🌾 粮食估产</h4>
+        <p>从一片麦田中随机选取若干小块收割测产，用这些小块的平均亩产估计整片麦田的亩产。</p>
+        <div class="formula-inline">部分估计整体</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 交互5：数据可视化 ===== -->
+  <h2 class="section-title"><span class="step-badge">11</span> 交互探索⑤：数据可视化</h2>
+  <div class="card">
+    <p>同一组数据，用不同的统计图展示，各有侧重。点击下方按钮切换图表类型。</p>
+
+    <div class="chart-tabs">
+      <div class="chart-tab active" data-chart="bar">📊 条形图</div>
+      <div class="chart-tab" data-chart="line">📈 折线图</div>
+      <div class="chart-tab" data-chart="pie">🥧 扇形图</div>
+    </div>
+
+    <div class="data-input-area">
+      <label style="font-weight:600;color:var(--math);min-width:60px;">数据：</label>
+      <input type="text" id="input-data-5" value="12, 18, 15, 25, 10" style="flex:1;min-width:150px;">
+      <label style="font-weight:600;color:var(--text-secondary);min-width:60px;font-size:14px;">标签：</label>
+      <input type="text" id="input-labels-5" value="语文,数学,英语,物理,化学" style="flex:1;min-width:150px;">
+      <button class="btn btn-primary btn-sm" id="btn-update-5" style="background:var(--math);">更新</button>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas-chart" width="680" height="360"></canvas>
+    </div>
+
+    <div class="tip-box" id="chart-tip">
+      <div class="tip-title">📊 条形图的特点</div>
+      <p style="margin-top:4px;" id="chart-tip-text">条形图能清楚地表示出每个项目的具体数目，便于比较大小。</p>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">12</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 某同学 5 次数学测试成绩分别为：85, 90, 78, 92, 88。则他的平均成绩为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 85</div>
+    <div class="quiz-option" data-idx="1">B. 86</div>
+    <div class="quiz-option" data-idx="2">C. 86.6</div>
+    <div class="quiz-option" data-idx="3">D. 88</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 一组数据：3, 5, 7, 8, 10, 12 的中位数是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 7</div>
+    <div class="quiz-option" data-idx="1">B. 7.5</div>
+    <div class="quiz-option" data-idx="2">C. 8</div>
+    <div class="quiz-option" data-idx="3">D. 8.5</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 甲、乙两人各射击 5 次，成绩如下：<br>甲：8, 8, 8, 8, 8 &nbsp;&nbsp; 乙：6, 7, 8, 9, 10<br>下列说法正确的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 甲的方差大</div>
+    <div class="quiz-option" data-idx="1">B. 乙的方差大</div>
+    <div class="quiz-option" data-idx="2">C. 两人方差相等</div>
+    <div class="quiz-option" data-idx="3">D. 无法比较</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">13</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 数据分析在其他学科中的应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        📈 <a href="10-一次函数.html"><strong>数学·一次函数</strong></a>——
+        一次函数可以描述数据的变化趋势。通过数据分析找到变量间的近似关系，就是建立一次函数模型的过程。
+        <span class="tag tag-math">趋势分析</span>
+      </li>
+      <li>
+        🔢 <a href="../九年级/01-一元二次方程.html"><strong>数学九年级·一元二次方程</strong></a>——
+        九年级将学习更多数据处理和建模方法，方差、平均数的思想在后续概率统计学习中更加深入。
+        <span class="tag tag-cross">知识衔接</span>
+      </li>
+      <li>
+        🧪 <a href="../../化学/八年级/03-身边的化学物质.html"><strong>化学·身边的化学物质（实验数据分析）</strong></a>——
+        化学实验中需要记录和处理大量数据（如质量、温度、体积），用平均数减小实验误差，用方差判断实验的精密度。
+        <span class="tag tag-chemistry">实验数据</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="10-一次函数.html" class="btn btn-outline">← 上一章：一次函数</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="../九年级/index.html" class="btn btn-primary" style="background: var(--math);">下一章：数学九年级 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 统计计算工具函数
+ * ======================================== */
+
+// 平均数
+function calcMean(arr) {
+  if (arr.length === 0) return 0;
+  return arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
+}
+
+// 中位数
+function calcMedian(arr) {
+  if (arr.length === 0) return 0;
+  var sorted = arr.slice().sort(function(a, b) { return a - b; });
+  var n = sorted.length;
+  if (n % 2 === 1) {
+    return sorted[Math.floor(n / 2)];
+  } else {
+    return (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+  }
+}
+
+// 众数（返回数组，可能为空）
+function calcMode(arr) {
+  if (arr.length === 0) return [];
+  var freq = {};
+  arr.forEach(function(v) {
+    var key = String(v);
+    freq[key] = (freq[key] || 0) + 1;
+  });
+  var maxFreq = 0;
+  for (var k in freq) {
+    if (freq[k] > maxFreq) maxFreq = freq[k];
+  }
+  if (maxFreq <= 1) return []; // 没有众数
+  var modes = [];
+  for (var k2 in freq) {
+    if (freq[k2] === maxFreq) modes.push(parseFloat(k2));
+  }
+  return modes.sort(function(a, b) { return a - b; });
+}
+
+// 极差
+function calcRange(arr) {
+  if (arr.length === 0) return 0;
+  return Math.max.apply(null, arr) - Math.min.apply(null, arr);
+}
+
+// 方差
+function calcVariance(arr) {
+  if (arr.length === 0) return 0;
+  var m = calcMean(arr);
+  var sum = arr.reduce(function(acc, v) { return acc + (v - m) * (v - m); }, 0);
+  return sum / arr.length;
+}
+
+// 解析输入数据
+function parseData(str) {
+  return str.split(/[,，\s]+/)
+    .map(function(s) { return parseFloat(s.trim()); })
+    .filter(function(v) { return !isNaN(v); });
+}
+
+// 格式化数字
+function fmt(v, decimals) {
+  decimals = decimals || 2;
+  if (Math.abs(v - Math.round(v)) < 0.001) return String(Math.round(v));
+  return v.toFixed(decimals);
+}
+
+/* ========================================
+ * 交互1：平均数计算器
+ * ======================================== */
+var data1 = [85, 90, 78, 92, 88];
+
+function updateStatsDisplay() {
+  // 更新标签列表
+  var tagList = document.getElementById('tag-list-1');
+  tagList.innerHTML = '';
+  data1.forEach(function(v, i) {
+    var tag = document.createElement('span');
+    tag.className = 'data-tag';
+    tag.innerHTML = v + ' <span class="remove-btn" data-idx="' + i + '">×</span>';
+    tagList.appendChild(tag);
+  });
+  tagList.querySelectorAll('.remove-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      data1.splice(idx, 1);
+      updateStatsDisplay();
+    });
+  });
+
+  // 计算统计量
+  if (data1.length === 0) {
+    document.getElementById('stat-mean').textContent = '—';
+    document.getElementById('stat-median').textContent = '—';
+    document.getElementById('stat-mode').textContent = '—';
+    document.getElementById('stat-range').textContent = '—';
+    document.getElementById('stat-variance').textContent = '—';
+    drawStatsCanvas([]);
+    return;
+  }
+
+  var mean = calcMean(data1);
+  var median = calcMedian(data1);
+  var modes = calcMode(data1);
+  var range = calcRange(data1);
+  var variance = calcVariance(data1);
+
+  document.getElementById('stat-mean').textContent = fmt(mean);
+  document.getElementById('stat-median').textContent = fmt(median);
+  document.getElementById('stat-mode').textContent = modes.length === 0 ? '无' : modes.map(function(m) { return fmt(m); }).join(', ');
+  document.getElementById('stat-range').textContent = fmt(range);
+  document.getElementById('stat-variance').textContent = fmt(variance);
+
+  drawStatsCanvas(data1);
+}
+
+function drawStatsCanvas(arr) {
+  var canvas = document.getElementById('canvas-stats');
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  if (arr.length === 0) return;
+
+  var padding = { top: 30, right: 40, bottom: 50, left: 50 };
+  var plotW = w - padding.left - padding.right;
+  var plotH = h - padding.top - padding.bottom;
+
+  var minVal = Math.min.apply(null, arr);
+  var maxVal = Math.max.apply(null, arr);
+  var mean = calcMean(arr);
+  var median = calcMedian(arr);
+
+  // 扩展范围
+  var range = maxVal - minVal;
+  if (range < 10) range = 10;
+  var yMin = Math.min(minVal, mean, median) - range * 0.2;
+  var yMax = Math.max(maxVal, mean, median) + range * 0.2;
+  if (yMin === yMax) { yMin -= 5; yMax += 5; }
+
+  function getY(val) {
+    return padding.top + plotH - ((val - yMin) / (yMax - yMin)) * plotH;
+  }
+  function getX(i) {
+    if (arr.length === 1) return padding.left + plotW / 2;
+    return padding.left + (i / (arr.length - 1)) * plotW;
+  }
+
+  // 网格和Y轴标签
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '12px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  var ySteps = 5;
+  for (var s = 0; s <= ySteps; s++) {
+    var yVal = yMin + (yMax - yMin) * s / ySteps;
+    var yPos = getY(yVal);
+    ctx.beginPath();
+    ctx.moveTo(padding.left, yPos);
+    ctx.lineTo(w - padding.right, yPos);
+    ctx.stroke();
+    ctx.fillText(fmt(yVal, 1), padding.left - 8, yPos);
+  }
+
+  // X轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top + plotH);
+  ctx.lineTo(w - padding.right, padding.top + plotH);
+  ctx.stroke();
+
+  // 平均数线（红色虚线）
+  var meanY = getY(mean);
+  ctx.strokeStyle = '#E74C3C';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, meanY);
+  ctx.lineTo(w - padding.right, meanY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#E74C3C';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('x̄ = ' + fmt(mean), padding.left + 8, meanY - 4);
+
+  // 中位数线（绿色虚线）
+  var medianY = getY(median);
+  ctx.strokeStyle = '#27AE60';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, medianY);
+  ctx.lineTo(w - padding.right, medianY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#27AE60';
+  ctx.textAlign = 'right';
+  ctx.fillText('中位数 = ' + fmt(median), w - padding.right - 8, medianY - 4);
+
+  // 数据点
+  arr.forEach(function(v, i) {
+    var px = getX(i);
+    var py = getY(v);
+    // 蓝色圆点
+    ctx.fillStyle = '#3498DB';
+    ctx.beginPath();
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(px, py, 3, 0, Math.PI * 2);
+    ctx.fill();
+    // 数据标签
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 13px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(fmt(v), px, py + 12);
+    // 序号
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText('x' + (i + 1), px, padding.top + plotH + 8);
+  });
+
+  // 标题
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('数据点分布图', w / 2, 6);
+}
+
+document.getElementById('btn-update-1').addEventListener('click', function() {
+  var input = document.getElementById('input-data-1').value;
+  var parsed = parseData(input);
+  if (parsed.length > 0) {
+    data1 = parsed;
+    updateStatsDisplay();
+  }
+});
+
+document.getElementById('btn-add-1').addEventListener('click', function() {
+  data1.push(Math.floor(Math.random() * 40) + 60);
+  document.getElementById('input-data-1').value = data1.join(', ');
+  updateStatsDisplay();
+});
+
+// 回车更新
+document.getElementById('input-data-1').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('btn-update-1').click();
+});
+
+updateStatsDisplay();
+
+/* ========================================
+ * 交互2：加权平均数演示
+ * ======================================== */
+function updateWeighted() {
+  var ps = parseFloat(document.getElementById('slider-pingshi').value);
+  var qz = parseFloat(document.getElementById('slider-qizhong').value);
+  var qm = parseFloat(document.getElementById('slider-qimo').value);
+  var w1 = parseFloat(document.getElementById('weight-1').value) || 0;
+  var w2 = parseFloat(document.getElementById('weight-2').value) || 0;
+  var w3 = parseFloat(document.getElementById('weight-3').value) || 0;
+
+  document.getElementById('display-pingshi').textContent = ps;
+  document.getElementById('display-qizhong').textContent = qz;
+  document.getElementById('display-qimo').textContent = qm;
+  document.getElementById('wc-score-1').textContent = ps;
+  document.getElementById('wc-score-2').textContent = qz;
+  document.getElementById('wc-score-3').textContent = qm;
+
+  var weightSum = w1 + w2 + w3;
+
+  if (weightSum === 0) {
+    document.getElementById('weighted-avg').textContent = '—';
+    document.getElementById('weighted-calc').textContent = '权重之和为0，请设置权重';
+    document.getElementById('simple-avg').textContent = fmt((ps + qz + qm) / 3);
+    document.getElementById('simple-calc').textContent = '(' + ps + '+' + qz + '+' + qm + ') / 3';
+    drawWeightedCanvas(ps, qz, qm, w1, w2, w3, 0, (ps + qz + qm) / 3);
+    return;
+  }
+
+  // 加权平均数 = (ps*w1 + qz*w2 + qm*w3) / (w1 + w2 + w3)
+  var weighted = (ps * w1 + qz * w2 + qm * w3) / weightSum;
+  var simple = (ps + qz + qm) / 3;
+
+  document.getElementById('weighted-avg').textContent = fmt(weighted);
+  document.getElementById('weighted-calc').textContent =
+    '(' + ps + '×' + w1 + ' + ' + qz + '×' + w2 + ' + ' + qm + '×' + w3 + ') / ' + weightSum;
+  document.getElementById('simple-avg').textContent = fmt(simple);
+  document.getElementById('simple-calc').textContent =
+    '(' + ps + ' + ' + qz + ' + ' + qm + ') / 3';
+
+  // 更新提示
+  var tipText = document.getElementById('weight-tip-text');
+  var maxW = Math.max(w1, w2, w3);
+  var maxItem = '';
+  if (w1 === maxW) maxItem = '平时成绩';
+  if (w2 === maxW) maxItem = maxItem ? maxItem + '和期中成绩' : '期中成绩';
+  if (w3 === maxW) maxItem = maxItem ? maxItem + '和期末成绩' : '期末成绩';
+  var diff = weighted - simple;
+  var diffStr = '';
+  if (Math.abs(diff) < 0.01) {
+    diffStr = '加权平均数与普通平均数相等，说明权重恰好均等（或权重不影响结果）。';
+  } else if (diff > 0) {
+    diffStr = '加权平均数比普通平均数高 ' + fmt(diff) + ' 分，因为权重大的项目成绩更好。';
+  } else {
+    diffStr = '加权平均数比普通平均数低 ' + fmt(Math.abs(diff)) + ' 分，因为权重大的项目成绩较低。';
+  }
+  tipText.textContent = diffStr + ' 当权重不均等时，加权平均数与普通平均数通常不同——这就是"权"的意义。';
+
+  drawWeightedCanvas(ps, qz, qm, w1, w2, w3, weighted, simple);
+}
+
+function drawWeightedCanvas(ps, qz, qm, w1, w2, w3, weighted, simple) {
+  var canvas = document.getElementById('canvas-weighted');
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  var padding = { top: 30, right: 30, bottom: 50, left: 50 };
+  var plotW = w - padding.left - padding.right;
+  var plotH = h - padding.top - padding.bottom;
+
+  var weightSum = w1 + w2 + w3;
+  if (weightSum === 0) weightSum = 1;
+
+  var items = [
+    { label: '平时', score: ps, weight: w1, color: '#3498DB' },
+    { label: '期中', score: qz, weight: w2, color: '#F39C12' },
+    { label: '期末', score: qm, weight: w3, color: '#E74C3C' }
+  ];
+
+  // 网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '12px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (var s = 0; s <= 5; s++) {
+    var yVal = s * 20;
+    var yPos = padding.top + plotH - (yVal / 100) * plotH;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, yPos);
+    ctx.lineTo(w - padding.right, yPos);
+    ctx.stroke();
+    ctx.fillText(yVal, padding.left - 8, yPos);
+  }
+
+  // X轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top + plotH);
+  ctx.lineTo(w - padding.right, padding.top + plotH);
+  ctx.stroke();
+
+  // 画柱状图（成绩）
+  var barW = plotW / 3 * 0.35;
+  var groupW = plotW / 3;
+  items.forEach(function(item, i) {
+    var cx = padding.left + groupW * i + groupW / 2;
+    // 成绩柱
+    var barH = (item.score / 100) * plotH;
+    var barY = padding.top + plotH - barH;
+    ctx.fillStyle = item.color;
+    ctx.fillRect(cx - barW / 2, barY, barW, barH);
+    // 成绩标签
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 16px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(item.score, cx, barY - 4);
+    // 项目标签
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '14px sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText(item.label, cx, padding.top + plotH + 8);
+    // 权重标签
+    ctx.fillStyle = item.color;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText('权 ' + item.weight + '%', cx, padding.top + plotH + 26);
+  });
+
+  // 加权平均数线
+  if (weighted > 0) {
+    var wY = padding.top + plotH - (weighted / 100) * plotH;
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 5]);
+    ctx.beginPath();
+    ctx.moveTo(padding.left, wY);
+    ctx.lineTo(w - padding.right, wY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#9B59B6';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('加权平均 = ' + fmt(weighted), padding.left + 8, wY - 4);
+  }
+
+  // 普通平均数线
+  var sY = padding.top + plotH - (simple / 100) * plotH;
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, sY);
+  ctx.lineTo(w - padding.right, sY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('普通平均 = ' + fmt(simple), w - padding.right - 8, sY + 4);
+}
+
+['slider-pingshi', 'slider-qizhong', 'slider-qimo'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', updateWeighted);
+});
+['weight-1', 'weight-2', 'weight-3'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', updateWeighted);
+});
+updateWeighted();
+
+/* ========================================
+ * 交互3：中位数和众数探索
+ * ======================================== */
+var data3 = [7, 3, 9, 3, 5, 8, 3, 6];
+
+function updateMedianMode() {
+  document.getElementById('raw-data-3').textContent = data3.join(', ');
+  var n = data3.length;
+
+  if (n === 0) {
+    document.getElementById('sort-display').innerHTML = '<span style="color:var(--text-secondary);">无数据</span>';
+    document.getElementById('sorted-data-3').textContent = '—';
+    document.getElementById('median-count').textContent = '—';
+    document.getElementById('median-value').textContent = '—';
+    document.getElementById('mode-value').textContent = '—';
+    document.getElementById('parity').textContent = '—';
+    drawMedianModeCanvas([]);
+    return;
+  }
+
+  var sorted = data3.slice().sort(function(a, b) { return a - b; });
+  var median = calcMedian(data3);
+  var modes = calcMode(data3);
+
+  document.getElementById('sorted-data-3').textContent = sorted.join(', ');
+  document.getElementById('median-count').textContent = n;
+  document.getElementById('median-value').textContent = fmt(median);
+  document.getElementById('mode-value').textContent = modes.length === 0 ? '无' : modes.map(function(m) { return fmt(m); }).join(', ');
+  document.getElementById('parity').textContent = n % 2 === 0 ? '偶数' : '奇数';
+
+  drawSortDisplay(sorted, median, modes);
+  drawMedianModeCanvas(data3);
+}
+
+function drawSortDisplay(sorted, median, modes) {
+  var container = document.getElementById('sort-display');
+  container.innerHTML = '';
+
+  var maxVal = Math.max.apply(null, sorted);
+  var minVal = Math.min.apply(null, sorted);
+  var range = maxVal - minVal;
+  if (range === 0) range = 1;
+
+  sorted.forEach(function(v, i) {
+    var bar = document.createElement('div');
+    bar.className = 'sort-bar';
+
+    var height = 30 + ((v - minVal) / range) * 35;
+    var rect = document.createElement('div');
+    rect.className = 'bar-rect';
+    rect.style.height = height + 'px';
+
+    // 颜色判断
+    var isMedian = false;
+    var n = sorted.length;
+    if (n % 2 === 1) {
+      if (i === Math.floor(n / 2)) isMedian = true;
+    } else {
+      if (i === n / 2 - 1 || i === n / 2) isMedian = true;
+    }
+
+    var isMode = modes.indexOf(v) !== -1;
+
+    if (isMedian && isMode) {
+      rect.style.background = 'linear-gradient(180deg, #27AE60, #E74C3C)';
+    } else if (isMedian) {
+      rect.style.background = '#27AE60';
+    } else if (isMode) {
+      rect.style.background = '#E74C3C';
+    } else {
+      rect.style.background = '#9B59B6';
+    }
+
+    rect.textContent = v;
+    bar.appendChild(rect);
+
+    var label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = (i + 1);
+    if (isMedian) label.style.color = '#27AE60';
+    else if (isMode) label.style.color = '#E74C3C';
+    bar.appendChild(label);
+
+    container.appendChild(bar);
+  });
+}
+
+function drawMedianModeCanvas(arr) {
+  var canvas = document.getElementById('canvas-median-mode');
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  if (arr.length === 0) return;
+
+  var padding = { top: 30, right: 30, bottom: 50, left: 50 };
+  var plotW = w - padding.left - padding.right;
+  var plotH = h - padding.top - padding.bottom;
+
+  var sorted = arr.slice().sort(function(a, b) { return a - b; });
+  var maxVal = Math.max.apply(null, arr);
+  var minVal = Math.min.apply(null, arr);
+  var range = maxVal - minVal;
+  if (range < 5) range = 5;
+  var yMax = maxVal + range * 0.15;
+  var yMin = Math.max(0, minVal - range * 0.15);
+  if (yMin === yMax) { yMin -= 5; yMax += 5; }
+
+  var median = calcMedian(arr);
+  var modes = calcMode(arr);
+  var n = sorted.length;
+
+  // 网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '12px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  var ySteps = 5;
+  for (var s = 0; s <= ySteps; s++) {
+    var yVal = yMin + (yMax - yMin) * s / ySteps;
+    var yPos = padding.top + plotH - ((yVal - yMin) / (yMax - yMin)) * plotH;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, yPos);
+    ctx.lineTo(w - padding.right, yPos);
+    ctx.stroke();
+    ctx.fillText(fmt(yVal, 1), padding.left - 8, yPos);
+  }
+
+  // X轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top + plotH);
+  ctx.lineTo(w - padding.right, padding.top + plotH);
+  ctx.stroke();
+
+  // 画条形图（排序后的数据）
+  var barW = Math.min(50, plotW / n * 0.7);
+  var gap = plotW / n;
+  sorted.forEach(function(v, i) {
+    var cx = padding.left + gap * i + gap / 2;
+    var barH = ((v - yMin) / (yMax - yMin)) * plotH;
+    var barY = padding.top + plotH - barH;
+
+    // 判断颜色
+    var isMedian = false;
+    if (n % 2 === 1) {
+      if (i === Math.floor(n / 2)) isMedian = true;
+    } else {
+      if (i === n / 2 - 1 || i === n / 2) isMedian = true;
+    }
+    var isMode = modes.indexOf(v) !== -1;
+
+    if (isMedian && isMode) {
+      // 中位数也是众数：渐变
+      var grad = ctx.createLinearGradient(0, barY, 0, barY + barH);
+      grad.addColorStop(0, '#27AE60');
+      grad.addColorStop(1, '#E74C3C');
+      ctx.fillStyle = grad;
+    } else if (isMedian) {
+      ctx.fillStyle = '#27AE60';
+    } else if (isMode) {
+      ctx.fillStyle = '#E74C3C';
+    } else {
+      ctx.fillStyle = '#9B59B6';
+    }
+
+    ctx.fillRect(cx - barW / 2, barY, barW, barH);
+
+    // 数值标签
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 14px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(fmt(v), cx, barY - 4);
+
+    // 序号标签
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '11px sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText('第' + (i + 1), cx, padding.top + plotH + 8);
+
+    // 中位数标注
+    if (isMedian && n % 2 === 1) {
+      ctx.fillStyle = '#27AE60';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('←中位数', cx, padding.top + plotH + 24);
+    } else if (isMedian && n % 2 === 0) {
+      ctx.fillStyle = '#27AE60';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('中位', cx, padding.top + plotH + 24);
+    }
+
+    // 众数标注
+    if (isMode) {
+      ctx.fillStyle = '#E74C3C';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText('众数', cx, barY - 22);
+    }
+  });
+
+  // 标题
+  ctx.fillStyle = '#2C3E50';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  var titleText = '排序后数据条形图（n=' + n + '，' + (n % 2 === 0 ? '偶数个' : '奇数个') + '）';
+  ctx.fillText(titleText, w / 2, 6);
+}
+
+document.getElementById('btn-update-3').addEventListener('click', function() {
+  var input = document.getElementById('input-data-3').value;
+  var parsed = parseData(input);
+  if (parsed.length > 0) {
+    data3 = parsed;
+    updateMedianMode();
+  }
+});
+
+document.getElementById('btn-sort').addEventListener('click', function() {
+  // 排序动画：先打乱再排序
+  var shuffled = data3.slice();
+  // 简单的动画：先显示原始顺序，逐步排序
+  var display = document.getElementById('sort-display');
+  display.innerHTML = '<span style="color:var(--math);font-weight:700;">排序中...</span>';
+  setTimeout(function() {
+    updateMedianMode();
+  }, 400);
+});
+
+document.getElementById('input-data-3').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('btn-update-3').click();
+});
+
+updateMedianMode();
+
+/* ========================================
+ * 交互4：方差与稳定性比较
+ * ======================================== */
+function updateVarianceCompare() {
+  var groupA = parseData(document.getElementById('input-group-a').value);
+  var groupB = parseData(document.getElementById('input-group-b').value);
+
+  if (groupA.length === 0 || groupB.length === 0) return;
+
+  var meanA = calcMean(groupA);
+  var meanB = calcMean(groupB);
+  var varA = calcVariance(groupA);
+  var varB = calcVariance(groupB);
+
+  document.getElementById('group-a-data').textContent = groupA.join(', ');
+  document.getElementById('group-b-data').textContent = groupB.join(', ');
+  document.getElementById('group-a-mean').textContent = fmt(meanA);
+  document.getElementById('group-b-mean').textContent = fmt(meanB);
+  document.getElementById('group-a-var').textContent = fmt(varA);
+  document.getElementById('group-b-var').textContent = fmt(varB);
+
+  // 标注稳定/不稳定
+  var cardA = document.getElementById('group-a-card');
+  var cardB = document.getElementById('group-b-card');
+  cardA.className = 'group-card ' + (varA <= varB ? 'stable' : 'unstable');
+  cardB.className = 'group-card ' + (varB < varA ? 'stable' : 'unstable');
+
+  // 结论
+  var conclusion = document.getElementById('variance-conclusion-text');
+  if (varA < varB) {
+    conclusion.innerHTML = '甲组方差（' + fmt(varA) + '） < 乙组方差（' + fmt(varB) + '），' +
+      '<strong style="color:var(--success);">甲组成绩更稳定</strong>。' +
+      '虽然两组平均数可能接近，但甲组数据波动小，乙组波动大。方差越小，数据越稳定。';
+  } else if (varB < varA) {
+    conclusion.innerHTML = '乙组方差（' + fmt(varB) + '） < 甲组方差（' + fmt(varA) + '），' +
+      '<strong style="color:var(--success);">乙组成绩更稳定</strong>。' +
+      '虽然两组平均数可能接近，但乙组数据波动小，甲组波动大。方差越小，数据越稳定。';
+  } else {
+    conclusion.innerHTML = '两组方差相等（' + fmt(varA) + '），稳定性相同。';
+  }
+
+  drawVarianceCanvas(groupA, groupB);
+}
+
+function drawVarianceCanvas(groupA, groupB) {
+  var canvas = document.getElementById('canvas-variance');
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  if (groupA.length === 0 && groupB.length === 0) return;
+
+  var padding = { top: 30, right: 30, bottom: 50, left: 50 };
+  var plotW = w - padding.left - padding.right;
+  var plotH = h - padding.top - padding.bottom;
+
+  var allData = groupA.concat(groupB);
+  var maxVal = Math.max.apply(null, allData);
+  var minVal = Math.min.apply(null, allData);
+  var range = maxVal - minVal;
+  if (range < 5) range = 5;
+  var yMax = maxVal + range * 0.2;
+  var yMin = Math.max(0, minVal - range * 0.2);
+  if (yMin === yMax) { yMin -= 5; yMax += 5; }
+
+  var meanA = calcMean(groupA);
+  var meanB = calcMean(groupB);
+
+  function getY(val) {
+    return padding.top + plotH - ((val - yMin) / (yMax - yMin)) * plotH;
+  }
+
+  // 网格
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '12px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (var s = 0; s <= 5; s++) {
+    var yVal = yMin + (yMax - yMin) * s / 5;
+    var yPos = getY(yVal);
+    ctx.beginPath();
+    ctx.moveTo(padding.left, yPos);
+    ctx.lineTo(w - padding.right, yPos);
+    ctx.stroke();
+    ctx.fillText(fmt(yVal, 1), padding.left - 8, yPos);
+  }
+
+  // X轴
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top + plotH);
+  ctx.lineTo(w - padding.right, padding.top + plotH);
+  ctx.stroke();
+
+  // 分成左右两半，分别画甲组和乙组
+  var halfW = plotW / 2;
+  var maxLen = Math.max(groupA.length, groupB.length);
+
+  // 甲组折线
+  ctx.strokeStyle = '#9B59B6';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  groupA.forEach(function(v, i) {
+    var x = padding.left + (halfW / (groupA.length + 1)) * (i + 1);
+    var y = getY(v);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  // 甲组数据点
+  groupA.forEach(function(v, i) {
+    var x = padding.left + (halfW / (groupA.length + 1)) * (i + 1);
+    var y = getY(v);
+    ctx.fillStyle = '#9B59B6';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 13px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(fmt(v), x, y + 10);
+  });
+  // 甲组平均数线
+  var meanAY = getY(meanA);
+  ctx.strokeStyle = '#9B59B6';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, meanAY);
+  ctx.lineTo(padding.left + halfW, meanAY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('甲 x̄=' + fmt(meanA), padding.left + 8, meanAY - 4);
+
+  // 乙组折线
+  ctx.strokeStyle = '#E74C3C';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  groupB.forEach(function(v, i) {
+    var x = padding.left + halfW + (halfW / (groupB.length + 1)) * (i + 1);
+    var y = getY(v);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  // 乙组数据点
+  groupB.forEach(function(v, i) {
+    var x = padding.left + halfW + (halfW / (groupB.length + 1)) * (i + 1);
+    var y = getY(v);
+    ctx.fillStyle = '#E74C3C';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 13px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(fmt(v), x, y + 10);
+  });
+  // 乙组平均数线
+  var meanBY = getY(meanB);
+  ctx.strokeStyle = '#E74C3C';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left + halfW, meanBY);
+  ctx.lineTo(w - padding.right, meanBY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#E74C3C';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('乙 x̄=' + fmt(meanB), padding.left + halfW + 8, meanBY - 4);
+
+  // 分隔线
+  ctx.strokeStyle = '#DDE4EB';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left + halfW, padding.top);
+  ctx.lineTo(padding.left + halfW, padding.top + plotH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 组标签
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('甲组（方差=' + fmt(calcVariance(groupA)) + '）', padding.left + halfW / 2, 6);
+  ctx.fillStyle = '#E74C3C';
+  ctx.fillText('乙组（方差=' + fmt(calcVariance(groupB)) + '）', padding.left + halfW + halfW / 2, 6);
+
+  // 底部标签
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '13px sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText('第1次 第2次 第3次 第4次 第5次', padding.left + halfW / 2, padding.top + plotH + 28);
+  ctx.fillText('第1次 第2次 第3次 第4次 第5次', padding.left + halfW + halfW / 2, padding.top + plotH + 28);
+}
+
+document.getElementById('btn-update-4').addEventListener('click', updateVarianceCompare);
+document.getElementById('input-group-a').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') updateVarianceCompare();
+});
+document.getElementById('input-group-b').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') updateVarianceCompare();
+});
+updateVarianceCompare();
+
+/* ========================================
+ * 交互5：数据可视化
+ * ======================================== */
+var chartType = 'bar';
+
+function updateChart() {
+  var data = parseData(document.getElementById('input-data-5').value);
+  var labels = document.getElementById('input-labels-5').value.split(/[,，\s]+/).filter(function(s) { return s.trim(); });
+
+  // 如果标签不够，补充默认标签
+  while (labels.length < data.length) {
+    labels.push('数据' + (labels.length + 1));
+  }
+
+  drawChart(data, labels, chartType);
+}
+
+function drawChart(data, labels, type) {
+  var canvas = document.getElementById('canvas-chart');
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  if (data.length === 0) return;
+
+  var padding = { top: 30, right: 30, bottom: 60, left: 50 };
+  var plotW = w - padding.left - padding.right;
+  var plotH = h - padding.top - padding.bottom;
+
+  var colors = ['#9B59B6', '#3498DB', '#F39C12', '#E74C3C', '#27AE60', '#1ABC9C', '#E67E22', '#8E44AD'];
+
+  if (type === 'bar') {
+    // 条形图
+    var maxVal = Math.max.apply(null, data);
+    var yMax = maxVal * 1.15;
+
+    // 网格
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '12px Georgia, serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (var s = 0; s <= 5; s++) {
+      var yVal = (yMax * s / 5);
+      var yPos = padding.top + plotH - (yVal / yMax) * plotH;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, yPos);
+      ctx.lineTo(w - padding.right, yPos);
+      ctx.stroke();
+      ctx.fillText(fmt(yVal, 1), padding.left - 8, yPos);
+    }
+
+    // X轴
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, padding.top + plotH);
+    ctx.lineTo(w - padding.right, padding.top + plotH);
+    ctx.stroke();
+
+    // 画柱
+    var barW = plotW / data.length * 0.6;
+    var gap = plotW / data.length;
+    data.forEach(function(v, i) {
+      var cx = padding.left + gap * i + gap / 2;
+      var barH = (v / yMax) * plotH;
+      var barY = padding.top + plotH - barH;
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fillRect(cx - barW / 2, barY, barW, barH);
+      // 数值标签
+      ctx.fillStyle = '#2C3E50';
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(fmt(v), cx, barY - 4);
+      // 项目标签
+      ctx.fillStyle = '#7F8C8D';
+      ctx.font = '13px sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText(labels[i] || ('数据' + (i + 1)), cx, padding.top + plotH + 8);
+    });
+
+    // 标题
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('条形图', w / 2, 6);
+
+    document.getElementById('chart-tip').querySelector('.tip-title').textContent = '📊 条形图的特点';
+    document.getElementById('chart-tip-text').textContent = '条形图能清楚地表示出每个项目的具体数目，便于直观比较各项目的大小关系。';
+
+  } else if (type === 'line') {
+    // 折线图
+    var maxVal2 = Math.max.apply(null, data);
+    var minVal2 = Math.min.apply(null, data);
+    var range2 = maxVal2 - minVal2;
+    if (range2 < 5) range2 = 5;
+    var yMax2 = maxVal2 + range2 * 0.15;
+    var yMin2 = Math.max(0, minVal2 - range2 * 0.15);
+
+    function getY2(val) {
+      return padding.top + plotH - ((val - yMin2) / (yMax2 - yMin2)) * plotH;
+    }
+
+    // 网格
+    ctx.strokeStyle = '#E8EEF4';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '12px Georgia, serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (var s2 = 0; s2 <= 5; s2++) {
+      var yVal2 = yMin2 + (yMax2 - yMin2) * s2 / 5;
+      var yPos2 = getY2(yVal2);
+      ctx.beginPath();
+      ctx.moveTo(padding.left, yPos2);
+      ctx.lineTo(w - padding.right, yPos2);
+      ctx.stroke();
+      ctx.fillText(fmt(yVal2, 1), padding.left - 8, yPos2);
+    }
+
+    // X轴
+    ctx.strokeStyle = '#7F8C8D';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, padding.top + plotH);
+    ctx.lineTo(w - padding.right, padding.top + plotH);
+    ctx.stroke();
+
+    // 画折线
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    data.forEach(function(v, i) {
+      var x = padding.left + (plotW / (data.length - 1 || 1)) * i;
+      var y = getY2(v);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // 画数据点
+    data.forEach(function(v, i) {
+      var x = padding.left + (plotW / (data.length - 1 || 1)) * i;
+      var y = getY2(v);
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+      // 数值标签
+      ctx.fillStyle = '#2C3E50';
+      ctx.font = 'bold 14px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(fmt(v), x, y - 12);
+      // 标签
+      ctx.fillStyle = '#7F8C8D';
+      ctx.font = '13px sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText(labels[i] || ('数据' + (i + 1)), x, padding.top + plotH + 8);
+    });
+
+    // 标题
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('折线图', w / 2, 6);
+
+    document.getElementById('chart-tip').querySelector('.tip-title').textContent = '📈 折线图的特点';
+    document.getElementById('chart-tip-text').textContent = '折线图能清楚地反映数据的变化趋势，适合表示数据随时间或顺序的变化情况。';
+
+  } else if (type === 'pie') {
+    // 扇形图
+    var total = data.reduce(function(a, b) { return a + b; }, 0);
+    if (total === 0) return;
+
+    var cx = w / 2;
+    var cy = h / 2 + 10;
+    var radius = Math.min(plotW, plotH) / 2 - 20;
+
+    var startAngle = -Math.PI / 2; // 从12点方向开始
+    data.forEach(function(v, i) {
+      var angle = (v / total) * Math.PI * 2;
+      var endAngle = startAngle + angle;
+
+      // 画扇形
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // 标签：百分比
+      var midAngle = (startAngle + endAngle) / 2;
+      var labelR = radius * 0.65;
+      var lx = cx + Math.cos(midAngle) * labelR;
+      var ly = cy + Math.sin(midAngle) * labelR;
+      var pct = ((v / total) * 100).toFixed(1);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pct + '%', lx, ly);
+
+      // 外部标签
+      var outR = radius + 25;
+      var olx = cx + Math.cos(midAngle) * outR;
+      var oly = cy + Math.sin(midAngle) * outR;
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText((labels[i] || ('数据' + (i + 1))) + '=' + fmt(v), olx, oly);
+
+      startAngle = endAngle;
+    });
+
+    // 标题
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('扇形图（总计=' + fmt(total) + '）', w / 2, 6);
+
+    document.getElementById('chart-tip').querySelector('.tip-title').textContent = '🥧 扇形图的特点';
+    document.getElementById('chart-tip-text').textContent = '扇形图能清楚地表示出各部分在总体中所占的百分比，适合展示数据的构成比例。';
+  }
+}
+
+document.querySelectorAll('.chart-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.chart-tab').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+    chartType = this.dataset.chart;
+    updateChart();
+  });
+});
+
+document.getElementById('btn-update-5').addEventListener('click', updateChart);
+document.getElementById('input-data-5').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') updateChart();
+});
+document.getElementById('input-labels-5').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') updateChart();
+});
+updateChart();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '平均数 = (85+90+78+92+88) / 5 = 433 / 5 = 86.6。',
+  hint: '将5个成绩相加，再除以5。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '数据已排序：3, 5, 7, 8, 10, 12，共6个（偶数个）。中位数 = 第3、4个数的平均值 = (7+8)/2 = 7.5。',
+  hint: 'n=6是偶数，取最中间两个数（第3和第4个）的平均值。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: '甲组5次成绩都是8，平均数为8，方差 = [(8−8)²×5]/5 = 0。乙组平均数也是8，方差 = [(6−8)²+(7−8)²+(8−8)²+(9−8)²+(10−8)²]/5 = (4+1+0+1+4)/5 = 2。乙的方差更大。',
+  hint: '甲组全部相同，方差为0；乙组数据有波动，方差大于0。'
+});
+</script>
 </body>
 </html>

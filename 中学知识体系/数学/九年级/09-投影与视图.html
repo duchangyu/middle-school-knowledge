@@ -6,85 +6,1271 @@
   <title>投影与视图 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-header .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 28px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 2px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row label {
+      font-weight: 600;
+      min-width: 110px;
+      color: var(--math);
+      font-size: 16px;
+      text-align: right;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      background: var(--math);
+    }
+    .slider-row .value-display {
+      min-width: 64px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== 演示容器 ===== */
+    .demo-container {
+      background: var(--bg-soft);
+      border: 2px dashed rgba(155,89,182,0.4);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      background: #fff;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== 模式切换 ===== */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+      justify-content: center;
+    }
+    .mode-toggle .mt-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid rgba(155,89,182,0.4);
+      background: var(--bg-card);
+      color: var(--math);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .mode-toggle .mt-btn:hover { background: rgba(155,89,182,0.1); }
+    .mode-toggle .mt-btn.active {
+      background: var(--math);
+      color: #fff;
+      border-color: var(--math);
+    }
+
+    /* ===== 信息读数面板 ===== */
+    .info-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .info-readout .ro-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid rgba(155,89,182,0.3);
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .info-readout .ro-cell .ro-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .info-readout .ro-cell .ro-num { font-size: 22px; font-weight: 700; color: var(--math); font-family: Georgia, serif; }
+    .info-readout .ro-cell .ro-num.small { font-size: 16px; }
+
+    /* ===== 性质列表 ===== */
+    .property-list { list-style: none; padding: 0; margin: 12px 0; }
+    .property-list li {
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--math);
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--math); }
+
+    /* ===== 生活实例卡片 ===== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+    }
+    .example-card h4 { color: var(--math); margin-bottom: 8px; font-size: 17px; }
+    .example-card p { font-size: 14px; color: var(--text-secondary); }
+
+    /* ===== 堆叠格子 ===== */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 64px);
+      gap: 8px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .stack-cell {
+      width: 64px; height: 64px;
+      border-radius: 10px;
+      border: 2px solid rgba(155,89,182,0.4);
+      background: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--math);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .stack-cell:hover { background: rgba(155,89,182,0.12); transform: translateY(-2px); }
+    .stack-cell.empty { color: var(--text-light); border-style: dashed; }
+
+    .stack-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 860px) { .stack-layout { grid-template-columns: 1fr; } }
+    .stack-panel {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+    .stack-panel h5 { color: var(--math); margin-bottom: 8px; font-size: 15px; }
+
+    /* ===== 匹配游戏 ===== */
+    .match-views {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .match-view-box {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      text-align: center;
+    }
+    .match-view-box .mv-label { font-size: 14px; font-weight: 600; color: var(--math); margin-bottom: 6px; }
+    .match-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .match-opt {
+      padding: 14px 8px;
+      border-radius: 10px;
+      border: 2px solid rgba(155,89,182,0.35);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      color: var(--text-main);
+    }
+    .match-opt:hover { background: rgba(155,89,182,0.08); transform: translateY(-2px); }
+    .match-opt.correct { border-color: var(--success); background: rgba(39,174,96,0.12); color: var(--success); }
+    .match-opt.wrong { border-color: var(--danger); background: rgba(231,76,60,0.08); color: var(--danger); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+
+    .view-caption {
+      margin-top: 10px;
+      font-size: 15px;
+      color: var(--text-main);
+      background: rgba(155,89,182,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 投影与视图</div>
+  <div class="navbar-brand">📐 投影与视图</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="index.html">📊 九年级数学</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理八年级</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📐 投影与视图</h1>
+  <p>从影子到工程图纸——学会用三个方向"看清"一个立体</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">数学</a>
+    <a href="../index.html">数学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>投影与视图</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>投影与视图</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 引入 ===== -->
+  <h2 class="section-header"><span class="step-badge">1</span> 引入：影子里的数学</h2>
+  <div class="card">
+    <p>傍晚走在路上，路灯把你的影子拉得老长；中午的太阳下，影子却缩成脚下一小团。<strong>影子为什么会变？</strong>工程师又是怎样把一座大楼"画"在平平的图纸上的？答案都藏在本章的两个关键词里：<strong class="math-accent">投影</strong>与<strong class="math-accent">视图</strong>。</p>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>🖐️ 手影戏</h4>
+        <p>灯光（点光源）照在手上，墙上出现小狗、鸽子的影子——这是<strong>中心投影</strong>，离灯越近影子越大。</p>
+      </div>
+      <div class="example-card">
+        <h4>☀️ 阳光下的影子</h4>
+        <p>太阳离我们极远，光线可看作<strong>平行</strong>的。同一时刻，物体高度与影长成比例——古人用它测金字塔高度！</p>
+      </div>
+      <div class="example-card">
+        <h4>🏗️ 工程图纸</h4>
+        <p>建筑师把楼房从<strong>正面、左面、上面</strong>各画一张平面图，工人照着就能盖出大楼——这就是<strong>三视图</strong>。</p>
+      </div>
+      <div class="example-card">
+        <h4>🗺️ 地图与航拍</h4>
+        <p>从正上方向下看大地得到的轮廓，就是一种"俯视图"。地图本质上是地球表面的投影。</p>
+      </div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 本章路线</div>
+      先认识投影的两种方式（平行投影、中心投影），再学习三视图的概念与画法规则（<strong>长对正、高平齐、宽相等</strong>），最后练会"看三视图还原几何体"的逆向功夫。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 投影 ===== -->
+  <h2 class="section-header"><span class="step-badge">2</span> 投影：平行投影与中心投影</h2>
+  <div class="card">
+    <p>一般地，用光线照射物体，在某个平面（地面、墙壁等）上得到的影子叫做物体的<strong class="math-accent">投影</strong>。照射光线叫做<strong>投影线</strong>，影子所在的平面叫做<strong>投影面</strong>。按投影线的不同，投影分为两类：</p>
+    <ul class="property-list">
+      <li><strong>平行投影</strong>：由<strong>平行光线</strong>形成的投影。例如<strong>太阳光</strong>下的影子（太阳极远，光线近似平行）。同一时刻，不同物体的高度与影长成<strong>正比</strong>。</li>
+      <li><strong>中心投影</strong>：由<strong>同一点（点光源）</strong>发出的光线形成的投影。例如<strong>灯泡、路灯、蜡烛</strong>下的影子。物体离光源越近，影子越<strong>大</strong>。</li>
+      <li><strong>正投影</strong>：在平行投影中，投影线<strong>垂直于</strong>投影面时产生的投影。三视图用的就是正投影——从正前方、正左方、正上方"垂直地看"。</li>
+    </ul>
+
+    <h4 style="margin:18px 0 6px; color:var(--math);">🧪 交互实验①：投影实验室</h4>
+    <p>切换<strong>太阳光（平行投影）</strong>与<strong>灯泡（中心投影）</strong>，拖动滑块改变光源位置，观察 3 米高的旗杆影子如何变化。</p>
+
+    <div class="mode-toggle">
+      <button class="mt-btn active" id="proj-mode-sun">☀️ 太阳光（平行投影）</button>
+      <button class="mt-btn" id="proj-mode-lamp">💡 灯泡（中心投影）</button>
+    </div>
+
+    <div id="sun-controls">
+      <div class="slider-row">
+        <label>太阳高度角</label>
+        <input type="range" id="slider-sun-angle" min="15" max="165" value="60" step="5">
+        <span class="value-display" id="display-sun-angle">60°</span>
+      </div>
+    </div>
+    <div id="lamp-controls" style="display:none;">
+      <div class="slider-row">
+        <label>灯泡水平位置</label>
+        <input type="range" id="slider-lamp-x" min="-180" max="180" value="120" step="10">
+        <span class="value-display" id="display-lamp-x">3.0 m</span>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-proj" width="560" height="360" viewBox="0 0 560 360"></svg>
+    </div>
+
+    <div class="info-readout">
+      <div class="ro-cell">
+        <div class="ro-label">投影类型</div>
+        <div class="ro-num small" id="ro-proj-type">平行投影</div>
+      </div>
+      <div class="ro-cell">
+        <div class="ro-label">旗杆高度</div>
+        <div class="ro-num">3 m</div>
+      </div>
+      <div class="ro-cell">
+        <div class="ro-label">影长</div>
+        <div class="ro-num" id="ro-shadow-len">1.73 m</div>
+      </div>
+    </div>
+
+    <div class="view-caption" id="proj-explain"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 观察要点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>平行投影</strong>：太阳高度角越接近 90°（正午），影子越<strong>短</strong>；早晚角度小，影子很<strong>长</strong>。影长 = 高度 ÷ tan(高度角)。</li>
+        <li><strong>中心投影</strong>：灯泡越靠近旗杆正上方，影子越短；灯泡偏向一侧时，影子被"甩"向另一侧且被<strong>放大</strong>。</li>
+        <li>同一时刻阳光下，<strong>高/影长</strong> 对所有物体都相同——这正是测量不可达高度（旗杆、金字塔）的原理。</li>
+      </ul>
+    </div>
   </div>
+
+  <!-- ===== 三视图的概念 ===== -->
+  <h2 class="section-header"><span class="step-badge">3</span> 三视图：主视图、左视图、俯视图</h2>
+  <div class="card">
+    <p>一个立体从不同方向看，形状可能完全不同（想想"横看成岭侧成峰"）。为了完整准确地描述一个几何体，我们约定从三个固定方向做<strong>正投影</strong>：</p>
+    <ul class="property-list">
+      <li><strong>主视图</strong>：从<strong>正面</strong>向物体投射，在竖直投影面上得到的视图。它反映物体的<strong>长</strong>和<strong>高</strong>。</li>
+      <li><strong>左视图</strong>：从<strong>左面</strong>向物体投射得到的视图。它反映物体的<strong>宽</strong>（前后）和<strong>高</strong>。</li>
+      <li><strong>俯视图</strong>：从<strong>上面</strong>向下投射得到的视图。它反映物体的<strong>长</strong>和<strong>宽</strong>。</li>
+    </ul>
+
+    <h4 style="margin:18px 0 6px; color:var(--math);">🧊 交互实验②：三视图观察器</h4>
+    <p>下面是一个由 5 个小正方体搭成的几何体。点击按钮切换观察方向，看看它"投"在三个投影面上的样子；也可以点"旋转观察"让几何体转起来。</p>
+
+    <div class="demo-container">
+      <svg id="svg-iso" width="440" height="300" viewBox="0 0 440 300"></svg>
+      <div style="margin-top:10px;">
+        <button class="btn btn-outline btn-sm" id="btn-rotate" style="border-color:var(--math);color:var(--math);">🔄 旋转观察</button>
+      </div>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mt-btn active" id="view-btn-front" data-view="front">👁️ 主视图（从正面看）</button>
+      <button class="mt-btn" id="view-btn-left" data-view="left">👁️ 左视图（从左面看）</button>
+      <button class="mt-btn" id="view-btn-top" data-view="top">👁️ 俯视图（从上面看）</button>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-view2d" width="180" height="140" viewBox="0 0 180 140"></svg>
+      <div class="view-caption" id="view-caption"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">👀 想一想</div>
+      同一个几何体，三个视图各不相同。反过来，<strong>只看一个视图能确定几何体吗？</strong>通常不能——所以工程图必须给出三视图。
+    </div>
+  </div>
+
+  <!-- ===== 三视图的画法规则 ===== -->
+  <h2 class="section-header"><span class="step-badge">4</span> 画法规则：长对正、高平齐、宽相等</h2>
+  <div class="card">
+    <p>画三视图时，三个视图之间有严格的位置与尺寸对应关系，九字口诀必须记牢：</p>
+    <div class="formula-box">
+      <div class="formula">长对正 · 高平齐 · 宽相等</div>
+      <div class="formula-note">
+        <strong>长对正</strong>：主视图与俯视图的<strong>长</strong>相等且上下对齐；
+        <strong>高平齐</strong>：主视图与左视图的<strong>高</strong>相等且左右平齐；
+        <strong>宽相等</strong>：左视图与俯视图的<strong>宽</strong>相等。
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-rules" width="460" height="300" viewBox="0 0 460 300">
+        <!-- 长对正 虚线 -->
+        <line x1="90" y1="120" x2="90" y2="170" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="210" y1="120" x2="210" y2="170" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <!-- 高平齐 虚线 -->
+        <line x1="210" y1="50" x2="250" y2="50" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="210" y1="120" x2="250" y2="120" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <!-- 宽相等 45° 转移线 -->
+        <line x1="290" y1="120" x2="290" y2="150" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="290" y1="150" x2="220" y2="220" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="210" y1="220" x2="220" y2="220" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="250" y1="220" x2="250" y2="260" stroke="#E67E22" stroke-width="0"/>
+        <!-- 主视图：长3 高2 -->
+        <rect x="90" y="50" width="120" height="70" fill="rgba(155,89,182,0.18)" stroke="#9B59B6" stroke-width="2.5"/>
+        <text x="150" y="90" text-anchor="middle" font-size="14" fill="#7D3C98" font-weight="bold">主视图</text>
+        <!-- 左视图：宽1 高2 -->
+        <rect x="250" y="50" width="40" height="70" fill="rgba(155,89,182,0.18)" stroke="#9B59B6" stroke-width="2.5"/>
+        <text x="270" y="90" text-anchor="middle" font-size="13" fill="#7D3C98" font-weight="bold">左视图</text>
+        <!-- 俯视图：长3 宽1 -->
+        <rect x="90" y="170" width="120" height="40" fill="rgba(155,89,182,0.18)" stroke="#9B59B6" stroke-width="2.5"/>
+        <text x="150" y="195" text-anchor="middle" font-size="14" fill="#7D3C98" font-weight="bold">俯视图</text>
+        <!-- 尺寸标注 -->
+        <text x="150" y="40" text-anchor="middle" font-size="13" fill="#9B59B6" font-weight="bold">长（主、俯对正）</text>
+        <text x="340" y="90" text-anchor="start" font-size="13" fill="#27AE60" font-weight="bold">高（主、左平齐）</text>
+        <text x="150" y="240" text-anchor="middle" font-size="13" fill="#E67E22" font-weight="bold">宽（左、俯相等）</text>
+        <line x1="90" y1="28" x2="210" y2="28" stroke="#9B59B6" stroke-width="1.5"/>
+        <line x1="90" y1="23" x2="90" y2="33" stroke="#9B59B6" stroke-width="1.5"/>
+        <line x1="210" y1="23" x2="210" y2="33" stroke="#9B59B6" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>实线与虚线</strong>：看得见的轮廓线画<strong>实线</strong>，被遮挡、看不见的轮廓线画<strong>虚线</strong>。例如空心圆筒的俯视图，内孔要画虚线圆。</li>
+      <li><strong>摆放位置</strong>：主视图在左上方，<strong>左视图在主视图正右方</strong>，<strong>俯视图在主视图正下方</strong>。</li>
+      <li><strong>先主后次</strong>：先画主视图，再按"长对正"画俯视图，按"高平齐"画左视图，最后用"宽相等"检查。</li>
+    </ul>
+
+    <div class="warning-box">
+      <strong>⚠️ 易错点</strong>："宽相等"指的是<strong>左视图的宽</strong>（水平方向）与<strong>俯视图的宽</strong>（竖直方向，即前后深度）相等，方向不同容易混淆，可用 45° 辅助线转移（如上图橙色虚线）。
+    </div>
+  </div>
+
+  <!-- ===== 由三视图还原几何体 ===== -->
+  <h2 class="section-header"><span class="step-badge">5</span> 由三视图还原几何体</h2>
+  <div class="card">
+    <p>给出三视图，想象出原来的几何体，是本章的"逆向思维"考点。先记住常见几何体的三视图特征：</p>
+    <ul class="property-list">
+      <li><strong>长方体</strong>：主视图、左视图、俯视图都是<strong>矩形</strong>。</li>
+      <li><strong>圆柱</strong>（竖放）：主视图、左视图是<strong>矩形</strong>，俯视图是<strong>圆</strong>。</li>
+      <li><strong>圆锥</strong>（竖放）：主视图、左视图是<strong>三角形</strong>，俯视图是<strong>带圆心点的圆</strong>（圆心是锥顶的投影）。</li>
+      <li><strong>球</strong>：三个视图都是<strong>圆</strong>。</li>
+      <li><strong>三棱柱</strong>（横放，棱朝左右）：主视图、俯视图是<strong>矩形</strong>，左视图是<strong>三角形</strong>。</li>
+    </ul>
+
+    <h4 style="margin:18px 0 6px; color:var(--math);">🎮 交互实验③：三视图猜几何体</h4>
+    <p>根据给出的三视图，从选项中点选正确的几何体。答对后会自动解锁下一题，共 4 题。</p>
+
+    <div style="text-align:center; font-weight:700; color:var(--math); margin:6px 0;" id="match-round">第 1 / 4 题</div>
+    <div class="match-views">
+      <div class="match-view-box">
+        <div class="mv-label">主视图</div>
+        <svg id="match-front" width="100" height="100" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="match-view-box">
+        <div class="mv-label">左视图</div>
+        <svg id="match-left" width="100" height="100" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="match-view-box">
+        <div class="mv-label">俯视图</div>
+        <svg id="match-top" width="100" height="100" viewBox="0 0 100 100"></svg>
+      </div>
+    </div>
+
+    <div class="match-options" id="match-options"></div>
+    <div class="view-caption" id="match-feedback" style="display:none;"></div>
+    <div style="text-align:center; margin-top:8px;">
+      <button class="btn btn-primary btn-sm" id="btn-match-next" style="background:var(--math); display:none;">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- ===== 立方体堆叠 ===== -->
+  <h2 class="section-header"><span class="step-badge">6</span> 综合应用：立方体堆叠的三视图</h2>
+  <div class="card">
+    <p>中考常考"由小正方体搭成的几何体"的三视图。<strong>秘诀</strong>：主视图每一列的高度 = 该列（前后方向）的最高堆数；左视图每一列的高度 = 该行（左右方向）的最高堆数；俯视图只需标出哪些位置有方块。</p>
+
+    <h4 style="margin:18px 0 6px; color:var(--math);">🧱 交互实验④：堆方块，看三视图</h4>
+    <p>点击 3×3 格子<strong>增加</strong>该位置的方块数（最多 3 个，再点一次清零），右侧实时生成立体图与三视图。格子布局与俯视图一致：<strong>上排 = 后排，下排 = 前排</strong>。</p>
+
+    <div class="stack-layout">
+      <div class="stack-panel">
+        <h5>🖱️ 点击堆方块（数字 = 该位置方块数）</h5>
+        <div class="stack-grid" id="stack-grid"></div>
+        <div style="font-size:13px; color:var(--text-secondary);">↑ 后排　·　↓ 前排（靠近观察者）</div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-outline btn-sm" id="btn-stack-reset" style="border-color:var(--math);color:var(--math);">🧹 全部清空</button>
+          <button class="btn btn-outline btn-sm" id="btn-stack-demo" style="border-color:var(--math);color:var(--math);">✨ 随机造型</button>
+        </div>
+        <div class="info-readout" style="margin-top:14px;">
+          <div class="ro-cell">
+            <div class="ro-label">方块总数</div>
+            <div class="ro-num" id="ro-cube-count">9</div>
+          </div>
+          <div class="ro-cell">
+            <div class="ro-label">主视图各列高</div>
+            <div class="ro-num small" id="ro-front-cols">2, 2, 2</div>
+          </div>
+          <div class="ro-cell">
+            <div class="ro-label">左视图各列高</div>
+            <div class="ro-num small" id="ro-left-cols">2, 3, 1</div>
+          </div>
+        </div>
+      </div>
+      <div class="stack-panel">
+        <h5>🧊 立体图</h5>
+        <div class="demo-container" style="margin:0;">
+          <svg id="svg-stack-iso" width="340" height="250" viewBox="0 0 340 250"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="match-views" style="margin-top:16px;">
+      <div class="match-view-box">
+        <div class="mv-label">主视图（从正面看）</div>
+        <svg id="svg-stack-front" width="170" height="170" viewBox="0 0 170 170"></svg>
+      </div>
+      <div class="match-view-box">
+        <div class="mv-label">左视图（从左面看）</div>
+        <svg id="svg-stack-left" width="170" height="170" viewBox="0 0 170 170"></svg>
+      </div>
+      <div class="match-view-box">
+        <div class="mv-label">俯视图（从上面看）</div>
+        <svg id="svg-stack-top" width="170" height="170" viewBox="0 0 170 170"></svg>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧩 自查三问</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>主视图有 3 列，俯视图的<strong>长</strong>方向也有 3 格 —— <strong>长对正</strong> ✓</li>
+        <li>左视图最高列与主视图最高列一样高 —— <strong>高平齐</strong> ✓</li>
+        <li>左视图有 3 列，俯视图的<strong>宽</strong>（前后）方向也有 3 格 —— <strong>宽相等</strong> ✓</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <h2 class="section-header"><span class="step-badge">7</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列现象中，属于中心投影的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 阳光下操场上旗杆的影子</div>
+    <div class="quiz-option" data-idx="1">B. 正午时大树在地上的影子</div>
+    <div class="quiz-option" data-idx="2">C. 夜晚路灯下行人的影子</div>
+    <div class="quiz-option" data-idx="3">D. 日晷上晷针的影子</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 画三视图的规则"长对正、高平齐、宽相等"中，"高平齐"指的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 主视图与俯视图的长度相等且对齐</div>
+    <div class="quiz-option" data-idx="1">B. 主视图与左视图的高度相等且平齐</div>
+    <div class="quiz-option" data-idx="2">C. 左视图与俯视图的宽度相等</div>
+    <div class="quiz-option" data-idx="3">D. 三个视图的大小完全相同</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 一个几何体的主视图和左视图都是三角形，俯视图是带圆心点的圆，则这个几何体是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 圆柱</div>
+    <div class="quiz-option" data-idx="1">B. 圆锥</div>
+    <div class="quiz-option" data-idx="2">C. 三棱柱</div>
+    <div class="quiz-option" data-idx="3">D. 球</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <h2 class="section-header"><span class="step-badge">8</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 投影与视图在其他学科中的身影</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/04-光现象.html"><strong>物理·光现象（光的直线传播）</strong></a>——
+        影子的形成是<strong>光沿直线传播</strong>最直接的证据：光被不透明物体挡住，在后方形成光照不到的暗区。平行投影对应平行光（太阳），中心投影对应点光源（灯泡）——本章的每一种投影都能在物理课找到原型。
+        <span class="tag tag-cross">光沿直线传播</span>
+      </li>
+      <li>
+        📐 <a href="08-锐角三角函数.html"><strong>数学·锐角三角函数</strong></a>——
+        阳光下"测影长算高度"：影长 = 高度 ÷ tan(太阳高度角)。上一章学的正切函数，正是平行投影计算的核心工具。
+        <span class="tag tag-cross">tan 的应用</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="08-锐角三角函数.html" class="btn btn-outline">← 上一章：锐角三角函数</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="index.html" class="btn btn-primary" style="background: var(--math);">最后一章（九年级数学完）🎉</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 交互实验①：投影实验室
+ * ======================================== */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('svg-proj');
+  var PX = 280;          // 旗杆底部屏幕 x
+  var GY = 300;          // 地面屏幕 y
+  var H = 120;           // 旗杆高 120px = 3m
+  var SCALE = 40;        // 40px = 1m
+  var LAMP_H = 220;      // 灯泡高 220px = 5.5m
+  var mode = 'sun';
+
+  function el(name, attrs) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  // 数学坐标(米→像素已含)转屏幕：mx 为相对旗杆底部的像素偏移，my 为向上的像素高度
+  function sx(mx) { return PX + mx; }
+  function sy(my) { return GY - my; }
+
+  function drawRays(dirX, dirY, throughX, throughY, count) {
+    // dirX,dirY：光线方向的单位向量（数学坐标，y向上为负表示向下）
+    // 过 (throughX,throughY) 附近画 count 条平行光线
+    var nx = -dirY, ny = dirX; // 垂直方向
+    for (var i = 0; i < count; i++) {
+      var off = (i - (count - 1) / 2) * 46;
+      var x0 = throughX + nx * off - dirX * 150;
+      var y0 = throughY + ny * off - dirY * 150;
+      var x1 = throughX + nx * off + dirX * 260;
+      var y1 = throughY + ny * off + dirY * 260;
+      svg.appendChild(el('line', {
+        x1: sx(x0), y1: sy(y0), x2: sx(x1), y2: sy(y1),
+        stroke: 'rgba(243,156,18,0.55)', 'stroke-width': 2, 'stroke-dasharray': '7,5'
+      }));
+    }
+  }
+
+  function render() {
+    svg.innerHTML = '';
+    // 天空与地面
+    svg.appendChild(el('rect', { x: 0, y: 0, width: 560, height: GY, fill: '#F6F2FB' }));
+    svg.appendChild(el('rect', { x: 0, y: GY, width: 560, height: 60, fill: '#E4EBF2' }));
+    svg.appendChild(el('line', { x1: 0, y1: GY, x2: 560, y2: GY, stroke: '#7F8C8D', 'stroke-width': 2 }));
+
+    var shadowTipX = 0; // 影子端点（相对旗杆底部，像素，可为负）
+    var explainText = '';
+
+    if (mode === 'sun') {
+      var a = parseFloat(document.getElementById('slider-sun-angle').value);
+      var rad = a * Math.PI / 180;
+      var cosA = Math.cos(rad), sinA = Math.sin(rad);
+      // 光线方向（数学坐标）：从太阳射向地面
+      var dx = cosA, dy = -sinA;
+      // 影子端点：旗杆顶 (0,H) 沿光线到 y=0
+      shadowTipX = H * cosA / sinA;
+
+      // 太阳位置（旗杆顶反方向 230px）
+      var sunX = -230 * cosA;
+      var sunY = H + 230 * sinA;
+      drawRays(dx, dy, 0, H + 60, 5);
+      // 关键光线（过旗杆顶到影子端点）
+      svg.appendChild(el('line', {
+        x1: sx(sunX), y1: sy(sunY), x2: sx(shadowTipX), y2: sy(0),
+        stroke: '#F39C12', 'stroke-width': 2.5
+      }));
+      // 太阳
+      svg.appendChild(el('circle', { cx: sx(sunX), cy: sy(sunY), r: 26, fill: '#F5B041', stroke: '#F39C12', 'stroke-width': 3 }));
+      for (var i = 0; i < 8; i++) {
+        var ang = i * Math.PI / 4;
+        svg.appendChild(el('line', {
+          x1: sx(sunX) + 32 * Math.cos(ang), y1: sy(sunY) + 32 * Math.sin(ang),
+          x2: sx(sunX) + 42 * Math.cos(ang), y2: sy(sunY) + 42 * Math.sin(ang),
+          stroke: '#F39C12', 'stroke-width': 3, 'stroke-linecap': 'round'
+        }));
+      }
+      var lenM = Math.abs(H / Math.tan(rad)) / SCALE;
+      document.getElementById('ro-shadow-len').textContent = lenM.toFixed(2) + ' m';
+      if (Math.abs(a - 90) < 3) {
+        explainText = '☀️ 太阳高度角 90°：太阳在旗杆正上方，光线竖直向下，影长 ≈ 0！';
+      } else if (a < 90) {
+        explainText = '☀️ 太阳高度角 ' + a + '°（太阳偏右上方），影子投向左侧，影长 = 3 ÷ tan' + a + '° ≈ ' + lenM.toFixed(2) + ' m。';
+      } else {
+        explainText = '☀️ 太阳高度角 ' + a + '°（太阳偏左上方），影子投向右侧，影长 = 3 ÷ tan' + (180 - a) + '° ≈ ' + lenM.toFixed(2) + ' m。';
+      }
+      document.getElementById('ro-proj-type').textContent = '平行投影';
+    } else {
+      var L = parseFloat(document.getElementById('slider-lamp-x').value); // 灯泡水平偏移 px
+      // 光线从灯泡 (L, LAMP_H) 过旗杆顶 (0, H) 到地面 y=0
+      var t = LAMP_H / (LAMP_H - H); // = 2.2
+      shadowTipX = L + t * (0 - L); // = -1.2L
+      // 灯泡光线（从灯泡向四周）
+      for (var j = -2; j <= 2; j++) {
+        var rayAng = -Math.PI / 2 + j * 0.35;
+        svg.appendChild(el('line', {
+          x1: sx(L), y1: sy(LAMP_H),
+          x2: sx(L + Math.cos(rayAng) * 150), y2: sy(LAMP_H + Math.sin(rayAng) * 150),
+          stroke: 'rgba(243,156,18,0.55)', 'stroke-width': 2, 'stroke-dasharray': '7,5'
+        }));
+      }
+      // 关键光线
+      svg.appendChild(el('line', {
+        x1: sx(L), y1: sy(LAMP_H), x2: sx(shadowTipX), y2: sy(0),
+        stroke: '#F39C12', 'stroke-width': 2.5
+      }));
+      // 灯泡
+      svg.appendChild(el('circle', { cx: sx(L), cy: sy(LAMP_H), r: 34, fill: 'rgba(245,176,65,0.25)' }));
+      svg.appendChild(el('circle', { cx: sx(L), cy: sy(LAMP_H), r: 16, fill: '#F5B041', stroke: '#E67E22', 'stroke-width': 3 }));
+      svg.appendChild(el('line', { x1: sx(L), y1: sy(LAMP_H) - 34, x2: sx(L), y2: 0, stroke: '#BDC3C7', 'stroke-width': 2 }));
+      var dM = Math.abs(L) / SCALE;
+      var lampLenM = (H * dM / (LAMP_H - H)) ; // 米
+      document.getElementById('ro-shadow-len').textContent = lampLenM.toFixed(2) + ' m';
+      if (L === 0) {
+        explainText = '💡 灯泡正好在旗杆正上方：光线从顶端竖直向下，影长 = 0。';
+      } else {
+        explainText = '💡 灯泡偏离旗杆 ' + dM.toFixed(1) + ' m（灯高 5.5 m），影子被甩向另一侧并放大：影长 = 3 × ' + dM.toFixed(1) + ' ÷ (5.5 − 3) = ' + lampLenM.toFixed(2) + ' m。这就是中心投影的"放大"效果！';
+      }
+      document.getElementById('ro-proj-type').textContent = '中心投影';
+    }
+
+    // 影子（地面上的深色区域）
+    var shX0 = Math.min(PX, sx(shadowTipX));
+    var shW = Math.abs(shadowTipX);
+    if (shW > 1) {
+      svg.appendChild(el('rect', {
+        x: shX0, y: GY + 4, width: shW, height: 12, rx: 6,
+        fill: 'rgba(44,62,80,0.35)'
+      }));
+    }
+    // 旗杆
+    svg.appendChild(el('rect', { x: PX - 5, y: sy(H), width: 10, height: H, fill: '#8E44AD', rx: 3 }));
+    svg.appendChild(el('circle', { cx: PX, cy: sy(H) - 8, r: 8, fill: '#E74C3C' }));
+    // 旗
+    svg.appendChild(el('polygon', {
+      points: (PX + 5) + ',' + (sy(H) + 6) + ' ' + (PX + 40) + ',' + (sy(H) + 16) + ' ' + (PX + 5) + ',' + (sy(H) + 26),
+      fill: '#E74C3C'
+    }));
+    // 高度标注
+    svg.appendChild(el('text', { x: PX + 48, y: sy(H / 2), 'font-size': 13, fill: '#7D3C98', 'font-weight': 'bold' }));
+    svg.lastChild.textContent = '3 m';
+    // 影长标注
+    if (shW > 20) {
+      var mt = el('text', {
+        x: shX0 + shW / 2, y: GY + 36, 'font-size': 13, fill: '#2C3E50',
+        'font-weight': 'bold', 'text-anchor': 'middle'
+      });
+      mt.textContent = '影子';
+      svg.appendChild(mt);
+    }
+    document.getElementById('proj-explain').textContent = explainText;
+  }
+
+  document.getElementById('proj-mode-sun').addEventListener('click', function () {
+    mode = 'sun';
+    this.classList.add('active');
+    document.getElementById('proj-mode-lamp').classList.remove('active');
+    document.getElementById('sun-controls').style.display = 'block';
+    document.getElementById('lamp-controls').style.display = 'none';
+    render();
+  });
+  document.getElementById('proj-mode-lamp').addEventListener('click', function () {
+    mode = 'lamp';
+    this.classList.add('active');
+    document.getElementById('proj-mode-sun').classList.remove('active');
+    document.getElementById('sun-controls').style.display = 'none';
+    document.getElementById('lamp-controls').style.display = 'block';
+    render();
+  });
+  document.getElementById('slider-sun-angle').addEventListener('input', function () {
+    document.getElementById('display-sun-angle').textContent = this.value + '°';
+    render();
+  });
+  document.getElementById('slider-lamp-x').addEventListener('input', function () {
+    document.getElementById('display-lamp-x').textContent = (Math.abs(parseFloat(this.value)) / SCALE).toFixed(1) + ' m';
+    render();
+  });
+  render();
+})();
+
+/* ========================================
+ * 公共：等轴测立方体绘制（面片画家算法）
+ * ======================================== */
+function IsoPainter(svg, opts) {
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = opts.W, HH = opts.HH, VH = opts.VH, OX = opts.OX, OY = opts.OY;
+  var FACES = [
+    { n: [0, 0, 1], v: [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1]] },
+    { n: [1, 0, 0], v: [[1, 0, 0], [1, 1, 0], [1, 1, 1], [1, 0, 1]] },
+    { n: [0, 1, 0], v: [[0, 1, 0], [1, 1, 0], [1, 1, 1], [0, 1, 1]] },
+    { n: [-1, 0, 0], v: [[0, 0, 0], [0, 0, 1], [0, 1, 1], [0, 1, 0]] },
+    { n: [0, -1, 0], v: [[0, 0, 0], [1, 0, 0], [1, 0, 1], [0, 0, 1]] },
+    { n: [0, 0, -1], v: [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]] }
+  ];
+  function rotPt(p, th, c) {
+    var dx = p[0] - c[0], dy = p[1] - c[1];
+    var co = Math.cos(th), si = Math.sin(th);
+    return [c[0] + dx * co - dy * si, c[1] + dx * si + dy * co, p[2]];
+  }
+  function proj(p) {
+    return [OX + (p[0] - p[1]) * W, OY + (p[0] + p[1]) * HH - p[2] * VH];
+  }
+  function faceColor(n) {
+    if (n[2] > 0.5) return '#D2B4DE';
+    if (n[2] < -0.5) return '#6C3483';
+    if (n[0] > n[1]) return '#9B59B6';
+    return '#7D3C98';
+  }
+  this.draw = function (cubes, theta, center) {
+    svg.innerHTML = '';
+    var list = [];
+    cubes.forEach(function (c) {
+      FACES.forEach(function (f) {
+        var rn = rotPt(f.n, theta, [0, 0]); // 法线旋转（平移无关）
+        if (rn[0] + rn[1] + rn[2] <= 0.05) return; // 背面剔除：视方向 (1,1,1)
+        var pts = f.v.map(function (v) {
+          return rotPt([c[0] + v[0], c[1] + v[1], c[2] + v[2]], theta, center);
+        });
+        var depth = 0;
+        pts.forEach(function (p) { depth += p[0] + p[1] + p[2]; });
+        list.push({ pts: pts, depth: depth / pts.length, color: faceColor(rn) });
+      });
+    });
+    list.sort(function (a, b) { return a.depth - b.depth; });
+    list.forEach(function (f) {
+      var d = f.pts.map(function (p) {
+        var sp = proj(p);
+        return sp[0].toFixed(1) + ',' + sp[1].toFixed(1);
+      }).join(' ');
+      var poly = document.createElementNS(NS, 'polygon');
+      poly.setAttribute('points', d);
+      poly.setAttribute('fill', f.color);
+      poly.setAttribute('stroke', 'rgba(255,255,255,0.85)');
+      poly.setAttribute('stroke-width', '1.2');
+      poly.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(poly);
+    });
+  };
+}
+
+/* ========================================
+ * 交互实验②：三视图观察器
+ * ======================================== */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var cubes = [
+    [0, 0, 0], [1, 0, 0], [2, 0, 0], // 前排三个
+    [0, 1, 0],                        // 左后一个
+    [0, 0, 1]                         // 左前上面一个
+  ];
+  var maxX = 0, maxY = 0, maxZ = 0;
+  cubes.forEach(function (c) {
+    maxX = Math.max(maxX, c[0]);
+    maxY = Math.max(maxY, c[1]);
+    maxZ = Math.max(maxZ, c[2]);
+  });
+  function hasCube(x, y, z) {
+    return cubes.some(function (c) { return c[0] === x && c[1] === y && c[2] === z; });
+  }
+
+  var isoSvg = document.getElementById('svg-iso');
+  var painter = new IsoPainter(isoSvg, { W: 34, HH: 17, VH: 34, OX: 220, OY: 170 });
+  var theta = 0;
+  painter.draw(cubes, theta, [1.5, 0.5]);
+
+  // 旋转动画
+  var rotating = false;
+  document.getElementById('btn-rotate').addEventListener('click', function () {
+    if (rotating) return;
+    rotating = true;
+    var btn = this;
+    btn.textContent = '🔄 旋转中…';
+    var start = null;
+    var startTheta = theta;
+    function step(now) {
+      if (!start) start = now;
+      var t = Math.min((now - start) / 2400, 1);
+      theta = startTheta + t * Math.PI * 2;
+      painter.draw(cubes, theta, [1.5, 0.5]);
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        theta = startTheta;
+        painter.draw(cubes, theta, [1.5, 0.5]);
+        rotating = false;
+        btn.textContent = '🔄 旋转观察';
+      }
+    }
+    requestAnimationFrame(step);
+  });
+
+  // 2D 视图绘制
+  var viewSvg = document.getElementById('svg-view2d');
+  var CAPTIONS = {
+    front: '主视图：从正面看，横向 = 长（左右 3 格），纵向 = 高（上下 2 格）。注意左边那一列有 2 层高！',
+    left: '左视图：从左面看，横向 = 宽（前后 2 格），纵向 = 高。前排高 2 层，后排只有 1 层。',
+    top: '俯视图：从上面看，横向 = 长，纵向 = 宽（下方为前排）。5 个位置中有 4 个有方块。'
+  };
+  function renderView(name) {
+    viewSvg.innerHTML = '';
+    var cell = 44, pad = 18;
+    var cols, rows, isFilled;
+    if (name === 'front') {
+      cols = maxX + 1; rows = maxZ + 1;
+      isFilled = function (c, r) {
+        var z = maxZ - r;
+        for (var y = 0; y <= maxY; y++) if (hasCube(c, y, z)) return true;
+        return false;
+      };
+    } else if (name === 'left') {
+      cols = maxY + 1; rows = maxZ + 1;
+      isFilled = function (c, r) {
+        var z = maxZ - r;
+        for (var x = 0; x <= maxX; x++) if (hasCube(x, c, z)) return true;
+        return false;
+      };
+    } else {
+      cols = maxX + 1; rows = maxY + 1;
+      isFilled = function (c, r) {
+        var y = maxY - r;
+        for (var z = 0; z <= maxZ; z++) if (hasCube(c, y, z)) return true;
+        return false;
+      };
+    }
+    var w = cols * cell + pad * 2, h = rows * cell + pad * 2;
+    viewSvg.setAttribute('width', w);
+    viewSvg.setAttribute('height', h);
+    viewSvg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', pad + c * cell);
+        rect.setAttribute('y', pad + r * cell);
+        rect.setAttribute('width', cell);
+        rect.setAttribute('height', cell);
+        rect.setAttribute('fill', isFilled(c, r) ? 'rgba(155,89,182,0.35)' : '#fff');
+        rect.setAttribute('stroke', '#9B59B6');
+        rect.setAttribute('stroke-width', isFilled(c, r) ? '2.5' : '1');
+        viewSvg.appendChild(rect);
+      }
+    }
+    document.getElementById('view-caption').textContent = CAPTIONS[name];
+  }
+
+  var viewBtns = {
+    front: document.getElementById('view-btn-front'),
+    left: document.getElementById('view-btn-left'),
+    top: document.getElementById('view-btn-top')
+  };
+  Object.keys(viewBtns).forEach(function (name) {
+    viewBtns[name].addEventListener('click', function () {
+      Object.keys(viewBtns).forEach(function (k) { viewBtns[k].classList.remove('active'); });
+      this.classList.add('active');
+      renderView(name);
+    });
+  });
+  renderView('front');
+})();
+
+/* ========================================
+ * 交互实验③：三视图猜几何体（匹配游戏）
+ * ======================================== */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var puzzles = [
+    {
+      front: 'triangle', left: 'triangle', top: 'circleDot',
+      options: ['圆柱', '圆锥', '球', '三棱柱'], correct: 1,
+      explain: '主、左视图都是三角形，俯视图是带圆心点的圆（圆心是锥顶的投影）→ 圆锥。'
+    },
+    {
+      front: 'rect', left: 'rect', top: 'circle',
+      options: ['长方体', '圆柱', '圆锥', '三棱柱'], correct: 1,
+      explain: '主、左视图是矩形，俯视图是圆 → 竖放的圆柱。'
+    },
+    {
+      front: 'circle', left: 'circle', top: 'circle',
+      options: ['圆柱', '正方体', '球', '圆锥'], correct: 2,
+      explain: '三个视图都是圆 → 球。无论从哪个方向看，球的轮廓总是圆。'
+    },
+    {
+      front: 'rect', left: 'triangle', top: 'rect',
+      options: ['长方体', '三棱柱', '圆柱', '圆锥'], correct: 1,
+      explain: '主、俯视图是矩形，左视图是三角形 → 横放的三棱柱（三角形端面在左右两侧）。'
+    }
+  ];
+  var idx = 0, answered = false;
+
+  function drawShape(svg, type) {
+    svg.innerHTML = '';
+    function mk(name, attrs) {
+      var e = document.createElementNS(NS, name);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      svg.appendChild(e);
+      return e;
+    }
+    var fill = 'rgba(155,89,182,0.3)', stroke = '#9B59B6';
+    if (type === 'triangle') {
+      mk('polygon', { points: '50,14 14,84 86,84', fill: fill, stroke: stroke, 'stroke-width': 3, 'stroke-linejoin': 'round' });
+    } else if (type === 'circle') {
+      mk('circle', { cx: 50, cy: 50, r: 34, fill: fill, stroke: stroke, 'stroke-width': 3 });
+    } else if (type === 'circleDot') {
+      mk('circle', { cx: 50, cy: 50, r: 34, fill: fill, stroke: stroke, 'stroke-width': 3 });
+      mk('circle', { cx: 50, cy: 50, r: 4, fill: stroke });
+    } else { // rect
+      mk('rect', { x: 22, y: 28, width: 56, height: 44, fill: fill, stroke: stroke, 'stroke-width': 3 });
+    }
+  }
+
+  function renderPuzzle() {
+    var p = puzzles[idx];
+    answered = false;
+    document.getElementById('match-round').textContent = '第 ' + (idx + 1) + ' / ' + puzzles.length + ' 题';
+    drawShape(document.getElementById('match-front'), p.front);
+    drawShape(document.getElementById('match-left'), p.left);
+    drawShape(document.getElementById('match-top'), p.top);
+    var fb = document.getElementById('match-feedback');
+    fb.style.display = 'none';
+    document.getElementById('btn-match-next').style.display = 'none';
+    var box = document.getElementById('match-options');
+    box.innerHTML = '';
+    p.options.forEach(function (name, i) {
+      var btn = document.createElement('button');
+      btn.className = 'match-opt';
+      btn.textContent = name;
+      btn.addEventListener('click', function () {
+        if (answered) return;
+        answered = true;
+        var opts = box.querySelectorAll('.match-opt');
+        if (i === p.correct) {
+          btn.classList.add('correct');
+          fb.innerHTML = '<strong style="color:var(--success);">✓ 回答正确！</strong>' + p.explain;
+        } else {
+          btn.classList.add('wrong');
+          opts[p.correct].classList.add('correct');
+          fb.innerHTML = '<strong style="color:var(--danger);">✗ 正确答案：' + p.options[p.correct] + '。</strong>' + p.explain;
+        }
+        fb.style.display = 'block';
+        document.getElementById('btn-match-next').style.display = 'inline-block';
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  document.getElementById('btn-match-next').addEventListener('click', function () {
+    idx = (idx + 1) % puzzles.length;
+    renderPuzzle();
+  });
+  renderPuzzle();
+})();
+
+/* ========================================
+ * 交互实验④：立方体堆叠三视图
+ * ======================================== */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  // heights[x][y]，x：左→右（0..2），y：前→后（0..2）
+  var heights = [
+    [1, 2, 0],
+    [0, 1, 2],
+    [2, 0, 1]
+  ];
+  var MAXH = 3;
+
+  var grid = document.getElementById('stack-grid');
+  var cells = {};
+  // 显示时后排在上：row 0 = y2
+  for (var r = 0; r < 3; r++) {
+    for (var c = 0; c < 3; c++) {
+      (function (x, y) {
+        var btn = document.createElement('button');
+        btn.className = 'stack-cell';
+        btn.addEventListener('click', function () {
+          heights[x][y] = (heights[x][y] + 1) % (MAXH + 1);
+          renderAll();
+        });
+        cells[x + ',' + y] = btn;
+        grid.appendChild(btn);
+      })(c, 2 - r);
+    }
+  }
+
+  var isoPainter = new IsoPainter(document.getElementById('svg-stack-iso'),
+    { W: 26, HH: 13, VH: 26, OX: 170, OY: 160 });
+
+  function renderGridSvg(svg, cols, rows, cellInfo) {
+    // cellInfo(c, rFromTop) -> {filled: bool, text: string|null}
+    svg.innerHTML = '';
+    var cell = 40, pad = 25;
+    var w = cols * cell + pad * 2, h = rows * cell + pad * 2;
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var info = cellInfo(c, r);
+        var rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', pad + c * cell);
+        rect.setAttribute('y', pad + r * cell);
+        rect.setAttribute('width', cell);
+        rect.setAttribute('height', cell);
+        rect.setAttribute('fill', info.filled ? 'rgba(155,89,182,0.35)' : '#fff');
+        rect.setAttribute('stroke', '#9B59B6');
+        rect.setAttribute('stroke-width', info.filled ? '2.5' : '1');
+        svg.appendChild(rect);
+        if (info.text) {
+          var t = document.createElementNS(NS, 'text');
+          t.setAttribute('x', pad + c * cell + cell / 2);
+          t.setAttribute('y', pad + r * cell + cell / 2 + 6);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('font-size', '17');
+          t.setAttribute('font-weight', 'bold');
+          t.setAttribute('fill', '#7D3C98');
+          t.textContent = info.text;
+          svg.appendChild(t);
+        }
+      }
+    }
+  }
+
+  function renderAll() {
+    var x, y;
+    // 格子数字
+    for (x = 0; x < 3; x++) {
+      for (y = 0; y < 3; y++) {
+        var btn = cells[x + ',' + y];
+        var h = heights[x][y];
+        btn.textContent = h > 0 ? h : '+';
+        btn.classList.toggle('empty', h === 0);
+      }
+    }
+    // 立体图
+    var cubes = [];
+    var count = 0;
+    for (x = 0; x < 3; x++) {
+      for (y = 0; y < 3; y++) {
+        for (var z = 0; z < heights[x][y]; z++) {
+          cubes.push([x, y, z]);
+          count++;
+        }
+      }
+    }
+    isoPainter.draw(cubes, 0, [1.5, 1.5]);
+    document.getElementById('ro-cube-count').textContent = count;
+
+    // 主视图：列 = x，高 = max_y h[x][y]
+    var frontCols = [];
+    for (x = 0; x < 3; x++) {
+      var m = 0;
+      for (y = 0; y < 3; y++) m = Math.max(m, heights[x][y]);
+      frontCols.push(m);
+    }
+    document.getElementById('ro-front-cols').textContent = frontCols.join(', ');
+    renderGridSvg(document.getElementById('svg-stack-front'), 3, MAXH, function (c, r) {
+      var levelFromBottom = MAXH - r; // 该行对应的层数（顶行=3）
+      return { filled: frontCols[c] >= levelFromBottom, text: null };
+    });
+
+    // 左视图：列 = y（前→后），高 = max_x h[x][y]
+    var leftCols = [];
+    for (y = 0; y < 3; y++) {
+      var m2 = 0;
+      for (x = 0; x < 3; x++) m2 = Math.max(m2, heights[x][y]);
+      leftCols.push(m2);
+    }
+    document.getElementById('ro-left-cols').textContent = leftCols.join(', ');
+    renderGridSvg(document.getElementById('svg-stack-left'), 3, MAXH, function (c, r) {
+      var levelFromBottom = MAXH - r;
+      return { filled: leftCols[c] >= levelFromBottom, text: null };
+    });
+
+    // 俯视图：列 = x，行 = y（后排在上）
+    renderGridSvg(document.getElementById('svg-stack-top'), 3, 3, function (c, r) {
+      var yy = 2 - r;
+      var hh = heights[c][yy];
+      return { filled: hh > 0, text: hh > 0 ? String(hh) : null };
+    });
+  }
+
+  document.getElementById('btn-stack-reset').addEventListener('click', function () {
+    for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++) heights[x][y] = 0;
+    renderAll();
+  });
+  document.getElementById('btn-stack-demo').addEventListener('click', function () {
+    for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++) heights[x][y] = Math.floor(Math.random() * (MAXH + 1));
+    renderAll();
+  });
+  renderAll();
+})();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '路灯是点光源，光线从同一点发出，属于中心投影。阳光（A、B、D）可看作平行光，属于平行投影。',
+  hint: '想一想：中心投影的关键是"点光源"。太阳光是平行光还是点光源？'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '"高平齐"指主视图与左视图的高相等且平齐；A 是"长对正"，C 是"宽相等"。',
+  hint: '口诀：长对正（主↔俯）、高平齐（主↔左）、宽相等（左↔俯）。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: '主、左视图为三角形，俯视图为带圆心点的圆（圆心是锥顶的投影），是圆锥。圆柱俯视是圆但主视是矩形；球三视图都是圆。',
+  hint: '三角形提示"尖顶"（锥体），圆形俯视图提示底面是圆。'
+});
+</script>
 </body>
 </html>

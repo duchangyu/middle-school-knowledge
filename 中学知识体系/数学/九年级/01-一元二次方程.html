@@ -6,85 +6,1526 @@
   <title>一元二次方程 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    input[type="range"] { accent-color: var(--math); }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 22px 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.7;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 13px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .formula-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
     }
-    .related-card {
+    .formula-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.08), rgba(155,89,182,0.02));
+      border: 2px solid rgba(155,89,182,0.18);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .formula-card:hover {
+      border-color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .formula-card .f-name { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+    .formula-card .f-eq {
+      font-size: 18px; font-weight: 700; color: var(--math);
+      font-family: Georgia, serif; line-height: 1.6;
+    }
+    .formula-card .f-cond { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+
+    /* 分数渲染 */
+    .frac {
       display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+      vertical-align: middle;
+      text-align: center;
+      font-family: Georgia, serif;
+    }
+    .frac .num { display: block; padding: 0 6px 2px; border-bottom: 2px solid currentColor; }
+    .frac .den { display: block; padding: 2px 6px 0; }
+    .formula .sqrt {
+      border-top: 1.5px solid currentColor;
+      padding: 0 4px;
+      display: inline-block;
+    }
+    .formula .sqrt::before {
+      content: '√';
+      margin-right: 2px;
+    }
+
+    /* ===== 知识要点列表 ===== */
+    .know-list { list-style: none; padding-left: 0; }
+    .know-list li {
+      padding: 10px 14px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      transition: transform 0.2s;
+    }
+    .know-list li:hover { transform: translateX(4px); }
+    .know-list li strong { color: var(--math); }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] { flex: 1; }
+    .slider-row .value-badge {
+      min-width: 52px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* 数字输入 */
+    .num-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 14px 0;
+    }
+    .num-input-row .ni-label {
+      font-weight: 700; color: var(--math);
+      font-family: Georgia, serif; font-size: 18px;
+    }
+    .num-input {
+      width: 80px;
+      padding: 8px 10px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-family: Georgia, serif;
+      text-align: center;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .num-input:focus { outline: none; border-color: var(--math); }
+
+    /* 预设 chip */
+    .preset-row {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0;
+    }
+    .preset-row .label { font-size: 13px; color: var(--text-secondary); }
+    .chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
       color: var(--text-main);
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .chip:hover { border-color: var(--math); background: rgba(155,89,182,0.1); }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
     }
+    .data-cell {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .dc-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+      word-break: break-all;
+    }
+    .data-cell.pos { background: rgba(39,174,96,0.10); border-color: rgba(39,174,96,0.4); }
+    .data-cell.pos .num { color: var(--success); }
+    .data-cell.zero { background: rgba(243,156,18,0.10); border-color: rgba(243,156,18,0.4); }
+    .data-cell.zero .num { color: var(--warning); }
+    .data-cell.neg { background: rgba(231,76,60,0.10); border-color: rgba(231,76,60,0.4); }
+    .data-cell.neg .num { color: var(--danger); }
+
+    /* ===== Canvas ===== */
+    .canvas-box {
+      width: 100%;
+      height: 440px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .canvas-box canvas { display: block; width: 100%; height: 100%; }
+
+    /* a=0 警告 */
+    .warn-banner {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin: 12px 0;
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+    }
+    .warn-banner.show { display: block; animation: pulse 1s infinite; }
+
+    /* ===== 方程识别卡片 ===== */
+    .eq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .eq-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px 12px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .eq-card .eq-text {
+      font-family: Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      min-height: 28px;
+    }
+    .eq-card .eq-btns {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .eq-judge-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .eq-judge-btn:hover { border-color: var(--math); color: var(--math); }
+    .eq-judge-btn.yes.selected { border-color: var(--success); background: var(--success); color: #fff; }
+    .eq-judge-btn.no.selected { border-color: var(--danger); background: var(--danger); color: #fff; }
+    .eq-card.right { border-color: var(--success); background: rgba(39,174,96,0.06); }
+    .eq-card.wrong { border-color: var(--danger); background: rgba(231,76,60,0.06); }
+    .eq-card .eq-feedback {
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-height: 18px;
+      line-height: 1.5;
+    }
+    .eq-card .eq-feedback.right { color: var(--success); }
+    .eq-card .eq-feedback.wrong { color: var(--danger); }
+    .eq-progress {
+      text-align: center;
+      font-weight: 700;
+      color: var(--math);
+      margin: 10px 0 4px;
+    }
+
+    /* ===== 标签页 ===== */
+    .tab-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 2px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .tab-btn.active { background: var(--math); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+    /* ===== 配方法步骤 ===== */
+    .cstep-list { margin: 14px 0; }
+    .cstep-item {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin: 10px 0;
+      animation: fadeIn 0.3s ease;
+    }
+    .cstep-item .cstep-title { font-weight: 700; color: var(--math); margin-bottom: 4px; }
+    .cstep-item .cstep-math {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 6px 0;
+      font-family: Georgia, serif;
+      line-height: 1.6;
+    }
+    .cstep-item .cstep-note { font-size: 13px; color: var(--text-secondary); }
+    .cstep-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .step-ind { font-weight: 800; color: var(--math); min-width: 60px; text-align: center; }
+
+    /* ===== 韦达定理验证 ===== */
+    .vieta-verify {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    @media (max-width: 700px) { .vieta-verify { grid-template-columns: 1fr; } }
+    .vv-item {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .vv-item .vv-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+    .vv-item .vv-calc {
+      font-family: Georgia, serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 6px 0;
+    }
+    .vv-item .vv-eq {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .vv-item.match { background: rgba(39,174,96,0.10); border-color: rgba(39,174,96,0.4); }
+    .vv-item.match .vv-eq { color: var(--success); }
+    .vv-item.nomatch { background: rgba(231,76,60,0.08); border-color: rgba(231,76,60,0.3); }
+
+    /* ===== 练习题 ===== */
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
+
+    /* ===== 解法对比步骤行 ===== */
+    .solve-step {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin: 8px 0;
+      font-family: Georgia, serif;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .solve-step .step-label {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-right: 8px;
+      font-family: -apple-system, sans-serif;
+      vertical-align: middle;
+    }
+    .solve-step .hl { color: var(--danger); font-weight: 700; }
+    .solve-step .ok { color: var(--success); font-weight: 700; }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .step-nav .btn-disabled { opacity: 0.4; pointer-events: none; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 一元二次方程</div>
+  <div class="navbar-brand">🔢 一元二次方程</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="../八年级/index.html">← 八年级数学</a></li>
+    <li><a href="../../物理/九年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>🔢 一元二次方程</h1>
+  <p>从"拼数字"到求根公式 —— 一个未知数、二次方，开启方程世界的新大门</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
     <a href="index.html">数学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>一元二次方程</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>一元二次方程</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 1. 引入 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：从面积问题说起</h2>
+  <div class="card">
+    <p>在解决实际问题时，我们常会遇到"已知面积求边长"这类问题。</p>
+    <div class="tip-box">
+      <div class="tip-title">💡 想一想</div>
+      有一块矩形花圃，长比宽多 <strong>3</strong> 米，面积是 <strong>18</strong> 平方米。设宽为 <strong>x</strong> 米，则长为 <strong>(x+3)</strong> 米，依题意列方程：<br>
+      <div style="text-align:center; font-family:Georgia,serif; font-size:20px; font-weight:700; color:var(--math); margin:10px 0;">
+        x(x + 3) = 18
+      </div>
+      展开整理得：<strong>x² + 3x − 18 = 0</strong>。<br>
+      这个方程只含一个未知数 <strong>x</strong>，且 <strong>x</strong> 的最高次数是 <strong>2</strong>——这就是我们要学的<strong class="math-accent">一元二次方程</strong>！
+    </div>
+    <p>前面学过的一元一次方程（ax + b = 0）只能解决"一次"关系，而现实中的抛物轨迹、面积、利润最大值等问题，都离不开"二次"。学会解一元二次方程，是打开二次世界大门的钥匙。</p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
+  <!-- ===== 2. 概念定义 + 交互1 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 一元二次方程的定义</h2>
+  <div class="card">
+    <p>方程两边都是<strong class="math-accent">整式</strong>，只含有<strong>一个</strong>未知数，并且未知数的最高次数是 <strong>2</strong>，这样的方程叫做<strong>一元二次方程</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">ax² + bx + c = 0　(a ≠ 0)</div>
+      <div class="formula-note">这是一元二次方程的<strong>一般形式</strong>，其中 x 是未知数</div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">二次项系数</div>
+        <div class="f-eq">a</div>
+        <div class="f-cond">a ≠ 0（否则退化为一次方程）</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">一次项系数</div>
+        <div class="f-eq">b</div>
+        <div class="f-cond">含 x 的一次项</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">常数项</div>
+        <div class="f-eq">c</div>
+        <div class="f-cond">不含 x 的项</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 关键提醒</div>
+      <strong>a ≠ 0</strong> 是一元二次方程的"底线"。只要 a = 0，无论 b、c 是什么，它就不再是二次方程。另外，方程两边必须是<strong>整式</strong>（多项式），分式方程（如 1/x + x = 0）<strong>不</strong>属于一元二次方程。
+    </div>
+
+    <ul class="know-list">
+      <li><strong>判断步骤：</strong>① 先化成一边为 0 的形式；② 看是否整式方程；③ 确认只有一个未知数且最高次为 2；④ 确认二次项系数 a ≠ 0。</li>
+      <li><strong>例：</strong>x² − 5x + 6 = 0 是一元二次方程（a=1, b=−5, c=6）；x² = 9 也是（即 x² − 9 = 0，a=1, b=0, c=−9）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 交互1：方程识别器 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互·方程识别器</h2>
+  <div class="card">
+    <p>下面给出 7 个方程，请判断哪些是<strong class="math-accent">一元二次方程</strong>。点击「是」或「不是」后，会立刻给出判断理由。</p>
+    <div class="eq-progress" id="eqProgress">已答对 0 / 7</div>
+    <div class="eq-grid" id="eqGrid"></div>
+    <div class="tip-box">
+      <div class="tip-title">💡 识别口诀</div>
+      先化一边为 0 → 看两边是否整式 → 看未知数个数（一元）→ 看最高次数（二次）→ 看 a ≠ 0。
+    </div>
+  </div>
+
+  <!-- ===== 4. 四种解法 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 四种解法</h2>
+  <div class="card">
+    <p>解一元二次方程，常用的有四种方法。它们各有"擅长"的场景：</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">① 直接开平方法</div>
+        <div class="f-eq">x² = p&nbsp;(p≥0)<br>(x + m)² = n&nbsp;(n≥0)</div>
+        <div class="f-cond">缺一次项或已是完全平方</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">② 配方法</div>
+        <div class="f-eq">ax²+bx+c=0 ⟶ (x+m)²=n</div>
+        <div class="f-cond">万能钥匙，也是推导公式的工具</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">③ 公式法</div>
+        <div class="f-eq">x = (−b ± √Δ) / (2a)</div>
+        <div class="f-cond">Δ = b²−4ac，万能方法</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">④ 因式分解法</div>
+        <div class="f-eq">(x−p)(x−q)=0 ⟶ x=p 或 x=q</div>
+        <div class="f-cond">能"拆"成两个一次因式时最省事</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 怎么选？</div>
+      能<strong>因式分解</strong>就先分解（最快）；缺一次项用<strong>直接开平方</strong>；题目要求或公式不好记时用<strong>配方法</strong>；实在没思路，<strong>公式法</strong>一定算得出。
+    </div>
+  </div>
+
+  <!-- ===== 交互3：四种解法对比 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 交互·四种解法对比</h2>
+  <div class="card">
+    <p>用四种方法解同一个方程 <strong class="math-accent">x² − 5x + 6 = 0</strong>，看看它们殊途同归——结果都是 x = 2 或 x = 3。</p>
+
+    <div class="tab-bar" id="methodTabs">
+      <button class="tab-btn active" data-tab="factor">① 因式分解法</button>
+      <button class="tab-btn" data-tab="complete">② 配方法</button>
+      <button class="tab-btn" data-tab="formula">③ 公式法</button>
+      <button class="tab-btn" data-tab="sqrt">④ 直接开平方法</button>
+    </div>
+
+    <!-- 因式分解法 -->
+    <div class="tab-panel active" id="tab-factor">
+      <div class="solve-step">
+        <span class="step-label">第 1 步</span>把方程写成一般形式：<span class="hl">x² − 5x + 6 = 0</span>
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 2 步</span>把左边的二次三项式分解因式：<br>
+        找两数 p、q，使 p + q = −5，p × q = 6。易得 p = −2，q = −3。
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 3 步</span>分解为：<span class="hl">(x − 2)(x − 3) = 0</span>
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 4 步</span>两个因式至少一个为 0：<br>
+        x − 2 = 0 ⟹ x = 2；&nbsp;&nbsp;x − 3 = 0 ⟹ x = 3
+      </div>
+      <div class="solve-step" style="border-left-color: var(--success);">
+        <span class="step-label">答案</span><span class="ok">x₁ = 2，x₂ = 3</span>
+      </div>
+    </div>
+
+    <!-- 配方法 -->
+    <div class="tab-panel" id="tab-complete">
+      <div class="solve-step">
+        <span class="step-label">第 1 步</span>移常数项：<span class="hl">x² − 5x = −6</span>
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 2 步</span>两边同加一次项系数一半的平方：(−5/2)² = 25/4<br>
+        x² − 5x + 25/4 = −6 + 25/4
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 3 步</span>左边写成完全平方，右边合并：<br>
+        <span class="hl">(x − 5/2)² = 1/4</span>&nbsp;&nbsp;（因为 −6 + 25/4 = −24/4 + 25/4 = 1/4）
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 4 步</span>直接开平方：x − 5/2 = ±1/2
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 5 步</span>解出 x：<br>
+        x = 5/2 + 1/2 = 3；&nbsp;&nbsp;x = 5/2 − 1/2 = 2
+      </div>
+      <div class="solve-step" style="border-left-color: var(--success);">
+        <span class="step-label">答案</span><span class="ok">x₁ = 2，x₂ = 3</span>
+      </div>
+    </div>
+
+    <!-- 公式法 -->
+    <div class="tab-panel" id="tab-formula">
+      <div class="solve-step">
+        <span class="step-label">第 1 步</span>确定系数：a = 1，b = −5，c = 6
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 2 步</span>计算判别式：<br>
+        Δ = b² − 4ac = (−5)² − 4×1×6 = 25 − 24 = <span class="hl">1</span>
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 3 步</span>Δ = 1 &gt; 0，方程有两个不相等的实数根，代入求根公式：<br>
+        x = (−b ± √Δ) / (2a) = (5 ± √1) / 2 = (5 ± 1) / 2
+      </div>
+      <div class="solve-step">
+        <span class="step-label">第 4 步</span>拆成两个根：<br>
+        x₁ = (5 + 1) / 2 = 3；&nbsp;&nbsp;x₂ = (5 − 1) / 2 = 2
+      </div>
+      <div class="solve-step" style="border-left-color: var(--success);">
+        <span class="step-label">答案</span><span class="ok">x₁ = 2，x₂ = 3</span>
+      </div>
+    </div>
+
+    <!-- 直接开平方法 -->
+    <div class="tab-panel" id="tab-sqrt">
+      <div class="warning-box" style="background: rgba(243,156,18,0.1);">
+        <div class="tip-title" style="color: var(--warning);">⚠ 不直接适用</div>
+        原方程 <strong>x² − 5x + 6 = 0</strong> 含有一次项 <strong>−5x</strong>，不是 x² = p 或 (x + m)² = n 的"直接可开方"形式，所以<strong>不能直接</strong>用直接开平方法求解。
+      </div>
+      <div class="solve-step">
+        <span class="step-label">适用形式</span>直接开平方法适用于：<br>
+        ① <span class="hl">x² = p</span>（p ≥ 0）⟹ x = ±√p；<br>
+        ② <span class="hl">(x + m)² = n</span>（n ≥ 0）⟹ x = −m ± √n。
+      </div>
+      <div class="solve-step">
+        <span class="step-label">举例</span>解 x² = 9：<br>
+        直接开平方得 x = ±√9 = ±3，所以 x₁ = 3，x₂ = −3。
+      </div>
+      <div class="solve-step">
+        <span class="step-label">衔接</span>本题若先用配方法得到 <strong>(x − 5/2)² = 1/4</strong>，便可用直接开平方法完成最后一步（见「配方法」标签）。
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">✅ 殊途同归</div>
+      四种方法<strong>结果一致</strong>：x = 2 或 x = 3。不同方法只是"路径"不同，方程的根是客观存在的。中考时根据题目特征选最快的方法即可。
+    </div>
+  </div>
+
+  <!-- ===== 6. 判别式 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 判别式 Δ = b² − 4ac</h2>
+  <div class="card">
+    <p>用公式法时，根号里 <strong>b² − 4ac</strong> 决定了方程有没有根、有几个根，所以它叫<strong class="math-accent">判别式</strong>，记作 <strong>Δ</strong>（读作 delta）。</p>
+
+    <div class="formula-box">
+      <div class="formula">Δ = b² − 4ac</div>
+      <div class="formula-note">Δ 的正负决定根的三种情况</div>
+    </div>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">Δ &gt; 0</div>
+        <div class="f-eq">两个不相等的实数根</div>
+        <div class="f-cond">x₁,₂ = (−b ± √Δ)/(2a)</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">Δ = 0</div>
+        <div class="f-eq">两个相等的实数根</div>
+        <div class="f-cond">x₁ = x₂ = −b/(2a)</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">Δ &lt; 0</div>
+        <div class="f-eq">无实数根</div>
+        <div class="f-cond">（在实数范围内无解）</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 几何意义</div>
+      一元二次方程 ax² + bx + c = 0 的根，就是抛物线 <strong>y = ax² + bx + c</strong> 与 x 轴交点的横坐标。所以：<br>
+      Δ &gt; 0 ⟺ 抛物线与 x 轴有<strong>两个</strong>交点；Δ = 0 ⟺ <strong>一个</strong>交点（相切）；Δ &lt; 0 ⟺ <strong>没有</strong>交点。
+    </div>
+  </div>
+
+  <!-- ===== 交互2：公式法求解器 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 交互·公式法求解器</h2>
+  <div class="card" id="solver-card">
+    <p>输入系数 a、b、c，实时计算判别式 Δ、判断根的情况、输出两根，并画出抛物线 y = ax² + bx + c 与 x 轴交点。</p>
+
+    <div class="formula-box" style="padding:14px;">
+      <div class="formula" style="font-size:22px;">x = <span class="frac"><span class="num">−b ± √(b² − 4ac)</span><span class="den">2a</span></span></div>
+    </div>
+
+    <div class="num-input-row">
+      <span class="ni-label">a =</span>
+      <input type="number" class="num-input" id="fsA" value="1" step="1">
+      <span class="ni-label">b =</span>
+      <input type="number" class="num-input" id="fsB" value="-5" step="1">
+      <span class="ni-label">c =</span>
+      <input type="number" class="num-input" id="fsC" value="6" step="1">
+      <button class="btn btn-primary btn-sm" id="fsSolve" style="background:var(--math);">求解</button>
+    </div>
+
+    <div class="preset-row">
+      <span class="label">试试这些：</span>
+      <button class="chip" data-a="1" data-b="-5" data-c="6">x²−5x+6=0</button>
+      <button class="chip" data-a="1" data-b="-4" data-c="4">x²−4x+4=0（Δ=0）</button>
+      <button class="chip" data-a="1" data-b="0" data-c="-9">x²−9=0</button>
+      <button class="chip" data-a="1" data-b="2" data-c="3">x²+2x+3=0（Δ&lt;0）</button>
+      <button class="chip" data-a="2" data-b="3" data-c="-2">2x²+3x−2=0</button>
+    </div>
+
+    <div class="warn-banner" id="fsWarnA0">⚠ a = 0！此时方程退化为 bx + c = 0（一元一次方程），不是一元二次方程。请把 a 设为非 0 值。</div>
+
+    <div class="data-panel">
+      <div class="data-cell" id="fsDeltaCell">
+        <div class="dc-label">判别式 Δ = b² − 4ac</div>
+        <div class="num" id="fsDelta">—</div>
+      </div>
+      <div class="data-cell" id="fsRootCase">
+        <div class="dc-label">根的情况</div>
+        <div class="num" id="fsCase" style="font-size:15px;">—</div>
+      </div>
+      <div class="data-cell" id="fsX1Cell">
+        <div class="dc-label">x₁</div>
+        <div class="num" id="fsX1">—</div>
+      </div>
+      <div class="data-cell" id="fsX2Cell">
+        <div class="dc-label">x₂</div>
+        <div class="num" id="fsX2">—</div>
+      </div>
+    </div>
+
+    <div class="canvas-box">
+      <canvas id="fsGraph" width="760" height="440"></canvas>
+    </div>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; text-align: center;">
+      🔴 红点为方程的实数根（抛物线与 x 轴的交点）；Δ &lt; 0 时抛物线不与 x 轴相交。
     </p>
   </div>
+
+  <!-- ===== 8. 配方法详解 + 交互4 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 配方法·推导求根公式</h2>
+  <div class="card" id="complete-card">
+    <p>配方法不仅能解具体方程，还能<strong class="math-accent">推导出求根公式</strong>。下面用一般形式 ax² + bx + c = 0 一步步配方，输入系数可实时看到每一步的数值。</p>
+
+    <div class="num-input-row">
+      <span class="ni-label">a =</span>
+      <input type="number" class="num-input" id="csA" value="1" step="1">
+      <span class="ni-label">b =</span>
+      <input type="number" class="num-input" id="csB" value="-5" step="1">
+      <span class="ni-label">c =</span>
+      <input type="number" class="num-input" id="csC" value="6" step="1">
+    </div>
+    <div class="preset-row">
+      <span class="label">预设：</span>
+      <button class="chip" data-a="1" data-b="-5" data-c="6">x²−5x+6=0</button>
+      <button class="chip" data-a="1" data-b="4" data-c="1">x²+4x+1=0</button>
+      <button class="chip" data-a="2" data-b="8" data-c="3">2x²+8x+3=0</button>
+    </div>
+
+    <div class="warn-banner" id="csWarnA0">⚠ a = 0，不是一元二次方程，无法配方。请把 a 设为非 0 值。</div>
+
+    <div class="cstep-list" id="cstepList"></div>
+    <div class="cstep-controls">
+      <button class="btn btn-outline btn-sm" id="stepPrev" style="border-color:var(--math);color:var(--math);">← 上一步</button>
+      <span class="step-ind" id="stepInd">1 / 6</span>
+      <button class="btn btn-primary btn-sm" id="stepNext" style="background:var(--math);">下一步 →</button>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 配方口诀</div>
+      "二次项先化为 1，常数移到另一边；两边加上<b>一半平方</b>，左边写成完全平方"——这里"一半"指一次项系数的一半。
+    </div>
+  </div>
+
+  <!-- ===== 9. 韦达定理 + 交互5 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 根与系数的关系·韦达定理</h2>
+  <div class="card">
+    <p>当一元二次方程 <strong>ax² + bx + c = 0</strong>（a ≠ 0）<strong>有实数根</strong> x₁、x₂ 时，两根与系数之间有如下关系，称为<strong class="math-accent">韦达定理</strong>：</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        x₁ + x₂ = <span class="frac"><span class="num">−b</span><span class="den">a</span></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        x₁ · x₂ = <span class="frac"><span class="num">c</span><span class="den">a</span></span>
+      </div>
+      <div class="formula-note">两根之和 = −b/a，两根之积 = c/a（要求 Δ ≥ 0）</div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 注意前提</div>
+      韦达定理要求方程<strong>有实数根</strong>（即 Δ ≥ 0）。当 Δ &lt; 0 时，方程无实数根，定理在实数范围内不适用。
+    </div>
+
+    <ul class="know-list">
+      <li><strong>不求根</strong>也能算两根之和与积——这是韦达定理最大的威力。</li>
+      <li><strong>已知两根</strong>反推方程：方程可写为 x² − (x₁+x₂)x + x₁·x₂ = 0（二次项系数归一）。</li>
+      <li><strong>检验</strong>：求出根后，可用 x₁+x₂ 和 x₁·x₂ 是否等于 −b/a、c/a 来验算。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 交互5：韦达定理验证 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 交互·韦达定理验证</h2>
+  <div class="card" id="vieta-card">
+    <p>输入系数 a、b、c，下方实时算出两根 x₁、x₂，并验证韦达定理的两个等式是否成立。</p>
+
+    <div class="num-input-row">
+      <span class="ni-label">a =</span>
+      <input type="number" class="num-input" id="vtA" value="1" step="1">
+      <span class="ni-label">b =</span>
+      <input type="number" class="num-input" id="vtB" value="-5" step="1">
+      <span class="ni-label">c =</span>
+      <input type="number" class="num-input" id="vtC" value="6" step="1">
+    </div>
+    <div class="preset-row">
+      <span class="label">预设：</span>
+      <button class="chip" data-a="1" data-b="-5" data-c="6">x²−5x+6=0</button>
+      <button class="chip" data-a="1" data-b="-4" data-c="4">x²−4x+4=0（等根）</button>
+      <button class="chip" data-a="2" data-b="3" data-c="-2">2x²+3x−2=0</button>
+      <button class="chip" data-a="1" data-b="2" data-c="3">x²+2x+3=0（无实根）</button>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell" id="vtDeltaCell">
+        <div class="dc-label">判别式 Δ</div>
+        <div class="num" id="vtDelta">—</div>
+      </div>
+      <div class="data-cell"><div class="dc-label">x₁</div><div class="num" id="vtX1">—</div></div>
+      <div class="data-cell"><div class="dc-label">x₂</div><div class="num" id="vtX2">—</div></div>
+    </div>
+
+    <div class="vieta-verify">
+      <div class="vv-item" id="vvSum">
+        <div class="vv-label">两根之和</div>
+        <div class="vv-calc">x₁ + x₂ = <span id="vtSumActual">—</span></div>
+        <div class="vv-calc">−b/a = <span id="vtSumExpect">—</span></div>
+        <div class="vv-eq" id="vtSumEq">—</div>
+      </div>
+      <div class="vv-item" id="vvProd">
+        <div class="vv-label">两根之积</div>
+        <div class="vv-calc">x₁ · x₂ = <span id="vtProdActual">—</span></div>
+        <div class="vv-calc">c/a = <span id="vtProdExpect">—</span></div>
+        <div class="vv-eq" id="vtProdEq">—</div>
+      </div>
+    </div>
+
+    <div class="tip-box" id="vtNote">
+      <div class="tip-title">📌 说明</div>
+      修改系数后，验证结果会实时更新。当 Δ ≥ 0 时，两根之和、两根之积应严格等于 −b/a、c/a；当 Δ &lt; 0 时无实数根，定理不适用。
+    </div>
+  </div>
+
+  <!-- ===== 11. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">11</span> 练一练</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列方程中，是一元二次方程的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. x³ − 2x² + 1 = 0</div>
+    <div class="quiz-option" data-idx="1">B. 2x² − 3x + 1 = 0</div>
+    <div class="quiz-option" data-idx="2">C. 1/x + x = 2</div>
+    <div class="quiz-option" data-idx="3">D. xy + 2x = 0</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 方程 x² − 4x + 4 = 0 的根的情况是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 有两个不相等的实数根</div>
+    <div class="quiz-option" data-idx="1">B. 有两个相等的实数根</div>
+    <div class="quiz-option" data-idx="2">C. 没有实数根</div>
+    <div class="quiz-option" data-idx="3">D. 无法确定</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 方程 x² − 3x + 2 = 0 的两根为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. x₁ = 1，x₂ = 2</div>
+    <div class="quiz-option" data-idx="1">B. x₁ = −1，x₂ = −2</div>
+    <div class="quiz-option" data-idx="2">C. x₁ = 1，x₂ = −2</div>
+    <div class="quiz-option" data-idx="3">D. x₁ = −1，x₂ = 2</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 12. 学科交叉 ===== -->
+  <h2 class="section-title"><span class="step-badge">12</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 一元二次方程的延伸与应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ➗ <a href="../八年级/05-因式分解.html"><strong>数学·八年级 因式分解</strong></a>——
+        <strong>因式分解法</strong>解一元二次方程，本质就是因式分解！把 ax²+bx+c 分解为 (x−p)(x−q)，由"几个因式之积为 0，则至少一个因式为 0"得根。掌握好因式分解（提公因式、平方差、完全平方、十字相乘），解方程就快了一大半。
+        <span class="tag tag-math">代数基础</span>
+      </li>
+      <li>
+        📊 <a href="02-二次函数.html"><strong>数学·九年级 二次函数</strong></a>——
+        一元二次方程 ax²+bx+c=0 的根，就是二次函数 <strong>y=ax²+bx+c</strong> 的图像（抛物线）与 <strong>x 轴交点的横坐标</strong>。判别式 Δ 决定交点个数：Δ&gt;0 两个交点，Δ=0 一个（相切），Δ&lt;0 无交点。方程与函数，是一体两面。
+        <span class="tag tag-math">方程与函数</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/九年级/16-电功率.html"><strong>物理·九年级 电功率</strong></a>——
+        在"电源有内阻"的电路中，外阻 R 变化时，功率 P = E²R/(R+r)² 求最大功率常化为关于 R 的二次式，用"二次函数求最值"或配方法求极值；许多极值问题最终都归结为解或分析一元二次方程。
+        <span class="tag tag-cross">极值应用</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="../八年级/index.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：八年级数学</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="02-二次函数.html" class="btn btn-primary" style="background: var(--math);">下一章：二次函数 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+(function () {
+  /* ============================================================
+   *  工具函数
+   * ============================================================ */
+  var $ = function (id) { return document.getElementById(id); };
+
+  // 数值格式化：整数直接显示，小数保留 2 位，去尾零
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    if (Math.abs(n) < 1e-9) return '0';
+    var r = Math.round(n * 100) / 100;
+    if (Math.abs(r - Math.round(r)) < 1e-9) return String(Math.round(r));
+    return String(r);
+  }
+
+  // 分数格式化（接收分子、分母数值，输出形如 5/2 的字符串，可约分则约分）
+  function gcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
+    while (b) { var t = a % b; a = b; b = t; }
+    return a || 1;
+  }
+  function fracStr(num, den) {
+    if (den === 0) return '—';
+    if (num === 0) return '0';
+    var sign = (num * den < 0) ? '−' : '';
+    var g = gcd(Math.round(num), Math.round(den));
+    var n = Math.abs(Math.round(num) / g);
+    var d = Math.abs(Math.round(den) / g);
+    if (d === 1) return sign + n;
+    return sign + n + '/' + d;
+  }
+
+  // 把带正负号的项拼成字符串（用于 ax²+bx+c 显示）
+  function polyString(a, b, c) {
+    function termCoef(v, first) {
+      var sign = v < 0 ? '−' : (first ? '' : '+');
+      var absV = Math.abs(v);
+      return { sign: sign, absV: absV };
+    }
+    var s = '';
+    var ta = termCoef(a, true);
+    s += ta.sign + (ta.absV === 1 ? '' : fmt(ta.absV)) + 'x²';
+    if (Math.abs(b) >= 1e-9) {
+      var tb = termCoef(b, false);
+      s += ' ' + tb.sign + ' ' + (tb.absV === 1 ? '' : fmt(tb.absV)) + 'x';
+    }
+    if (Math.abs(c) >= 1e-9) {
+      var tc = termCoef(c, false);
+      s += ' ' + tc.sign + ' ' + fmt(tc.absV);
+    }
+    return s + ' = 0';
+  }
+
+  /* ============================================================
+   *  交互1：方程识别器
+   * ============================================================ */
+  var eqProblems = [
+    { eq: 'x² + 2x + 1 = 0', isQ: true,  reason: '整式方程，一元，最高次 2，a=1≠0，是一元二次方程。' },
+    { eq: 'x³ + 2x = 0',    isQ: false, reason: '含 x³，最高次数是 3，是一元三次方程。' },
+    { eq: '2x² − 3x = 5',   isQ: true,  reason: '移项得 2x²−3x−5=0，整式、一元、二次，a=2≠0。' },
+    { eq: '1/x + x = 0',    isQ: false, reason: '含 1/x，分母中有未知数，是分式方程，不是整式方程。' },
+    { eq: '(x+1)(x−2) = 0', isQ: true,  reason: '展开得 x²−x−2=0，整式、一元、二次，a=1≠0。' },
+    { eq: 'x² = 9',         isQ: true,  reason: '即 x²−9=0，整式、一元、二次，a=1≠0。' },
+    { eq: 'ax² + bx + c = 0', isQ: false, reason: '未说明 a≠0。当 a=0 时它不是二次方程，所以不能确定是一元二次方程。' }
+  ];
+  var eqAnswered = 0; // 答对数
+
+  function renderEqGrid() {
+    var grid = $('eqGrid');
+    grid.innerHTML = '';
+    eqProblems.forEach(function (p, i) {
+      var card = document.createElement('div');
+      card.className = 'eq-card';
+      card.innerHTML =
+        '<div class="eq-text">' + p.eq + '</div>' +
+        '<div class="eq-btns">' +
+          '<button class="eq-judge-btn yes" data-judge="1">✓ 是</button>' +
+          '<button class="eq-judge-btn no" data-judge="0">✗ 不是</button>' +
+        '</div>' +
+        '<div class="eq-feedback"></div>';
+      grid.appendChild(card);
+
+      var fb = card.querySelector('.eq-feedback');
+      var btnYes = card.querySelector('.yes');
+      var btnNo = card.querySelector('.no');
+      var solved = false;
+
+      function judge(userSaysYes, btn) {
+        if (solved) return;
+        var correct = (userSaysYes === p.isQ);
+        btnYes.classList.remove('selected');
+        btnNo.classList.remove('selected');
+        btn.classList.add('selected');
+        if (correct) {
+          card.classList.remove('wrong');
+          card.classList.add('right');
+          fb.className = 'eq-feedback right';
+          fb.innerHTML = '✓ 正确！' + p.reason;
+          eqAnswered++;
+          $('eqProgress').textContent = '已答对 ' + eqAnswered + ' / ' + eqProblems.length;
+          solved = true;
+        } else {
+          card.classList.remove('right');
+          card.classList.add('wrong');
+          fb.className = 'eq-feedback wrong';
+          fb.innerHTML = '✗ 不对，再想想。提示：' + p.reason;
+        }
+      }
+      btnYes.addEventListener('click', function () { judge(true, btnYes); });
+      btnNo.addEventListener('click', function () { judge(false, btnNo); });
+    });
+  }
+
+  /* ============================================================
+   *  交互2：公式法求解器（含 Canvas）
+   * ============================================================ */
+  function readNum(id) {
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function solveQ(a, b, c) {
+    // 返回 { delta, case, x1, x2 }
+    if (Math.abs(a) < 1e-9) return { delta: null, case: 'notQ', x1: null, x2: null };
+    var delta = b * b - 4 * a * c;
+    if (delta > 1e-9) {
+      var sq = Math.sqrt(delta);
+      var x1 = (-b + sq) / (2 * a);
+      var x2 = (-b - sq) / (2 * a);
+      return { delta: delta, case: 'two', x1: x1, x2: x2 };
+    } else if (Math.abs(delta) <= 1e-9) {
+      var x = -b / (2 * a);
+      return { delta: 0, case: 'one', x1: x, x2: x };
+    } else {
+      return { delta: delta, case: 'none', x1: null, x2: null };
+    }
+  }
+
+  function drawArrow(ctx, tipX, tipY, angle) {
+    var len = 10;
+    ctx.fillStyle = '#2C3E50';
+    ctx.beginPath();
+    ctx.moveTo(tipX, tipY);
+    ctx.lineTo(tipX - len * Math.cos(angle - 0.42), tipY - len * Math.sin(angle - 0.42));
+    ctx.lineTo(tipX - len * Math.cos(angle + 0.42), tipY - len * Math.sin(angle + 0.42));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawFsGraph(a, b, c, sol) {
+    var canvas = $('fsGraph');
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var W = canvas.clientWidth || 760;
+    var H = canvas.clientHeight || 440;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    var scale = 40;
+    var ox = W / 2, oy = H / 2;
+
+    // 背景
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+
+    // 网格
+    ctx.strokeStyle = '#EDF1F6';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (var i = -Math.ceil(ox / scale); i <= Math.ceil((W - ox) / scale); i++) {
+      if (i === 0) continue;
+      var gx = Math.round(ox + i * scale) + 0.5;
+      ctx.moveTo(gx, 0); ctx.lineTo(gx, H);
+      var gy = Math.round(oy - i * scale) + 0.5;
+      ctx.moveTo(0, gy); ctx.lineTo(W, gy);
+    }
+    ctx.stroke();
+
+    // 坐标轴
+    ctx.strokeStyle = '#2C3E50';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(W, oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, H); ctx.stroke();
+    drawArrow(ctx, W - 10, oy, 0);
+    drawArrow(ctx, ox, 10, -Math.PI / 2);
+
+    // 刻度
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = '#7F8C8D';
+    ctx.strokeStyle = '#B0BCC9';
+    ctx.lineWidth = 1;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (var xi = -Math.floor(ox / scale); xi <= Math.floor((W - ox) / scale); xi++) {
+      if (xi === 0) continue;
+      var px = Math.round(ox + xi * scale) + 0.5;
+      ctx.beginPath(); ctx.moveTo(px, oy - 4); ctx.lineTo(px, oy + 4); ctx.stroke();
+      ctx.fillText(xi, px, oy + 6);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (var yi = -Math.floor(oy / scale); yi <= Math.floor((H - oy) / scale); yi++) {
+      if (yi === 0) continue;
+      var py = Math.round(oy - yi * scale) + 0.5;
+      ctx.beginPath(); ctx.moveTo(ox - 4, py); ctx.lineTo(ox + 4, py); ctx.stroke();
+      ctx.fillText(yi, ox - 6, py);
+    }
+    ctx.fillStyle = '#7F8C8D';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('x', W - 18, oy + 10);
+    ctx.fillText('y', ox + 10, 2);
+    ctx.fillText('O', ox + 6, oy - 16);
+
+    // a=0：画直线提示
+    if (Math.abs(a) < 1e-6) {
+      ctx.strokeStyle = '#E74C3C';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 5]);
+      ctx.beginPath();
+      var y0 = oy - (b * (-ox / scale) + c) * scale;
+      var y1 = oy - (b * ((W - ox) / scale) + c) * scale;
+      ctx.moveTo(0, y0); ctx.lineTo(W, y1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#E74C3C';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('a = 0，不是二次函数', W / 2, H / 2 - 40);
+      return;
+    }
+
+    // 抛物线
+    var x0 = -ox / scale, x1 = (W - ox) / scale;
+    ctx.strokeStyle = '#9B59B6';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    var started = false;
+    for (var x = x0; x <= x1; x += 0.02) {
+      var cx = ox + x * scale;
+      var cy = oy - (a * x * x + b * x + c) * scale;
+      if (cy < -800 || cy > H + 800) { started = false; continue; }
+      if (!started) { ctx.moveTo(cx, cy); started = true; }
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.stroke();
+
+    // 标注与 x 轴交点（方程的根）
+    if (sol.case === 'two') {
+      [sol.x1, sol.x2].forEach(function (rx, idx) {
+        var px = ox + rx * scale;
+        if (px < 0 || px > W) return;
+        ctx.beginPath();
+        ctx.arc(px, oy, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#E74C3C';
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // 标签
+        var label = 'x' + (idx === 0 ? '₁' : '₂') + ' = ' + fmt(rx);
+        ctx.font = 'bold 13px sans-serif';
+        var tw = ctx.measureText(label).width;
+        var tx = px + 10, ty = oy + 14;
+        if (tx + tw + 12 > W) tx = px - tw - 22;
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillRect(tx - 6, ty - 14, tw + 16, 22);
+        ctx.strokeStyle = '#E74C3C';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tx - 6, ty - 14, tw + 16, 22);
+        ctx.fillStyle = '#E74C3C';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText(label, tx + 2, ty + 1);
+      });
+    } else if (sol.case === 'one') {
+      var px = ox + sol.x1 * scale;
+      if (px >= 0 && px <= W) {
+        ctx.beginPath();
+        ctx.arc(px, oy, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#E67E22';
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        var label = 'x₁ = x₂ = ' + fmt(sol.x1);
+        ctx.font = 'bold 13px sans-serif';
+        var tw = ctx.measureText(label).width;
+        var tx = px + 10, ty = oy + 14;
+        if (tx + tw + 12 > W) tx = px - tw - 22;
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillRect(tx - 6, ty - 14, tw + 16, 22);
+        ctx.strokeStyle = '#E67E22';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tx - 6, ty - 14, tw + 16, 22);
+        ctx.fillStyle = '#E67E22';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText(label, tx + 2, ty + 1);
+      }
+    } else if (sol.case === 'none') {
+      // 抛物线不与 x 轴相交
+      ctx.fillStyle = '#E74C3C';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Δ < 0，无实数根（抛物线与 x 轴无交点）', W / 2, 30);
+    }
+  }
+
+  function updateFormulaSolver() {
+    var a = readNum('fsA'), b = readNum('fsB'), c = readNum('fsC');
+    var isZero = Math.abs(a) < 1e-9;
+    $('fsWarnA0').classList.toggle('show', isZero);
+
+    var deltaCell = $('fsDeltaCell');
+    var caseCell = $('fsRootCase');
+    var x1Cell = $('fsX1Cell');
+    var x2Cell = $('fsX2Cell');
+    [deltaCell, caseCell, x1Cell, x2Cell].forEach(function (el) {
+      el.classList.remove('pos', 'zero', 'neg');
+    });
+
+    if (isZero) {
+      $('fsDelta').textContent = '—';
+      $('fsCase').textContent = '非二次方程';
+      $('fsX1').textContent = '—';
+      $('fsX2').textContent = '—';
+      drawFsGraph(a, b, c, { case: 'notQ' });
+      return;
+    }
+
+    var sol = solveQ(a, b, c);
+    var delta = sol.delta;
+    $('fsDelta').textContent = fmt(delta);
+
+    if (delta > 1e-9) {
+      deltaCell.classList.add('pos');
+      caseCell.classList.add('pos');
+      x1Cell.classList.add('pos');
+      x2Cell.classList.add('pos');
+      $('fsCase').textContent = '两个不相等实数根';
+      $('fsX1').textContent = fmt(sol.x1);
+      $('fsX2').textContent = fmt(sol.x2);
+    } else if (Math.abs(delta) <= 1e-9) {
+      deltaCell.classList.add('zero');
+      caseCell.classList.add('zero');
+      x1Cell.classList.add('zero');
+      x2Cell.classList.add('zero');
+      $('fsCase').textContent = '两个相等实数根';
+      $('fsX1').textContent = fmt(sol.x1);
+      $('fsX2').textContent = fmt(sol.x2);
+    } else {
+      deltaCell.classList.add('neg');
+      caseCell.classList.add('neg');
+      $('fsCase').textContent = '无实数根';
+      $('fsX1').textContent = '—';
+      $('fsX2').textContent = '—';
+    }
+    drawFsGraph(a, b, c, sol);
+  }
+
+  /* ============================================================
+   *  交互4：配方法分步演示
+   * ============================================================ */
+  var CS_STEP_COUNT = 6;
+  var csStep = 1;
+
+  // 为当前 a,b,c 生成的每一步 HTML（symbolic + numeric）
+  function buildCsStep(i, a, b, c) {
+    var div = document.createElement('div');
+    div.className = 'cstep-item';
+    var title = '', math = '', note = '';
+    var ba = b / a;            // b/a
+    var ca = c / a;            // c/a
+    var half = b / (2 * a);    // b/(2a)
+    var halfSq = half * half;  // (b/(2a))²
+    var delta = b * b - 4 * a * c;
+    var rhs = halfSq - ca;     // (b²-4ac)/(4a²) = b²/(4a²) - c/a
+
+    if (i === 0) {
+      title = '第 1 步 · 写出原方程';
+      math = polyString(a, b, c);
+      note = '这是一元二次方程的一般形式。目标是把它变成 (x + m)² = n 的形式。';
+    } else if (i === 1) {
+      title = '第 2 步 · 两边除以 a（二次项系数化为 1）';
+      var s = 'x²';
+      if (Math.abs(ba) >= 1e-9) {
+        s += (ba < 0 ? ' − ' : ' + ') + (Math.abs(ba) === 1 ? '' : fmt(Math.abs(ba))) + 'x';
+      }
+      s += (ca < 0 ? ' − ' : ' + ') + fmt(Math.abs(ca)) + ' = 0';
+      math = s + '　⟶　x² + (b/a)x = −c/a';
+      note = '两边同除以 a（a≠0），使二次项系数变为 1。当前 b/a = ' + fmt(ba) + '，−c/a = ' + fmt(-ca) + '。';
+    } else if (i === 2) {
+      title = '第 3 步 · 移常数项，两边加 (b/2a)²';
+      math = 'x² + (b/a)x + (b/2a)² = (b/2a)² − c/a';
+      note = '配方核心：两边同加一次项系数一半的平方 (b/2a)² = ' + fmt(halfSq) +
+             '，左边就能凑成完全平方式，右边合并：' + fmt(halfSq) + ' − ' + fmt(ca) + ' = ' + fmt(rhs) + '。';
+    } else if (i === 3) {
+      title = '第 4 步 · 左边写成完全平方，右边合并';
+      math = '(x + b/2a)² = (b² − 4ac)/(4a²)';
+      note = '左边：x² + (b/a)x + (b/2a)² = (x + b/2a)²（注意 b/2a = ' + fmt(half) +
+             '）；右边通分合并得 (b²−4ac)/(4a²)。当前 (b²−4ac)/(4a²) = ' + fmt(rhs) + '，其中 b²−4ac = Δ = ' + fmt(delta) + '。';
+    } else if (i === 4) {
+      title = '第 5 步 · 开平方';
+      if (delta < -1e-9) {
+        math = '(x + b/2a)² = (b² − 4ac)/(4a²) < 0';
+        note = '右边 = ' + fmt(rhs) + ' < 0，负数不能开实数平方——所以方程无实数根！';
+      } else if (Math.abs(delta) <= 1e-9) {
+        math = 'x + b/2a = 0';
+        note = 'Δ = 0，右边为 0，开方得 x + b/2a = 0，即 x = −b/(2a) = ' + fmt(-half) + '（两个相等的实数根）。';
+      } else {
+        math = 'x + b/2a = ± √(b² − 4ac) / (2a)';
+        note = 'Δ = ' + fmt(delta) + ' > 0，右边为正，两边开平方得 x + b/2a = ±√Δ/(2a)。';
+      }
+    } else {
+      title = '第 6 步 · 整理得求根公式';
+      if (delta < -1e-9) {
+        math = 'Δ < 0，方程无实数根。';
+        note = '当 Δ < 0 时，一元二次方程 ax²+bx+c=0 无实数根。';
+      } else {
+        math = 'x = (−b ± √(b² − 4ac)) / (2a)';
+        note = '移项即得求根公式。当前：x = (−(' + fmt(b) + ') ± √' + fmt(delta) + ') / (2×' + fmt(a) + ') = ' +
+               (delta > 1e-9 ? (fmt(((-b) + Math.sqrt(delta)) / (2 * a)) + ' 或 ' + fmt(((-b) - Math.sqrt(delta)) / (2 * a)))
+                             : fmt(-b / (2 * a))) + '。';
+      }
+    }
+
+    var t = document.createElement('div'); t.className = 'cstep-title'; t.textContent = title;
+    var m = document.createElement('div'); m.className = 'cstep-math'; m.textContent = math;
+    var n = document.createElement('div'); n.className = 'cstep-note'; n.textContent = note;
+    div.appendChild(t); div.appendChild(m); div.appendChild(n);
+    return div;
+  }
+
+  function renderCsSteps() {
+    var list = $('cstepList');
+    var a = readNum('csA'), b = readNum('csB'), c = readNum('csC');
+    list.innerHTML = '';
+    if (Math.abs(a) < 1e-9) {
+      var warn = document.createElement('div');
+      warn.className = 'warning-box';
+      warn.textContent = '⚠ a = 0，不是一元二次方程，无法配方。请把 a 设为非 0 值。';
+      list.appendChild(warn);
+      $('stepInd').textContent = '—';
+      return;
+    }
+    for (var i = 0; i < csStep; i++) {
+      list.appendChild(buildCsStep(i, a, b, c));
+    }
+    $('stepInd').textContent = Math.min(csStep, CS_STEP_COUNT) + ' / ' + CS_STEP_COUNT;
+  }
+
+  /* ============================================================
+   *  交互5：韦达定理验证
+   * ============================================================ */
+  function updateVieta() {
+    var a = readNum('vtA'), b = readNum('vtB'), c = readNum('vtC');
+    var sol = solveQ(a, b, c);
+    var delta = sol.delta;
+
+    var deltaCell = $('vtDeltaCell');
+    deltaCell.classList.remove('pos', 'zero', 'neg');
+
+    var vvSum = $('vvSum'), vvProd = $('vvProd');
+    vvSum.classList.remove('match', 'nomatch');
+    vvProd.classList.remove('match', 'nomatch');
+
+    if (Math.abs(a) < 1e-9) {
+      deltaCell.classList.add('neg');
+      $('vtDelta').textContent = '—';
+      $('vtX1').textContent = '—'; $('vtX2').textContent = '—';
+      $('vtSumActual').textContent = '—'; $('vtSumExpect').textContent = '—';
+      $('vtProdActual').textContent = '—'; $('vtProdExpect').textContent = '—';
+      $('vtSumEq').textContent = 'a = 0，非二次方程';
+      $('vtProdEq').textContent = '—';
+      vvSum.classList.add('nomatch'); vvProd.classList.add('nomatch');
+      return;
+    }
+
+    $('vtDelta').textContent = fmt(delta);
+    if (delta > 1e-9) deltaCell.classList.add('pos');
+    else if (Math.abs(delta) <= 1e-9) deltaCell.classList.add('zero');
+    else deltaCell.classList.add('neg');
+
+    if (sol.case === 'none') {
+      $('vtX1').textContent = '—'; $('vtX2').textContent = '—';
+      $('vtSumActual').textContent = '—'; $('vtSumExpect').textContent = fmt(-b / a);
+      $('vtProdActual').textContent = '—'; $('vtProdExpect').textContent = fmt(c / a);
+      $('vtSumEq').textContent = 'Δ < 0，无实数根，定理不适用';
+      $('vtProdEq').textContent = '—';
+      vvSum.classList.add('nomatch'); vvProd.classList.add('nomatch');
+      return;
+    }
+
+    $('vtX1').textContent = fmt(sol.x1);
+    $('vtX2').textContent = fmt(sol.x2);
+
+    var sumActual = sol.x1 + sol.x2;
+    var sumExpect = -b / a;
+    var prodActual = sol.x1 * sol.x2;
+    var prodExpect = c / a;
+
+    $('vtSumActual').textContent = fmt(sumActual);
+    $('vtSumExpect').textContent = fmt(sumExpect);
+    var sumMatch = Math.abs(sumActual - sumExpect) < 1e-6;
+    vvSum.classList.add(sumMatch ? 'match' : 'nomatch');
+    $('vtSumEq').innerHTML = sumMatch ? '✓ 相等，韦达定理成立' : '✗ 不等（请检查计算）';
+
+    $('vtProdActual').textContent = fmt(prodActual);
+    $('vtProdExpect').textContent = fmt(prodExpect);
+    var prodMatch = Math.abs(prodActual - prodExpect) < 1e-6;
+    vvProd.classList.add(prodMatch ? 'match' : 'nomatch');
+    $('vtProdEq').innerHTML = prodMatch ? '✓ 相等，韦达定理成立' : '✗ 不等（请检查计算）';
+  }
+
+  /* ============================================================
+   *  绑定事件与初始化
+   * ============================================================ */
+  function bindSolverChips(inputIds, chipSelector, applyFn) {
+    var chips = document.querySelectorAll(chipSelector);
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        inputIds.forEach(function (id) {
+          var key = id.toLowerCase().slice(-1); // a / b / c
+          $(id).value = chip.dataset[key];
+        });
+        applyFn();
+      });
+    });
+  }
+
+  // 窗口尺寸变化重绘
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      updateFormulaSolver();
+    }, 120);
+  });
+
+  function init() {
+    // —— 交互1：方程识别器 ——
+    renderEqGrid();
+
+    // —— 交互2：公式法求解器 ——
+    ['fsA', 'fsB', 'fsC'].forEach(function (id) {
+      $(id).addEventListener('input', updateFormulaSolver);
+    });
+    $('fsSolve').addEventListener('click', updateFormulaSolver);
+    bindSolverChips(['fsA', 'fsB', 'fsC'], '.card#solver-card .chip', updateFormulaSolver);
+
+    // —— 交互4：配方法分步演示 ——
+    ['csA', 'csB', 'csC'].forEach(function (id) {
+      $(id).addEventListener('input', function () { csStep = 1; renderCsSteps(); });
+    });
+    bindSolverChips(['csA', 'csB', 'csC'], '.card#complete-card .chip', function () {
+      csStep = 1;
+      renderCsSteps();
+    });
+    $('stepNext').addEventListener('click', function () {
+      if (csStep < CS_STEP_COUNT) { csStep++; renderCsSteps(); }
+    });
+    $('stepPrev').addEventListener('click', function () {
+      if (csStep > 1) { csStep--; renderCsSteps(); }
+    });
+
+    // —— 交互5：韦达定理验证 ——
+    ['vtA', 'vtB', 'vtC'].forEach(function (id) {
+      $(id).addEventListener('input', updateVieta);
+    });
+    bindSolverChips(['vtA', 'vtB', 'vtC'], '.card#vieta-card .chip', updateVieta);
+
+    // —— 标签页 & 练习题 ——
+    initTabs('methodTabs');
+    initQuiz('quiz1', {
+      correct: 1,
+      explain: 'B 项 2x²−3x+1=0 是整式方程，一元，最高次为 2，且 a=2≠0，是一元二次方程。A 是三次；C 含 1/x 是分式方程；D 含 xy 是二元方程。',
+      hint: '看四点：整式、一元、最高次为 2、a≠0。'
+    });
+    initQuiz('quiz2', {
+      correct: 1,
+      explain: 'Δ = b²−4ac = (−4)²−4×1×4 = 16−16 = 0。Δ=0 表示两个相等的实数根（x₁=x₂=2）。',
+      hint: '先算 Δ = b²−4ac，再看正负零。'
+    });
+    initQuiz('quiz3', {
+      correct: 0,
+      explain: '因式分解：(x−1)(x−2)=0，所以 x₁=1，x₂=2。也可用韦达定理验证：x₁+x₂=3=−b/a，x₁·x₂=2=c/a，吻合。',
+      hint: '试着把 x²−3x+2 分解为 (x−p)(x−q)，p+q=3，pq=2。'
+    });
+
+    // —— 首次渲染 ——
+    updateFormulaSolver();
+    renderCsSteps();
+    updateVieta();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
 </body>
 </html>

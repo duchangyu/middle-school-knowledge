@@ -6,57 +6,517 @@
   <title>分式 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 14px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 13px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .formula-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .formula-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.08), rgba(155,89,182,0.02));
+      border: 2px solid rgba(155,89,182,0.18);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .formula-card:hover {
+      border-color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .formula-card .f-name {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .formula-card .f-eq {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+    }
+    .formula-card .f-cond {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* ===== 分式显示组件 ===== */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 4px;
+      font-family: Georgia, serif;
+    }
+    .frac .num {
+      border-bottom: 2px solid currentColor;
+      padding: 0 8px 2px;
+      font-weight: 700;
+    }
+    .frac .den {
+      padding: 2px 8px 0;
+      font-weight: 700;
+    }
+    .frac.large .num, .frac.large .den { font-size: 22px; padding: 2px 14px; }
+    .frac.small .num, .frac.small .den { font-size: 16px; padding: 0 6px; }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 50px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid transparent;
     }
-    .related-card:hover {
-      background: #9B59B620;
+    .data-cell .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+      word-break: break-all;
+    }
+    .data-cell.highlight {
+      background: rgba(39,174,96,0.10);
+      border-color: rgba(39,174,96,0.4);
+    }
+    .data-cell.highlight .num { color: var(--success); }
+    .data-cell.danger {
+      background: rgba(231,76,60,0.12);
+      border-color: rgba(231,76,60,0.5);
+    }
+    .data-cell.danger .num { color: var(--danger); }
+
+    /* ===== 警告横幅 ===== */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.05));
+      border: 2px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-align: center;
+      margin: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--danger);
+      display: none;
+      animation: pulse 1.2s infinite;
+    }
+    .alert-banner.show { display: block; }
+    .alert-banner .alert-icon { font-size: 24px; margin-right: 8px; }
+
+    .safe-banner {
+      background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(39,174,96,0.03));
+      border: 2px solid var(--success);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      text-align: center;
+      margin: 14px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    /* ===== SVG 容器 ===== */
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 8px 0 4px;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 公式实时显示 ===== */
+    .live-formula {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(155,89,182,0.10), rgba(155,89,182,0.02));
+      border-radius: var(--radius-sm);
+      margin: 12px 0;
+      color: var(--math);
+      letter-spacing: 1px;
+      line-height: 1.8;
+    }
+    .live-formula .op { color: var(--text-secondary); margin: 0 6px; }
+    .live-formula .res { color: var(--success); }
+
+    /* ===== 答题输入区 ===== */
+    .ans-input {
+      width: 160px;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-family: Georgia, serif;
+      text-align: center;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .ans-input:focus { outline: none; border-color: var(--math); }
+    .ans-input.ok { border-color: var(--success); background: rgba(39,174,96,0.08); }
+    .ans-input.bad { border-color: var(--danger); background: rgba(231,76,60,0.08); }
+
+    .ans-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .ans-feedback {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .ans-feedback.show { display: block; }
+    .ans-feedback.right { background: rgba(39,174,96,0.12); color: var(--success); }
+    .ans-feedback.wrong { background: rgba(231,76,60,0.12); color: var(--danger); }
+
+    .problem-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--math);
+    }
+    .problem-card .poly-display {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .problem-card .prob-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .prob-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ===== 方法选择按钮 ===== */
+    .method-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .method-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .method-btn:hover { border-color: var(--math); color: var(--math); }
+    .method-btn.selected {
+      border-color: var(--math);
+      background: var(--math);
+      color: #fff;
+    }
+
+    /* ===== 分式判断卡片 ===== */
+    .judge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .judge-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .judge-card:hover {
+      border-color: var(--math);
       transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(155,89,182,0.15);
+    }
+    .judge-card .expr {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .judge-card .judge-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .judge-card .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .judge-card.badge-frac .badge { background: rgba(155,89,182,0.15); color: var(--math); }
+    .judge-card.badge-int .badge { background: rgba(52,152,219,0.15); color: var(--info); }
+    .judge-card.correct {
+      border-color: var(--success);
+      background: rgba(39,174,96,0.08);
+    }
+    .judge-card.wrong {
+      border-color: var(--danger);
+      background: rgba(231,76,60,0.08);
+    }
+    .judge-card .result-icon {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      display: none;
+    }
+    .judge-card.correct .result-icon { display: block; color: var(--success); }
+    .judge-card.wrong .result-icon { display: block; color: var(--danger); }
+    .judge-card.revealed { pointer-events: none; }
+
+    /* ===== 步骤展示 ===== */
+    .step-line {
+      padding: 12px 18px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+      font-size: 17px;
+      text-align: center;
+      border-left: 4px solid var(--text-light);
+      margin-bottom: 8px;
+      display: none;
+    }
+    .step-line.show { display: block; animation: fadeIn 0.4s ease; }
+    .step-line.active {
+      border-left-color: var(--math);
+      background: rgba(155,89,182,0.08);
+    }
+    .step-line .step-label {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-right: 10px;
+      font-family: -apple-system, sans-serif;
+      vertical-align: middle;
+      background: #fff;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .step-line .hl-a { color: #E74C3C; font-weight: 700; }
+    .step-line .hl-b { color: #3498DB; font-weight: 700; }
+    .step-line .hl-c { color: #27AE60; font-weight: 700; }
+    .step-line .hl-d { color: #E67E22; font-weight: 700; }
+    .step-line .hl-m { color: var(--math); font-weight: 700; }
+
+    /* ===== 知识要点列表 ===== */
+    .know-list { list-style: none; padding-left: 0; }
+    .know-list li {
+      padding: 10px 14px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      transition: transform 0.2s;
+    }
+    .know-list li:hover { transform: translateX(4px); }
+    .know-list li strong { color: var(--math); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .step-nav .btn-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== 运算步骤容器 ===== */
+    .steps-container {
+      margin: 14px 0;
+    }
+    .steps-toolbar {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .step-progress {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 6px 0;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📐 分式</div>
+  <div class="navbar-brand">✂️ 分式</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>✂️ 分式</h1>
+  <p>定义 · 基本性质 · 约分通分 · 四则运算 —— 分母中含有字母的代数式，函数与方程的基石</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +527,1006 @@
     <span>分式</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>分式</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 分式的定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 分式的定义</h2>
+  <div class="card">
+    <p>如果 <strong>A</strong>、<strong>B</strong> 表示两个整式，且 <strong class="math-accent">B 中含有字母</strong>，那么式子 <span class="frac small"><span class="num">A</span><span class="den">B</span></span> 叫做<strong class="math-accent">分式</strong>（fraction）。其中 A 叫做分式的<strong>分子</strong>，B 叫做分式的<strong>分母</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        分式 = <span class="frac large"><span class="num">A</span><span class="den">B</span></span>
+        <span style="font-size:16px;color:var(--text-secondary);">（A、B 是整式，B 含字母）</span>
+      </div>
+      <div class="formula-note">分式是两个整式相除的商，分数线起除号和括号的作用</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 整式与分式的区别</div>
+      <strong>整式</strong>：分母中<strong>不含字母</strong>。如 <span class="frac small"><span class="num">x</span><span class="den">2</span></span>、<span class="frac small"><span class="num">x+1</span><span class="den">3</span></span>、<span class="frac small"><span class="num">2x</span><span class="den">π</span></span>（π 是常数，不是字母）。<br>
+      <strong>分式</strong>：分母中<strong>含有字母</strong>。如 <span class="frac small"><span class="num">1</span><span class="den">x</span></span>、<span class="frac small"><span class="num">3</span><span class="den">x−1</span></span>、<span class="frac small"><span class="num">1</span><span class="den">x+y</span></span>。
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 易错提醒</div>
+      <strong>π 是常数，不是字母！</strong>所以 <span class="frac small"><span class="num">2x</span><span class="den">π</span></span> 的分母 π 是一个具体的数（约 3.14159…），不含字母，是<strong>整式</strong>而不是分式。<br>
+      同理 <span class="frac small"><span class="num">5</span><span class="den">7</span></span> 是分数（也是整式），不是分式。
+    </div>
+
+    <ul class="know-list">
+      <li><strong>是分式：</strong><span class="frac small"><span class="num">1</span><span class="den">x</span></span>、<span class="frac small"><span class="num">3</span><span class="den">x−1</span></span>、<span class="frac small"><span class="num">1</span><span class="den">x+y</span></span>　——分母含字母</li>
+      <li><strong>是整式：</strong><span class="frac small"><span class="num">x</span><span class="den">2</span></span>、<span class="frac small"><span class="num">x+1</span><span class="den">2</span></span>、<span class="frac small"><span class="num">x²</span><span class="den">3</span></span>　——分母是数，不含字母</li>
+      <li><strong>是整式（易错）：</strong><span class="frac small"><span class="num">2x</span><span class="den">π</span></span>　——π 是常数，分母不含字母</li>
+    </ul>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 交互1：分式判断器 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 交互·分式判断器</h2>
+  <div class="card">
+    <p>下面有 8 个代数式，请逐一判断：哪些是<strong class="math-accent">分式</strong>，哪些是<strong class="math-accent">整式</strong>？点击卡片下方的按钮选择，正确变绿，错误变红。判断依据：看<strong>分母中是否含有字母</strong>。</p>
+
+    <div class="judge-grid" id="judge-grid"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 判断口诀</div>
+      一看分母，二看字母：分母里有字母 → 分式；分母里没字母 → 整式。注意 <strong>π 是常数</strong>，不算字母。
+    </div>
   </div>
+
+  <!-- ===== 3. 分式有意义的条件 & 值为0的条件 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 分式有意义的条件 &amp; 值为 0 的条件</h2>
+  <div class="card">
+    <h3 style="color:var(--math);margin-bottom:10px;">① 分式有意义的条件</h3>
+    <p>在分式 <span class="frac small"><span class="num">A</span><span class="den">B</span></span> 中，当<strong class="math-accent">分母 B ≠ 0</strong> 时，分式才有意义；当<strong class="math-accent">分母 B = 0</strong> 时，分式无意义（因为除数不能为 0）。</p>
+
+    <div class="formula-box">
+      <div class="formula">分式 <span class="frac large"><span class="num">A</span><span class="den">B</span></span> 有意义 &nbsp;⟺&nbsp; B ≠ 0</div>
+      <div class="formula-note">只看分母，与分子无关</div>
+    </div>
+
+    <h3 style="color:var(--math);margin:20px 0 10px;">② 分式的值为 0 的条件</h3>
+    <p>分式 <span class="frac small"><span class="num">A</span><span class="den">B</span></span> 的值为 0，需要<strong class="math-accent">同时满足两个条件</strong>：</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">条件一</div>
+        <div class="f-eq">分子 A = 0</div>
+        <div class="f-cond">保证分式的值为 0</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">条件二</div>
+        <div class="f-eq">分母 B ≠ 0</div>
+        <div class="f-cond">保证分式有意义</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 两个条件缺一不可</div>
+      求分式值为 0 时，<strong>必须先解 A=0 得到 x 的值，再代回分母检验 B≠0</strong>。如果分母也等于 0，这个 x 要舍去（此时分式无意义，谈不上值为 0）。<br><br>
+      <strong>例：</strong>当 x 为何值时，分式 <span class="frac small"><span class="num">x²−9</span><span class="den">x−3</span></span> 的值为 0？<br>
+      解：由 x²−9 = 0 得 x = ±3；<br>
+      检验：x=3 时分母 x−3=0，舍去；x=−3 时分母 x−3=−6≠0，符合。<br>
+      所以 <strong>x = −3</strong>。
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互2：分式有意义条件探索 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 交互·分式有意义条件探索</h2>
+  <div class="card">
+    <p>选择一个分式，拖动滑块改变 x 的值（−10 到 10），实时观察分母和分式的值。当分母 = 0 时会出现红色警告——此时 x 不能取这个值，分式无意义。</p>
+
+    <div class="method-row" id="meaning-methods">
+      <button class="method-btn selected" data-expr="1/(x-3)" data-a="1" data-b="x-3" data-bad="3">1 / (x−3)</button>
+      <button class="method-btn" data-expr="1/(x+2)" data-a="1" data-b="x+2" data-bad="-2">1 / (x+2)</button>
+      <button class="method-btn" data-expr="(x-1)/(x-2)" data-a="x-1" data-b="x-2" data-bad="2">(x−1) / (x−2)</button>
+      <button class="method-btn" data-expr="x/(x+3)" data-a="x" data-b="x+3" data-bad="-3">x / (x+3)</button>
+      <button class="method-btn" data-expr="1/(x*x-4)" data-a="1" data-b="x²−4" data-bad="2,-2">1 / (x²−4)</button>
+    </div>
+
+    <div class="live-formula" id="meaning-display"></div>
+
+    <div class="slider-row">
+      <label>x 的值</label>
+      <input type="range" id="meaning-slider" min="-10" max="10" value="0" step="1">
+      <span class="value-badge" id="meaning-x-val">0</span>
+    </div>
+
+    <div class="alert-banner" id="meaning-alert">
+      <span class="alert-icon">⚠️</span><span id="meaning-alert-text">x 不能取这个值！分母 = 0，分式无意义！</span>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell" id="cell-a">
+        <div class="label">分子 A 的值</div>
+        <div class="num" id="meaning-a-val">1</div>
+      </div>
+      <div class="data-cell" id="cell-b">
+        <div class="label">分母 B 的值</div>
+        <div class="num" id="meaning-b-val">−3</div>
+      </div>
+      <div class="data-cell highlight" id="cell-val">
+        <div class="label">分式的值 A/B</div>
+        <div class="num" id="meaning-frac-val">−0.33</div>
+      </div>
+    </div>
+
+    <div class="safe-banner" id="meaning-condition"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 观察要点</div>
+      滑动到使<strong>分母 = 0</strong>的 x 值时，分式<strong>无意义</strong>（红色警告）。所以"分式有意义的条件"就是<strong>分母 ≠ 0</strong>，即 x 不能等于使分母为 0 的那些值。对于 <span class="frac small"><span class="num">1</span><span class="den">x²−4</span></span>，分母 = 0 有两个解 x=2 和 x=−2，所以 x ≠ ±2。
+    </div>
+  </div>
+
+  <!-- ===== 5. 分式的基本性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 分式的基本性质</h2>
+  <div class="card">
+    <p>分式的分子和分母同乘（或除以）<strong class="math-accent">同一个不为 0 的整式</strong>，分式的值不变。这是分式变形（约分、通分）的理论基础。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        <span class="frac large"><span class="num">A</span><span class="den">B</span></span>
+        = <span class="frac large"><span class="num">A × M</span><span class="den">B × M</span></span>
+        = <span class="frac large"><span class="num">A ÷ M</span><span class="den">B ÷ M</span></span>
+        &nbsp;&nbsp;<span style="font-size:18px;color:var(--danger);">(M ≠ 0)</span>
+      </div>
+      <div class="formula-note">M 必须是不等于 0 的整式，且对原分式有意义</div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 三个"同一个"</div>
+      <strong>同乘或同除</strong>（不能一个乘一个除）、<strong>同一个</strong>整式（分子分母必须用同一个 M）、<strong>不为 0</strong>（M ≠ 0，否则分母变 0 无意义）。<br>
+      这与小学分数的基本性质完全类似：<span class="frac small"><span class="num">1</span><span class="den">2</span></span> = <span class="frac small"><span class="num">2</span><span class="den">4</span></span> = <span class="frac small"><span class="num">3</span><span class="den">6</span></span>，分子分母同乘同一个非零数，值不变。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 符号法则</div>
+      分式的分子、分母、分式本身，<strong>任意改变其中两个的符号</strong>，分式的值不变（因为相当于同乘 −1 两次）。例如：<br>
+      <span class="frac small"><span class="num">−a</span><span class="den">−b</span></span> = <span class="frac small"><span class="num">a</span><span class="den">b</span></span>；&nbsp;&nbsp;
+      <span class="frac small"><span class="num">−a</span><span class="den">b</span></span> = <span class="frac small"><span class="num">a</span><span class="den">−b</span></span> = −<span class="frac small"><span class="num">a</span><span class="den">b</span></span>。
+    </div>
+  </div>
+
+  <!-- ===== 6. 交互3：分式基本性质演示 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 交互·分式基本性质演示</h2>
+  <div class="card">
+    <p>给定分式 <span class="frac small"><span class="num">6x²y</span><span class="den">9xy²</span></span>（公因式为 3xy），选择要同乘或同除的整式 M，实时观察变形后的分式。<strong>同乘</strong>可选任意非零整式；<strong>同除</strong>应选公因式（否则结果不是整式）。当 M = 0 时变形无效。</p>
+
+    <div class="method-row" id="prop-methods">
+      <button class="method-btn selected" data-m="x" data-op="mul">同乘 x</button>
+      <button class="method-btn" data-m="2x" data-op="mul">同乘 2x</button>
+      <button class="method-btn" data-m="x²" data-op="mul">同乘 x²</button>
+      <button class="method-btn" data-m="3" data-op="mul">同乘 3</button>
+      <button class="method-btn" data-m="3xy" data-op="div">同除 3xy</button>
+      <button class="method-btn" data-m="xy" data-op="div">同除 xy</button>
+      <button class="method-btn" data-m="3" data-op="div">同除 3</button>
+      <button class="method-btn" data-m="x" data-op="div">同除 x</button>
+      <button class="method-btn" data-m="0" data-op="mul">M = 0（陷阱）</button>
+    </div>
+
+    <div class="live-formula" id="prop-display"></div>
+
+    <div class="alert-banner" id="prop-alert">
+      <span class="alert-icon">⚠️</span>M = 0 不满足条件！分式的基本性质要求 M ≠ 0，不能同乘（或同除）0。
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell highlight">
+        <div class="label">原分式 A/B</div>
+        <div class="num" style="font-size:18px;"><span class="frac"><span class="num">6x²y</span><span class="den">9xy²</span></span></div>
+      </div>
+      <div class="data-cell" id="prop-result-cell">
+        <div class="label" id="prop-result-label">变形后（未化简）</div>
+        <div class="num" id="prop-result" style="font-size:16px;">—</div>
+      </div>
+      <div class="data-cell highlight" id="prop-simp-cell">
+        <div class="label">化简后（值不变）</div>
+        <div class="num" id="prop-simp" style="font-size:16px;">—</div>
+      </div>
+    </div>
+
+    <div class="svg-wrap" id="prop-area-wrap"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:#9B59B6"></span>原分式 <span class="frac small"><span class="num">6x²y</span><span class="den">9xy²</span></span></div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#27AE60"></span>变形后（比例不变，值相等）</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 面积模型类比</div>
+      把分式 <span class="frac small"><span class="num">6x²y</span><span class="den">9xy²</span></span> 看作一个"比例"。<strong>同乘 M</strong> 相当于把分子块和分母块同时放大 M 倍，比例不变；<strong>同除公因式 M</strong>（即约分）相当于把分子块和分母块同时缩小 M 倍，比例也不变。无论同乘还是同除，最终化简后都是 <span class="frac small"><span class="num">2x</span><span class="den">3y</span></span>。
+    </div>
+  </div>
+
+  <!-- ===== 7. 约分与通分 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 约分与通分</h2>
+  <div class="card">
+    <h3 style="color:var(--math);margin-bottom:10px;">① 约分——化简分式</h3>
+    <p>把一个分式的分子和分母的<strong class="math-accent">公因式</strong>约去，叫做分式的<strong>约分</strong>。约分的关键是找分子分母的公因式，这需要用到<strong>因式分解</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        <span class="frac large"><span class="num">A·M</span><span class="den">B·M</span></span>
+        = <span class="frac large"><span class="num">A</span><span class="den">B</span></span>
+        <span style="font-size:16px;color:var(--text-secondary);">（约去公因式 M，M≠0）</span>
+      </div>
+      <div class="formula-note">约分后分子分母不再有公因式的分式，叫做最简分式</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 找公因式的方法（与因式分解一致）</div>
+      <strong>① 系数：</strong>取分子分母系数的最大公约数。<br>
+      <strong>② 字母：</strong>取分子分母<strong>都含有</strong>的字母。<br>
+      <strong>③ 指数：</strong>相同字母取<strong>最低次幂</strong>。<br><br>
+      <strong>示例：</strong>约分 <span class="frac small"><span class="num">6x²y</span><span class="den">9xy²</span></span>。系数 6, 9 最大公约数 = 3；x 最低次幂 x¹；y 最低次幂 y¹。公因式 = <strong>3xy</strong>。约分后 = <span class="frac small"><span class="num">2x</span><span class="den">3y</span></span>。
+    </div>
+
+    <h3 style="color:var(--math);margin:20px 0 10px;">② 通分——化异分母为同分母</h3>
+    <p>把几个异分母分式分别化为与原来相等的<strong class="math-accent">同分母分式</strong>，叫做分式的<strong>通分</strong>。通分的关键是找<strong>最简公分母</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">最简公分母 = 各分母系数的最小公倍数 × 各字母最高次幂的积</div>
+      <div class="formula-note">取"最小"避免数字过大，取"最高次幂"保证能被所有分母整除</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 通分示例</div>
+      通分 <span class="frac small"><span class="num">1</span><span class="den">x</span></span> 与 <span class="frac small"><span class="num">1</span><span class="den">x+1</span></span>。<br>
+      两个分母 x 和 x+1 没有公因式，最简公分母 = <strong>x(x+1)</strong>。<br>
+      <span class="frac small"><span class="num">1</span><span class="den">x</span></span> = <span class="frac small"><span class="num">x+1</span><span class="den">x(x+1)</span></span>，&nbsp;&nbsp;
+      <span class="frac small"><span class="num">1</span><span class="den">x+1</span></span> = <span class="frac small"><span class="num">x</span><span class="den">x(x+1)</span></span>。
+    </div>
+  </div>
+
+  <!-- ===== 8. 交互4：约分与通分练习器 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 交互·约分与通分练习器</h2>
+  <div class="card">
+    <p>共 8 道题（5 道约分 + 3 道通分）。约分题：先填入公因式，再填入约分后的最简分式；通分题：填入最简公分母。点击"检查"验证，答错可"查看答案"。</p>
+
+    <div class="prob-nav">
+      <button class="btn btn-outline btn-sm" id="red-prev" style="border-color:var(--math);color:var(--math);">← 上一题</button>
+      <span style="font-weight:700;color:var(--math);" id="red-progress">第 1 / 8 题</span>
+      <button class="btn btn-outline btn-sm" id="red-next" style="border-color:var(--math);color:var(--math);">下一题 →</button>
+    </div>
+
+    <div class="problem-card" id="red-card">
+      <div class="poly-display" id="red-poly">—</div>
+      <div class="prob-meta" id="red-hint">找出公因式，并写出化简后的结果</div>
+      <div class="ans-row" id="red-input-row"></div>
+      <div class="ans-feedback" id="red-feedback"></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 约分通分口诀</div>
+      <strong>约分</strong>：找公因式（系数最大公约数 × 相同字母最低次幂），分子分母同时除掉。<br>
+      <strong>通分</strong>：找最简公分母（系数最小公倍数 × 所有字母最高次幂），分子分母同乘缺的因式。
+    </div>
+  </div>
+
+  <!-- ===== 9. 分式的运算 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 分式的运算</h2>
+  <div class="card">
+    <p>分式的四则运算与分数的运算法则<strong class="math-accent">完全类似</strong>，关键是熟练运用约分和通分。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">分式乘法</div>
+        <div class="f-eq"><span class="frac small"><span class="num">A</span><span class="den">B</span></span> · <span class="frac small"><span class="num">C</span><span class="den">D</span></span> = <span class="frac small"><span class="num">A·C</span><span class="den">B·D</span></span></div>
+        <div class="f-cond">分子乘分子，分母乘分母</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">分式除法</div>
+        <div class="f-eq"><span class="frac small"><span class="num">A</span><span class="den">B</span></span> ÷ <span class="frac small"><span class="num">C</span><span class="den">D</span></span> = <span class="frac small"><span class="num">A·D</span><span class="den">B·C</span></span></div>
+        <div class="f-cond">把除式分子分母颠倒后相乘</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">同分母加减</div>
+        <div class="f-eq"><span class="frac small"><span class="num">A</span><span class="den">C</span></span> ± <span class="frac small"><span class="num">B</span><span class="den">C</span></span> = <span class="frac small"><span class="num">A±B</span><span class="den">C</span></span></div>
+        <div class="f-cond">分母不变，分子相加减</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">异分母加减</div>
+        <div class="f-eq"><span class="frac small"><span class="num">A</span><span class="den">B</span></span> ± <span class="frac small"><span class="num">C</span><span class="den">D</span></span> = <span class="frac small"><span class="num">A·D±C·B</span><span class="den">B·D</span></span></div>
+        <div class="f-cond">先通分，化为同分母再加减</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 运算注意事项</div>
+      <strong>乘除法</strong>：先因式分解，便于约分；除法先变乘法（颠倒除式）。<br>
+      <strong>加减法</strong>：异分母必须先通分，结果要化为<strong>最简分式</strong>。<br>
+      <strong>混合运算</strong>：按"括号→乘除→加减"的顺序，结果务必约简。
+    </div>
+  </div>
+
+  <!-- ===== 10. 交互5：分式运算计算器 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 交互·分式运算计算器</h2>
+  <div class="card">
+    <p>选择一道运算题，点击"下一步"逐步查看运算过程，每步用不同颜色高亮关键变形。共有 6 道典型题，覆盖乘法、除法、同分母加减、异分母加减等情形。</p>
+
+    <div class="prob-nav">
+      <button class="btn btn-outline btn-sm" id="calc-prev" style="border-color:var(--math);color:var(--math);">← 上一题</button>
+      <span style="font-weight:700;color:var(--math);" id="calc-progress">第 1 / 6 题</span>
+      <button class="btn btn-outline btn-sm" id="calc-next" style="border-color:var(--math);color:var(--math);">下一题 →</button>
+    </div>
+
+    <div class="problem-card" id="calc-card">
+      <div class="poly-display" id="calc-expr">—</div>
+      <div class="prob-meta" id="calc-type">—</div>
+    </div>
+
+    <div class="steps-container" id="calc-steps"></div>
+
+    <div class="steps-toolbar">
+      <button class="btn btn-primary btn-sm" id="calc-next-step" style="background:var(--math);">下一步 ▶</button>
+      <button class="btn btn-outline btn-sm" id="calc-show-all" style="border-color:var(--math);color:var(--math);">显示全部</button>
+      <button class="btn btn-outline btn-sm" id="calc-reset-steps" style="border-color:var(--text-light);color:var(--text-secondary);">↻ 重新开始</button>
+    </div>
+    <div class="step-progress" id="calc-step-progress"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 运算策略</div>
+      <strong>乘法</strong>：分子分母分别相乘 → 约分到最简。<br>
+      <strong>除法</strong>：把除式的分子分母颠倒变乘法 → 按乘法做。<br>
+      <strong>异分母加减</strong>：找最简公分母 → 通分 → 同分母加减 → 约分。
+    </div>
+  </div>
+
+  <!-- ===== 11. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">11</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列各式中，是分式的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. <span class="frac small"><span class="num">x+1</span><span class="den">2</span></span></div>
+    <div class="quiz-option" data-idx="1">B. <span class="frac small"><span class="num">2x</span><span class="den">π</span></span></div>
+    <div class="quiz-option" data-idx="2">C. <span class="frac small"><span class="num">3</span><span class="den">x−1</span></span></div>
+    <div class="quiz-option" data-idx="3">D. <span class="frac small"><span class="num">x²</span><span class="den">3</span></span></div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 分式 <span class="frac small"><span class="num">x−2</span><span class="den">x+3</span></span> 有意义，则 x 的取值范围是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. x ≠ 2</div>
+    <div class="quiz-option" data-idx="1">B. x ≠ −3</div>
+    <div class="quiz-option" data-idx="2">C. x ≠ 3</div>
+    <div class="quiz-option" data-idx="3">D. x ≠ 0</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 计算 <span class="frac small"><span class="num">a</span><span class="den">b</span></span> ÷ <span class="frac small"><span class="num">a²</span><span class="den">c</span></span> 的结果是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. <span class="frac small"><span class="num">c</span><span class="den">ab</span></span></div>
+    <div class="quiz-option" data-idx="1">B. <span class="frac small"><span class="num">ac</span><span class="den">a²b</span></span></div>
+    <div class="quiz-option" data-idx="2">C. <span class="frac small"><span class="num">a³</span><span class="den">bc</span></span></div>
+    <div class="quiz-option" data-idx="3">D. <span class="frac small"><span class="num">b</span><span class="den">ac</span></span></div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 12. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">12</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 分式的延伸与应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        🔢 <a href="05-因式分解.html"><strong>数学·因式分解</strong></a>——
+        分式的<strong>约分与通分</strong>离不开因式分解：把分子分母分解因式后，才能约去公因式；找最简公分母也要先把各分母分解因式。因式分解是分式化简与运算的核心工具。
+        <span class="tag tag-math">代数基础</span>
+      </li>
+      <li>
+        √ <a href="07-二次根式.html"><strong>数学·二次根式</strong></a>——
+        二次根式与分式有相似的<strong>化简思想</strong>：分式约分去公因式，二次根式化简去完全平方因子。分母有理化（如把 <span class="frac small"><span class="num">1</span><span class="den">√2</span></span> 化为 <span class="frac small"><span class="num">√2</span><span class="den">2</span></span>）本质上就是"特殊的通分"。
+        <span class="tag tag-math">化简思想</span>
+      </li>
+      <li>
+        🧪 <a href="../../化学/九年级/09-溶液.html"><strong>化学·溶液</strong></a>——
+        溶质质量分数 = <span class="frac small"><span class="num">溶质质量</span><span class="den">溶液质量</span></span>，这就是一个<strong>分式</strong>！当溶液质量（分母）变化时，溶质质量分数（分式的值）随之变化。理解分式有助于理解溶液稀释、浓缩等计算。
+        <span class="tag tag-cross">化学应用</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="05-因式分解.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：因式分解</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="07-二次根式.html" class="btn btn-primary" style="background: var(--math);">下一章：二次根式 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  工具函数
+ * ============================================================ */
+const $ = (id) => document.getElementById(id);
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function makeSvg(tag, attrs) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+const SUP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻' };
+function sup(n) { return String(n).split('').map(c => SUP[c] || c).join(''); }
+
+/* 规范化答案字符串 */
+function normAns(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\s/g, '')
+    .replace(/−|–|—/g, '-')
+    .replace(/[·×]/g, '*')
+    .replace(/²/g, '^2')
+    .replace(/³/g, '^3')
+    .toLowerCase()
+    .replace(/^\+/, '');
+}
+
+/* 安全求值：把 x 代入表达式，仅支持 +,-,*,/,^,() 和数字、x、π */
+function evalExpr(expr, x) {
+  try {
+    // 把 ^ 转为 **，π 转为 Math.PI
+    let js = expr
+      .replace(/\^/g, '**')
+      .replace(/π/g, 'Math.PI')
+      .replace(/x/g, '(' + x + ')');
+    // 安全检查：只允许数字、运算符、括号、Math.PI
+    if (!/^[0-9+\-*/().\s*MathPI]+$/.test(js.replace(/Math\.PI/g, 'Math.PI'))) {
+      return NaN;
+    }
+    const val = Function('return ' + js)();
+    return val;
+  } catch (e) {
+    return NaN;
+  }
+}
+
+/* 格式化数字显示 */
+function fmtNum(n) {
+  if (isNaN(n) || !isFinite(n)) return '无意义';
+  if (Math.abs(n) < 1e-10) return '0';
+  const r = Math.round(n * 1000) / 1000;
+  return String(r);
+}
+
+/* 生成分式 HTML */
+function fracHTML(num, den, cls) {
+  cls = cls || 'small';
+  return `<span class="frac ${cls}"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+}
+
+/* ============================================================
+ *  交互1：分式判断器
+ * ============================================================ */
+const judgeProblems = [
+  { expr: fracHTML('1', 'x'),         isFrac: true,  explain: '分母是 x，含字母，是分式。' },
+  { expr: fracHTML('x', '2'),         isFrac: false, explain: '分母是 2，不含字母，是整式。' },
+  { expr: fracHTML('3', 'x−1'),       isFrac: true,  explain: '分母 x−1 含字母 x，是分式。' },
+  { expr: fracHTML('5', '7'),         isFrac: false, explain: '分母 7 不含字母，是分数（也是整式）。' },
+  { expr: fracHTML('x+1', '2'),       isFrac: false, explain: '分母 2 不含字母，是整式。' },
+  { expr: fracHTML('2x', 'π'),        isFrac: false, explain: 'π 是常数（不是字母），分母不含字母，是整式。这是易错题！' },
+  { expr: fracHTML('x²', '3'),        isFrac: false, explain: '分母 3 不含字母，是整式。' },
+  { expr: fracHTML('1', 'x+y'),       isFrac: true,  explain: '分母 x+y 含字母，是分式。' }
+];
+
+function renderJudgeGrid() {
+  const grid = $('judge-grid');
+  grid.innerHTML = '';
+  judgeProblems.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'judge-card';
+    card.dataset.idx = i;
+    card.innerHTML = `
+      <div class="expr">${p.expr}</div>
+      <div class="judge-label">点击判断：</div>
+      <div class="ans-row" style="margin:8px 0 0;">
+        <button class="method-btn jbtn" data-ans="frac" style="font-size:13px;padding:5px 14px;">分式</button>
+        <button class="method-btn jbtn" data-ans="int" style="font-size:13px;padding:5px 14px;">整式</button>
+      </div>
+      <div class="badge" style="display:none;"></div>
+      <div class="result-icon"></div>
+    `;
+    grid.appendChild(card);
+    card.querySelectorAll('.jbtn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleJudge(i, btn.dataset.ans, card);
+      });
+    });
+  });
+}
+
+function handleJudge(idx, ans, card) {
+  const p = judgeProblems[idx];
+  const userThinksFrac = (ans === 'frac');
+  const correct = (userThinksFrac === p.isFrac);
+  card.classList.add('revealed');
+  card.querySelectorAll('.jbtn').forEach(b => b.style.display = 'none');
+  card.querySelector('.judge-label').textContent = correct ? '判断正确！' : '判断错误';
+  const badge = card.querySelector('.badge');
+  badge.style.display = 'inline-block';
+  if (p.isFrac) {
+    badge.textContent = '分式';
+    card.classList.add('badge-frac');
+  } else {
+    badge.textContent = '整式';
+    card.classList.add('badge-int');
+  }
+  const icon = card.querySelector('.result-icon');
+  if (correct) {
+    card.classList.add('correct');
+    icon.textContent = '✓';
+  } else {
+    card.classList.add('wrong');
+    icon.textContent = '✗';
+  }
+  // 在卡片下方加说明
+  const note = document.createElement('div');
+  note.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.5;';
+  note.textContent = p.explain;
+  card.appendChild(note);
+}
+
+/* ============================================================
+ *  交互2：分式有意义条件探索
+ * ============================================================ */
+const meaningState = { expr: '1/(x-3)', a: '1', b: 'x-3', bad: [3] };
+
+function updateMeaning() {
+  const x = parseInt($('meaning-slider').value);
+  $('meaning-x-val').textContent = x;
+
+  // 显示当前分式
+  $('meaning-display').innerHTML = fracHTML(meaningState.a, meaningState.b);
+
+  // 计算 A、B
+  const aVal = evalExpr(meaningState.a, x);
+  const bVal = evalExpr(meaningState.b, x);
+
+  $('meaning-a-val').textContent = fmtNum(aVal);
+  $('meaning-b-val').textContent = fmtNum(bVal);
+
+  const alertEl = $('meaning-alert');
+  const cellB = $('cell-b');
+  const cellVal = $('cell-val');
+
+  if (Math.abs(bVal) < 1e-10) {
+    // 分母 = 0
+    alertEl.classList.add('show');
+    $('meaning-alert-text').textContent = `x = ${x} 时分母 = 0，分式无意义！x 不能取这个值。`;
+    cellB.classList.remove('highlight');
+    cellB.classList.add('danger');
+    cellVal.classList.remove('highlight');
+    cellVal.classList.add('danger');
+    $('meaning-frac-val').textContent = '无意义';
+  } else {
+    alertEl.classList.remove('show');
+    cellB.classList.remove('danger');
+    cellVal.classList.remove('danger');
+    cellB.classList.add('highlight');
+    cellVal.classList.add('highlight');
+    const fracVal = aVal / bVal;
+    $('meaning-frac-val').textContent = fmtNum(fracVal);
+  }
+
+  // 条件说明
+  const badStr = meaningState.bad.map(v => 'x ≠ ' + v).join('，');
+  $('meaning-condition').innerHTML = `✓ 分式 <span class="frac small"><span class="num">${meaningState.a}</span><span class="den">${meaningState.b}</span></span> 有意义的条件：<strong>${badStr}</strong>（分母 ≠ 0）`;
+}
+
+function bindMeaning() {
+  document.querySelectorAll('#meaning-methods .method-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#meaning-methods .method-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      meaningState.expr = btn.dataset.expr;
+      meaningState.a = btn.dataset.a;
+      meaningState.b = btn.dataset.b;
+      meaningState.bad = btn.dataset.bad.split(',').map(s => parseInt(s.trim()));
+      updateMeaning();
+    });
+  });
+  $('meaning-slider').addEventListener('input', updateMeaning);
+}
+
+/* ============================================================
+ *  交互3：分式基本性质演示
+ * 原分式：6x²y / 9xy²，公因式 3xy，最简形式 2x/3y
+ * ============================================================ */
+const propState = { M: 'x', op: 'mul' };
+
+/* 变形后的分子分母（未化简） */
+function propMul(M) {
+  // 同乘 M: (6x²y·M)/(9xy²·M)
+  const table = {
+    'x':  { num: '6x³y',  den: '9x²y²' },
+    '2x': { num: '12x³y', den: '18x²y²' },
+    'x²': { num: '6x⁴y',  den: '9x³y²' },
+    '3':  { num: '18x²y', den: '27xy²' }
+  };
+  return table[M];
+}
+
+function propDiv(M) {
+  // 同除 M（M 是公因式）: (6x²y÷M)/(9xy²÷M)
+  const table = {
+    '3xy': { num: '2x',   den: '3y'  },   // 6x²y÷3xy=2x, 9xy²÷3xy=3y
+    'xy':  { num: '6x',   den: '9y'  },   // 6x²y÷xy=6x, 9xy²÷xy=9y
+    '3':   { num: '2x²y', den: '3xy²' },  // 6x²y÷3=2x²y, 9xy²÷3=3xy²
+    'x':   { num: '6xy',  den: '9y²' }    // 6x²y÷x=6xy, 9xy²÷x=9y²
+  };
+  return table[M];
+}
+
+function updateProp() {
+  const M = propState.M;
+  const op = propState.op;
+  const alertEl = $('prop-alert');
+  const resultCell = $('prop-result-cell');
+
+  if (M === '0') {
+    alertEl.classList.add('show');
+    $('prop-result').innerHTML = '— 无效 —';
+    $('prop-simp').innerHTML = '— 无效 —';
+    resultCell.classList.remove('highlight');
+    resultCell.classList.add('danger');
+    $('prop-simp-cell').classList.remove('highlight');
+    $('prop-simp-cell').classList.add('danger');
+    $('prop-display').innerHTML = `${fracHTML('6x²y', '9xy²')} <span class="op">×</span> <span style="color:var(--danger);font-weight:700;">M = 0</span> <span class="op">→</span> <span style="color:var(--danger);">不满足条件！</span>`;
+    drawPropArea();
+    return;
+  }
+
+  alertEl.classList.remove('show');
+  resultCell.classList.remove('danger');
+  $('prop-simp-cell').classList.remove('danger');
+  resultCell.classList.add('highlight');
+  $('prop-simp-cell').classList.add('highlight');
+
+  const opLabel = op === 'mul' ? '同乘' : '同除';
+  const mDisp = M === 'x²' ? 'x²' : M;
+  let raw, simp;
+
+  if (op === 'mul') {
+    raw = propMul(M);
+    simp = { num: '2x', den: '3y' };
+  } else {
+    raw = propDiv(M);
+    // 同除后再约分到最简
+    const simpTable = {
+      '3xy': { num: '2x', den: '3y' },  // 已是最简
+      'xy':  { num: '2x', den: '3y' },  // 6x/9y = 2x/3y
+      '3':   { num: '2x', den: '3y' },  // 2x²y/3xy² = 2x/3y
+      'x':   { num: '2x', den: '3y' }   // 6xy/9y² = 2x/3y
+    };
+    simp = simpTable[M];
+  }
+
+  $('prop-result-label').textContent = `${opLabel} ${mDisp} 后（未化简）`;
+  $('prop-result').innerHTML = fracHTML(raw.num, raw.den);
+  $('prop-simp').innerHTML = fracHTML(simp.num, simp.den);
+
+  $('prop-display').innerHTML = `${fracHTML('6x²y', '9xy²')} <span class="op">${opLabel} M = ${mDisp}</span> <span class="op">→</span> ${fracHTML(raw.num, raw.den)} <span class="op">=</span> <span class="res">${fracHTML(simp.num, simp.den)}</span> <span class="op">（值不变）</span>`;
+  drawPropArea();
+}
+
+function drawPropArea() {
+  const wrap = $('prop-area-wrap');
+  wrap.innerHTML = '';
+  const M = propState.M;
+  const W = 480, H = 200;
+  const svg = makeSvg('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: H });
+  wrap.appendChild(svg);
+
+  // 左侧：原分式 6x²y/9xy² 的比例（紫色占 6/9 = 2/3）
+  const ox1 = 30, oy1 = 30;
+  const w1 = 120, h1 = 140;
+  svg.appendChild(makeSvg('rect', { x: ox1, y: oy1, width: w1, height: h1, fill: 'none', stroke: '#BDC3C7', 'stroke-width': 2, rx: 4 }));
+  svg.appendChild(makeSvg('rect', { x: ox1, y: oy1, width: w1, height: h1 * 2 / 3, fill: '#9B59B6', opacity: 0.55, stroke: '#fff', 'stroke-width': 1.5 }));
+  const t1 = makeSvg('text', { x: ox1 + w1 / 2, y: oy1 + h1 / 3 + 5, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 'bold', fill: '#fff', 'font-family': 'Georgia,serif' });
+  t1.textContent = '6x²y';
+  svg.appendChild(t1);
+  const lab1 = makeSvg('text', { x: ox1 + w1 / 2, y: oy1 + h1 + 20, 'text-anchor': 'middle', 'font-size': 13, fill: '#7F8C8D' });
+  lab1.textContent = '原：6x²y / 9xy²';
+  svg.appendChild(lab1);
+
+  // 中间箭头
+  const arrow = makeSvg('text', { x: W / 2 - 10, y: H / 2 + 5, 'text-anchor': 'middle', 'font-size': 28, fill: '#27AE60', 'font-weight': 'bold' });
+  arrow.textContent = M === '0' ? '✗' : '→';
+  svg.appendChild(arrow);
+  const mlabel = makeSvg('text', { x: W / 2 - 10, y: H / 2 + 30, 'text-anchor': 'middle', 'font-size': 12, fill: '#27AE60', 'font-weight': 'bold' });
+  const opLabel = propState.op === 'mul' ? '同乘' : '同除';
+  mlabel.textContent = M === '0' ? 'M=0 无效' : opLabel + ' M=' + (M === 'x²' ? 'x²' : M);
+  svg.appendChild(mlabel);
+
+  // 右侧：变形后（比例不变，还是 2/3）
+  const ox2 = W - 150, oy2 = 30;
+  const w2 = 120, h2 = 140;
+  if (M !== '0') {
+    svg.appendChild(makeSvg('rect', { x: ox2, y: oy2, width: w2, height: h2, fill: 'none', stroke: '#BDC3C7', 'stroke-width': 2, rx: 4 }));
+    svg.appendChild(makeSvg('rect', { x: ox2, y: oy2, width: w2, height: h2 * 2 / 3, fill: '#27AE60', opacity: 0.55, stroke: '#fff', 'stroke-width': 1.5 }));
+    const t2 = makeSvg('text', { x: ox2 + w2 / 2, y: oy2 + h2 / 3 + 5, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 'bold', fill: '#fff', 'font-family': 'Georgia,serif' });
+    t2.textContent = '化简→2x/3y';
+    svg.appendChild(t2);
+    const lab2 = makeSvg('text', { x: ox2 + w2 / 2, y: oy2 + h2 + 20, 'text-anchor': 'middle', 'font-size': 13, fill: '#7F8C8D' });
+    lab2.textContent = '变形后：比例不变';
+    svg.appendChild(lab2);
+  } else {
+    const t = makeSvg('text', { x: ox2 + w2 / 2, y: oy2 + h2 / 2, 'text-anchor': 'middle', 'font-size': 16, fill: '#E74C3C', 'font-weight': 'bold' });
+    t.textContent = '无意义';
+    svg.appendChild(t);
+  }
+}
+
+function bindProp() {
+  document.querySelectorAll('#prop-methods .method-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#prop-methods .method-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      propState.M = btn.dataset.m;
+      propState.op = btn.dataset.op;
+      updateProp();
+    });
+  });
+}
+
+/* ============================================================
+ *  交互4：约分与通分练习器（8 题）
+ * ============================================================ */
+const reduceProblems = [
+  { type: '约分', poly: fracHTML('6x²y', '9xy²'), q: '找公因式', a1: ['3xy'], q2: '约分结果', a2: ['2x/3y'], hint: '系数6,9最大公约数=3；x最低1次；y最低1次。公因式3xy' },
+  { type: '约分', poly: fracHTML('8a³', '12a²'), q: '找公因式', a1: ['4a²'], q2: '约分结果', a2: ['2a/3'], hint: '系数8,12最大公约数=4；a最低2次。公因式4a²' },
+  { type: '约分', poly: fracHTML('15x³', '10x²'), q: '找公因式', a1: ['5x²'], q2: '约分结果', a2: ['3x/2'], hint: '系数15,10最大公约数=5；x最低2次' },
+  { type: '约分', poly: fracHTML('x²−4', 'x+2'), q: '因式分解分子', a1: ['(x+2)(x-2)'], q2: '约分结果', a2: ['x-2'], hint: '分子是平方差：x²−4=(x+2)(x-2)，约去(x+2)' },
+  { type: '约分', poly: fracHTML('x²−1', 'x²+2x+1'), q: '因式分解', a1: ['(x-1)(x+1)'], q2: '约分结果', a2: ['x-1/x+1'], hint: '分子x²−1=(x-1)(x+1)；分母x²+2x+1=(x+1)²，约去(x+1)' },
+  { type: '通分', poly: '通分：1/x 与 1/(x+1)', q: '最简公分母', a1: ['x(x+1)'], q2: '', a2: [], hint: '两分母x和x+1无公因式，最简公分母=x(x+1)' },
+  { type: '通分', poly: '通分：1/a²b 与 1/ab²', q: '最简公分母', a1: ['a²b²'], q2: '', a2: [], hint: '系数都是1；a最高2次，b最高2次。最简公分母a²b²' },
+  { type: '通分', poly: '通分：1/(x−1) 与 1/(x+1)', q: '最简公分母', a1: ['(x-1)(x+1)', 'x²-1', 'x²−1'], q2: '', a2: [], hint: '两分母无公因式，最简公分母=(x−1)(x+1)=x²−1' }
+];
+
+let redIdx = 0;
+
+function loadReduceProblem() {
+  const p = reduceProblems[redIdx];
+  $('red-poly').innerHTML = p.poly;
+  $('red-progress').textContent = `第 ${redIdx + 1} / ${reduceProblems.length} 题（${p.type}）`;
+  $('red-hint').textContent = p.q2 ? `${p.q}，再${p.q2}` : p.q;
+  // 渲染输入框
+  const row = $('red-input-row');
+  row.innerHTML = '';
+  const inp1 = document.createElement('input');
+  inp1.type = 'text';
+  inp1.className = 'ans-input';
+  inp1.id = 'red-ans1';
+  inp1.placeholder = '如 ' + p.a1[0];
+  row.appendChild(inp1);
+  if (p.q2) {
+    const lab = document.createElement('span');
+    lab.style.cssText = 'font-family:Georgia,serif;font-size:16px;';
+    lab.textContent = p.q2 + '：';
+    row.appendChild(lab);
+    const inp2 = document.createElement('input');
+    inp2.type = 'text';
+    inp2.className = 'ans-input';
+    inp2.id = 'red-ans2';
+    inp2.placeholder = '如 ' + p.a2[0];
+    row.appendChild(inp2);
+  }
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn btn-primary btn-sm';
+  checkBtn.style.background = 'var(--math)';
+  checkBtn.textContent = '检查';
+  checkBtn.addEventListener('click', checkReduce);
+  row.appendChild(checkBtn);
+  const showBtn = document.createElement('button');
+  showBtn.className = 'btn btn-outline btn-sm';
+  showBtn.style.cssText = 'border-color:var(--text-light);color:var(--text-secondary);';
+  showBtn.textContent = '查看答案';
+  showBtn.addEventListener('click', () => {
+    const fb = $('red-feedback');
+    fb.className = 'ans-feedback show right';
+    let ans = p.a1[0];
+    if (p.q2) ans += '，' + p.q2 + '：' + p.a2[0];
+    fb.innerHTML = `答案：<strong>${ans}</strong><br>提示：${p.hint}`;
+  });
+  row.appendChild(showBtn);
+
+  $('red-feedback').className = 'ans-feedback';
+  $('red-feedback').innerHTML = '';
+}
+
+function checkReduce() {
+  const p = reduceProblems[redIdx];
+  const a1 = normAns($('red-ans1').value);
+  const ok1 = p.a1.map(normAns).includes(a1);
+  let ok2 = true;
+  if (p.q2) {
+    const a2 = normAns($('red-ans2').value);
+    ok2 = p.a2.map(normAns).includes(a2);
+    $('red-ans2').classList.toggle('ok', ok2);
+    $('red-ans2').classList.toggle('bad', !ok2 && $('red-ans2').value !== '');
+  }
+  $('red-ans1').classList.toggle('ok', ok1);
+  $('red-ans1').classList.toggle('bad', !ok1 && $('red-ans1').value !== '');
+
+  const fb = $('red-feedback');
+  if (ok1 && ok2) {
+    fb.className = 'ans-feedback show right';
+    let msg = '✓ 完全正确！';
+    if (p.q2) msg += ` ${p.poly.replace(/<[^>]+>/g,'')} → ${p.a1[0]}，结果 ${p.a2[0]}`;
+    else msg += ` 最简公分母 = ${p.a1[0]}`;
+    fb.innerHTML = msg;
+  } else {
+    fb.className = 'ans-feedback show wrong';
+    let msg = '✗ ';
+    if (!ok1 && !ok2) msg += '两个空都不对。';
+    else if (!ok1) msg += '第一个空不对。';
+    else msg += '第二个空不对。';
+    msg += ' 提示：' + p.hint;
+    fb.innerHTML = msg;
+  }
+}
+
+function bindReduce() {
+  $('red-prev').addEventListener('click', () => { redIdx = (redIdx - 1 + reduceProblems.length) % reduceProblems.length; loadReduceProblem(); });
+  $('red-next').addEventListener('click', () => { redIdx = (redIdx + 1) % reduceProblems.length; loadReduceProblem(); });
+}
+
+/* ============================================================
+ *  交互5：分式运算计算器（6 题，分步展示）
+ * ============================================================ */
+const calcProblems = [
+  {
+    type: '分式乘法',
+    exprHTML: fracHTML('2x', 'y') + ' × ' + fracHTML('3', '4x'),
+    steps: [
+      { label: '乘法法则', html: `<span class="hl-a">${fracHTML('2x','y')}</span> × <span class="hl-b">${fracHTML('3','4x')}</span> = ${fracHTML('2x·3','y·4x')}` },
+      { label: '分子分母相乘', html: `${fracHTML('2x·3','y·4x')} = ${fracHTML('6x','4xy')}` },
+      { label: '约去公因式 2x', html: `${fracHTML('6x','4xy')} = ${fracHTML('6x','4xy')} <span class="op">→</span> ${fracHTML('3','2y')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('3','2y')}</span>` }
+    ]
+  },
+  {
+    type: '分式除法',
+    exprHTML: fracHTML('a', 'b') + ' ÷ ' + fracHTML('a²', 'c'),
+    steps: [
+      { label: '除法变乘法', html: `<span class="hl-a">${fracHTML('a','b')}</span> ÷ <span class="hl-b">${fracHTML('a²','c')}</span> = ${fracHTML('a','b')} × ${fracHTML('c','a²')}` },
+      { label: '颠倒除式后相乘', html: `${fracHTML('a','b')} × ${fracHTML('c','a²')} = ${fracHTML('a·c','b·a²')}` },
+      { label: '分子分母相乘', html: `${fracHTML('a·c','b·a²')} = ${fracHTML('ac','a²b')}` },
+      { label: '约去公因式 a', html: `${fracHTML('ac','a²b')} = ${fracHTML('ac','a²b')} <span class="op">→</span> ${fracHTML('c','ab')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('c','ab')}</span>` }
+    ]
+  },
+  {
+    type: '同分母加法',
+    exprHTML: fracHTML('2', 'x−1') + ' + ' + fracHTML('3', 'x−1'),
+    steps: [
+      { label: '同分母加法法则', html: `<span class="hl-a">${fracHTML('2','x−1')}</span> + <span class="hl-b">${fracHTML('3','x−1')}</span> = ${fracHTML('2+3','x−1')}` },
+      { label: '分子相加', html: `${fracHTML('2+3','x−1')} = ${fracHTML('5','x−1')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('5','x−1')}</span>（分子分母无公因式，已是最简）` }
+    ]
+  },
+  {
+    type: '异分母加法',
+    exprHTML: fracHTML('1', 'x') + ' + ' + fracHTML('1', 'x+1'),
+    steps: [
+      { label: '找最简公分母', html: `分母 x 和 x+1 互质，最简公分母 = <span class="hl-m">x(x+1)</span>` },
+      { label: '通分', html: `${fracHTML('1','x')} = ${fracHTML('x+1','x(x+1)')}，&nbsp; ${fracHTML('1','x+1')} = ${fracHTML('x','x(x+1)')}` },
+      { label: '同分母相加', html: `${fracHTML('x+1','x(x+1)')} + ${fracHTML('x','x(x+1)')} = ${fracHTML('(x+1)+x','x(x+1)')}` },
+      { label: '合并分子', html: `${fracHTML('(x+1)+x','x(x+1)')} = ${fracHTML('2x+1','x(x+1)')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('2x+1','x(x+1)')}</span>（无法再约分）` }
+    ]
+  },
+  {
+    type: '异分母减法',
+    exprHTML: fracHTML('1', 'a') + ' − ' + fracHTML('1', 'b'),
+    steps: [
+      { label: '找最简公分母', html: `分母 a 和 b 互质，最简公分母 = <span class="hl-m">ab</span>` },
+      { label: '通分', html: `${fracHTML('1','a')} = ${fracHTML('b','ab')}，&nbsp; ${fracHTML('1','b')} = ${fracHTML('a','ab')}` },
+      { label: '同分母相减', html: `${fracHTML('b','ab')} − ${fracHTML('a','ab')} = ${fracHTML('b−a','ab')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('b−a','ab')}</span>` }
+    ]
+  },
+  {
+    type: '综合·需因式分解',
+    exprHTML: fracHTML('x', 'x²−4') + ' + ' + fracHTML('1', 'x−2'),
+    steps: [
+      { label: '因式分解分母', html: `x²−4 = <span class="hl-m">(x+2)(x−2)</span>，最简公分母 = (x+2)(x−2)` },
+      { label: '通分', html: `${fracHTML('x','(x+2)(x−2)')} = ${fracHTML('x','(x+2)(x−2)')}，&nbsp; ${fracHTML('1','x−2')} = ${fracHTML('x+2','(x+2)(x−2)')}` },
+      { label: '同分母相加', html: `${fracHTML('x','(x+2)(x−2)')} + ${fracHTML('x+2','(x+2)(x−2)')} = ${fracHTML('x+(x+2)','(x+2)(x−2)')}` },
+      { label: '合并分子', html: `${fracHTML('x+(x+2)','(x+2)(x−2)')} = ${fracHTML('2x+2','(x+2)(x−2)')}` },
+      { label: '提取公因式', html: `${fracHTML('2x+2','(x+2)(x−2)')} = ${fracHTML('2(x+1)','(x+2)(x−2)')}` },
+      { label: '最简结果', html: `<span class="hl-c">结果 = ${fracHTML('2(x+1)','(x+2)(x−2)')}</span>（分子分母无公因式）` }
+    ]
+  }
+];
+
+let calcIdx = 0;
+let calcStepShown = 0;
+
+function loadCalcProblem() {
+  const p = calcProblems[calcIdx];
+  $('calc-expr').innerHTML = p.exprHTML;
+  $('calc-type').textContent = `${p.type}（共 ${p.steps.length} 步）`;
+  $('calc-progress').textContent = `第 ${calcIdx + 1} / ${calcProblems.length} 题`;
+  calcStepShown = 0;
+  renderCalcSteps();
+}
+
+function renderCalcSteps() {
+  const p = calcProblems[calcIdx];
+  const container = $('calc-steps');
+  container.innerHTML = '';
+  for (let i = 0; i < p.steps.length; i++) {
+    const step = p.steps[i];
+    const line = document.createElement('div');
+    line.className = 'step-line';
+    if (i < calcStepShown) line.classList.add('show', 'active');
+    line.innerHTML = `<span class="step-label">第${i + 1}步·${step.label}</span>${step.html}`;
+    container.appendChild(line);
+  }
+  $('calc-step-progress').textContent = `已展示 ${calcStepShown} / ${p.steps.length} 步`;
+}
+
+function bindCalc() {
+  $('calc-next-step').addEventListener('click', () => {
+    const p = calcProblems[calcIdx];
+    if (calcStepShown < p.steps.length) {
+      calcStepShown++;
+      renderCalcSteps();
+    }
+  });
+  $('calc-show-all').addEventListener('click', () => {
+    const p = calcProblems[calcIdx];
+    calcStepShown = p.steps.length;
+    renderCalcSteps();
+  });
+  $('calc-reset-steps').addEventListener('click', () => {
+    calcStepShown = 0;
+    renderCalcSteps();
+  });
+  $('calc-prev').addEventListener('click', () => { calcIdx = (calcIdx - 1 + calcProblems.length) % calcProblems.length; loadCalcProblem(); });
+  $('calc-next').addEventListener('click', () => { calcIdx = (calcIdx + 1) % calcProblems.length; loadCalcProblem(); });
+}
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+function initQuizzes() {
+  initQuiz('quiz1', {
+    correct: 2,
+    explain: '分式的分母必须含有字母。A 分母 2、B 分母 π（常数）、D 分母 3 都不含字母，都是整式。只有 C 的分母 x−1 含字母 x，是分式。',
+    hint: '看分母里有没有字母。π 是常数不是字母。'
+  });
+  initQuiz('quiz2', {
+    correct: 1,
+    explain: '分式有意义要求分母 ≠ 0。x+3 ≠ 0，解得 x ≠ −3。注意：分母是 x+3，不是 x−3。',
+    hint: '令分母 = 0 求出"禁值"，排除它就是 x 的取值范围。'
+  });
+  initQuiz('quiz3', {
+    correct: 0,
+    explain: '除法变乘法：a/b ÷ a²/c = a/b × c/a² = (a·c)/(b·a²) = ac/(a²b)，约去公因式 a，得 c/(ab)。',
+    hint: '除法 = 颠倒除式后相乘，然后约分。'
+  });
+}
+
+/* ============================================================
+ *  初始化
+ * ============================================================ */
+function init() {
+  renderJudgeGrid();
+  updateMeaning();
+  bindMeaning();
+  updateProp();
+  bindProp();
+  loadReduceProblem();
+  bindReduce();
+  loadCalcProblem();
+  bindCalc();
+  initQuizzes();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>

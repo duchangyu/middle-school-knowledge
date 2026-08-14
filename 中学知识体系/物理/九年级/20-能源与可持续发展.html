@@ -6,53 +6,318 @@
   <title>能源与可持续发展 · 九年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    /* 演示容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 64px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 模式切换按钮组 */
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 4px;
+      margin: 8px 4px;
+      flex-wrap: wrap;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .mode-toggle button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .mode-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .mode-toggle button:hover:not(.active) {
+      background: rgba(74,144,217,0.1);
+    }
+
+    /* 信息读数 */
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* 属性列表 */
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 两列布局 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    /* 对比结果框 */
+    .compare-result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .compare-result .box {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .compare-result .box.fission { background: rgba(74,144,217,0.08); border: 2px solid var(--primary); }
+    .compare-result .box.fusion { background: rgba(243,156,18,0.10); border: 2px solid var(--warning); }
+    .compare-result .box .title { font-size: 15px; margin-bottom: 8px; font-weight: 700; }
+    .compare-result .box.fission .title { color: var(--primary-dark); }
+    .compare-result .box.fusion .title { color: #B9770E; }
+    .compare-result .box .num { font-size: 15px; line-height: 1.8; text-align: left; }
+
+    /* ===== 交互1：能源分类游戏 ===== */
+    .en-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 14px 0;
+      min-height: 96px;
+      padding: 12px;
+      background: white;
+      border-radius: var(--radius-sm);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .en-chip {
+      padding: 9px 18px;
+      border: 2px solid var(--primary);
+      background: white;
+      color: var(--primary-dark);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .en-chip:hover { transform: translateY(-2px); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+    .en-chip.selected {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 3px rgba(74,144,217,0.3);
+    }
+    .en-chip.placed {
+      border-color: var(--success);
+      background: rgba(39,174,96,0.12);
+      color: var(--success);
+      cursor: default;
+    }
+    .en-chip.placed:hover { transform: none; box-shadow: none; }
+    .en-chip.wrongflash {
+      animation: chipShake 0.4s;
+      border-color: var(--danger);
+      background: rgba(231,76,60,0.12);
+    }
+    @keyframes chipShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .en-bins {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 6px;
+    }
+    .en-bin {
+      border: 3px dashed var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      min-height: 110px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(74,144,217,0.04);
+    }
+    .en-bin:hover { background: rgba(74,144,217,0.12); }
+    .en-bin .bin-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .en-bin .bin-hint { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .en-bin .bin-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .game-feedback {
+      margin-top: 12px;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      line-height: 1.7;
+      text-align: left;
+      display: none;
+    }
+    .game-feedback.ok {
+      display: block;
+      background: rgba(39,174,96,0.1);
+      border: 1px solid var(--success);
+    }
+    .game-feedback.no {
+      display: block;
+      background: rgba(231,76,60,0.08);
+      border: 1px solid var(--danger);
+    }
+
+    /* ===== 交互2：核电站链条 ===== */
+    .station-box {
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .station-box:hover { filter: brightness(1.08); }
+    .station-box.active rect:first-child {
+      stroke: #E74C3C;
+      stroke-width: 3.5;
+    }
+    .station-desc {
+      margin-top: 12px;
+      background: white;
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.8;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      min-height: 60px;
+    }
+    .station-desc .st-title { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .compare-result { grid-template-columns: 1fr; }
+      .en-bins { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">🔌 能源与可持续发展</div>
+  <div class="navbar-brand">⚡ 能源与可持续发展</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级物理目录</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学九年级</a></li>
   </ul>
 </nav>
 
@@ -60,31 +325,743 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">物理</a>
+    <a href="../index.html">物理</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>能源与可持续发展</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🔌</div>
-    <h2>能源与可持续发展</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚡ 能源与可持续发展</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">能源家族如何分类？核能、太阳能从哪来？为什么能量守恒我们还要节约能源？</p>
+
+  <!-- ===== 第一部分：能源家族 ===== -->
+  <div class="card">
+    <div class="section-header">🏷️ 1. 能源家族 —— 能源的分类</div>
+
+    <p>烧水煮饭、点灯照明、汽车行驶……人类的生活一刻也离不开<strong>能源</strong>。凡是能提供能量的物质资源，都可以叫做能源。化石能源（煤、石油、天然气）是千百万年前埋在地下的动植物经过漫长地质年代形成的，是当今世界的<strong>主要能源</strong>。</p>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">分法一：一次能源与二次能源（按能否直接从自然界获得）</h3>
+    <ul class="property-list">
+      <li><strong>一次能源</strong>：可以从自然界<strong>直接获取</strong>的能源。如：煤、石油、天然气、太阳能、水能、风能、地热能、核能、生物质能</li>
+      <li><strong>二次能源</strong>：无法从自然界直接获取，必须通过<strong>消耗一次能源</strong>才能得到。如：<strong>电能</strong>、汽油、柴油、煤气、酒精</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">分法二：可再生能源与不可再生能源（按能否在短期内从自然界得到补充）</h3>
+    <ul class="property-list">
+      <li><strong>可再生能源</strong>：可以在自然界里<strong>源源不断地得到</strong>。如：太阳能、水能、风能、地热能、生物质能</li>
+      <li><strong>不可再生能源</strong>：越用越少，不能在短期内从自然界得到补充。如：煤、石油、天然气等化石能源，以及<strong>核能</strong>（铀等核燃料储量有限）</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 易错提醒</div>
+      • "可再生/不可再生"的分类对象是<strong>一次能源</strong>。电能是二次能源，不要说"电能是可再生能源"<br>
+      • 核能虽然不像化石燃料那样燃烧，但铀矿是有限的，属于<strong>不可再生能源</strong><br>
+      • 电能是最方便的二次能源——便于输送和转化，所以发电厂要把各种一次能源先变成电能
+    </div>
+
+    <!-- ===== 交互1：能源分类游戏 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🎮 交互1：能源分类大挑战</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+        先点击选中一张能源卡片，再点击它该去的分类框。分错了会抖动提示，全部放对即通关！
+      </p>
+
+      <div class="mode-toggle" id="enModeToggle">
+        <button class="active" data-mode="renew">♻️ 按能否再生分</button>
+        <button data-mode="primary">⛏️ 按获取方式分</button>
+      </div>
+
+      <div class="en-pool" id="enPool"></div>
+
+      <div class="en-bins">
+        <div class="en-bin" id="enBinA" data-cat="A">
+          <div class="bin-title" id="enBinATitle">可再生能源</div>
+          <div class="bin-hint" id="enBinAHint">能源源不断从自然界得到补充</div>
+          <div class="bin-items" id="enBinAItems"></div>
+        </div>
+        <div class="en-bin" id="enBinB" data-cat="B">
+          <div class="bin-title" id="enBinBTitle">不可再生能源</div>
+          <div class="bin-hint" id="enBinBHint">越用越少，短期内无法补充</div>
+          <div class="bin-items" id="enBinBItems"></div>
+        </div>
+      </div>
+
+      <div class="game-feedback" id="enFeedback"></div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">已分对：</span><span class="value"><span id="enScoreRight">0</span> / <span id="enScoreTotal">9</span></span></div>
+        <div class="readout-item">
+          <button class="btn btn-outline" id="enResetBtn" style="padding: 4px 14px; font-size: 13px;">↺ 重新开始</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：核能 ===== -->
+  <div class="card">
+    <div class="section-header">☢️ 2. 核能 —— 原子核里的巨大能量</div>
+
+    <p>原子由原子核和核外电子组成，原子核又由<strong>质子</strong>和<strong>中子</strong>组成。质子、中子依靠强大的核力紧密结合在一起，一旦原子核发生<strong>分裂或结合</strong>，就可能释放出惊人的能量——<strong>核能</strong>（原子能）。获得核能有两种途径：<strong>裂变</strong>和<strong>聚变</strong>。</p>
+
+    <div class="compare-result">
+      <div class="box fission">
+        <div class="title">⚛ 裂变（重核分裂）</div>
+        <div class="num">
+          · 用<strong>中子轰击铀-235</strong>原子核，使其分裂成两个较小的核，同时放出 2~3 个中子和巨大能量<br>
+          · 这些中子又去轰击其他铀核——<strong>链式反应</strong><br>
+          · 链式反应<strong>不加控制</strong> → <strong>原子弹</strong><br>
+          · 链式反应<strong>加以控制</strong>（控制棒吸收中子）→ <strong>核电站</strong>
+        </div>
+      </div>
+      <div class="box fusion">
+        <div class="title">🌟 聚变（轻核结合）</div>
+        <div class="num">
+          · 质量很小的原子核（如氘核、氚核）在<strong>超高温</strong>下结合成新的原子核，释放更大的能量<br>
+          · 也叫<strong>热核反应</strong><br>
+          · 应用：<strong>氢弹</strong>（不可控）<br>
+          · <strong>太阳内部</strong>每时每刻都在发生聚变，太阳能本质上就是核能！
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 对比记忆</div>
+      裂变 = "大核炸小"，原子弹不可控、核电站可控；聚变 = "小核并大"，氢弹、太阳。<br>
+      目前人类和平利用的只有<strong>可控裂变</strong>（核电站）；可控核聚变仍在研究中，一旦成功，海水中的氘将提供几乎用不完的能源。
+    </div>
+
+    <h3 style="margin: 22px 0 8px; color: var(--primary-dark);">⚡ 核电站是怎样发电的？</h3>
+    <div class="formula-box" style="font-size: 19px;">
+      核能 → <strong>内能</strong> → <strong>机械能</strong> → <strong>电能</strong>
+    </div>
+
+    <!-- ===== 交互2：核电站能量转化链 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🏭 交互2：核电站能量转化链</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+        点击链条上的每个环节查看说明；调节"反应堆功率"滑块，观察能量流动速度和灯泡亮度的变化
+      </p>
+
+      <svg viewBox="0 0 680 250" width="680" height="250">
+        <rect x="0" y="0" width="680" height="250" fill="#FBFDFF"/>
+
+        <!-- 环节1：核反应堆 -->
+        <g class="station-box" id="npSt0" data-st="0">
+          <rect x="30" y="80" width="100" height="80" rx="10" fill="rgba(243,156,18,0.15)" stroke="#F39C12" stroke-width="2"/>
+          <text x="80" y="112" text-anchor="middle" font-size="26">☢️</text>
+          <text x="80" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#B9770E">核反应堆</text>
+          <text x="80" y="176" text-anchor="middle" font-size="12" fill="#B9770E" font-weight="bold">核能</text>
+        </g>
+
+        <!-- 环节2：蒸汽 -->
+        <g class="station-box" id="npSt1" data-st="1">
+          <rect x="170" y="80" width="100" height="80" rx="10" fill="rgba(231,76,60,0.10)" stroke="#E74C3C" stroke-width="2"/>
+          <text x="220" y="112" text-anchor="middle" font-size="26">♨️</text>
+          <text x="220" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#C0392B">高温蒸汽</text>
+          <text x="220" y="176" text-anchor="middle" font-size="12" fill="#C0392B" font-weight="bold">内能</text>
+        </g>
+
+        <!-- 环节3：汽轮机 -->
+        <g class="station-box" id="npSt2" data-st="2">
+          <rect x="310" y="80" width="100" height="80" rx="10" fill="rgba(74,144,217,0.10)" stroke="#4A90D9" stroke-width="2"/>
+          <text x="360" y="112" text-anchor="middle" font-size="26">⚙️</text>
+          <text x="360" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E6BA8">汽轮机</text>
+          <text x="360" y="176" text-anchor="middle" font-size="12" fill="#2E6BA8" font-weight="bold">机械能</text>
+        </g>
+
+        <!-- 环节4：发电机 -->
+        <g class="station-box" id="npSt3" data-st="3">
+          <rect x="450" y="80" width="100" height="80" rx="10" fill="rgba(39,174,96,0.10)" stroke="#27AE60" stroke-width="2"/>
+          <text x="500" y="112" text-anchor="middle" font-size="26">🔌</text>
+          <text x="500" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#1E8449">发电机</text>
+          <text x="500" y="176" text-anchor="middle" font-size="12" fill="#1E8449" font-weight="bold">电能</text>
+        </g>
+
+        <!-- 箭头 -->
+        <g stroke="#7F8C8D" stroke-width="2.5" fill="none">
+          <line x1="132" y1="120" x2="168" y2="120"/>
+          <line x1="272" y1="120" x2="308" y2="120"/>
+          <line x1="412" y1="120" x2="448" y2="120"/>
+          <line x1="552" y1="120" x2="588" y2="120"/>
+        </g>
+        <g fill="#7F8C8D">
+          <polygon points="168,120 160,115 160,125"/>
+          <polygon points="308,120 300,115 300,125"/>
+          <polygon points="448,120 440,115 440,125"/>
+          <polygon points="588,120 580,115 580,125"/>
+        </g>
+
+        <!-- 流动的能量粒子（JS 驱动） -->
+        <g id="npDots" fill="#F39C12"></g>
+
+        <!-- 灯泡 -->
+        <g>
+          <circle id="npBulbGlow" cx="624" cy="120" r="38" fill="rgba(253,184,19,0)"/>
+          <circle cx="624" cy="120" r="24" fill="rgba(255,244,200,0.9)" stroke="#B7950B" stroke-width="2.5"/>
+          <path d="M 615 120 Q 624 109 633 120 M 619 127 L 629 127" fill="none" stroke="#B7950B" stroke-width="2.5"/>
+          <rect x="618" y="142" width="12" height="9" fill="#7F8C8D"/>
+          <text x="624" y="176" text-anchor="middle" font-size="12" fill="#7F8C8D" font-weight="bold">万家灯火</text>
+        </g>
+
+        <text x="340" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E6BA8">核能 → 内能 → 机械能 → 电能</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>反应堆功率：</label>
+        <input type="range" id="npPower" min="0" max="100" value="60">
+        <span class="value-display"><span id="npPowerVal">60</span>%</span>
+      </div>
+
+      <div class="station-desc" id="npDesc">
+        <span class="st-title">👆 点击上面的环节</span><br>
+        核电站的核心是利用<strong>可控链式反应</strong>释放核能，再经过一系列能量转化发出电能。点击各环节了解详情。
+      </div>
+    </div>
   </div>
+
+  <!-- ===== 第三部分：太阳能 ===== -->
+  <div class="card">
+    <div class="section-header">☀️ 3. 太阳能 —— 巨大的"核能火炉"</div>
+
+    <p>太阳距离地球 1.5 亿千米，它内部每时每刻都在发生<strong>氢核聚变</strong>，向外辐射巨大的能量。太阳已经燃烧了约 50 亿年，正处在"壮年"。</p>
+
+    <div class="formula-box" style="font-size: 16px;">
+      太阳核心：<strong>氢原子核聚变</strong>（热核反应）→ 释放核能 → 以光和热的形式辐射到地球
+    </div>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">太阳能是地球上大部分能源的源头</h3>
+    <ul class="property-list">
+      <li><strong>化石能源</strong>：远古动植物（靠太阳能生长）埋在地下形成 —— 煤、石油、天然气其实是"储存起来的太阳能"</li>
+      <li><strong>风能、水能</strong>：太阳晒热空气产生风，蒸发水汽形成降水与河流 —— 都来自太阳能</li>
+      <li><strong>生物质能</strong>：植物通过<strong>光合作用</strong>把太阳能转化为化学能储存起来</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">直接利用太阳能的两种方式</h3>
+    <ul class="property-list">
+      <li><strong>光热转换</strong>：用集热器把水等物质加热 —— 太阳能热水器、太阳灶（太阳能 → 内能）</li>
+      <li><strong>光电转换</strong>：用太阳能电池把太阳能直接转化为电能 —— 太阳能路灯、卫星太阳能电池板（太阳能 → 电能）</li>
+    </ul>
+
+    <!-- ===== 交互3：太阳能利用模拟 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🌞 交互3：太阳能利用模拟器</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+        调节光照强度，同时观察太阳能热水器的水温变化和太阳能电池的输出变化
+      </p>
+
+      <svg viewBox="0 0 640 300" width="640" height="300">
+        <rect x="0" y="0" width="640" height="300" fill="#EAF6FF"/>
+
+        <!-- 太阳 -->
+        <g id="slSun">
+          <g id="slRays" stroke="#FDB813" stroke-width="4" stroke-linecap="round" opacity="0.6">
+            <line x1="110" y1="18" x2="110" y2="2"/>
+            <line x1="110" y1="98" x2="110" y2="114"/>
+            <line x1="70" y1="58" x2="54" y2="58"/>
+            <line x1="150" y1="58" x2="166" y2="58"/>
+            <line x1="82" y1="30" x2="71" y2="19"/>
+            <line x1="138" y1="30" x2="149" y2="19"/>
+            <line x1="82" y1="86" x2="71" y2="97"/>
+            <line x1="138" y1="86" x2="149" y2="97"/>
+          </g>
+          <circle id="slSunCore" cx="110" cy="58" r="30" fill="#FDB813" opacity="0.6"/>
+          <circle cx="110" cy="58" r="22" fill="#FFD700"/>
+        </g>
+
+        <!-- 左：太阳能热水器 -->
+        <g>
+          <text x="230" y="36" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E6BA8">太阳能热水器（光→热）</text>
+          <!-- 集热板 -->
+          <g transform="translate(230,108) rotate(-18)">
+            <rect x="-62" y="-26" width="124" height="52" rx="6" fill="#154360" stroke="#0B2A40" stroke-width="2.5"/>
+            <g stroke="#4A90D9" stroke-width="2" opacity="0.85">
+              <line x1="-42" y1="-26" x2="-42" y2="26"/>
+              <line x1="-21" y1="-26" x2="-21" y2="26"/>
+              <line x1="0" y1="-26" x2="0" y2="26"/>
+              <line x1="21" y1="-26" x2="21" y2="26"/>
+              <line x1="42" y1="-26" x2="42" y2="26"/>
+            </g>
+          </g>
+          <!-- 支架与水管 -->
+          <line x1="196" y1="128" x2="186" y2="196" stroke="#7F8C8D" stroke-width="4"/>
+          <line x1="264" y1="128" x2="254" y2="196" stroke="#7F8C8D" stroke-width="4"/>
+          <!-- 水箱 -->
+          <rect x="160" y="196" width="140" height="78" rx="12" fill="#F8F9F9" stroke="#90A4AE" stroke-width="2.5"/>
+          <rect id="slWater" x="166" y="202" width="128" height="66" rx="8" fill="#4A90D9" opacity="0.85"/>
+          <text id="slWaterText" x="230" y="240" text-anchor="middle" font-size="15" font-weight="bold" fill="white">15℃</text>
+          <text x="230" y="292" text-anchor="middle" font-size="12" fill="#7F8C8D">水箱水温随光照升高</text>
+        </g>
+
+        <!-- 右：太阳能电池 + 灯泡 -->
+        <g>
+          <text x="470" y="36" text-anchor="middle" font-size="14" font-weight="bold" fill="#B9770E">太阳能电池（光→电）</text>
+          <!-- 电池板 -->
+          <g transform="translate(440,108) rotate(-18)">
+            <rect x="-56" y="-24" width="112" height="48" rx="6" fill="#1A5276" stroke="#0B2A40" stroke-width="2.5"/>
+            <g stroke="#5DADE2" stroke-width="1.6" opacity="0.9">
+              <line x1="-28" y1="-24" x2="-28" y2="24"/>
+              <line x1="0" y1="-24" x2="0" y2="24"/>
+              <line x1="28" y1="-24" x2="28" y2="24"/>
+              <line x1="-56" y1="0" x2="56" y2="0"/>
+            </g>
+          </g>
+          <line x1="406" y1="128" x2="398" y2="190" stroke="#7F8C8D" stroke-width="4"/>
+          <line x1="474" y1="128" x2="466" y2="190" stroke="#7F8C8D" stroke-width="4"/>
+          <!-- 导线到灯泡 -->
+          <path d="M 398 190 L 398 216 L 500 216" fill="none" stroke="#90A4AE" stroke-width="3"/>
+          <path d="M 466 190 L 466 232 L 500 232" fill="none" stroke="#90A4AE" stroke-width="3"/>
+          <!-- 灯泡 -->
+          <circle id="slBulbGlow" cx="530" cy="224" r="40" fill="rgba(253,184,19,0)"/>
+          <circle cx="530" cy="224" r="25" fill="rgba(255,244,200,0.9)" stroke="#B7950B" stroke-width="2.5"/>
+          <path d="M 521 224 Q 530 213 539 224 M 525 231 L 535 231" fill="none" stroke="#B7950B" stroke-width="2.5"/>
+          <rect x="524" y="247" width="12" height="9" fill="#7F8C8D"/>
+          <text id="slPowerText" x="470" y="292" text-anchor="middle" font-size="12" fill="#7F8C8D">输出功率：180 W</text>
+        </g>
+      </svg>
+
+      <div class="slider-row">
+        <label>☀️ 光照强度：</label>
+        <input type="range" id="slIntensity" min="0" max="100" value="60">
+        <span class="value-display"><span id="slIntensityVal">60</span>%</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">热水器水温：</span><span class="value"><span id="slTemp">48</span> ℃</span></div>
+        <div class="readout-item"><span class="label">电池输出功率：</span><span class="value"><span id="slPower">180</span> W</span></div>
+        <div class="readout-item"><span class="label">能量转化：</span><span class="value" id="slConv">太阳能 → 内能 / 电能</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        <span id="slTip">光照越强，热水器水温越高（<strong>太阳能→内能</strong>），电池输出功率越大、灯泡越亮（<strong>太阳能→电能</strong>）。太阳能清洁、安全、取之不尽，但<strong>分散、不稳定</strong>（阴天、夜晚无法利用），需要储能设备配合。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：能量转移和转化的方向性 ===== -->
+  <div class="card">
+    <div class="section-header">🧭 4. 能量转移和转化的方向性</div>
+
+    <p>我们已经学过<strong>能量守恒定律</strong>：能量既不会凭空消灭，也不会凭空产生，它只会从一种形式转化为其他形式，或者从一个物体转移到其他物体，总量保持不变。既然能量守恒，为什么还要"节约能源"呢？</p>
+
+    <div class="formula-box" style="font-size: 17px; line-height: 1.8;">
+      能量的转化和转移具有<strong style="color: var(--danger);">方向性</strong>：<br>
+      我们利用的能量，最终都变成了环境的<strong>内能</strong>，无法自动收回来重新利用
+    </div>
+
+    <ul class="property-list">
+      <li><strong>热量只能自发地从高温物体传向低温物体</strong>，不能自发地反向传递（空调"把热量从室内搬到室外"要耗电做功）</li>
+      <li>汽车刹车时，动能变成轮胎与地面的<strong>内能</strong>散失到空气中——这些内能<strong>不能自动</strong>变回汽车的动能</li>
+      <li>火炉的内能散失到房间和空气中，无法全部收集起来再烧一壶水</li>
+      <li>任何能源利用过程都有损耗：利用率不可能达到 100%</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 关键理解</div>
+      "能量守恒"说的是<strong>总量不变</strong>；"方向性"说的是<strong>品质下降</strong>——便于利用的能量（如化学能、电能）用过之后变成分散的内能，虽然总能量没变，却<strong>不再好用</strong>了。所以我们必须<strong>节约能源</strong>！
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：能源与可持续发展 ===== -->
+  <div class="card">
+    <div class="section-header">🌱 5. 能源与环境 · 可持续发展</div>
+
+    <h3 style="margin: 6px 0 8px; color: var(--primary-dark);">能源消耗对环境的影响</h3>
+    <ul class="property-list">
+      <li><strong>大气污染</strong>：燃烧化石燃料产生二氧化硫、氮氧化物、粉尘 → 酸雨、雾霾</li>
+      <li><strong>温室效应</strong>：大量排放二氧化碳，使全球气候变暖 → 冰川融化、海平面上升、极端天气增多</li>
+      <li><strong>其他</strong>：燃烧产生的废渣、热污染；核电站的核废料需要妥善处理（安全措施十分严格）</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">可持续发展与新能源</h3>
+    <p>化石能源、核能都是<strong>不可再生能源</strong>，储量有限。解决能源问题的出路：</p>
+    <ul class="property-list">
+      <li><strong>提高能源利用率</strong>：改进技术、减少浪费（节能灯、变频空调、混合动力汽车）</li>
+      <li><strong>开发和利用新能源</strong>：太阳能、风能、水能、地热能、潮汐能、生物质能、氢能，以及未来的<strong>可控核聚变</strong></li>
+    </ul>
+
+    <div class="formula-box" style="font-size: 16px;">
+      理想未来能源的四个条件：<strong>足够丰富</strong> · <strong>足够便宜</strong> · <strong>技术成熟</strong> · <strong>安全清洁</strong>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🌍 我们能做什么</div>
+      随手关灯、夏季空调不低于 26℃、绿色出行（公交/骑行/步行）、双面用纸……<br>
+      可持续发展 = 既满足当代人的需要，又不损害后代人满足其需要的能力。节约能源，从我做起！
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 6. 练习题</div>
+    <p>检验一下你对能源知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 下列能源中，属于可再生能源的是：</div>
+      <div class="quiz-option" data-idx="0">A. 煤</div>
+      <div class="quiz-option" data-idx="1">B. 石油</div>
+      <div class="quiz-option" data-idx="2">C. 天然气</div>
+      <div class="quiz-option" data-idx="3">D. 太阳能</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 核电站发电过程中，能量转化的正确顺序是：</div>
+      <div class="quiz-option" data-idx="0">A. 核能 → 电能</div>
+      <div class="quiz-option" data-idx="1">B. 核能 → 内能 → 机械能 → 电能</div>
+      <div class="quiz-option" data-idx="2">C. 核能 → 机械能 → 电能</div>
+      <div class="quiz-option" data-idx="3">D. 内能 → 核能 → 电能 → 机械能</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于能源与能量，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 太阳内部每时每刻都在发生核裂变，释放巨大能量</div>
+      <div class="quiz-option" data-idx="1">B. 能量是守恒的，所以能源是"取之不尽、用之不竭"的，无需节约</div>
+      <div class="quiz-option" data-idx="2">C. 电能可以直接从自然界获取，属于一次能源</div>
+      <div class="quiz-option" data-idx="3">D. 能量的转化和转移具有方向性，散失到环境中的内能无法自动收集起来重新利用</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 能量守恒定律、内能的利用 ↔ <a href="17-内能.html">物理 · 内能</a>；电能的计算 ↔ <a href="16-电功率.html">物理 · 电功率</a></p>
+    <p>· 发电机（电磁感应）↔ <a href="19-电与磁.html">物理 · 电与磁</a>——发电站的心脏是发电机</p>
+    <p>· 化石燃料的燃烧、燃料热值 ↔ <a href="../../化学/九年级/07-燃料及其利用.html">化学 · 燃料及其利用</a></p>
+    <p>· 大气污染与温室效应 ↔ <a href="../../化学/九年级/02-空气.html">化学 · 空气</a>；化学与社会发展 ↔ <a href="../../化学/九年级/12-化学与生活.html">化学 · 化学与生活</a></p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="19-电与磁.html" class="btn btn-outline">← 上一章：电与磁</a>
+    <a href="index.html" class="btn btn-primary">最后一章（无下一章）→ 返回九年级目录</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：能源分类大挑战
+// ============================================================
+(function() {
+  var MODES = {
+    renew: {
+      titleA: '可再生能源', hintA: '能源源不断从自然界得到补充',
+      titleB: '不可再生能源', hintB: '越用越少，短期内无法补充',
+      chips: [
+        { name: '☀️ 太阳能', cat: 'A' },
+        { name: '💨 风能', cat: 'A' },
+        { name: '💧 水能', cat: 'A' },
+        { name: '🌋 地热能', cat: 'A' },
+        { name: '🌾 生物质能', cat: 'A' },
+        { name: '🪨 煤', cat: 'B' },
+        { name: '🛢️ 石油', cat: 'B' },
+        { name: '🔥 天然气', cat: 'B' },
+        { name: '☢️ 核能', cat: 'B' }
+      ],
+      doneTip: '全部正确！记住：<strong>核能</strong>虽然不燃烧，但铀矿有限，属于<strong>不可再生能源</strong>；太阳能、风能、水能、地热能、生物质能都取之不尽。'
+    },
+    primary: {
+      titleA: '一次能源', hintA: '可以从自然界直接获取',
+      titleB: '二次能源', hintB: '必须消耗一次能源才能制取',
+      chips: [
+        { name: '🪨 煤', cat: 'A' },
+        { name: '🛢️ 石油', cat: 'A' },
+        { name: '🔥 天然气', cat: 'A' },
+        { name: '☀️ 太阳能', cat: 'A' },
+        { name: '💨 风能', cat: 'A' },
+        { name: '💧 水能', cat: 'A' },
+        { name: '☢️ 核能', cat: 'A' },
+        { name: '⚡ 电能', cat: 'B' },
+        { name: '⛽ 汽油', cat: 'B' },
+        { name: '🚗 柴油', cat: 'B' },
+        { name: '💨 煤气', cat: 'B' }
+      ],
+      doneTip: '全部正确！<strong>电能</strong>是最典型的二次能源——发电厂消耗煤、水能、核能等一次能源才能发出电；汽油、柴油由石油炼制，煤气由煤加工，也都是二次能源。'
+    }
+  };
+
+  var mode = 'renew';
+  var selectedChip = null;
+  var rightCount = 0;
+
+  var pool = document.getElementById('enPool');
+  var binA = document.getElementById('enBinA');
+  var binB = document.getElementById('enBinB');
+  var binAItems = document.getElementById('enBinAItems');
+  var binBItems = document.getElementById('enBinBItems');
+  var feedback = document.getElementById('enFeedback');
+
+  function showFeedback(ok, html) {
+    feedback.className = 'game-feedback ' + (ok ? 'ok' : 'no');
+    feedback.innerHTML = html;
+  }
+
+  function build() {
+    var conf = MODES[mode];
+    pool.innerHTML = '';
+    binAItems.innerHTML = '';
+    binBItems.innerHTML = '';
+    document.getElementById('enBinATitle').textContent = conf.titleA;
+    document.getElementById('enBinAHint').textContent = conf.hintA;
+    document.getElementById('enBinBTitle').textContent = conf.titleB;
+    document.getElementById('enBinBHint').textContent = conf.hintB;
+    feedback.className = 'game-feedback';
+    feedback.style.display = 'none';
+    selectedChip = null;
+    rightCount = 0;
+    document.getElementById('enScoreRight').textContent = '0';
+    document.getElementById('enScoreTotal').textContent = conf.chips.length;
+
+    // 打乱顺序
+    var chips = conf.chips.slice();
+    for (var i = chips.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = chips[i]; chips[i] = chips[j]; chips[j] = t;
+    }
+
+    chips.forEach(function(c) {
+      var el = document.createElement('button');
+      el.className = 'en-chip';
+      el.textContent = c.name;
+      el.dataset.cat = c.cat;
+      el.addEventListener('click', function() {
+        if (el.classList.contains('placed')) return;
+        if (selectedChip === el) {
+          el.classList.remove('selected');
+          selectedChip = null;
+          return;
+        }
+        if (selectedChip) selectedChip.classList.remove('selected');
+        selectedChip = el;
+        el.classList.add('selected');
+      });
+      pool.appendChild(el);
+    });
+  }
+
+  function tryPlace(binCat, binItemsEl, binTitle) {
+    if (!selectedChip) {
+      showFeedback(false, '☝️ 先点击选中一张能源卡片，再点击分类框。');
+      return;
+    }
+    var chip = selectedChip;
+    if (chip.dataset.cat === binCat) {
+      chip.classList.remove('selected');
+      chip.classList.add('placed');
+      binItemsEl.appendChild(chip);
+      selectedChip = null;
+      rightCount++;
+      document.getElementById('enScoreRight').textContent = rightCount;
+      var total = MODES[mode].chips.length;
+      if (rightCount === total) {
+        showFeedback(true, '🎉 ' + MODES[mode].doneTip);
+      } else {
+        showFeedback(true, '✓ 正确！<strong>' + chip.textContent + '</strong> 属于「' + binTitle + '」。还剩 ' + (total - rightCount) + ' 张，继续！');
+      }
+    } else {
+      chip.classList.add('wrongflash');
+      setTimeout(function() { chip.classList.remove('wrongflash'); }, 450);
+      var hint = mode === 'renew'
+        ? '想一想：它能在短期内从自然界源源不断得到补充吗？'
+        : '想一想：它能从自然界直接获取吗？还是要靠加工/发电才能得到？';
+      showFeedback(false, '✗ 分错了。<strong>' + chip.textContent + '</strong> 不属于「' + binTitle + '」。' + hint);
+    }
+  }
+
+  binA.addEventListener('click', function() { tryPlace('A', binAItems, MODES[mode].titleA); });
+  binB.addEventListener('click', function() { tryPlace('B', binBItems, MODES[mode].titleB); });
+
+  document.querySelectorAll('#enModeToggle button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      mode = btn.dataset.mode;
+      document.querySelectorAll('#enModeToggle button').forEach(function(b) {
+        b.classList.toggle('active', b === btn);
+      });
+      build();
+    });
+  });
+
+  document.getElementById('enResetBtn').addEventListener('click', build);
+
+  build();
+})();
+
+// ============================================================
+// 交互2：核电站能量转化链
+// ============================================================
+(function() {
+  var NS = 'http://www.w3.org/2000/svg';
+  var dotsG = document.getElementById('npDots');
+  var bulbGlow = document.getElementById('npBulbGlow');
+  var desc = document.getElementById('npDesc');
+  var power = 60;
+  var lastTime = 0;
+
+  // 四段箭头区间
+  var gaps = [
+    { x1: 134, x2: 166 },
+    { x1: 274, x2: 306 },
+    { x1: 414, x2: 446 },
+    { x1: 554, x2: 586 }
+  ];
+  var DOTS_PER_GAP = 2;
+  var dots = [];
+
+  gaps.forEach(function(g, gi) {
+    for (var i = 0; i < DOTS_PER_GAP; i++) {
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', 4);
+      c.setAttribute('cy', 120);
+      dotsG.appendChild(c);
+      dots.push({ el: c, gap: g, offset: (gi * 0.5 + i / DOTS_PER_GAP) });
+    }
+  });
+
+  var progress = 0;
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    // 能量流动速度 ∝ 功率
+    progress += dt * (0.05 + power / 100 * 0.75);
+    dots.forEach(function(d) {
+      var t = (progress + d.offset) % 1;
+      d.el.setAttribute('cx', d.gap.x1 + (d.gap.x2 - d.gap.x1) * t);
+      d.el.setAttribute('opacity', power > 0 ? 0.95 : 0.15);
+    });
+
+    // 灯泡亮度 ∝ 功率
+    bulbGlow.setAttribute('fill', 'rgba(253,184,19,' + (power / 100 * 0.8).toFixed(2) + ')');
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  document.getElementById('npPower').addEventListener('input', function(e) {
+    power = parseFloat(e.target.value);
+    document.getElementById('npPowerVal').textContent = power;
+  });
+
+  // 环节说明
+  var STAGES = [
+    {
+      title: '☢️ 核反应堆 —— 核能',
+      text: '铀-235 原子核在中子轰击下发生<strong>裂变</strong>，释放巨大能量。反应堆中插有<strong>控制棒</strong>（吸收中子）来调节链式反应的速度，使核能平稳释放——这就是"可控链式反应"。原子弹则是不可控的链式反应。'
+    },
+    {
+      title: '♨️ 高温蒸汽 —— 核能 → 内能',
+      text: '裂变释放的核能把水加热成<strong>高温高压的水蒸气</strong>。这一步能量由核能转化为<strong>内能</strong>。核电站与火电站的区别主要就在这一步：一个用核反应"烧水"，一个用煤"烧水"。'
+    },
+    {
+      title: '⚙️ 汽轮机 —— 内能 → 机械能',
+      text: '高温高压蒸汽推动<strong>汽轮机的叶片</strong>高速旋转，蒸汽的内能转化为汽轮机的<strong>机械能</strong>。这和热机（蒸汽机）的工作原理一脉相承。'
+    },
+    {
+      title: '🔌 发电机 —— 机械能 → 电能',
+      text: '汽轮机带动<strong>发电机的线圈在磁场中转动</strong>，切割磁感线产生感应电流（电磁感应），机械能转化为<strong>电能</strong>，经电网输送到千家万户。复习链接：上一章「电与磁」！'
+    }
+  ];
+
+  document.querySelectorAll('.station-box').forEach(function(st) {
+    st.addEventListener('click', function() {
+      document.querySelectorAll('.station-box').forEach(function(s) { s.classList.remove('active'); });
+      st.classList.add('active');
+      var info = STAGES[parseInt(st.dataset.st)];
+      desc.innerHTML = '<span class="st-title">' + info.title + '</span><br>' + info.text;
+    });
+  });
+})();
+
+// ============================================================
+// 交互3：太阳能利用模拟器
+// ============================================================
+(function() {
+  var BASE_TEMP = 15, MAX_TEMP = 70;   // 水温范围 15℃ ~ 70℃
+  var MAX_POWER = 300;                  // 电池最大功率 300 W
+
+  var rays = document.getElementById('slRays');
+  var sunCore = document.getElementById('slSunCore');
+  var water = document.getElementById('slWater');
+  var waterText = document.getElementById('slWaterText');
+  var bulbGlow = document.getElementById('slBulbGlow');
+  var powerText = document.getElementById('slPowerText');
+  var tip = document.getElementById('slTip');
+
+  function mixColor(t) {
+    // 蓝 #4A90D9 → 红 #E74C3C
+    var c1 = { r: 74, g: 144, b: 217 }, c2 = { r: 231, g: 76, b: 60 };
+    var r = Math.round(c1.r + (c2.r - c1.r) * t);
+    var g = Math.round(c1.g + (c2.g - c1.g) * t);
+    var b = Math.round(c1.b + (c2.b - c1.b) * t);
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  function update(intensity) {
+    var t = intensity / 100;
+
+    // 太阳亮度
+    rays.setAttribute('opacity', 0.15 + 0.85 * t);
+    sunCore.setAttribute('opacity', 0.25 + 0.75 * t);
+    sunCore.setAttribute('r', 26 + 8 * t);
+
+    // 水温
+    var temp = Math.round(BASE_TEMP + (MAX_TEMP - BASE_TEMP) * t);
+    water.setAttribute('fill', mixColor(t));
+    waterText.textContent = temp + '℃';
+    document.getElementById('slTemp').textContent = temp;
+
+    // 电池输出
+    var p = Math.round(MAX_POWER * t);
+    document.getElementById('slPower').textContent = p;
+    powerText.textContent = '输出功率：' + p + ' W';
+    bulbGlow.setAttribute('fill', 'rgba(253,184,19,' + (t * 0.8).toFixed(2) + ')');
+
+    // 提示
+    if (intensity === 0) {
+      tip.innerHTML = '没有光照（夜晚/阴雨天）：热水器无法加热，电池输出为 0——这正是太阳能<strong>分散、不稳定</strong>的弱点，实际使用中要搭配储能装置（蓄电池、保温水箱）。';
+    } else if (intensity >= 90) {
+      tip.innerHTML = '强光下：水温接近 70℃，电池满功率输出！太阳能清洁、安全、取之不尽，是<strong>可再生能源</strong>中的佼佼者。';
+    } else {
+      tip.innerHTML = '光照越强，热水器水温越高（<strong>太阳能→内能</strong>），电池输出功率越大、灯泡越亮（<strong>太阳能→电能</strong>）。太阳能清洁、安全、取之不尽，但<strong>分散、不稳定</strong>（阴天、夜晚无法利用），需要储能设备配合。';
+    }
+  }
+
+  document.getElementById('slIntensity').addEventListener('input', function(e) {
+    var v = parseFloat(e.target.value);
+    document.getElementById('slIntensityVal').textContent = v;
+    update(v);
+  });
+
+  update(60);
+})();
+
+// ============================================================
+// 练习题
+// ============================================================
+initQuiz('quiz1', {
+  correct: 3,
+  explain: '煤、石油、天然气是化石能源，越用越少，属于不可再生能源；太阳能可以在自然界源源不断地得到，属于可再生能源。',
+  hint: '想想哪种能源"取之不尽、用之不竭"。'
+});
+
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '核电站：核反应堆中裂变释放核能 → 把水加热成高温蒸汽（内能）→ 蒸汽推动汽轮机转动（机械能）→ 汽轮机带动发电机发电（电能）。中间的内能、机械能环节不可省略。',
+  hint: '回忆核电站能量转化链的四个环节：反应堆→蒸汽→汽轮机→发电机。'
+});
+
+initQuiz('quiz3', {
+  correct: 3,
+  explain: 'A 错：太阳内部发生的是核聚变（热核反应）。B 错：能量守恒不等于能源用之不竭——能量的利用有方向性，高品质能源用过后变成难以利用的内能，必须节约。C 错：电能不能从自然界直接获取，是二次能源。D 正确。',
+  hint: '注意区分"能量守恒"与"能量利用的方向性"；太阳是聚变，电能是二次能源。'
+});
+</script>
+
 </body>
 </html>

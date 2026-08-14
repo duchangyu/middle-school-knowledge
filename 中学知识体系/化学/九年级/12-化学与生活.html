@@ -6,49 +6,205 @@
   <title>化学与生活 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    .section-header {
+      font-size: 22px; font-weight: 700; color: var(--chemistry);
+      margin: 32px 0 14px; padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex; align-items: center; gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px;
+      flex-shrink: 0;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+    /* 知识卡片网格 */
+    .knowledge-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry); transition: all 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card.life-food { border-left-color: var(--success); }
+    .know-card.life-cloth { border-left-color: var(--info); }
+    .know-card.life-house { border-left-color: var(--warning); }
+    .know-card.life-env { border-left-color: #8e44ad; }
+    .know-card.life-mat { border-left-color: var(--danger); }
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .know-card .kc-title .formula-tag {
+      font-family: 'Cambria','Times New Roman',serif;
+      font-size: 14px; color: var(--text-secondary); font-weight: 600;
+      background: var(--bg-soft); padding: 2px 8px; border-radius: 10px;
+    }
+    .know-card .kc-def { font-size: 14px; line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+    .know-card .kc-examples strong { color: var(--text-main); }
+    .know-card .kc-examples em { font-style: normal; color: var(--chemistry); font-weight: 600; }
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg,#fff7f5,#fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
+    }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 12px 18px; margin: 14px auto; max-width: 560px;
+      font-family: 'Cambria','Times New Roman',serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
+    }
+    .formula-box .label {
+      font-family: -apple-system,"PingFang SC",sans-serif;
+      font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400;
+    }
+    /* 滑块行 */
+    .slider-row {
+      display: flex; align-items: center; gap: 12px;
+      margin: 12px auto; max-width: 460px;
+    }
+    .slider-row label { font-size: 14px; font-weight: 600; white-space: nowrap; }
+    .slider-row input[type="range"] { flex: 1; accent-color: var(--chemistry); }
+    .value-display {
+      min-width: 68px; text-align: center; font-weight: 700; font-size: 14px;
+      color: var(--chemistry); background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px;
+    }
+    /* 信息读出 */
+    .info-readout {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px;
+      margin-top: 14px; text-align: left; font-size: 14px;
+      line-height: 1.8; min-height: 56px; box-shadow: var(--shadow);
+    }
+    .info-readout .ir-title { font-weight: 700; color: var(--chemistry); margin-bottom: 4px; }
+    .info-readout .ir-eq {
+      font-family: 'Cambria','Times New Roman',serif;
+      font-size: 16px; font-weight: 700; color: var(--chemistry);
+      display: block; margin: 6px 0;
+    }
+    /* 营养素六维面板 */
+    .nutri-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px; margin: 14px 0;
+    }
+    .nutri-card {
+      background: var(--bg-card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 14px; text-align: center;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .nutri-card:hover { border-color: var(--chemistry); transform: translateY(-2px); }
+    .nutri-card .nc-icon { font-size: 32px; }
+    .nutri-card .nc-name { font-size: 14px; font-weight: 700; margin-top: 4px; }
+    .nutri-card .nc-tag {
+      font-family: 'Cambria','Times New Roman',serif;
+      font-size: 13px; color: var(--text-secondary); margin-top: 2px;
+    }
+    .nutri-detail {
+      background: var(--bg-soft); border-radius: var(--radius-sm);
+      padding: 14px 16px; margin-top: 12px;
+      font-size: 14px; line-height: 1.8; text-align: left;
+      display: none;
+    }
+    .nutri-detail.show { display: block; }
+    .nutri-detail .nd-title { font-weight: 700; color: var(--chemistry); margin-bottom: 6px; }
+    /* 微量元素表 */
+    .element-table {
+      width: 100%; border-collapse: collapse; margin: 14px 0;
+      font-size: 14px; box-shadow: var(--shadow); border-radius: var(--radius-sm); overflow: hidden;
+    }
+    .element-table th { background: var(--chemistry); color: white; padding: 10px 12px; text-align: left; }
+    .element-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg-card); }
+    .element-table tr:last-child td { border-bottom: none; }
+    .element-table tr:hover td { background: rgba(231,76,60,0.05); }
+    /* 性质清单 */
+    .property-list { list-style: none; padding: 0; margin: 14px 0; }
+    .property-list li {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 12px 16px; margin-bottom: 10px;
+      border-left: 4px solid var(--chemistry);
+      box-shadow: var(--shadow); font-size: 14px; line-height: 1.7;
+    }
+    .property-list li .pl-name { font-weight: 700; color: var(--chemistry); margin-right: 8px; }
+    /* 提示框 */
+    .tip-box {
+      background: linear-gradient(135deg,#FFF3E0,#FFE0B2);
+      border-left: 4px solid var(--warning);
+      padding: 14px 18px; border-radius: var(--radius-sm);
+      margin: 16px 0; font-size: 14px; line-height: 1.7;
+    }
+    .tip-box .tip-title { font-weight: 700; color: var(--warning); margin-bottom: 4px; }
+    /* 学科交叉链接行 */
+    .cross-row {
+      display: flex; justify-content: space-between; align-items: stretch;
+      gap: 12px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .cross-link {
+      flex: 1; min-width: 180px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--text-main); transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--border);
+    }
+    .cross-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cross-link.cross-chem { border-left-color: var(--chemistry); }
+    .cross-link.cross-bio { border-left-color: var(--success); }
+    .cross-link .arrow { font-size: 20px; color: var(--text-secondary); }
+    .cross-link .cl-label { font-size: 12px; color: var(--text-secondary); }
+    .cross-link .cl-title { font-size: 14px; font-weight: 600; }
+    /* 总结框 */
+    .summary-box {
+      background: linear-gradient(135deg,#E74C3C10,#F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
+    /* 模式切换 */
+    .mode-toggle {
+      display: inline-flex; background: var(--bg-soft);
+      border-radius: 20px; padding: 3px; gap: 2px; margin: 6px 0;
+    }
+    .mode-toggle button {
+      border: none; padding: 6px 16px; border-radius: 16px;
+      cursor: pointer; background: transparent; font-weight: 600;
+      font-size: 13px; color: var(--text-secondary); font-family: inherit;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .mode-toggle button.active { background: var(--chemistry); color: white; }
+    /* pH 比色卡 */
+    .ph-strip { display: flex; border-radius: var(--radius-sm); overflow: hidden; margin: 12px 0; box-shadow: var(--shadow); }
+    .ph-cell { flex: 1; padding: 10px 4px; text-align: center; font-size: 12px; color: white; font-weight: 700; }
+    .ph-marker {
+      width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
+      border-top: 14px solid #333; margin: 0 auto;
+      transition: margin-left 0.25s;
     }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
   <div class="navbar-brand">⚗️ 化学与生活</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
@@ -60,31 +216,478 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>化学与生活</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>化学与生活</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">⚗️ 第十二单元：化学与生活</div>
+    <p style="color: var(--text-secondary); font-size: 15px;">
+      化学并不是只在实验室里——它就在我们每天的<strong>衣、食、住、行</strong>里。
+      本单元学习六大<strong style="color:var(--chemistry);">营养素</strong>、人体所需的<strong>常量/微量元素</strong>、有机合成材料的"三大巨头"
+      （塑料、合成纤维、合成橡胶）、以及如何用化学方法认识身边的环境问题。
+      关键词：<em>营养均衡、有机高分子、绿色化学</em>。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
+  <!-- ========== 1. 六大营养素 ========== -->
+  <h2 class="section-header"><span class="num">1</span>六大营养素</h2>
+  <div class="knowledge-grid">
+    <div class="know-card life-food">
+      <div class="kc-title">🍞 糖类 <span class="formula-tag">Cₙ(H₂O)ₘ</span></div>
+      <div class="kc-def">最主要的<strong>供能物质</strong>，由 C、H、O 三种元素组成。</div>
+      <div class="kc-examples">
+        <strong>代表：</strong>葡萄糖（C₆H₁₂O₆）、蔗糖、淀粉、纤维素。<br>
+        <strong>食物：</strong>米饭、馒头、面包、土豆、蔗糖。<br>
+        <em>注意：糖类 ≠ "有甜味的糖"，淀粉也属于糖类。</em>
+      </div>
+    </div>
+    <div class="know-card life-food">
+      <div class="kc-title">🥩 蛋白质 <span class="formula-tag">—</span></div>
+      <div class="kc-def">构成<strong>细胞的基本物质</strong>，是机体生长发育及修补受损组织的主要原料。</div>
+      <div class="kc-examples">
+        <strong>组成：</strong>由 C、H、O、N 等元素组成，相对分子质量从几万到几百万，属<strong>天然有机高分子</strong>。<br>
+        <strong>食物：</strong>鱼、肉、蛋、奶、豆类。<br>
+        <em>蛋白质受热或遇重金属盐（如 CuSO₄）会变性，失去生理活性。</em>
+      </div>
+    </div>
+    <div class="know-card life-food">
+      <div class="kc-title">🧈 油脂 <span class="formula-tag">—</span></div>
+      <div class="kc-def">重要的<strong>供能物质</strong>，是维持生命活动的<strong>备用能源</strong>。</div>
+      <div class="kc-examples">
+        <strong>植物油脂：</strong>花生油、豆油、菜籽油（常温液态）。<br>
+        <strong>动物油脂：</strong>牛油、猪油（常温固态）。<br>
+        <em>每克油脂完全氧化放出约 39 kJ 能量——比糖类（约 17 kJ/g）高一倍多。</em>
+      </div>
+    </div>
+    <div class="know-card life-food">
+      <div class="kc-title">🥬 维生素 <span class="formula-tag">—</span></div>
+      <div class="kc-def"><strong>调节新陈代谢</strong>、预防疾病、维持身体健康，人体需求量小但必不可少。</div>
+      <div class="kc-examples">
+        <strong>缺乏症状：</strong>缺 VA 夜盲症；缺 VC 坏血病；缺 VD 佝偻病、骨质疏松。<br>
+        <strong>食物：</strong>新鲜蔬菜、水果。<br>
+        <em>维生素大多<strong>受热易分解</strong>，蔬菜尽量少煮、凉拌更佳。</em>
+      </div>
+    </div>
+    <div class="know-card life-mat">
+      <div class="kc-title">🧂 无机盐 <span class="formula-tag">—</span></div>
+      <div class="kc-def">构成人体组织、维持正常生理功能的重要物质。</div>
+      <div class="kc-examples">
+        <strong>钙 Ca：</strong>构成骨骼和牙齿；<strong>铁 Fe：</strong>合成血红蛋白，缺铁性贫血；<strong>碘 I：</strong>合成甲状腺素，缺碘大脖子病；<strong>锌 Zn：</strong>促进发育。<br>
+        <em>详见下文「常量元素与微量元素」表。</em>
+      </div>
+    </div>
+    <div class="know-card life-mat">
+      <div class="kc-title">💧 水 <span class="formula-tag">H₂O</span></div>
+      <div class="kc-def"><strong>最重要的营养素</strong>，约占体重的 60%~70%。</div>
+      <div class="kc-examples">
+        <strong>作用：</strong>① 溶剂，运输营养与废物；② 参与代谢反应；③ 调节体温。<br>
+        <em>每天饮水约 1.5~2 L，运动后要补充更多。</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 六大营养素的供能角色</div>
+    <strong>糖类</strong>是主要供能物质（每天主食），<strong>油脂</strong>是备用能源，<strong>蛋白质</strong>也能供能但更重要的任务是构建和修复身体。
+    <strong>维生素、无机盐、水</strong>不提供能量，但缺一不可。
+  </div>
+
+  <!-- ========== 2. 交互探索①：六大营养素点选 ========== -->
+  <h2 class="section-header"><span class="num">互</span>交互一：六大营养素查询</h2>
+  <div class="demo-container">
+    <h3>📋 点击下方任一营养素，查看详细信息</h3>
+    <p class="demo-desc">掌握每种营养素的化学组成、生理功能与主要食物来源</p>
+    <div class="nutri-grid" id="nutri-grid"></div>
+    <div class="nutri-detail" id="nutri-detail"></div>
+  </div>
+
+  <!-- ========== 3. 常量与微量元素 ========== -->
+  <h2 class="section-header"><span class="num">2</span>常量元素与微量元素</h2>
+  <div class="card">
+    <p style="font-size: 15px; line-height: 1.9;">
+      人体由 50 多种元素组成，其中含量较多的有 <strong style="color:var(--chemistry);">O、C、H、N、Ca、P</strong> 等 11 种，
+      称为<strong>常量元素</strong>（含量超过人体质量的 0.01%）。其余含量低于 0.01% 的称为<strong>微量元素</strong>——
+      虽然含量极微，但同样重要。
     </p>
+    <table class="element-table">
+      <thead>
+        <tr>
+          <th>类别</th>
+          <th>元素</th>
+          <th>生理功能与缺乏症</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="6">常量元素</td><td>O、C、H、N</td><td>构成有机物（蛋白质、糖类、油脂）的基础</td></tr>
+        <tr><td>Ca 钙</td><td>构成骨骼和牙齿；幼儿缺钙→佝偻病，成人→骨质疏松</td></tr>
+        <tr><td>P 磷</td><td>构成骨骼、牙齿；参与能量代谢（ATP）</td></tr>
+        <tr><td>K 钾</td><td>维持细胞内液渗透压、心肌兴奋</td></tr>
+        <tr><td>Na 钠</td><td>维持细胞外液渗透压；缺钠→头晕乏力</td></tr>
+        <tr><td>Mg 镁</td><td>激活多种酶、参与骨骼代谢</td></tr>
+        <tr><td rowspan="6">微量元素</td><td>Fe 铁</td><td>合成血红蛋白；缺铁→<strong>缺铁性贫血</strong></td></tr>
+        <tr><td>Zn 锌</td><td>促进生长发育；缺锌→发育迟缓、食欲不振</td></tr>
+        <tr><td>I 碘</td><td>合成甲状腺素；缺碘→<strong>地方性甲状腺肿</strong>（大脖子病），孕妇缺碘影响胎儿脑发育</td></tr>
+        <tr><td>Se 硒</td><td>抗氧化、保护心血管</td></tr>
+        <tr><td>Cu 铜</td><td>协助铁的运输；缺铜→贫血</td></tr>
+        <tr><td>F 氟</td><td>防龋齿；过多→氟斑牙、氟骨症</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">⚠️ 加碘食盐</div>
+    我国大部分地区缺碘，推广<strong>加碘食盐</strong>（含 KIO₃）防治大脖子病。但沿海居民常吃海产品已不缺碘，不宜长期过量补碘。
+  </div>
+
+  <!-- ========== 4. 交互②：微量元素缺乏症匹配 ========== -->
+  <h2 class="section-header"><span class="num">互</span>交互二：微量元素缺乏症速配</h2>
+  <div class="demo-container">
+    <h3>🧪 拖动滑块设置情境，查看建议补充的元素</h3>
+    <p class="demo-desc">理解不同生理异常对应的元素缺乏</p>
+    <div class="slider-row">
+      <label>症状：</label>
+      <input type="range" id="symptom-slider" min="0" max="5" step="1" value="0">
+      <div class="value-display" id="symptom-display">缺铁性贫血</div>
+    </div>
+    <div class="info-readout" id="symptom-readout"></div>
+  </div>
+
+  <!-- ========== 5. 化学元素与人体健康 ========== -->
+  <h2 class="section-header"><span class="num">3</span>有害元素与健康</h2>
+  <div class="property-list">
+    <li>
+      <span class="pl-name">① 重金属中毒</span>
+      <strong>Hg 汞</strong>、<strong>Pb 铅</strong>、<strong>Cu 铜</strong>、<strong>As 砷</strong>（虽不是金属）等重金属元素，
+      进入人体后会与蛋白质结合使其<strong>变性</strong>，失去生理活性。表现为：汞中毒→神经系统损伤；铅中毒→智力下降、贫血。
+    </li>
+    <li>
+      <span class="pl-name">② 蛋白质的变性</span>
+      重金属盐、甲醛、酒精、强酸强碱、高温、紫外线等都能使蛋白质<strong>不可逆变性</strong>——
+      这就是为什么不能用甲醛浸泡海鲜、用酒精消毒、利用高温杀菌的化学本质。
+    </li>
+    <li>
+      <span class="pl-name">③ 平衡膳食</span>
+      没有任何一种食物含有人体所需的<strong>全部营养素</strong>，所以饮食要<strong>多样化、粗细搭配、荤素搭配</strong>。
+      偏食、挑食会导致营养不良或过剩。
+    </li>
+  </div>
+
+  <!-- ========== 6. 有机合成材料：三大材料 ========== -->
+  <h2 class="section-header"><span class="num">4</span>有机合成材料</h2>
+  <div class="knowledge-grid">
+    <div class="know-card life-house">
+      <div class="kc-title">🛍️ 塑料（合成树脂）<span class="formula-tag">—</span></div>
+      <div class="kc-def">三大合成材料之首，生活中最常见的有机合成材料。</div>
+      <div class="kc-examples">
+        <strong>常见品种：</strong>聚乙烯 PE（食品袋、奶瓶）、聚氯乙烯 PVC（电线皮、塑料管）、聚苯乙烯 PS（泡沫）、聚丙烯 PP（微波炉餐盒）。<br>
+        <strong>特点：</strong>密度小、耐腐蚀、易成型；缺点：易燃、难降解（造成"白色污染"）、受热易老化。<br>
+        <em>"热塑性"可反复加工；"热固性"成型后不能再加热熔化（电木、酚醛树脂）。</em>
+      </div>
+    </div>
+    <div class="know-card life-cloth">
+      <div class="kc-title">👕 合成纤维 <span class="formula-tag">"六大纶"</span></div>
+      <div class="kc-def">用煤、石油、天然气为原料经化学加工制成的纤维，被誉为"化纤"。</div>
+      <div class="kc-examples">
+        <strong>六大纶：</strong>涤纶（的确良）、锦纶（尼龙）、腈纶（人造羊毛）、丙纶、氯纶、维纶。<br>
+        <strong>优点：</strong>耐磨、不皱、易洗快干、不霉不蛀。<br>
+        <strong>缺点：</strong>吸湿性、透气性差，穿着闷热（腈纶吸湿最差）；不易染色。<br>
+        <em>区分天然纤维（棉、麻、丝、毛）与合成纤维：燃烧法——合成纤维遇火缩成硬球、有特殊气味。</em>
+      </div>
+    </div>
+    <div class="know-card life-env">
+      <div class="kc-title">🎈 合成橡胶 <span class="formula-tag">—</span></div>
+      <div class="kc-def">以石油、天然气为原料，经聚合反应制成的高分子弹性体。</div>
+      <div class="kc-examples">
+        <strong>分类：</strong>通用合成橡胶（丁苯橡胶、顺丁橡胶、氯丁橡胶）、特种橡胶（硅橡胶、氟橡胶）。<br>
+        <strong>应用：</strong>轮胎、密封圈、传送带、医疗手套。<br>
+        <em>优点：高弹性、耐高温/低温、耐酸碱腐蚀——综合性能超过天然橡胶。</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 7. 交互③：纤维/材料鉴别 ========== -->
+  <h2 class="section-header"><span class="num">互</span>交互三：纤维材质鉴别模拟</h2>
+  <div class="demo-container">
+    <h3>🔥 燃烧法区分纤维种类</h3>
+    <p class="demo-desc">点击纤维样品，观察燃烧现象与气味</p>
+    <div class="mode-toggle" id="fiber-toggle" style="margin-bottom: 14px;">
+      <button class="active" data-fib="cotton">棉线</button>
+      <button data-fib="wool">羊毛</button>
+      <button data-fib="polyester">涤纶</button>
+      <button data-fib="nylon">锦纶</button>
+    </div>
+    <div class="info-readout" id="fiber-readout"></div>
+  </div>
+
+  <!-- ========== 8. 白色污染与环境保护 ========== -->
+  <h2 class="section-header"><span class="num">5</span>白色污染与绿色化学</h2>
+  <div class="property-list">
+    <li>
+      <span class="pl-name">① 白色污染</span>
+      废弃塑料制品（一次性餐盒、塑料袋、农膜等）对环境的污染。
+      特点：难以降解（百年以上）、污染土壤与水体、焚烧产生有毒气体（氯化氢、二噁英）。
+    </li>
+    <li>
+      <span class="pl-name">② 治理方法</span>
+      减少使用（少用一次性塑料）+ 重复使用 + 回收再利用 +
+      <strong>研制可降解塑料</strong>（如淀粉基塑料、微生物降解塑料）。
+    </li>
+    <li>
+      <span class="pl-name">③ 绿色化学</span>
+      又称环境友好化学，核心是<strong>从源头上减少和消除污染</strong>——
+      使用无毒无害原料、提高原子利用率（原子经济）、产物可降解。
+      核心原则："5R"：Reduction（减量）、Reuse（重复）、Recycling（回收）、Regeneration（再生）、Rejection（拒用）。
+    </li>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">🌍 酸雨与温室效应</div>
+    <strong>酸雨：</strong>pH < 5.6 的雨水，主要由 SO₂ 和 NOₓ 引起（化石燃料燃烧）——
+    <span style="font-family:'Cambria',serif;">SO₂ + H₂O ═ H₂SO₃</span>；危害：腐蚀建筑、酸化土壤、影响水生生态。<br>
+    <strong>温室效应：</strong>CO₂、CH₄ 等温室气体过多吸收地表红外辐射导致全球变暖。
+    解决思路：减少化石燃料燃烧、开发清洁能源（太阳能、风能、氢能）、植树造林。
+  </div>
+
+  <!-- ========== 9. 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 本章必记要点</div>
+    <div class="sb-item"><strong>六大营养素：</strong>糖类（供能）、油脂（备用能源）、蛋白质（构建/修复）、维生素（调节）、无机盐、水。前三类<strong>能提供能量</strong>，后三类不能。</div>
+    <div class="sb-item"><strong>供能排序：</strong>每克糖类/蛋白质≈17 kJ，每克油脂≈39 kJ（同质量油脂放能最多）。</div>
+    <div class="sb-item"><strong>重要元素：</strong>钙→骨骼；铁→血红蛋白（缺铁性贫血）；碘→甲状腺（大脖子病）；锌→发育。重金属 Hg、Pb、As 有毒。</div>
+    <div class="sb-item"><strong>三大有机合成材料：</strong>塑料、合成纤维（"六大纶"）、合成橡胶。共同优点：原料来自石油/煤/天然气；缺点：难降解。</div>
+    <div class="sb-item"><strong>白色污染：</strong>废弃塑料污染环境。治理：减量 + 重复 + 回收 + 研制可降解塑料。</div>
+    <div class="sb-item"><strong>绿色化学：</strong>5R 原则；目标是<em>从源头消除污染</em>，提高原子利用率。</div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列营养素中，不能为人体提供能量，但又是人体所必需的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 糖类</div>
+    <div class="quiz-option" data-idx="1">B. 油脂</div>
+    <div class="quiz-option" data-idx="2">C. 维生素</div>
+    <div class="quiz-option" data-idx="3">D. 蛋白质</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 某同学得了"地方性甲状腺肿（大脖子病）"，医生建议他多吃下列哪种食物？（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 猪肝（补血）</div>
+    <div class="quiz-option" data-idx="1">B. 海带、紫菜（补碘）</div>
+    <div class="quiz-option" data-idx="2">C. 鸡蛋、牛奶（补蛋白质）</div>
+    <div class="quiz-option" data-idx="3">D. 苹果、橘子（补维生素 C）</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 下列关于"白色污染"的叙述中，不正确的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 废弃塑料造成的污染称为白色污染</div>
+    <div class="quiz-option" data-idx="1">B. 一次性餐盒、农用地膜是白色污染的主要来源</div>
+    <div class="quiz-option" data-idx="2">C. 焚烧废弃塑料是治理白色污染的最佳方法</div>
+    <div class="quiz-option" data-idx="3">D. 研制和推广可降解塑料是解决白色污染的有效途径</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>学科交叉</h2>
+  <div class="cross-row">
+    <a class="cross-link cross-chem" href="11-盐化肥.html">
+      <span class="arrow">←</span>
+      <div>
+        <div class="cl-label">化学 · 九年级（上一章）</div>
+        <div class="cl-title">11-盐化肥（化肥的营养元素 N/P/K）</div>
+      </div>
+    </a>
+    <a class="cross-link cross-bio" href="../../物理/八年级/06-质量与密度.html">
+      <div style="text-align:right;">
+        <div class="cl-label">物理 · 八年级</div>
+        <div class="cl-title">06-质量与密度（鉴别塑料密度测成分）</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="11-盐化肥.html" class="btn btn-outline">← 上一章：11-盐 化肥</a>
+    <a href="index.html" class="btn btn-primary" style="background:var(--chemistry);">📚 返回九年级化学目录</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：六大营养素点选查询 ===================== */
+(function () {
+  const NUTRI = [
+    { icon: '🍞', name: '糖类',   formula: 'Cₙ(H₂O)ₘ',
+      role: '主要供能物质',
+      chem: '由 C、H、O 组成；蔗糖、淀粉、纤维素都是糖类',
+      food: '米饭、馒头、面包、土豆、甘蔗',
+      note: '糖类 ≠ "有甜味的糖"，淀粉也属于糖类' },
+    { icon: '🥩', name: '蛋白质', formula: '高分子',
+      role: '构建与修复身体',
+      chem: '由 C、H、O、N（少量 S）组成，相对分子质量 1 万~100 万',
+      food: '鱼、肉、蛋、奶、豆类',
+      note: '受热或遇重金属盐变性（不可逆）；酶也是蛋白质' },
+    { icon: '🧈', name: '油脂',   formula: '—',
+      role: '备用能源（每克 ≈ 39 kJ）',
+      chem: '植物油常温液态（不饱和），动物油常温固态（饱和）',
+      food: '花生油、豆油、牛油、猪油',
+      note: '同等质量放能约是糖类的 2.25 倍' },
+    { icon: '🥬', name: '维生素', formula: '—',
+      role: '调节新陈代谢',
+      chem: '大多受热易分解，不提供能量',
+      food: '新鲜蔬菜、水果',
+      note: '缺 VA 夜盲；缺 VC 坏血；缺 VD 佝偻病/骨质疏松' },
+    { icon: '🧂', name: '无机盐', formula: '—',
+      role: '构成组织、维持渗透压',
+      chem: '含 Ca、Fe、Zn、I 等多种元素',
+      food: '奶制品（钙）、动物肝脏（铁）、海带（碘）',
+      note: '缺 Ca 佝偻病；缺 Fe 贫血；缺 I 大脖子病' },
+    { icon: '💧', name: '水',     formula: 'H₂O',
+      role: '最重要的营养素（占体重 60%~70%）',
+      chem: '由 H、O 组成，良好的溶剂',
+      food: '饮水、食物中含水',
+      note: '每天 1.5~2 L；参与代谢反应、调节体温' }
+  ];
+  const grid = document.getElementById('nutri-grid');
+  const detail = document.getElementById('nutri-detail');
+  NUTRI.forEach((n, i) => {
+    const card = document.createElement('div');
+    card.className = 'nutri-card';
+    card.innerHTML = `
+      <div class="nc-icon">${n.icon}</div>
+      <div class="nc-name">${n.name}</div>
+      <div class="nc-tag">${n.formula}</div>`;
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.nutri-card').forEach(c => c.style.borderColor = '');
+      card.style.borderColor = 'var(--chemistry)';
+      detail.className = 'nutri-detail show';
+      detail.innerHTML = `
+        <div class="nd-title">${n.icon} ${n.name} · ${n.formula}</div>
+        <div><strong>生理功能：</strong>${n.role}</div>
+        <div><strong>化学组成：</strong>${n.chem}</div>
+        <div><strong>主要食物来源：</strong>${n.food}</div>
+        <div style="margin-top:6px; color:var(--text-secondary);">💡 ${n.note}</div>`;
+    });
+    grid.appendChild(card);
+  });
+  // 默认选中第一个
+  grid.firstChild && grid.firstChild.click();
+})();
+
+/* ===================== 交互 2：微量元素缺乏症速配 ===================== */
+(function () {
+  const CASES = [
+    { label: '缺铁性贫血',
+      elem: '铁 Fe', food: '动物肝脏、瘦肉、蛋黄、红枣、菠菜',
+      chem: 'Fe²⁺ 是血红蛋白的中心离子，参与 O₂ 运输',
+      tip: '饭后吃含维生素 C 的水果可促进铁的吸收（Fe³⁺→Fe²⁺）' },
+    { label: '地方性甲状腺肿',
+      elem: '碘 I', food: '海带、紫菜、加碘盐（KIO₃）',
+      chem: 'I 是合成甲状腺素的关键元素',
+      tip: '沿海居民已不缺碘，长期过量补碘也会引起甲状腺疾病' },
+    { label: '幼儿佝偻病 / 成人骨质疏松',
+      elem: '钙 Ca', food: '牛奶、虾皮、豆制品、绿叶蔬菜',
+      chem: 'Ca²⁺ + PO₄³⁻ 构成羟基磷酸钙 Ca₁₀(PO₄)₆(OH)₂',
+      tip: '补钙同时补 VD 才能吸收；多晒太阳能促进皮肤合成 VD' },
+    { label: '发育迟缓 / 食欲不振',
+      elem: '锌 Zn', food: '牡蛎、瘦肉、动物肝脏、坚果',
+      chem: 'Zn 是多种酶的活性中心，参与 DNA 复制',
+      tip: '挑食偏食的儿童最容易缺锌' },
+    { label: '夜盲症',
+      elem: '维生素 A',
+      food: '动物肝脏、胡萝卜、菠菜',
+      chem: 'VA 是脂溶性维生素，参与视网膜感光',
+      tip: '与油脂一起烹调才能吸收（脂溶性）；VA 过量也有害' },
+    { label: '坏血病',
+      elem: '维生素 C',
+      food: '新鲜水果（柑橘、猕猴桃）、青椒、西红柿',
+      chem: 'VC 是水溶性维生素，参与胶原蛋白合成',
+      tip: '蔬菜长时间加热会大量损失 VC，建议凉拌或快炒' }
+  ];
+  const slider = document.getElementById('symptom-slider');
+  const display = document.getElementById('symptom-display');
+  const readout = document.getElementById('symptom-readout');
+  function update() {
+    const i = parseInt(slider.value);
+    const c = CASES[i];
+    display.textContent = c.label;
+    readout.innerHTML = `
+      <span class="ir-title">🩺 病情分析</span>
+      <div><strong>主因：</strong>缺 <strong style="color:var(--chemistry);">${c.elem}</strong></div>
+      <div><strong>建议食物：</strong>${c.food}</div>
+      <div style="margin-top:6px;"><strong>化学原理：</strong>${c.chem}</div>
+      <div style="margin-top:6px; color:var(--text-secondary);">💡 ${c.tip}</div>`;
+  }
+  slider.addEventListener('input', update);
+  update();
+})();
+
+/* ===================== 交互 3：纤维燃烧鉴别 ===================== */
+(function () {
+  const FIBERS = {
+    cotton:   { name: '棉线（天然·植物）',
+      burn: '易燃，黄色火焰，有烧纸气味',
+      ash:  '灰色粉末状灰烬',
+      verdict: '天然纤维（植物源）' },
+    wool:     { name: '羊毛（天然·动物）',
+      burn: '起泡燃烧，发出烧焦羽毛气味（蛋白质焦味）',
+      ash:  '松脆黑灰',
+      verdict: '天然纤维（动物源·蛋白质）' },
+    polyester:{ name: '涤纶（合成纤维）',
+      burn: '先熔化后燃烧，黄色火焰，边缘呈黑色',
+      ash:  '硬而黑的小球（不易捏碎）',
+      verdict: '合成纤维' },
+    nylon:    { name: '锦纶/尼龙（合成纤维）',
+      burn: '熔化燃烧，有芹菜样特殊气味',
+      ash:  '硬褐色小球',
+      verdict: '合成纤维' }
+  };
+  const buttons = document.querySelectorAll('#fiber-toggle button');
+  const readout = document.getElementById('fiber-readout');
+  function show(key) {
+    const f = FIBERS[key];
+    readout.innerHTML = `
+      <span class="ir-title">🔥 ${f.name}</span>
+      <div><strong>燃烧现象：</strong>${f.burn}</div>
+      <div><strong>灰烬特征：</strong>${f.ash}</div>
+      <div style="margin-top:6px;"><strong>鉴别结论：</strong>
+        <span style="color:var(--chemistry); font-weight:700;">${f.verdict}</span></div>`;
+  }
+  buttons.forEach(b => {
+    b.addEventListener('click', () => {
+      buttons.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      show(b.dataset.fib);
+    });
+  });
+  show('cotton');
+})();
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '六大营养素中，<strong>糖类、油脂、蛋白质</strong>三类能提供能量；<strong>维生素、无机盐、水</strong>不提供能量但必不可少。',
+  hint: '糖、油、蛋白质都能"烧出"能量。维生素虽然不能供能，但缺了会生病——想想夜盲症、坏血病。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '地方性甲状腺肿（大脖子病）由<strong>缺碘</strong>引起。海带、紫菜等海产品含碘丰富，加碘食盐（含 KIO₃）是常见防治手段。',
+  hint: '大脖子 → 甲状腺 → 甲状腺素 → 哪种元素是甲状腺素的原料？'
+});
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '焚烧废弃塑料会释放 HCl、二噁英等有毒气体，<strong>污染空气</strong>，所以不是最佳方法。最佳途径是<strong>减少使用 + 回收利用 + 推广可降解塑料</strong>。',
+  hint: '想想塑料焚烧时会产生什么？聚氯乙烯（PVC）含 Cl，燃烧会生成 HCl。'
+});
+</script>
+
 </body>
 </html>

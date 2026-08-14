@@ -6,53 +6,231 @@
   <title>透镜及其应用 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 70px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 17px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .property-list li strong { color: var(--primary-dark); }
+    .lens-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+    .lens-card {
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      text-align: center;
+      border-top: 4px solid var(--primary);
+    }
+    .lens-card h4 {
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    .lens-card .desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      text-align: left;
+    }
+    .imaging-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .imaging-table th {
+      background: var(--primary);
+      color: white;
+      padding: 12px 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .imaging-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .imaging-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+    .imaging-table td {
+      padding: 12px 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+      background: white;
+    }
+    .imaging-table .imaging-row.active {
+      background: rgba(74,144,217,0.18);
+      font-weight: 700;
+    }
+    .imaging-table .imaging-row.active td {
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+    .imaging-table .imaging-row.active td:first-child {
+      box-shadow: inset 4px 0 0 var(--primary);
+    }
+    .ray-legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 14px;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .ray-legend .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ray-legend .legend-color {
+      width: 24px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .app-card {
+      padding: 20px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .app-card:hover { transform: translateY(-3px); }
+    .app-card .icon { font-size: 36px; margin-bottom: 8px; }
+    .app-card h4 { color: var(--primary-dark); margin-bottom: 6px; }
+    .app-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .no-image-note {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      margin-top: 12px;
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+      font-size: 14px;
+    }
+    .no-image-note.show { display: block; }
+    @media (max-width: 600px) {
+      .lens-compare { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
+      .imaging-table { font-size: 12px; }
+      .imaging-table th, .imaging-table td { padding: 8px 4px; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚡ 透镜及其应用</div>
+  <div class="navbar-brand">🔍 透镜及其应用</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
+    <li><a href="../../数学/八年级/index.html">📐 数学八年级</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学八年级</a></li>
   </ul>
 </nav>
 
@@ -62,29 +240,1025 @@
     <span class="separator">/</span>
     <a href="index.html">物理</a>
     <span class="separator">/</span>
-    <span>八年级</span>
+    <a href="index.html">八年级</a>
     <span class="separator">/</span>
     <span>透镜及其应用</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>透镜及其应用</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🔍 透镜及其应用</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从凸透镜到凹透镜，探索光的折射与成像规律，理解照相机、投影仪、放大镜的原理</p>
+
+  <!-- ===== 第一部分：认识透镜 ===== -->
+  <div class="card">
+    <div class="section-header">🔬 1. 认识透镜</div>
+
+    <p>透镜是利用光的<strong>折射</strong>原理工作的光学元件。透镜用玻璃（或石英、塑料等透明材料）磨制而成，表面通常是球面的一部分。透镜分为两类：</p>
+
+    <div class="lens-compare">
+      <div class="lens-card">
+        <h4>凸透镜（会聚透镜）</h4>
+        <svg viewBox="0 0 200 140" width="180" height="126">
+          <line x1="10" y1="70" x2="190" y2="70" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+          <path d="M 100,20 Q 125,70 100,120 Q 75,70 100,20 Z" fill="rgba(74,144,217,0.18)" stroke="#4A90D9" stroke-width="2.5"/>
+          <circle cx="100" cy="70" r="2.5" fill="#2C3E50"/>
+          <line x1="100" y1="66" x2="100" y2="74" stroke="#2C3E50" stroke-width="1.5"/>
+          <line x1="55" y1="66" x2="55" y2="74" stroke="#666" stroke-width="1.5"/>
+          <line x1="145" y1="66" x2="145" y2="74" stroke="#666" stroke-width="1.5"/>
+          <text x="55" y="88" text-anchor="middle" font-size="11" fill="#666">F</text>
+          <text x="145" y="88" text-anchor="middle" font-size="11" fill="#666">F</text>
+          <text x="100" y="88" text-anchor="middle" font-size="11" fill="#666">O</text>
+        </svg>
+        <div class="desc">
+          <strong>中间厚、边缘薄</strong><br>
+          对光有<strong>会聚</strong>作用<br>
+          焦点为实焦点（光线实际会聚）
+        </div>
+      </div>
+      <div class="lens-card">
+        <h4>凹透镜（发散透镜）</h4>
+        <svg viewBox="0 0 200 140" width="180" height="126">
+          <line x1="10" y1="70" x2="190" y2="70" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+          <path d="M 75,20 L 125,20 Q 100,70 125,120 L 75,120 Q 100,70 75,20 Z" fill="rgba(74,144,217,0.18)" stroke="#4A90D9" stroke-width="2.5"/>
+          <circle cx="100" cy="70" r="2.5" fill="#2C3E50"/>
+          <line x1="100" y1="66" x2="100" y2="74" stroke="#2C3E50" stroke-width="1.5"/>
+          <line x1="55" y1="66" x2="55" y2="74" stroke="#666" stroke-width="1.5"/>
+          <line x1="145" y1="66" x2="145" y2="74" stroke="#666" stroke-width="1.5"/>
+          <text x="55" y="88" text-anchor="middle" font-size="11" fill="#666">F</text>
+          <text x="145" y="88" text-anchor="middle" font-size="11" fill="#666">F</text>
+          <text x="100" y="88" text-anchor="middle" font-size="11" fill="#666">O</text>
+        </svg>
+        <div class="desc">
+          <strong>中间薄、边缘厚</strong><br>
+          对光有<strong>发散</strong>作用<br>
+          焦点为虚焦点（光线反向延长线交点）
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin: 16px 0 8px; color: var(--primary-dark);">基本概念</h3>
+    <ul class="property-list">
+      <li><strong>主光轴</strong>：通过透镜两个球面球心的直线</li>
+      <li><strong>光心（O）</strong>：透镜的中心，通过光心的光线方向不变</li>
+      <li><strong>焦点（F）</strong>：平行于主光轴的光线经凸透镜折射后会聚的点。凸透镜有两个实焦点，分居透镜两侧</li>
+      <li><strong>焦距（f）</strong>：焦点到光心的距离。焦距越短，会聚能力越强</li>
+    </ul>
+
+    <div class="formula-box">
+      凸透镜的三条特殊光线：<br>
+      <span style="font-size: 14px; font-weight: 400;">
+        ① 过光心的光线 → 方向不变 &nbsp;&nbsp;
+        ② 平行于主光轴 → 过焦点 &nbsp;&nbsp;
+        ③ 过焦点 → 平行于主光轴
+      </span>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：凸透镜成像实验模拟器（核心） ===== -->
+  <div class="card">
+    <div class="section-header">🎯 2. 凸透镜成像实验模拟器（核心交互）</div>
+
+    <p>拖动滑块调节<strong>物距 u</strong>（物体到透镜的距离），观察像的变化。焦距 f = 10cm 固定不变。三条特殊光线实时绘制：</p>
+
+    <div class="ray-legend">
+      <div class="legend-item"><div class="legend-color" style="background:#E74C3C"></div>光线①：过光心</div>
+      <div class="legend-item"><div class="legend-color" style="background:#27AE60"></div>光线②：平行→过焦点</div>
+      <div class="legend-item"><div class="legend-color" style="background:#9B59B6"></div>光线③：过焦点→平行</div>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 720 420" width="720" height="420">
+        <defs>
+          <marker id="arrow-obj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="arrow-img" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <!-- 主光轴 -->
+        <line x1="20" y1="230" x2="700" y2="230" stroke="#999" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+        <!-- 焦点和2倍焦距标记 -->
+        <line x1="300" y1="224" x2="300" y2="236" stroke="#666" stroke-width="1.5"/>
+        <text x="300" y="252" text-anchor="middle" font-size="12" fill="#666">2F</text>
+        <line x1="330" y1="224" x2="330" y2="236" stroke="#666" stroke-width="1.5"/>
+        <text x="330" y="252" text-anchor="middle" font-size="12" fill="#666">F</text>
+        <line x1="390" y1="224" x2="390" y2="236" stroke="#666" stroke-width="1.5"/>
+        <text x="390" y="252" text-anchor="middle" font-size="12" fill="#666">F</text>
+        <line x1="420" y1="224" x2="420" y2="236" stroke="#666" stroke-width="1.5"/>
+        <text x="420" y="252" text-anchor="middle" font-size="12" fill="#666">2F</text>
+
+        <!-- 凸透镜 -->
+        <path d="M 360,110 Q 385,230 360,350 Q 335,230 360,110 Z" fill="rgba(74,144,217,0.15)" stroke="#4A90D9" stroke-width="2.5"/>
+        <circle cx="360" cy="230" r="3" fill="#2C3E50"/>
+        <text x="360" y="370" text-anchor="middle" font-size="12" fill="#666">光心 O</text>
+
+        <!-- 三条光线（实线） -->
+        <polyline id="cx-ray1" points="" fill="none" stroke="#E74C3C" stroke-width="2"/>
+        <polyline id="cx-ray2" points="" fill="none" stroke="#27AE60" stroke-width="2"/>
+        <polyline id="cx-ray3" points="" fill="none" stroke="#9B59B6" stroke-width="2"/>
+
+        <!-- 三条光线的虚线延长（虚像情况） -->
+        <polyline id="cx-ray1-dash" points="" fill="none" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="5,4" style="display:none;"/>
+        <polyline id="cx-ray2-dash" points="" fill="none" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="5,4" style="display:none;"/>
+        <polyline id="cx-ray3-dash" points="" fill="none" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,4" style="display:none;"/>
+
+        <!-- 物体（箭头） -->
+        <line id="cx-object" x1="0" y1="0" x2="0" y2="0" stroke="#F5A623" stroke-width="3" marker-end="url(#arrow-obj)"/>
+        <text id="cx-object-label" x="0" y="0" font-size="13" fill="#F5A623" font-weight="600">物体</text>
+
+        <!-- 像（箭头） -->
+        <line id="cx-image" x1="0" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="3" marker-end="url(#arrow-img)"/>
+        <text id="cx-image-label" x="0" y="0" font-size="13" fill="#4A90D9" font-weight="600">像</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>物距 u</label>
+        <input type="range" id="cx-slider" min="5" max="60" value="25" step="1">
+        <span class="value-display"><span id="cx-u-display">25</span> cm</span>
+      </div>
+
+      <div class="no-image-note" id="cx-no-image-note">
+        ⚠️ u = f = 10cm：物体在焦点上，经凸透镜后光线平行射出，不成像
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">物距 u =</span>
+          <span class="value"><span id="cx-info-u">25</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像距 v =</span>
+          <span class="value"><span id="cx-info-v">16.7</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像的性质：</span>
+          <span class="value"><span id="cx-info-orient">倒立</span>·<span id="cx-info-size">缩小</span>·<span id="cx-info-type">实像</span></span>
+        </div>
+        <div class="readout-item">
+          <span class="label">应用：</span>
+          <span class="value" id="cx-info-app">📷 照相机</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 操作提示</div>
+      • 将滑块拖到 <strong>u = 20</strong>（2f处）：观察等大倒立实像<br>
+      • 将滑块拖到 <strong>u = 10</strong>（焦点上）：观察不成像现象<br>
+      • 将滑块拖到 <strong>u = 5</strong>（焦点内）：观察正立放大虚像（放大镜原理）<br>
+      • 注意虚像用<strong>虚线箭头</strong>表示，光线延长线用<strong>虚线</strong>表示
+    </div>
   </div>
+
+  <!-- ===== 第三部分：成像规律总结表 ===== -->
+  <div class="card">
+    <div class="section-header">📋 3. 凸透镜成像规律总结表</div>
+
+    <p>凸透镜成像规律是本章最核心的内容。下表随上方滑块联动，<strong>蓝色高亮行</strong>表示当前物距所在区间：</p>
+
+    <table class="imaging-table">
+      <thead>
+        <tr>
+          <th>物距 u</th>
+          <th>像距 v</th>
+          <th>像的性质</th>
+          <th>应用</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="imaging-row" data-case="0">
+          <td>u &gt; 2f</td>
+          <td>f &lt; v &lt; 2f</td>
+          <td>倒立 · 缩小 · 实像</td>
+          <td>📷 照相机</td>
+        </tr>
+        <tr class="imaging-row" data-case="1">
+          <td>u = 2f</td>
+          <td>v = 2f</td>
+          <td>倒立 · 等大 · 实像</td>
+          <td>（分界点：缩小/放大）</td>
+        </tr>
+        <tr class="imaging-row" data-case="2">
+          <td>f &lt; u &lt; 2f</td>
+          <td>v &gt; 2f</td>
+          <td>倒立 · 放大 · 实像</td>
+          <td>📽️ 投影仪 / 幻灯机</td>
+        </tr>
+        <tr class="imaging-row" data-case="3">
+          <td>u = f</td>
+          <td>不成像</td>
+          <td>—（平行光射出）</td>
+          <td>🔦 探照灯 / 平行光源</td>
+        </tr>
+        <tr class="imaging-row" data-case="4">
+          <td>u &lt; f</td>
+          <td>v &lt; 0（同侧）</td>
+          <td>正立 · 放大 · 虚像</td>
+          <td>🔍 放大镜</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 记忆口诀</div>
+      • <strong>一倍焦距分虚实</strong>：u = f 是实像与虚像的分界点。u &gt; f 成实像，u &lt; f 成虚像<br>
+      • <strong>二倍焦距分大小</strong>：u = 2f 是放大与缩小的分界点。u &gt; 2f 成缩小像，u &lt; 2f 成放大像<br>
+      • <strong>物近像远像变大</strong>：物体靠近透镜（仍成实像时），像远离透镜且变大<br>
+      • <strong>实像皆倒立，虚像皆正立</strong>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：凹透镜光线 ===== -->
+  <div class="card">
+    <div class="section-header">🔭 4. 凹透镜的三条特殊光线</div>
+
+    <p>凹透镜对光有<strong>发散</strong>作用，无论物距如何，凹透镜<strong>始终成正立、缩小的虚像</strong>。凹透镜的焦点为<strong>虚焦点</strong>（折射光线的反向延长线交点）。</p>
+
+    <div class="ray-legend">
+      <div class="legend-item"><div class="legend-color" style="background:#E74C3C"></div>光线①：过光心（方向不变）</div>
+      <div class="legend-item"><div class="legend-color" style="background:#27AE60"></div>光线②：平行→反向延长过虚焦点F</div>
+      <div class="legend-item"><div class="legend-color" style="background:#9B59B6"></div>光线③：射向F'→折射后平行于主光轴</div>
+    </div>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 720 360" width="720" height="360">
+        <defs>
+          <marker id="cc-arrow-obj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="cc-arrow-img" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <!-- 主光轴 -->
+        <line x1="20" y1="180" x2="700" y2="180" stroke="#999" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+        <!-- 焦点标记 -->
+        <line x1="330" y1="174" x2="330" y2="186" stroke="#666" stroke-width="1.5"/>
+        <text x="330" y="202" text-anchor="middle" font-size="12" fill="#666">F（虚焦点）</text>
+        <line x1="390" y1="174" x2="390" y2="186" stroke="#666" stroke-width="1.5"/>
+        <text x="390" y="202" text-anchor="middle" font-size="12" fill="#666">F'（虚焦点）</text>
+
+        <!-- 凹透镜 -->
+        <path d="M 340,80 L 380,80 Q 360,180 380,280 L 340,280 Q 360,180 340,80 Z" fill="rgba(74,144,217,0.15)" stroke="#4A90D9" stroke-width="2.5"/>
+        <circle cx="360" cy="180" r="3" fill="#2C3E50"/>
+        <text x="360" y="300" text-anchor="middle" font-size="12" fill="#666">光心 O</text>
+
+        <!-- 三条光线（实线） -->
+        <polyline id="cc-ray1" points="" fill="none" stroke="#E74C3C" stroke-width="2"/>
+        <polyline id="cc-ray2" points="" fill="none" stroke="#27AE60" stroke-width="2"/>
+        <polyline id="cc-ray3" points="" fill="none" stroke="#9B59B6" stroke-width="2"/>
+
+        <!-- 虚线延长 -->
+        <polyline id="cc-ray1-dash" points="" fill="none" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <polyline id="cc-ray2-dash" points="" fill="none" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <polyline id="cc-ray3-dash" points="" fill="none" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+        <!-- 物体 -->
+        <line id="cc-object" x1="0" y1="0" x2="0" y2="0" stroke="#F5A623" stroke-width="3" marker-end="url(#cc-arrow-obj)"/>
+        <text id="cc-object-label" x="0" y="0" font-size="13" fill="#F5A623" font-weight="600">物体</text>
+
+        <!-- 虚像 -->
+        <line id="cc-image" x1="0" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#cc-arrow-img)"/>
+        <text id="cc-image-label" x="0" y="0" font-size="13" fill="#4A90D9" font-weight="600">虚像</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>物距 u</label>
+        <input type="range" id="cc-slider" min="5" max="40" value="15" step="1">
+        <span class="value-display"><span id="cc-u-display">15</span> cm</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">物距 u =</span>
+          <span class="value"><span id="cc-info-u">15</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像距 |v| =</span>
+          <span class="value"><span id="cc-info-v">6.0</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像的性质：</span>
+          <span class="value">正立 · 缩小 · 虚像</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">放大率：</span>
+          <span class="value"><span id="cc-info-m">0.40</span>×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📝 凹透镜成像特点</div>
+      • 无论物体放在哪里，凹透镜<strong>始终成正立、缩小的虚像</strong><br>
+      • 虚像位于物体和透镜<strong>之间</strong>（比物体更靠近透镜）<br>
+      • 物体越远，像越靠近焦点且越小；物体越近，像越靠近物体且越大（但始终比物体小）
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：照相机原理 ===== -->
+  <div class="card">
+    <div class="section-header">📷 5. 照相机原理</div>
+
+    <p>照相机的镜头相当于一个<strong>凸透镜</strong>，胶片（或CCD/CMOS感光元件）相当于<strong>光屏</strong>。物体在<strong>二倍焦距以外</strong>（u &gt; 2f），在胶片上成<strong>倒立、缩小、实像</strong>。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 280" width="600" height="280">
+        <defs>
+          <marker id="cam-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <!-- 主光轴 -->
+        <line x1="10" y1="140" x2="590" y2="140" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- 照相机机身 -->
+        <rect x="185" y="65" width="380" height="150" rx="8" fill="#3A3A3A" stroke="#222" stroke-width="2"/>
+        <text x="375" y="240" text-anchor="middle" font-size="12" fill="#666">照相机机身</text>
+
+        <!-- 镜头（凸透镜） -->
+        <ellipse cx="200" cy="140" rx="8" ry="50" fill="rgba(74,144,217,0.3)" stroke="#4A90D9" stroke-width="2"/>
+        <text x="200" y="205" text-anchor="middle" font-size="11" fill="#4A90D9">镜头（凸透镜）</text>
+
+        <!-- 胶片/感光元件 -->
+        <rect x="540" y="75" width="12" height="130" fill="#E74C3C" opacity="0.7"/>
+        <text x="546" y="62" text-anchor="middle" font-size="11" fill="#E74C3C">胶片/CCD</text>
+
+        <!-- 焦点标记 -->
+        <line x1="220" y1="135" x2="220" y2="145" stroke="#888" stroke-width="1"/>
+        <text x="220" y="158" text-anchor="middle" font-size="10" fill="#888">F</text>
+        <line x1="240" y1="135" x2="240" y2="145" stroke="#888" stroke-width="1"/>
+        <text x="240" y="158" text-anchor="middle" font-size="10" fill="#888">2F</text>
+
+        <!-- 物体（树/箭头） -->
+        <line id="cam-object" x1="0" y1="0" x2="0" y2="0" stroke="#27AE60" stroke-width="3" marker-end="url(#cam-arrow)"/>
+        <text id="cam-object-label" x="0" y="0" font-size="12" fill="#27AE60" font-weight="600">物体</text>
+
+        <!-- 像箭头 -->
+        <line id="cam-image" x1="0" y1="0" x2="0" y2="0" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cam-arrow)"/>
+        <text id="cam-image-label" x="0" y="0" font-size="11" fill="#E74C3C" font-weight="600">像</text>
+
+        <!-- 两条成像光线 -->
+        <line id="cam-ray1" x1="0" y1="0" x2="0" y2="0" stroke="#F5A623" stroke-width="1.5" opacity="0.7"/>
+        <line id="cam-ray2a" x1="0" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="1.5" opacity="0.7"/>
+        <line id="cam-ray2b" x1="0" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+
+      <div class="slider-row">
+        <label>拍摄距离 u</label>
+        <input type="range" id="cam-slider" min="25" max="80" value="40" step="1">
+        <span class="value-display"><span id="cam-u-display">40</span> cm</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">物距 u =</span>
+          <span class="value"><span id="cam-info-u">40</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像距 v =</span>
+          <span class="value"><span id="cam-info-v">13.3</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像：</span>
+          <span class="value">倒立 · 缩小 · 实像</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">缩小倍率：</span>
+          <span class="value"><span id="cam-info-m">3.0</span>×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 照相机的使用</div>
+      • 拍摄远处景物时（u 很大），像很靠近焦点（v 接近 f），像较小<br>
+      • 拍摄近处景物时（u 减小但仍 &gt; 2f），像变大变远，需要<strong>将镜头前伸</strong>（增大像距）<br>
+      • "调焦"就是调节镜头到胶片的距离（像距），使像清晰落在胶片上
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：放大镜原理 ===== -->
+  <div class="card">
+    <div class="section-header">🔍 6. 放大镜原理</div>
+
+    <p>放大镜就是一个<strong>短焦距凸透镜</strong>。使用时，将物体放在<strong>焦距以内</strong>（u &lt; f），通过透镜观察，可看到<strong>正立、放大的虚像</strong>。虚像在物体的<strong>同侧</strong>（物体后方）。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 600 320" width="600" height="320">
+        <defs>
+          <marker id="mag-arrow-obj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/>
+          </marker>
+          <marker id="mag-arrow-img" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <!-- 主光轴 -->
+        <line x1="10" y1="160" x2="590" y2="160" stroke="#999" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+        <!-- 焦点标记 -->
+        <line x1="270" y1="154" x2="270" y2="166" stroke="#666" stroke-width="1.5"/>
+        <text x="270" y="182" text-anchor="middle" font-size="12" fill="#666">F</text>
+        <line x1="330" y1="154" x2="330" y2="166" stroke="#666" stroke-width="1.5"/>
+        <text x="330" y="182" text-anchor="middle" font-size="12" fill="#666">F</text>
+
+        <!-- 放大镜镜框 -->
+        <circle cx="300" cy="160" r="55" fill="none" stroke="#8B7355" stroke-width="3" opacity="0.4"/>
+        <line x1="345" y1="205" x2="380" y2="250" stroke="#8B7355" stroke-width="4" stroke-linecap="round" opacity="0.4"/>
+        <!-- 凸透镜 -->
+        <path d="M 300,105 Q 322,160 300,215 Q 278,160 300,105 Z" fill="rgba(74,144,217,0.15)" stroke="#4A90D9" stroke-width="2.5"/>
+        <circle cx="300" cy="160" r="3" fill="#2C3E50"/>
+
+        <!-- 三条光线 -->
+        <polyline id="mag-ray1" points="" fill="none" stroke="#E74C3C" stroke-width="2"/>
+        <polyline id="mag-ray2" points="" fill="none" stroke="#27AE60" stroke-width="2"/>
+        <polyline id="mag-ray3" points="" fill="none" stroke="#9B59B6" stroke-width="2"/>
+
+        <!-- 虚线延长 -->
+        <polyline id="mag-ray1-dash" points="" fill="none" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <polyline id="mag-ray2-dash" points="" fill="none" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <polyline id="mag-ray3-dash" points="" fill="none" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+        <!-- 物体 -->
+        <line id="mag-object" x1="0" y1="0" x2="0" y2="0" stroke="#F5A623" stroke-width="3" marker-end="url(#mag-arrow-obj)"/>
+        <text id="mag-object-label" x="0" y="0" font-size="12" fill="#F5A623" font-weight="600">物体</text>
+
+        <!-- 虚像 -->
+        <line id="mag-image" x1="0" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#mag-arrow-img)"/>
+        <text id="mag-image-label" x="0" y="0" font-size="12" fill="#4A90D9" font-weight="600">虚像</text>
+
+        <!-- 眼睛 -->
+        <g opacity="0.6">
+          <ellipse cx="540" cy="160" rx="18" ry="12" fill="#FFF" stroke="#2C3E50" stroke-width="1.5"/>
+          <circle cx="540" cy="160" r="6" fill="#2C3E50"/>
+          <text x="540" y="190" text-anchor="middle" font-size="11" fill="#666">眼睛</text>
+        </g>
+      </svg>
+
+      <div class="slider-row">
+        <label>物距 u（&lt; f = 10cm）</label>
+        <input type="range" id="mag-slider" min="2" max="9" value="5" step="0.5">
+        <span class="value-display"><span id="mag-u-display">5.0</span> cm</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item">
+          <span class="label">物距 u =</span>
+          <span class="value"><span id="mag-info-u">5.0</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像距 |v| =</span>
+          <span class="value"><span id="mag-info-v">10.0</span> cm</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">像：</span>
+          <span class="value">正立 · 放大 · 虚像</span>
+        </div>
+        <div class="readout-item">
+          <span class="label">放大率：</span>
+          <span class="value"><span id="mag-info-m">2.0</span>×</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 放大镜的使用技巧</div>
+      • 物体必须放在<strong>焦距以内</strong>（u &lt; f）才能成正立放大虚像<br>
+      • 物体越靠近焦点（u → f），虚像越远、<strong>放大率越大</strong><br>
+      • 要使虚像更大，可以<strong>稍微远离物体</strong>（增大 u，但仍 &lt; f）<br>
+      • 虚像不能用光屏承接，只能用眼睛透过透镜观察
+    </div>
+  </div>
+
+  <!-- ===== 第七部分：显微镜与望远镜 ===== -->
+  <div class="card">
+    <div class="section-header">🔬 7. 显微镜与望远镜（拓展）</div>
+
+    <p>显微镜和望远镜都由<strong>两组透镜</strong>（物镜和目镜）组成，利用了凸透镜的两次成像。</p>
+
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="icon">🔬</div>
+        <h4>显微镜</h4>
+        <p><strong>物镜</strong>：f<sub>物</sub> 短，物体在 f~2f 间，成倒立放大实像（中间像）<br>
+        <strong>目镜</strong>：f<sub>目</sub> 长，中间像在 f 内，成正立放大虚像<br>
+        <strong>总放大率</strong> = 物镜放大率 × 目镜放大率</p>
+      </div>
+      <div class="app-card">
+        <div class="icon">🔭</div>
+        <h4>开普勒望远镜</h4>
+        <p><strong>物镜</strong>：f<sub>物</sub> 长，远处物体成像在焦点附近（倒立缩小实像）<br>
+        <strong>目镜</strong>：f<sub>目</sub> 短，物镜的像在目镜焦点内<br>
+        成<strong>倒立</strong>的虚像（天文用）</p>
+      </div>
+      <div class="app-card">
+        <div class="icon">🔭</div>
+        <h4>伽利略望远镜</h4>
+        <p><strong>物镜</strong>为凸透镜，<strong>目镜</strong>为凹透镜<br>
+        成<strong>正立</strong>的虚像<br>
+        常用于观剧、观赛（地面观察）</p>
+      </div>
+      <div class="app-card">
+        <div class="icon">📽️</div>
+        <h4>投影仪/幻灯机</h4>
+        <p>利用 f &lt; u &lt; 2f 时成倒立放大实像<br>
+        胶片要<strong>倒插</strong>（使屏幕上为正立像）<br>
+        屏幕越远像越大（投到 2f 以外）</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第八部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 8. 练习题</div>
+    <p>检验一下你对透镜成像规律的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 凸透镜焦距为 10cm，将物体放在距透镜 25cm 处，所成像的性质是：</div>
+      <div class="quiz-option" data-idx="0">A. 正立、放大、虚像</div>
+      <div class="quiz-option" data-idx="1">B. 倒立、缩小、实像</div>
+      <div class="quiz-option" data-idx="2">C. 倒立、放大、实像</div>
+      <div class="quiz-option" data-idx="3">D. 正立、缩小、虚像</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 用放大镜观察物体时，要看到正立放大的虚像，物体应放在：</div>
+      <div class="quiz-option" data-idx="0">A. 焦点以外（u &gt; f）</div>
+      <div class="quiz-option" data-idx="1">B. 焦点以内（u &lt; f）</div>
+      <div class="quiz-option" data-idx="2">C. 两倍焦距以外（u &gt; 2f）</div>
+      <div class="quiz-option" data-idx="3">D. 焦点上（u = f）</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 一束平行于主光轴的光线经凸透镜折射后，折射光线将：</div>
+      <div class="quiz-option" data-idx="0">A. 仍然平行于主光轴</div>
+      <div class="quiz-option" data-idx="1">B. 经过焦点</div>
+      <div class="quiz-option" data-idx="2">C. 经过光心</div>
+      <div class="quiz-option" data-idx="3">D. 原路返回</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 透镜成像的基础是光的折射 ↔ <a href="04-光现象.html">物理 · 光现象</a>（光的折射定律与折射率）</p>
+    <p>· 成像规律中的比例关系 ↔ <a href="../../数学/八年级/index.html">数学 · 相似三角形</a>（物距、像距与放大率的几何关系）</p>
+    <p>· 透镜材料（玻璃）的制造 ↔ <a href="03-物态变化.html">物理 · 物态变化</a>（玻璃的熔融与凝固成型）</p>
+    <p>· 透镜质量与密度 ↔ <a href="06-质量与密度.html">物理 · 质量与密度</a>（不同光学材料的密度特性）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="04-光现象.html" class="btn btn-outline">← 上一章：光现象</a>
+    <a href="06-质量与密度.html" class="btn btn-primary">下一章：质量与密度 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ===== 辅助函数 =====
+function setAttr(id, attr, val) {
+  var el = document.getElementById(id);
+  if (el) el.setAttribute(attr, val);
+}
+function rayYAtX(x1, y1, x2, y2, targetX) {
+  if (x2 === x1) return y2;
+  return y1 + (targetX - x1) * (y2 - y1) / (x2 - x1);
+}
+
+// ===== 1. 凸透镜成像模拟器 =====
+function updateConvexLens(u) {
+  var f = 10;
+  var scale = 3;
+  var lensX = 360;
+  var axisY = 230;
+  var objHpx = 12;
+  var fpx = f * scale; // 30
+
+  var objX = lensX - u * scale;
+  var objTipY = axisY - objHpx;
+
+  var v, imgX, imgTipY, imgHpx;
+  var isVirtual = false, isNoImage = false;
+  var caseIdx;
+
+  if (Math.abs(u - f) < 0.01) {
+    isNoImage = true;
+    caseIdx = 3;
+  } else {
+    v = u * f / (u - f);
+    if (v < 0) {
+      isVirtual = true;
+      imgX = lensX + v * scale;
+      imgHpx = Math.abs(v) / u * objHpx;
+      imgTipY = axisY - imgHpx;
+    } else {
+      imgX = lensX + v * scale;
+      imgHpx = v / u * objHpx;
+      imgTipY = axisY + imgHpx;
+    }
+    if (u > 2 * f + 0.01) caseIdx = 0;
+    else if (Math.abs(u - 2 * f) <= 0.01) caseIdx = 1;
+    else if (u > f + 0.01) caseIdx = 2;
+    else caseIdx = 4;
+  }
+
+  // 物体箭头
+  setAttr('cx-object', 'x1', objX);
+  setAttr('cx-object', 'y1', axisY);
+  setAttr('cx-object', 'x2', objX);
+  setAttr('cx-object', 'y2', objTipY);
+  setAttr('cx-object-label', 'x', objX - 32);
+  setAttr('cx-object-label', 'y', objTipY - 4);
+
+  // 像箭头
+  var imgArrow = document.getElementById('cx-image');
+  var imgLabel = document.getElementById('cx-image-label');
+  var noImageNote = document.getElementById('cx-no-image-note');
+
+  if (isNoImage) {
+    imgArrow.style.display = 'none';
+    imgLabel.style.display = 'none';
+    noImageNote.classList.add('show');
+  } else {
+    imgArrow.style.display = 'block';
+    imgLabel.style.display = 'block';
+    noImageNote.classList.remove('show');
+    setAttr('cx-image', 'x1', imgX);
+    setAttr('cx-image', 'y1', axisY);
+    setAttr('cx-image', 'x2', imgX);
+    setAttr('cx-image', 'y2', imgTipY);
+    imgArrow.setAttribute('stroke-dasharray', isVirtual ? '5,3' : 'none');
+    setAttr('cx-image-label', 'x', imgX + 8);
+    setAttr('cx-image-label', 'y', isVirtual ? imgTipY - 4 : imgTipY + 14);
+  }
+
+  // 三条光线
+  var ray1 = document.getElementById('cx-ray1');
+  var ray2 = document.getElementById('cx-ray2');
+  var ray3 = document.getElementById('cx-ray3');
+  var ray1d = document.getElementById('cx-ray1-dash');
+  var ray2d = document.getElementById('cx-ray2-dash');
+  var ray3d = document.getElementById('cx-ray3-dash');
+  ray1d.style.display = 'none';
+  ray2d.style.display = 'none';
+  ray3d.style.display = 'none';
+
+  var rightEdge = 700;
+
+  if (isNoImage) {
+    // u = f：光线①和②出射后平行，不成像
+    var slope1 = (axisY - objTipY) / (lensX - objX);
+    var r1EndY = axisY + slope1 * (rightEdge - lensX);
+    ray1.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + axisY + ' ' + rightEdge + ',' + r1EndY);
+    ray1.style.display = 'block';
+
+    var slope2 = (axisY - objTipY) / fpx;
+    var r2EndY = objTipY + slope2 * (rightEdge - lensX);
+    ray2.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + objTipY + ' ' + rightEdge + ',' + r2EndY);
+    ray2.style.display = 'block';
+
+    ray3.style.display = 'none';
+  } else if (!isVirtual) {
+    // 实像
+    ray3.style.display = 'block';
+    var imgClampedX = Math.min(imgX, rightEdge - 5);
+    var extendX = Math.min(rightEdge, imgX + 30);
+
+    // 光线①：物体→光心→像
+    var r1EndY = rayYAtX(lensX, axisY, imgX, imgTipY, extendX);
+    ray1.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + axisY + ' ' + extendX + ',' + r1EndY);
+    ray1.style.display = 'block';
+
+    // 光线②：物体→平行→过焦点→像
+    var r2EndY = rayYAtX(lensX, objTipY, imgX, imgTipY, extendX);
+    ray2.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + objTipY + ' ' + extendX + ',' + r2EndY);
+    ray2.style.display = 'block';
+
+    // 光线③：物体→过F→平行→像（lensHitY3 = imgTipY）
+    ray3.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + imgTipY + ' ' + extendX + ',' + imgTipY);
+    ray3.style.display = 'block';
+  } else {
+    // 虚像
+    ray3.style.display = 'block';
+
+    // 光线①实线：物体→光心→右边缘
+    var slope1v = (axisY - objTipY) / (lensX - objX);
+    var r1EndYv = axisY + slope1v * (rightEdge - lensX);
+    ray1.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + axisY + ' ' + rightEdge + ',' + r1EndYv);
+    ray1.style.display = 'block';
+    // 光线①虚线延长：光心→虚像
+    ray1d.setAttribute('points', lensX + ',' + axisY + ' ' + imgX + ',' + imgTipY);
+    ray1d.style.display = 'block';
+
+    // 光线②实线：物体→平行→射向F方向→右边缘
+    var slope2v = (axisY - objTipY) / fpx;
+    var r2EndYv = objTipY + slope2v * (rightEdge - lensX);
+    ray2.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + objTipY + ' ' + rightEdge + ',' + r2EndYv);
+    ray2.style.display = 'block';
+    // 光线②虚线延长：透镜入射点→虚像
+    ray2d.setAttribute('points', lensX + ',' + objTipY + ' ' + imgX + ',' + imgTipY);
+    ray2d.style.display = 'block';
+
+    // 光线③实线：物体→透镜（向上）→水平→右边缘（lensHitY3 = imgTipY）
+    ray3.setAttribute('points', objX + ',' + objTipY + ' ' + lensX + ',' + imgTipY + ' ' + rightEdge + ',' + imgTipY);
+    ray3.style.display = 'block';
+    // 光线③虚线延长：透镜→虚像（水平）
+    ray3d.setAttribute('points', lensX + ',' + imgTipY + ' ' + imgX + ',' + imgTipY);
+    ray3d.style.display = 'block';
+  }
+
+  // 表格高亮
+  document.querySelectorAll('.imaging-row').forEach(function(row, i) {
+    row.classList.toggle('active', i === caseIdx);
+  });
+
+  // 信息显示
+  document.getElementById('cx-info-u').textContent = u;
+  document.getElementById('cx-u-display').textContent = u;
+  if (isNoImage) {
+    document.getElementById('cx-info-v').textContent = '∞';
+    document.getElementById('cx-info-orient').textContent = '—';
+    document.getElementById('cx-info-size').textContent = '—';
+    document.getElementById('cx-info-type').textContent = '不成像';
+    document.getElementById('cx-info-app').textContent = '—';
+  } else {
+    var vDisplay = Math.abs(v).toFixed(1);
+    document.getElementById('cx-info-v').textContent = vDisplay + (isVirtual ? '（同侧）' : '');
+    document.getElementById('cx-info-orient').textContent = isVirtual ? '正立' : '倒立';
+    var sizeDesc;
+    if (Math.abs(imgHpx - objHpx) < 0.5) sizeDesc = '等大';
+    else if (imgHpx > objHpx) sizeDesc = '放大';
+    else sizeDesc = '缩小';
+    document.getElementById('cx-info-size').textContent = sizeDesc;
+    document.getElementById('cx-info-type').textContent = isVirtual ? '虚像' : '实像';
+    var appDesc = '—';
+    if (caseIdx === 0) appDesc = '📷 照相机';
+    else if (caseIdx === 1) appDesc = '（分界点）';
+    else if (caseIdx === 2) appDesc = '📽️ 投影仪/幻灯机';
+    else if (caseIdx === 4) appDesc = '🔍 放大镜';
+    document.getElementById('cx-info-app').textContent = appDesc;
+  }
+}
+
+// ===== 2. 凹透镜光线 =====
+function updateConcaveLens(u) {
+  var fabs = 10; // |f|
+  var scale = 3;
+  var lensX = 360;
+  var axisY = 180;
+  var objHpx = 12;
+  var fpx = fabs * scale; // 30
+
+  var objX = lensX - u * scale;
+  var objTipY = axisY - objHpx;
+
+  // 凹透镜：v = -u*|f|/(u+|f|)，虚像在同侧
+  var v = -u * fabs / (u + fabs);
+  var imgX = lensX + v * scale; // v < 0，imgX < lensX（同侧）
+  var imgHpx = Math.abs(v) / u * objHpx; // 正立缩小
+  var imgTipY = axisY - imgHpx;
+
+  // 物体
+  setAttr('cc-object', 'x1', objX);
+  setAttr('cc-object', 'y1', axisY);
+  setAttr('cc-object', 'x2', objX);
+  setAttr('cc-object', 'y2', objTipY);
+  setAttr('cc-object-label', 'x', objX - 32);
+  setAttr('cc-object-label', 'y', objTipY - 4);
+
+  // 虚像
+  setAttr('cc-image', 'x1', imgX);
+  setAttr('cc-image', 'y1', axisY);
+  setAttr('cc-image', 'x2', imgX);
+  setAttr('cc-image', 'y2', imgTipY);
+  setAttr('cc-image-label', 'x', imgX - 32);
+  setAttr('cc-image-label', 'y', imgTipY - 4);
+
+  var rightEdge = 700;
+  var FleftX = lensX - fpx;  // 330
+  var FrightX = lensX + fpx; // 390
+
+  // 光线①：过光心，方向不变
+  var r1Slope = (axisY - objTipY) / (lensX - objX);
+  var r1EndY = axisY + r1Slope * (rightEdge - lensX);
+  document.getElementById('cc-ray1').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + axisY + ' ' + rightEdge + ',' + r1EndY);
+  // 虚线延长：光心→虚像
+  document.getElementById('cc-ray1-dash').setAttribute('points',
+    lensX + ',' + axisY + ' ' + imgX + ',' + imgTipY);
+
+  // 光线②：平行于主光轴→折射后反向延长过F（左虚焦点）
+  // 入射：物体→透镜（水平）
+  // 出射：从透镜射出，方向如同从F_left发出，斜率 = -objH/f（向上发散）
+  var r2Slope = -objHpx / fpx; // 负值（向上）
+  var r2EndY = objTipY + r2Slope * (rightEdge - lensX);
+  document.getElementById('cc-ray2').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + objTipY + ' ' + rightEdge + ',' + r2EndY);
+  // 虚线延长：透镜出射点→虚像（反向延长过F_left）
+  document.getElementById('cc-ray2-dash').setAttribute('points',
+    lensX + ',' + objTipY + ' ' + imgX + ',' + imgTipY);
+
+  // 光线③：射向F'（右虚焦点）→折射后平行于主光轴
+  // 入射方向：从物体射向F'，斜率 = objH/((u+|f|)*scale) * scale = objH/(u+|f|)
+  // 透镜入射点y = imgTipY（已证明）
+  document.getElementById('cc-ray3').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + imgTipY + ' ' + rightEdge + ',' + imgTipY);
+  // 虚线延长：透镜→虚像（水平）
+  document.getElementById('cc-ray3-dash').setAttribute('points',
+    lensX + ',' + imgTipY + ' ' + imgX + ',' + imgTipY);
+
+  // 信息
+  document.getElementById('cc-info-u').textContent = u;
+  document.getElementById('cc-u-display').textContent = u;
+  document.getElementById('cc-info-v').textContent = Math.abs(v).toFixed(1);
+  document.getElementById('cc-info-m').textContent = (Math.abs(v) / u).toFixed(2);
+}
+
+// ===== 3. 照相机原理 =====
+function updateCamera(u) {
+  var f = 10;
+  var scale = 2;
+  var lensX = 200;
+  var axisY = 140;
+  var objHpx = 12;
+  var fpx = f * scale; // 20
+
+  var objX = lensX - u * scale;
+  var objTipY = axisY - objHpx;
+
+  var v = u * f / (u - f); // 实像
+  var imgX = lensX + v * scale;
+  var imgHpx = v / u * objHpx;
+  var imgTipY = axisY + imgHpx; // 倒立（下方）
+
+  // 物体
+  setAttr('cam-object', 'x1', objX);
+  setAttr('cam-object', 'y1', axisY);
+  setAttr('cam-object', 'x2', objX);
+  setAttr('cam-object', 'y2', objTipY);
+  setAttr('cam-object-label', 'x', objX - 32);
+  setAttr('cam-object-label', 'y', objTipY - 4);
+
+  // 像
+  setAttr('cam-image', 'x1', imgX);
+  setAttr('cam-image', 'y1', axisY);
+  setAttr('cam-image', 'x2', imgX);
+  setAttr('cam-image', 'y2', imgTipY);
+  setAttr('cam-image-label', 'x', imgX + 8);
+  setAttr('cam-image-label', 'y', imgTipY + 14);
+
+  // 光线①：物体→光心→像
+  setAttr('cam-ray1', 'x1', objX);
+  setAttr('cam-ray1', 'y1', objTipY);
+  setAttr('cam-ray1', 'x2', imgX);
+  setAttr('cam-ray1', 'y2', imgTipY);
+
+  // 光线②a：物体→平行→透镜
+  setAttr('cam-ray2a', 'x1', objX);
+  setAttr('cam-ray2a', 'y1', objTipY);
+  setAttr('cam-ray2a', 'x2', lensX);
+  setAttr('cam-ray2a', 'y2', objTipY);
+
+  // 光线②b：透镜→过F_right→像
+  setAttr('cam-ray2b', 'x1', lensX);
+  setAttr('cam-ray2b', 'y1', objTipY);
+  setAttr('cam-ray2b', 'x2', imgX);
+  setAttr('cam-ray2b', 'y2', imgTipY);
+
+  // 信息
+  document.getElementById('cam-info-u').textContent = u;
+  document.getElementById('cam-u-display').textContent = u;
+  document.getElementById('cam-info-v').textContent = v.toFixed(1);
+  document.getElementById('cam-info-m').textContent = (u / v).toFixed(1);
+}
+
+// ===== 4. 放大镜原理 =====
+function updateMagnifier(u) {
+  var f = 10;
+  var scale = 3;
+  var lensX = 300;
+  var axisY = 160;
+  var objHpx = 9;
+  var fpx = f * scale; // 30
+
+  var objX = lensX - u * scale;
+  var objTipY = axisY - objHpx;
+
+  // 虚像：v = uf/(u-f)，u < f 时 v < 0
+  var v = u * f / (u - f);
+  var imgX = lensX + v * scale; // v<0，imgX < lensX（同侧，更远）
+  var imgHpx = Math.abs(v) / u * objHpx;
+  var imgTipY = axisY - imgHpx; // 正立（上方）
+
+  // 物体
+  setAttr('mag-object', 'x1', objX);
+  setAttr('mag-object', 'y1', axisY);
+  setAttr('mag-object', 'x2', objX);
+  setAttr('mag-object', 'y2', objTipY);
+  setAttr('mag-object-label', 'x', objX - 32);
+  setAttr('mag-object-label', 'y', objTipY - 4);
+
+  // 虚像
+  setAttr('mag-image', 'x1', imgX);
+  setAttr('mag-image', 'y1', axisY);
+  setAttr('mag-image', 'x2', imgX);
+  setAttr('mag-image', 'y2', imgTipY);
+  setAttr('mag-image-label', 'x', imgX - 32);
+  setAttr('mag-image-label', 'y', imgTipY - 4);
+
+  var rightEdge = 490; // 留出眼睛空间
+
+  // 光线①：物体→光心→右
+  var r1Slope = (axisY - objTipY) / (lensX - objX);
+  var r1EndY = axisY + r1Slope * (rightEdge - lensX);
+  document.getElementById('mag-ray1').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + axisY + ' ' + rightEdge + ',' + r1EndY);
+  document.getElementById('mag-ray1-dash').setAttribute('points',
+    lensX + ',' + axisY + ' ' + imgX + ',' + imgTipY);
+
+  // 光线②：物体→平行→射向F_right方向
+  var r2Slope = (axisY - objTipY) / fpx;
+  var r2EndY = objTipY + r2Slope * (rightEdge - lensX);
+  document.getElementById('mag-ray2').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + objTipY + ' ' + rightEdge + ',' + r2EndY);
+  document.getElementById('mag-ray2-dash').setAttribute('points',
+    lensX + ',' + objTipY + ' ' + imgX + ',' + imgTipY);
+
+  // 光线③：物体→透镜（向上）→水平（lensHitY3 = imgTipY）
+  document.getElementById('mag-ray3').setAttribute('points',
+    objX + ',' + objTipY + ' ' + lensX + ',' + imgTipY + ' ' + rightEdge + ',' + imgTipY);
+  document.getElementById('mag-ray3-dash').setAttribute('points',
+    lensX + ',' + imgTipY + ' ' + imgX + ',' + imgTipY);
+
+  // 信息
+  document.getElementById('mag-info-u').textContent = u.toFixed(1);
+  document.getElementById('mag-u-display').textContent = u.toFixed(1);
+  document.getElementById('mag-info-v').textContent = Math.abs(v).toFixed(1);
+  document.getElementById('mag-info-m').textContent = (Math.abs(v) / u).toFixed(1);
+}
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 凸透镜成像模拟器
+  var cxSlider = document.getElementById('cx-slider');
+  cxSlider.addEventListener('input', function() {
+    updateConvexLens(parseFloat(this.value));
+  });
+  updateConvexLens(25);
+
+  // 凹透镜
+  var ccSlider = document.getElementById('cc-slider');
+  ccSlider.addEventListener('input', function() {
+    updateConcaveLens(parseFloat(this.value));
+  });
+  updateConcaveLens(15);
+
+  // 照相机
+  var camSlider = document.getElementById('cam-slider');
+  camSlider.addEventListener('input', function() {
+    updateCamera(parseFloat(this.value));
+  });
+  updateCamera(40);
+
+  // 放大镜
+  var magSlider = document.getElementById('mag-slider');
+  magSlider.addEventListener('input', function() {
+    updateMagnifier(parseFloat(this.value));
+  });
+  updateMagnifier(5);
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: 'f = 10cm，u = 25cm。因为 u = 25cm &gt; 2f = 20cm，根据凸透镜成像规律，此时成<strong>倒立、缩小、实像</strong>，这是照相机的原理。像距 f &lt; v &lt; 2f，即 10 &lt; v &lt; 20cm。',
+    hint: '比较 u 与 2f 的关系。u = 25cm，2f = 20cm，u &gt; 2f 对应"倒立缩小实像"（照相机）。'
+  });
+
+  initQuiz('quiz2', {
+    correct: 1,
+    explain: '放大镜利用的是凸透镜成虚像的条件：物体必须在<strong>焦距以内</strong>（u &lt; f），此时成正立、放大、虚像。u = f 时不成像，u &gt; f 时成实像（倒立）。',
+    hint: '回忆口诀"一倍焦距分虚实"：u &lt; f 成虚像（正立放大），u &gt; f 成实像（倒立）。放大镜看到的是正立放大虚像。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 1,
+    explain: '这是凸透镜的三条特殊光线之一：<strong>平行于主光轴的光线经凸透镜折射后经过焦点</strong>。这是因为凸透镜对光有会聚作用，平行光会聚于焦点。',
+    hint: '三条特殊光线：①过光心方向不变；②平行于主光轴→过焦点；③过焦点→平行于主光轴。'
+  });
+});
+</script>
+
 </body>
 </html>

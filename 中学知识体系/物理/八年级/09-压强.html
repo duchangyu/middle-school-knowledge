@@ -6,53 +6,436 @@
   <title>压强 · 八年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 72px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.8;
+    }
+    .formula-box .sub {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 10px 16px;
+      margin-bottom: 6px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* ===== 压强计算器 ===== */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 760px;
+      margin: 18px auto;
+    }
+    .calc-field {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s;
+      text-align: left;
+    }
+    .calc-field:focus-within { border-color: var(--primary); }
+    .calc-field .field-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .calc-field .field-label .symbol {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 16px;
+      font-family: 'Cambria', serif;
+    }
+    .calc-field input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-family: 'Cambria', serif;
+      background: transparent;
+      padding: 2px 0;
+    }
+    .calc-field input::placeholder { color: var(--text-light); font-weight: 400; }
+    .calc-field .unit-toggle {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .calc-field .unit-toggle button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .calc-field .unit-toggle button.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .calc-result-line {
+      text-align: center;
+      margin-top: 14px;
+      font-family: 'Cambria', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      font-weight: 600;
+      min-height: 28px;
+    }
+
+    .preset-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .preset-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 16px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-main);
+    }
+    .preset-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* ===== 对比场景 tabs ===== */
+    .scene-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .scene-tab {
+      padding: 8px 18px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .scene-tab:hover { border-color: var(--primary-light); }
+    .scene-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+    @media (max-width: 600px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+    .compare-cell {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      border: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .compare-cell.high { border-color: var(--danger); background: rgba(231,76,60,0.04); }
+    .compare-cell.low { border-color: var(--success); background: rgba(39,174,96,0.04); }
+    .compare-cell h5 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .compare-cell .tag-mini {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .compare-cell.high .tag-mini { background: var(--danger); color: white; }
+    .compare-cell.low .tag-mini { background: var(--success); color: white; }
+    .compare-cell .p-val {
+      font-family: 'Cambria', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-top: 6px;
+    }
+
+    /* ===== 托里拆利步骤 ===== */
+    .step-display {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .step-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-soft);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+    .step-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(74,144,217,0.2);
+    }
+    .step-pill.done {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+    .step-desc {
+      text-align: center;
+      font-size: 15px;
+      color: var(--text-main);
+      min-height: 24px;
+      margin: 8px 0 12px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn-row .btn { min-width: 110px; }
+
+    /* ===== 半球状态显示 ===== */
+    .hemisphere-status {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .status-block {
+      background: white;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      text-align: center;
+      min-width: 140px;
+    }
+    .status-block .status-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .status-block .status-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-family: 'Cambria', serif;
+    }
+    .status-block .status-value.warn { color: var(--danger); }
+    .status-block .status-value.ok { color: var(--success); }
+
+    .pull-result {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      min-height: 28px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      transition: all 0.3s;
+    }
+    .pull-result.stuck {
+      background: rgba(231,76,60,0.12);
+      color: var(--danger);
+    }
+    .pull-result.open {
+      background: rgba(39,174,96,0.12);
+      color: var(--success);
+    }
+
+    /* ===== 知识小卡片 ===== */
+    .know-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .know-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      border-top: 4px solid var(--primary);
+    }
+    .know-card .icon { font-size: 28px; }
+    .know-card h4 {
+      margin: 6px 0 6px;
+      color: var(--primary-dark);
+      font-size: 15px;
+    }
+    .know-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* 水柱喷射动画 */
+    .water-stream {
+      animation: streamFlow 1.2s linear infinite;
+    }
+    @keyframes streamFlow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -20; }
+    }
+
+    /* 练习题反馈 */
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      display: none;
+      background: var(--bg-soft);
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚡ 压强</div>
+  <div class="navbar-brand">⚖️ 压强</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级物理目录</a></li>
+    <li><a href="../../数学/八年级/01-三角形.html">📐 数学八年级</a></li>
   </ul>
 </nav>
 
@@ -62,29 +445,1162 @@
     <span class="separator">/</span>
     <a href="index.html">物理</a>
     <span class="separator">/</span>
-    <span>八年级</span>
+    <a href="index.html">八年级</a>
     <span class="separator">/</span>
     <span>压强</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚡</div>
-    <h2>压强</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚖️ 压强</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从图钉到坦克，从水坝到大气——为什么"面积"能改变力的效果？</p>
+
+  <!-- ===== 第一部分：压力 ===== -->
+  <div class="card">
+    <div class="section-header">🎯 1. 压力</div>
+
+    <p>你用力按桌面，桌面就被向下压；图钉尖压在墙上，墙受到一个垂直墙面的力。这类<strong>垂直作用在物体表面上的力</strong>，叫做<strong>压力</strong>，用 F 表示，单位是牛顿（N）。</p>
+
+    <ul class="property-list">
+      <li><strong>方向</strong>：压力的方向<strong>垂直于受力面</strong>，指向受力物体内部。</li>
+      <li><strong>作用点</strong>：在受力面上。</li>
+      <li><strong>压力 ≠ 重力</strong>：只有当物体<strong>自由放在水平面上</strong>，且只受重力和支持力时，压力的大小才等于重力（F = G）。斜面上、墙上压着的物体，压力都不等于重力。</li>
+    </ul>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 520 280" width="520" height="280">
+        <defs>
+          <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/>
+          </marker>
+          <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/>
+          </marker>
+          <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#27AE60"/>
+          </marker>
+          <pattern id="hatchPattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="8" stroke="#999" stroke-width="1"/>
+          </pattern>
+        </defs>
+
+        <!-- 场景一：水平面，F = G -->
+        <text x="130" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">① 水平面：F = G</text>
+        <!-- 地面 -->
+        <rect x="40" y="180" width="180" height="14" fill="url(#hatchPattern)"/>
+        <line x1="40" y1="180" x2="220" y2="180" stroke="#555" stroke-width="2"/>
+        <!-- 物体 -->
+        <rect x="100" y="130" width="60" height="50" fill="#7BB0E8" stroke="#2E6BA8" stroke-width="2" rx="4"/>
+        <!-- 重力 G -->
+        <line x1="130" y1="130" x2="130" y2="195" stroke="#27AE60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+        <text x="138" y="170" font-size="13" fill="#27AE60" font-weight="600">G</text>
+        <!-- 压力 F（作用在地面） -->
+        <line x1="130" y1="180" x2="130" y2="220" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+        <text x="138" y="212" font-size="13" fill="#E74C3C" font-weight="600">F = G</text>
+
+        <!-- 场景二：斜面，F < G -->
+        <text x="290" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">② 斜面：F &lt; G</text>
+        <!-- 斜面 -->
+        <polygon points="220,250 360,250 360,150" fill="url(#hatchPattern)" stroke="#555" stroke-width="2"/>
+        <!-- 物体（旋转放在斜面上） -->
+        <g transform="translate(290,178) rotate(-32)">
+          <rect x="-22" y="-18" width="44" height="36" fill="#7BB0E8" stroke="#2E6BA8" stroke-width="2" rx="3"/>
+        </g>
+        <!-- 重力 G（竖直向下） -->
+        <line x1="290" y1="165" x2="290" y2="225" stroke="#27AE60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+        <text x="296" y="200" font-size="13" fill="#27AE60" font-weight="600">G</text>
+        <!-- 压力 F（垂直斜面） -->
+        <line x1="290" y1="178" x2="312" y2="160" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+        <text x="316" y="156" font-size="13" fill="#E74C3C" font-weight="600">F</text>
+
+        <!-- 场景三：墙上按图钉，F 由手施加 -->
+        <text x="450" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">③ 按图钉：F 由手施加</text>
+        <!-- 墙 -->
+        <rect x="430" y="80" width="50" height="180" fill="url(#hatchPattern)"/>
+        <line x1="430" y1="80" x2="430" y2="260" stroke="#555" stroke-width="2"/>
+        <!-- 图钉 -->
+        <circle cx="415" cy="170" r="10" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
+        <line x1="415" y1="170" x2="428" y2="170" stroke="#888" stroke-width="2"/>
+        <!-- 手的推力 -->
+        <line x1="370" y1="170" x2="403" y2="170" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+        <text x="362" y="162" font-size="13" fill="#4A90D9" font-weight="600">手的力</text>
+        <!-- 压力（作用在墙上） -->
+        <line x1="430" y1="170" x2="462" y2="170" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+        <text x="464" y="162" font-size="13" fill="#E74C3C" font-weight="600">F</text>
+      </svg>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🔑 关键区分</div>
+      重力是由于地球吸引而产生的，方向<strong>始终竖直向下</strong>，作用在物体的重心；而压力是物体间的弹力，方向<strong>垂直于受力面</strong>，作用在接触面上。两者大小只有在水平面自由放置时才相等。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：压强 + 计算器 ===== -->
+  <div class="card">
+    <div class="section-header">📐 2. 压强</div>
+
+    <p>同样大小的力，作用在不同的面积上，效果大不相同——图钉尖能扎进墙里，但同样大小的力作用在手掌上却毫无感觉。为了描述<strong>压力的作用效果</strong>，我们引入<strong>压强</strong>。</p>
+
+    <p><strong>压强</strong>：物体所受压力大小与受力面积之比，叫做压强，用 p 表示。</p>
+
+    <div class="formula-box">
+      p = F / S
+      <div class="sub">p — 压强（Pa）　　F — 压力（N）　　S — 受力面积（m²）</div>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>单位</strong>：帕斯卡，简称帕，符号 <strong>Pa</strong>。1 Pa = 1 N/m²，表示每平方米面积上受到 1 N 的压力。</li>
+      <li><strong>物理意义</strong>：压强越大，压力的作用效果越显著。</li>
+      <li><strong>单位换算</strong>：1 kPa = 1000 Pa；1 MPa = 10⁶ Pa；1 cm² = 10⁻⁴ m²。</li>
+    </ul>
+
+    <div class="section-header" style="font-size:18px; margin-top:20px;">🧮 交互 1：压强计算器</div>
+    <p style="font-size:14px; color:var(--text-secondary);">输入任意两个量，自动计算第三个。点击下方"实例"按钮快速填入参考值。</p>
+
+    <div class="calc-grid">
+      <div class="calc-field" id="field-F">
+        <div class="field-label">
+          <span>压力</span>
+          <span class="symbol">F</span>
+        </div>
+        <input type="number" id="input-F" placeholder="输入数值" step="any">
+        <div class="unit-toggle">
+          <button class="active" data-unit="N">N</button>
+        </div>
+      </div>
+
+      <div class="calc-field" id="field-S">
+        <div class="field-label">
+          <span>受力面积</span>
+          <span class="symbol">S</span>
+        </div>
+        <input type="number" id="input-S" placeholder="输入数值" step="any">
+        <div class="unit-toggle" id="S-units">
+          <button class="active" data-unit="m2">m²</button>
+          <button data-unit="cm2">cm²</button>
+        </div>
+      </div>
+
+      <div class="calc-field" id="field-p">
+        <div class="field-label">
+          <span>压强</span>
+          <span class="symbol">p</span>
+        </div>
+        <input type="number" id="input-p" placeholder="输入数值" step="any">
+        <div class="unit-toggle" id="p-units">
+          <button class="active" data-unit="Pa">Pa</button>
+          <button data-unit="kPa">kPa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-result-line" id="calc-result">输入任意两个量，第三个自动算出</div>
+
+    <div class="preset-row">
+      <button class="preset-btn" data-preset="thumbtack">📌 图钉尖（F=5N, S=0.05mm²）</button>
+      <button class="preset-btn" data-preset="book">📚 课本放桌面</button>
+      <button class="preset-btn" data-preset="adult">🧍 成人站立（单脚）</button>
+      <button class="preset-btn" data-preset="tank">🚜 坦克履带</button>
+      <button class="preset-btn" data-preset="clear">🗑️ 清空</button>
+    </div>
   </div>
+
+  <!-- ===== 第三部分：改变压强 ===== -->
+  <div class="card">
+    <div class="section-header">🔧 3. 改变压强的方法</div>
+
+    <p>从公式 <strong>p = F / S</strong> 可以看出，压强由<strong>压力</strong>和<strong>受力面积</strong>共同决定。改变任意一个，就能改变压强：</p>
+
+    <div class="know-grid">
+      <div class="know-card">
+        <div class="icon">⬇️</div>
+        <h4>减小压强</h4>
+        <p>· 减小压力（如轻放）<br>· <strong>增大受力面积</strong><br>例：宽书包带、雪地滑雪板、坦克履带、骆驼大脚掌、铁轨下铺枕木</p>
+      </div>
+      <div class="know-card">
+        <div class="icon">⬆️</div>
+        <h4>增大压强</h4>
+        <p>· 增大压力（如用力切菜）<br>· <strong>减小受力面积</strong><br>例：刀刃磨薄、图钉尖、缝衣针、啄木鸟尖嘴、破窗锤尖头</p>
+      </div>
+    </div>
+
+    <div class="section-header" style="font-size:18px; margin-top:24px;">🔄 交互 2：增大 / 减小压强对比</div>
+    <p style="font-size:14px; color:var(--text-secondary);">选择一个场景，拖动滑块改变"接触面积"，观察压强变化和"陷入"效果。</p>
+
+    <div class="scene-tabs" id="scene-tabs">
+      <button class="scene-tab active" data-scene="knife">🔪 刀刃薄 vs 厚</button>
+      <button class="scene-tab" data-scene="thumbtack">📌 图钉尖 vs 平</button>
+      <button class="scene-tab" data-scene="snow">⛷️ 雪地靴宽 vs 窄</button>
+      <button class="scene-tab" data-scene="bag">🎒 书包带宽 vs 窄</button>
+    </div>
+
+    <div class="demo-container">
+      <svg id="compare-svg" viewBox="0 0 560 320" width="560" height="320">
+        <!-- 内容由 JS 动态渲染 -->
+      </svg>
+    </div>
+
+    <div class="slider-row">
+      <label>接触面积 S：</label>
+      <input type="range" id="area-slider" min="1" max="100" value="50">
+      <div class="value-display" id="area-display">50</div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">压力 F：</span><span class="value" id="cmp-F">10 N</span></div>
+      <div class="readout-item"><span class="label">面积 S：</span><span class="value" id="cmp-S">—</span></div>
+      <div class="readout-item"><span class="label">压强 p：</span><span class="value" id="cmp-p">—</span></div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-cell high" id="cell-high">
+        <h5>减小面积 · 增大压强 <span class="tag-mini">压强大</span></h5>
+        <div style="font-size:13px; color:var(--text-secondary);" id="desc-high">接触面积小，压力集中，作用效果显著</div>
+        <div class="p-val" id="p-high">—</div>
+      </div>
+      <div class="compare-cell low" id="cell-low">
+        <h5>增大面积 · 减小压强 <span class="tag-mini">压强小</span></h5>
+        <div style="font-size:13px; color:var(--text-secondary);" id="desc-low">接触面积大，压力分散，作用效果弱</div>
+        <div class="p-val" id="p-low">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：液体压强 ===== -->
+  <div class="card">
+    <div class="section-header">💧 4. 液体压强</div>
+
+    <p>把气球套在矿泉水瓶上，扎几个小孔，灌满水——你会发现水会从每个孔向<strong>各个方向</strong>喷出。这说明：液体内部向<strong>各个方向都有压强</strong>。</p>
+
+    <ul class="property-list">
+      <li>液体内部向<strong>各个方向</strong>都有压强。</li>
+      <li>在同一深度，液体向各个方向的压强<strong>相等</strong>。</li>
+      <li><strong>深度越深，压强越大</strong>——所以深水潜水员要穿特制潜水服。</li>
+      <li>液体压强还与液体<strong>密度</strong>有关：密度越大，压强越大。</li>
+    </ul>
+
+    <div class="formula-box">
+      p = ρ g h
+      <div class="sub">p — 液体压强（Pa）　ρ — 液体密度（kg/m³）　g = 10 N/kg　h — 深度（m，从液面竖直向下计算）</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">⚠️ 注意</div>
+      深度 h 是<strong>从液面到所求点</strong>的竖直距离，<strong>不是</strong>到容器底的距离，也不是斜向距离。液面下的点越深，h 越大，p 越大。
+    </div>
+
+    <div class="section-header" style="font-size:18px; margin-top:24px;">🚰 交互 3：液体压强模拟</div>
+    <p style="font-size:14px; color:var(--text-secondary);">选择液体种类，调节深度，观察侧壁不同深度孔的水柱喷射距离——越深的孔喷得越远！</p>
+
+    <div class="demo-container">
+      <svg id="liquid-svg" viewBox="0 0 560 380" width="560" height="380">
+        <!-- 由 JS 动态渲染 -->
+      </svg>
+    </div>
+
+    <div class="scene-tabs" id="liquid-tabs">
+      <button class="scene-tab active" data-liquid="water">💧 水（ρ=1.0×10³）</button>
+      <button class="scene-tab" data-liquid="salt">🧂 盐水（ρ=1.2×10³）</button>
+      <button class="scene-tab" data-liquid="alcohol">🍶 酒精（ρ=0.8×10³）</button>
+    </div>
+
+    <div class="slider-row">
+      <label>所求点深度 h：</label>
+      <input type="range" id="depth-slider" min="0.1" max="1" step="0.05" value="0.5">
+      <div class="value-display" id="depth-display">0.50 m</div>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">液体密度 ρ：</span><span class="value" id="liq-rho">1.0×10³ kg/m³</span></div>
+      <div class="readout-item"><span class="label">深度 h：</span><span class="value" id="liq-h">0.50 m</span></div>
+      <div class="readout-item"><span class="label">压强 p = ρgh：</span><span class="value" id="liq-p">5000 Pa</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：大气压强 ===== -->
+  <div class="card">
+    <div class="section-header">🌍 5. 大气压强</div>
+
+    <p>我们生活在大气的"海洋"底部，空气也受重力，空气也像液体一样能流动，所以空气内部各个方向也都有压强——这就是<strong>大气压强</strong>，简称<strong>大气压</strong>。</p>
+
+    <div class="know-grid">
+      <div class="know-card">
+        <div class="icon">🧱</div>
+        <h4>存在证明：马德堡半球实验</h4>
+        <p>1654 年，德国马德堡市市长奥托·冯·格里克把两个铜半球合在一起，抽去内部空气，竟然用 16 匹马都拉不开！有力证明了大气压的存在且非常大。</p>
+      </div>
+      <div class="know-card">
+        <div class="icon">📏</div>
+        <h4>测量：托里拆利实验</h4>
+        <p>1644 年意大利科学家托里拆利，用一根约 1 m 长的玻璃管装满水银倒置入水银槽中，管内水银柱下降到约 <strong>760 mm</strong> 处不再下降——这段水银柱产生的压强就等于大气压。</p>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      标准大气压 p₀ = ρ<sub>水银</sub> g h = 13.6×10³ × 10 × 0.76 ≈ <strong>1.01×10⁵ Pa</strong> = 760 mmHg
+    </div>
+
+    <!-- ===== 交互4：托里拆利 ===== -->
+    <div class="section-header" style="font-size:18px; margin-top:24px;">🧪 交互 4：托里拆利实验模拟</div>
+    <p style="font-size:14px; color:var(--text-secondary);">点击"下一步"逐步完成实验，观察水银柱高度变化。</p>
+
+    <div class="step-display" id="tor-step-display">
+      <div class="step-pill active" data-step="0">1</div>
+      <div class="step-pill" data-step="1">2</div>
+      <div class="step-pill" data-step="2">3</div>
+      <div class="step-pill" data-step="3">4</div>
+    </div>
+    <div class="step-desc" id="tor-step-desc">步骤 1：将约 1 m 长的玻璃管装满水银</div>
+
+    <div class="demo-container">
+      <svg id="tor-svg" viewBox="0 0 480 380" width="480" height="380">
+        <!-- 由 JS 渲染 -->
+      </svg>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" id="tor-prev">← 上一步</button>
+      <button class="btn btn-primary" id="tor-next">下一步 →</button>
+      <button class="btn btn-outline" id="tor-reset">重置</button>
+    </div>
+
+    <div class="info-readout">
+      <div class="readout-item"><span class="label">水银柱高度：</span><span class="value" id="tor-height">— mm</span></div>
+      <div class="readout-item"><span class="label">大气压：</span><span class="value" id="tor-pressure">— Pa</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 交互5：马德堡半球 ===== -->
+  <div class="card">
+    <div class="section-header">🧲 交互 5：马德堡半球实验</div>
+    <p style="font-size:14px; color:var(--text-secondary);">先"抽出空气"，再尝试"拉开"两半球。调节球内残余气压，看看拉力会发生什么变化。</p>
+
+    <div class="demo-container">
+      <svg id="hemi-svg" viewBox="0 0 480 280" width="480" height="280">
+        <!-- 由 JS 渲染 -->
+      </svg>
+    </div>
+
+    <div class="slider-row">
+      <label>球内残余气压（相对大气压）：</label>
+      <input type="range" id="hemi-slider" min="0" max="100" value="0">
+      <div class="value-display" id="hemi-display">0%</div>
+    </div>
+
+    <div class="hemisphere-status">
+      <div class="status-block">
+        <div class="status-label">球内气压</div>
+        <div class="status-value warn" id="hemi-inner">0 Pa</div>
+      </div>
+      <div class="status-block">
+        <div class="status-label">外部大气压</div>
+        <div class="status-value" id="hemi-outer">1.01×10⁵ Pa</div>
+      </div>
+      <div class="status-block">
+        <div class="status-label">压力差（压紧力）</div>
+        <div class="status-value" id="hemi-diff">1.01×10⁵ Pa</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="hemi-pump">💨 抽出空气</button>
+      <button class="btn btn-danger" id="hemi-pull">💪 拉开半球</button>
+      <button class="btn btn-outline" id="hemi-reset">↩️ 重置</button>
+    </div>
+
+    <div class="pull-result" id="hemi-result" style="background:var(--bg-soft);">先点击"抽出空气"开始实验</div>
+  </div>
+
+  <!-- ===== 练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 练习题</div>
+
+    <div class="quiz-question" id="quiz1">
+      <div class="question-text">1. 一本书平放在水平桌面上，书重 3 N，与桌面接触面积 0.05 m²。则书对桌面的压强是多少？</div>
+      <div class="quiz-option" data-idx="0">A. 15 Pa</div>
+      <div class="quiz-option" data-idx="1">B. 60 Pa</div>
+      <div class="quiz-option" data-idx="2">C. 0.15 Pa</div>
+      <div class="quiz-option" data-idx="3">D. 0.6 Pa</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz2">
+      <div class="question-text">2. 下列措施中，为了<strong>减小</strong>压强的是？</div>
+      <div class="quiz-option" data-idx="0">A. 切菜刀要经常磨一磨</div>
+      <div class="quiz-option" data-idx="1">B. 图钉的尖端做得很尖</div>
+      <div class="quiz-option" data-idx="2">C. 推土机履带做得很宽</div>
+      <div class="quiz-option" data-idx="3">D. 破窗锤的敲击端做成尖锥状</div>
+      <div class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-question" id="quiz3">
+      <div class="question-text">3. 一只潜水艇潜入水下 20 m 深处，此处水产生的压强约为多少？（ρ水 = 1.0×10³ kg/m³，g = 10 N/kg）</div>
+      <div class="quiz-option" data-idx="0">A. 2×10³ Pa</div>
+      <div class="quiz-option" data-idx="1">B. 2×10⁴ Pa</div>
+      <div class="quiz-option" data-idx="2">C. 2×10⁵ Pa</div>
+      <div class="quiz-option" data-idx="3">D. 2×10⁶ Pa</div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉</div>
+    <p>· 压强公式 p = F/S 中的面积计算（长方形、三角形、圆）↔ <a href="../../数学/八年级/01-三角形.html">数学 · 三角形</a>（面积计算）</p>
+    <p>· 液体压强 p = ρgh 中的深度、压强比例关系 ↔ 数学中的<strong>正比例函数</strong></p>
+    <p>· 托里拆利实验中水银柱高度计算 ↔ 数学中的<strong>等式与单位换算</strong></p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="08-运动和力.html" class="btn btn-outline">← 上一章：运动和力</a>
+    <a href="10-浮力.html" class="btn btn-primary">下一章：浮力 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+'use strict';
+
+// ============================================================
+// 工具函数
+// ============================================================
+function $(id) { return document.getElementById(id); }
+function clamp(v, mn, mx) { return Math.min(mx, Math.max(mn, v)); }
+function fmtSci(v) {
+  // 简化科学计数法显示
+  if (v === 0) return '0';
+  var abs = Math.abs(v);
+  if (abs >= 10000 || abs < 0.01) return v.toExponential(2).replace('e+', '×10^').replace('e-', '×10^-');
+  return v.toFixed(2);
+}
+function fmtPa(p) {
+  if (p >= 100000) return (p / 100000).toFixed(2) + '×10⁵ Pa';
+  if (p >= 1000) return (p / 1000).toFixed(2) + ' kPa';
+  return p.toFixed(1) + ' Pa';
+}
+
+// ============================================================
+// 交互 1：压强计算器
+// ============================================================
+var calcState = {
+  F: null, S: null, p: null,    // 存储的值（SI 单位）
+  Sunit: 'm2', punits: 'Pa',
+  lastEdited: null
+};
+
+// 单位换算
+function convertS(val, unit) {
+  // 返回 m²
+  return unit === 'cm2' ? val * 1e-4 : val;
+}
+function convertP(val, unit) {
+  // 返回 Pa
+  return unit === 'kPa' ? val * 1000 : val;
+}
+function unconvertS(val, unit) {
+  return unit === 'cm2' ? val * 1e4 : val;
+}
+function unconvertP(val, unit) {
+  return unit === 'kPa' ? val / 1000 : val;
+}
+
+function readCalcInputs() {
+  var fRaw = $('input-F').value;
+  var sRaw = $('input-S').value;
+  var pRaw = $('input-p').value;
+  calcState.F = fRaw === '' ? null : parseFloat(fRaw);
+  calcState.S = sRaw === '' ? null : convertS(parseFloat(sRaw), calcState.Sunit);
+  calcState.p = pRaw === '' ? null : convertP(parseFloat(pRaw), calcState.punits);
+}
+
+function recalcCalc(skipField) {
+  // 根据已输入的两个量算第三个
+  var F = calcState.F, S = calcState.S, p = calcState.p;
+  var haveF = F !== null && !isNaN(F);
+  var haveS = S !== null && !isNaN(S);
+  var haveP = p !== null && !isNaN(p);
+  var result = $('calc-result');
+
+  if (haveF && haveS && S !== 0) {
+    var calcP = F / S;
+    $('input-p').value = unconvertP(calcP, calcState.punits).toFixed(4).replace(/\.?0+$/, '');
+    result.innerHTML = 'p = F / S = ' + F.toFixed(2) + ' N ÷ ' + S.toFixed(4) + ' m² = <strong>' + fmtPa(calcP) + '</strong>';
+  } else if (haveF && haveP && p !== 0) {
+    var calcS = F / p;
+    $('input-S').value = unconvertS(calcS, calcState.Sunit).toFixed(4).replace(/\.?0+$/, '');
+    result.innerHTML = 'S = F / p = ' + F.toFixed(2) + ' N ÷ ' + fmtPa(p) + ' = <strong>' + (calcS * (calcState.Sunit === 'cm2' ? 1e4 : 1)).toFixed(4) + ' ' + (calcState.Sunit === 'cm2' ? 'cm²' : 'm²') + '</strong>';
+  } else if (haveS && haveP && S !== 0) {
+    var calcF = p * S;
+    $('input-F').value = calcF.toFixed(4).replace(/\.?0+$/, '');
+    result.innerHTML = 'F = p × S = ' + fmtPa(p) + ' × ' + S.toFixed(4) + ' m² = <strong>' + calcF.toFixed(2) + ' N</strong>';
+  } else {
+    result.innerHTML = '输入任意两个量，第三个自动算出（当前输入 ' + (haveF?'1':'0') + (haveS?'1':'0') + (haveP?'1':'0') + '）';
+  }
+}
+
+function initCalc() {
+  ['input-F', 'input-S', 'input-p'].forEach(function(id) {
+    $(id).addEventListener('input', function() {
+      readCalcInputs();
+      recalcCalc();
+    });
+  });
+  // 单位切换
+  $('S-units').querySelectorAll('button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      // 先读当前值
+      var oldVal = $('input-S').value;
+      var oldUnit = calcState.Sunit;
+      var newUnit = btn.dataset.unit;
+      // 切换按钮 active
+      $('S-units').querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      calcState.Sunit = newUnit;
+      // 换算显示值
+      if (oldVal !== '') {
+        var inM2 = convertS(parseFloat(oldVal), oldUnit);
+        $('input-S').value = unconvertS(inM2, newUnit).toFixed(4).replace(/\.?0+$/, '');
+      }
+      readCalcInputs();
+      recalcCalc();
+    });
+  });
+  $('p-units').querySelectorAll('button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var oldVal = $('input-p').value;
+      var oldUnit = calcState.punits;
+      var newUnit = btn.dataset.unit;
+      $('p-units').querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      calcState.punits = newUnit;
+      if (oldVal !== '') {
+        var inPa = convertP(parseFloat(oldVal), oldUnit);
+        $('input-p').value = unconvertP(inPa, newUnit).toFixed(4).replace(/\.?0+$/, '');
+      }
+      readCalcInputs();
+      recalcCalc();
+    });
+  });
+
+  // 预设值
+  var presets = {
+    thumbtack: { F: 5, S_m2: 5e-8, p: null },     // 0.05 mm² = 5e-8 m²
+    book:      { F: 3, S_m2: 0.05, p: null },     // 课本放桌面
+    adult:     { F: 600, S_m2: 0.02, p: null },   // 单脚 ~ 200 cm²
+    tank:      { F: 500000, S_m2: 5, p: null },   // 坦克履带
+    clear:     null
+  };
+  document.querySelectorAll('.preset-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = btn.dataset.preset;
+      if (key === 'clear') {
+        $('input-F').value = '';
+        $('input-S').value = '';
+        $('input-p').value = '';
+        readCalcInputs();
+        recalcCalc();
+        return;
+      }
+      var data = presets[key];
+      if (!data) return;
+      $('input-F').value = data.F;
+      $('input-S').value = unconvertS(data.S_m2, calcState.Sunit).toFixed(4).replace(/\.?0+$/, '');
+      $('input-p').value = '';
+      readCalcInputs();
+      recalcCalc();
+    });
+  });
+}
+
+// ============================================================
+// 交互 2：增大/减小压强对比
+// ============================================================
+var compareScenes = {
+  knife: {
+    F: 20,
+    descHigh: '薄刃：接触面积小，压强大，容易切开食物',
+    descLow: '厚背：接触面积大，压强小，切不动',
+    icon: 'knife'
+  },
+  thumbtack: {
+    F: 5,
+    descHigh: '尖端：面积仅 ~0.05 mm²，压强极大，轻松扎入',
+    descLow: '钉帽：面积大，压强小，按住不疼',
+    icon: 'thumbtack'
+  },
+  snow: {
+    F: 600,
+    descHigh: '窄鞋：陷入雪中很深，行走困难',
+    descLow: '宽雪地靴：面积大，压强小，不易陷入',
+    icon: 'snow'
+  },
+  bag: {
+    F: 30,
+    descHigh: '窄带：勒肩疼，压强大',
+    descLow: '宽带：分散压力，舒适不勒',
+    icon: 'bag'
+  }
+};
+var currentScene = 'knife';
+
+function renderCompareSVG() {
+  var svg = $('compare-svg');
+  var scene = compareScenes[currentScene];
+  var F = scene.F;
+  // 滑块值 1-100 表示 "接触面积比例"，1=极小，100=极大
+  var sliderVal = parseInt($('area-slider').value);
+  // 计算两个对比面积（m²）
+  // 用滑块控制"小"场景的面积比例
+  var S_high, S_low;
+  if (currentScene === 'knife') {
+    // 刀刃：0.5 mm² ~ 50 mm²
+    S_high = (0.5 + sliderVal * 0.5) * 1e-6;  // m²
+    S_low = (50 + sliderVal * 5) * 1e-6;
+  } else if (currentScene === 'thumbtack') {
+    S_high = (0.05 + sliderVal * 0.05) * 1e-6;
+    S_low = (50 + sliderVal * 2) * 1e-6;
+  } else if (currentScene === 'snow') {
+    // 鞋：50 cm² ~ 500 cm²
+    S_high = (30 + sliderVal * 1) * 1e-4;
+    S_low = (300 + sliderVal * 10) * 1e-4;
+  } else { // bag
+    S_high = (2 + sliderVal * 0.2) * 1e-4;
+    S_low = (20 + sliderVal * 1) * 1e-4;
+  }
+  var p_high = F / S_high;
+  var p_low = F / S_low;
+
+  // 更新读数
+  $('cmp-F').textContent = F + ' N';
+  $('cmp-S').textContent = (S_high * 1e6).toFixed(2) + ' mm²（小）';
+  $('cmp-p').textContent = fmtPa(p_high);
+  $('p-high').textContent = 'p = ' + fmtPa(p_high);
+  $('p-low').textContent = 'p = ' + fmtPa(p_low);
+  $('desc-high').textContent = scene.descHigh;
+  $('desc-low').textContent = scene.descLow;
+
+  // 绘制 SVG（左：小面积陷入深，右：大面积陷入浅）
+  // 陷入深度 ∝ 压强
+  var sinkHigh = clamp(p_high / (p_high + p_low) * 40 + 8, 5, 50);
+  var sinkLow = clamp(p_low / (p_high + p_low) * 40 + 3, 2, 30);
+
+  var svgContent = '';
+  // 表面线
+  var surfaceY = 220;
+
+  // ===== 左侧（小面积，压强大，陷入深） =====
+  var leftX = 140;
+  // 表面凹陷
+  svgContent += '<path d="M 30 ' + surfaceY + ' Q ' + (leftX - 30) + ' ' + (surfaceY + sinkHigh) + ' ' + leftX + ' ' + (surfaceY + sinkHigh) + ' Q ' + (leftX + 30) + ' ' + (surfaceY + sinkHigh) + ' ' + 250 + ' ' + surfaceY + '" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>';
+  svgContent += '<line x1="30" y1="' + surfaceY + '" x2="250" y2="' + surfaceY + '" stroke="#B8956A" stroke-width="1" stroke-dasharray="4,3"/>';
+  svgContent += '<text x="140" y="58" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="600">小面积 · 压强大</text>';
+
+  if (currentScene === 'knife') {
+    // 刀
+    var knifeY = surfaceY - 50 + sinkHigh;
+    svgContent += '<g transform="translate(' + leftX + ',' + knifeY + ')">';
+    svgContent += '<path d="M -40 -40 L 40 -40 L 0 10 Z" fill="#BDC3C7" stroke="#7F8C8D" stroke-width="1.5"/>';
+    svgContent += '<rect x="-10" y="-70" width="20" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '</g>';
+  } else if (currentScene === 'thumbtack') {
+    var tackY = surfaceY - 60 + sinkHigh;
+    svgContent += '<g transform="translate(' + leftX + ',' + tackY + ')">';
+    svgContent += '<circle cx="0" cy="-30" r="14" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>';
+    svgContent += '<line x1="0" y1="-16" x2="0" y2="20" stroke="#888" stroke-width="3"/>';
+    svgContent += '<polygon points="-2,20 2,20 0,28" fill="#666"/>';
+    svgContent += '</g>';
+  } else if (currentScene === 'snow') {
+    var bootY = surfaceY - 50 + sinkHigh;
+    svgContent += '<g transform="translate(' + leftX + ',' + bootY + ')">';
+    svgContent += '<rect x="-22" y="-30" width="44" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '<rect x="-15" y="-50" width="22" height="22" fill="#7B5E3D" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '</g>';
+  } else { // bag
+    var strapY = surfaceY - 35 + sinkHigh;
+    svgContent += '<g transform="translate(' + leftX + ',' + strapY + ')">';
+    svgContent += '<rect x="-30" y="-10" width="60" height="6" fill="' + (sliderVal < 30 ? '#E74C3C' : '#9B59B6') + '" stroke="#333" stroke-width="1"/>';
+    svgContent += '<text x="0" y="22" text-anchor="middle" font-size="11" fill="#666">肩</text>';
+    svgContent += '</g>';
+  }
+
+  // 压力箭头
+  svgContent += '<line x1="' + leftX + '" y1="80" x2="' + leftX + '" y2="' + (surfaceY - 60 + sinkHigh) + '" stroke="#4A90D9" stroke-width="2" marker-end="url(#cmpArrow)"/>';
+  svgContent += '<text x="' + (leftX + 8) + '" y="90" font-size="12" fill="#4A90D9" font-weight="600">F=' + F + 'N</text>';
+  // 压强标签
+  svgContent += '<rect x="' + (leftX - 50) + '" y="' + (surfaceY + 60) + '" width="100" height="22" rx="11" fill="#E74C3C"/>';
+  svgContent += '<text x="' + leftX + '" y="' + (surfaceY + 75) + '" text-anchor="middle" font-size="12" fill="white" font-weight="600">' + fmtPa(p_high) + '</text>';
+
+  // ===== 右侧（大面积，压强小，陷入浅） =====
+  var rightX = 420;
+  svgContent += '<path d="M 310 ' + surfaceY + ' Q ' + (rightX - 30) + ' ' + (surfaceY + sinkLow) + ' ' + rightX + ' ' + (surfaceY + sinkLow) + ' Q ' + (rightX + 30) + ' ' + (surfaceY + sinkLow) + ' ' + 530 + ' ' + surfaceY + '" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>';
+  svgContent += '<line x1="310" y1="' + surfaceY + '" x2="530" y2="' + surfaceY + '" stroke="#B8956A" stroke-width="1" stroke-dasharray="4,3"/>';
+  svgContent += '<text x="420" y="58" text-anchor="middle" font-size="13" fill="#27AE60" font-weight="600">大面积 · 压强小</text>';
+
+  if (currentScene === 'knife') {
+    var knifeY2 = surfaceY - 50 + sinkLow;
+    svgContent += '<g transform="translate(' + rightX + ',' + knifeY2 + ')">';
+    svgContent += '<path d="M -40 -38 L 40 -38 L 0 -10 L 0 5 L -2 5 Z" fill="#BDC3C7" stroke="#7F8C8D" stroke-width="1.5"/>';
+    svgContent += '<rect x="-10" y="-70" width="20" height="32" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '</g>';
+  } else if (currentScene === 'thumbtack') {
+    var tackY2 = surfaceY - 60 + sinkLow;
+    svgContent += '<g transform="translate(' + rightX + ',' + tackY2 + ')">';
+    svgContent += '<circle cx="0" cy="-10" r="20" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>';
+    svgContent += '<line x1="0" y1="10" x2="0" y2="22" stroke="#888" stroke-width="3"/>';
+    svgContent += '<polygon points="-2,22 2,22 0,28" fill="#666"/>';
+    svgContent += '</g>';
+  } else if (currentScene === 'snow') {
+    var bootY2 = surfaceY - 50 + sinkLow;
+    svgContent += '<g transform="translate(' + rightX + ',' + bootY2 + ')">';
+    svgContent += '<rect x="-50" y="-30" width="100" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '<rect x="-40" y="-50" width="22" height="22" fill="#7B5E3D" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
+    svgContent += '</g>';
+  } else { // bag
+    var strapY2 = surfaceY - 35 + sinkLow;
+    svgContent += '<g transform="translate(' + rightX + ',' + strapY2 + ')">';
+    svgContent += '<rect x="-50" y="-10" width="100" height="8" fill="#27AE60" stroke="#333" stroke-width="1"/>';
+    svgContent += '<text x="0" y="24" text-anchor="middle" font-size="11" fill="#666">肩</text>';
+    svgContent += '</g>';
+  }
+
+  // 压力箭头
+  svgContent += '<line x1="' + rightX + '" y1="80" x2="' + rightX + '" y2="' + (surfaceY - 60 + sinkLow) + '" stroke="#4A90D9" stroke-width="2" marker-end="url(#cmpArrow)"/>';
+  svgContent += '<text x="' + (rightX + 8) + '" y="90" font-size="12" fill="#4A90D9" font-weight="600">F=' + F + 'N</text>';
+  svgContent += '<rect x="' + (rightX - 50) + '" y="' + (surfaceY + 50) + '" width="100" height="22" rx="11" fill="#27AE60"/>';
+  svgContent += '<text x="' + rightX + '" y="' + (surfaceY + 65) + '" text-anchor="middle" font-size="12" fill="white" font-weight="600">' + fmtPa(p_low) + '</text>';
+
+  // 底部说明
+  svgContent += '<text x="280" y="' + (320 - 8) + '" text-anchor="middle" font-size="12" fill="#7F8C8D">压力相同时，受力面积越小 → 压强越大 → 陷入越深</text>';
+
+  svg.innerHTML = '<defs><marker id="cmpArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/></marker></defs>' + svgContent;
+}
+
+function initCompare() {
+  $('scene-tabs').querySelectorAll('.scene-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      $('scene-tabs').querySelectorAll('.scene-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentScene = tab.dataset.scene;
+      renderCompareSVG();
+    });
+  });
+  $('area-slider').addEventListener('input', function() {
+    $('area-display').textContent = $('area-slider').value;
+    renderCompareSVG();
+  });
+  renderCompareSVG();
+}
+
+// ============================================================
+// 交互 3：液体压强模拟
+// ============================================================
+var liquids = {
+  water:  { name: '水', rho: 1000, color: '#4A90D9' },
+  salt:   { name: '盐水', rho: 1200, color: '#5DADE2' },
+  alcohol:{ name: '酒精', rho: 800, color: '#AED6F1' }
+};
+var currentLiquid = 'water';
+
+function renderLiquidSVG() {
+  var svg = $('liquid-svg');
+  var liq = liquids[currentLiquid];
+  var h = parseFloat($('depth-slider').value);   // m
+  var p = liq.rho * 10 * h;
+
+  $('depth-display').textContent = h.toFixed(2) + ' m';
+  $('liq-rho').textContent = (liq.rho / 1000).toFixed(1) + '×10³ kg/m³';
+  $('liq-h').textContent = h.toFixed(2) + ' m';
+  $('liq-p').textContent = fmtPa(p);
+
+  // 画一个容器（侧壁有三个孔）
+  var containerX = 160, containerY = 60, containerW = 200, containerH = 240;
+  var liquidTopY = containerY + 30;
+  var liquidBottomY = containerY + containerH - 10;
+  var fullDepth = 2.0;  // m，容器总深度（仅用于显示比例）
+  // 三个孔的位置
+  var holes = [
+    { y: liquidTopY + 60,  depth: 0.3 },
+    { y: liquidTopY + 130, depth: 0.9 },
+    { y: liquidTopY + 200, depth: 1.5 }
+  ];
+
+  var content = '';
+  // 容器边框
+  content += '<rect x="' + containerX + '" y="' + containerY + '" width="' + containerW + '" height="' + containerH + '" fill="none" stroke="#555" stroke-width="3"/>';
+  // 液体
+  content += '<rect x="' + (containerX + 3) + '" y="' + liquidTopY + '" width="' + (containerW - 6) + '" height="' + (containerH - (liquidTopY - containerY) - 6) + '" fill="' + liq.color + '" fill-opacity="0.45"/>';
+  // 液面波纹
+  content += '<line x1="' + (containerX + 3) + '" y1="' + liquidTopY + '" x2="' + (containerX + containerW - 3) + '" y2="' + liquidTopY + '" stroke="' + liq.color + '" stroke-width="2"/>';
+  // 液面文字
+  content += '<text x="' + (containerX - 8) + '" y="' + (liquidTopY + 4) + '" text-anchor="end" font-size="11" fill="#666">液面</text>';
+  // 容器底部地面
+  content += '<line x1="40" y1="' + (containerY + containerH) + '" x2="540" y2="' + (containerY + containerH) + '" stroke="#999" stroke-width="2"/>';
+  for (var gx = 50; gx < 540; gx += 20) {
+    content += '<line x1="' + gx + '" y1="' + (containerY + containerH) + '" x2="' + (gx - 8) + '" y2="' + (containerY + containerH + 8) + '" stroke="#999" stroke-width="1"/>';
+  }
+
+  // 深度标尺
+  content += '<line x1="' + (containerX - 25) + '" y1="' + liquidTopY + '" x2="' + (containerX - 25) + '" y2="' + liquidBottomY + '" stroke="#999" stroke-width="1"/>';
+  content += '<text x="' + (containerX - 30) + '" y="' + (liquidTopY + 4) + '" text-anchor="end" font-size="10" fill="#666">0</text>';
+  content += '<text x="' + (containerX - 30) + '" y="' + (liquidBottomY + 4) + '" text-anchor="end" font-size="10" fill="#666">2m</text>';
+
+  // 三个孔 + 水柱
+  for (var i = 0; i < holes.length; i++) {
+    var hole = holes[i];
+    var holeX = containerX + containerW;
+    var holeDepth = hole.depth;
+    var holeP = liq.rho * 10 * holeDepth;
+    // 喷射距离 ∝ √(2h(H-h))（抛体运动），简化为 ∝ depth * (fullDepth - depth)
+    var range = Math.sqrt(2 * holeDepth * (fullDepth - holeDepth)) * 70;
+
+    // 孔
+    content += '<circle cx="' + holeX + '" cy="' + hole.y + '" r="4" fill="#333"/>';
+    // 水柱（抛物线）
+    var endX = holeX + range;
+    var endY = liquidBottomY - 2;
+    var midX = holeX + range * 0.5;
+    var midY = hole.y + 8;
+    content += '<path d="M ' + holeX + ' ' + hole.y + ' Q ' + midX + ' ' + midY + ' ' + endX + ' ' + endY + '" fill="none" stroke="' + liq.color + '" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6,4" class="water-stream"/>';
+    // 孔深标签
+    content += '<text x="' + (holeX + 6) + '" y="' + (hole.y - 8) + '" font-size="11" fill="#2E6BA8" font-weight="600">h=' + holeDepth.toFixed(1) + 'm</text>';
+    // 压强标签
+    content += '<text x="' + (holeX + 6) + '" y="' + (hole.y + 10) + '" font-size="11" fill="#E74C3C">p=' + fmtPa(holeP) + '</text>';
+    // 喷射距离标签
+    content += '<text x="' + (holeX + range * 0.5) + '" y="' + (endY + 14) + '" text-anchor="middle" font-size="10" fill="#888">射程 ' + (range / 70).toFixed(2) + 'm</text>';
+  }
+
+  // 所求点（红色圆点）
+  var pointDepth = h;
+  var pointY = liquidTopY + (pointDepth / fullDepth) * (liquidBottomY - liquidTopY);
+  if (pointY > liquidBottomY) pointY = liquidBottomY;
+  content += '<circle cx="' + (containerX + containerW / 2) + '" cy="' + pointY + '" r="7" fill="#E74C3C" stroke="white" stroke-width="2"/>';
+  content += '<line x1="' + (containerX + containerW / 2) + '" y1="' + liquidTopY + '" x2="' + (containerX + containerW / 2) + '" y2="' + pointY + '" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="3,3"/>';
+  content += '<text x="' + (containerX + containerW / 2 + 10) + '" y="' + (pointY + 3) + '" font-size="12" fill="#E74C3C" font-weight="600">所求点</text>';
+  content += '<text x="' + (containerX + containerW / 2 + 10) + '" y="' + (pointY + 18) + '" font-size="11" fill="#E74C3C">h=' + h.toFixed(2) + 'm</text>';
+  content += '<text x="' + (containerX + containerW / 2 + 10) + '" y="' + (pointY + 32) + '" font-size="11" fill="#E74C3C">p=' + fmtPa(p) + '</text>';
+
+  // 标题
+  content += '<text x="280" y="25" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">液体：' + liq.name + '（ρ = ' + (liq.rho/1000).toFixed(1) + '×10³ kg/m³）</text>';
+  // 公式
+  content += '<text x="280" y="' + (containerY + containerH + 30) + '" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="600">p = ρgh = ' + (liq.rho/1000).toFixed(1) + '×10³ × 10 × ' + h.toFixed(2) + ' = ' + fmtPa(p) + '</text>';
+  // 结论
+  content += '<text x="280" y="' + (containerY + containerH + 50) + '" text-anchor="middle" font-size="12" fill="#7F8C8D">💡 越深的孔喷得越远 —— 深度越大，压强越大</text>';
+
+  svg.innerHTML = content;
+}
+
+function initLiquid() {
+  $('liquid-tabs').querySelectorAll('.scene-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      $('liquid-tabs').querySelectorAll('.scene-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentLiquid = tab.dataset.liquid;
+      renderLiquidSVG();
+    });
+  });
+  $('depth-slider').addEventListener('input', renderLiquidSVG);
+  renderLiquidSVG();
+}
+
+// ============================================================
+// 交互 4：托里拆利实验
+// ============================================================
+var torStep = 0;
+var torSteps = [
+  { desc: '步骤 1：将约 1 m 长的玻璃管装满水银', height: 1000, label: '装满水银' },
+  { desc: '步骤 2：用手指堵住管口，倒置浸入水银槽', height: 1000, label: '倒置入槽' },
+  { desc: '步骤 3：松开手指，水银柱开始下降', height: 800, label: '水银下降' },
+  { desc: '步骤 4：水银柱稳定在 760 mm 高度，上方为真空', height: 760, label: '稳定 760mm' }
+];
+
+function renderTorSVG() {
+  var svg = $('tor-svg');
+  var step = torSteps[torStep];
+  var tubeH = step.height;  // mm
+
+  // 显示描述
+  $('tor-step-desc').textContent = step.desc;
+  // 步骤 pill 状态
+  $('tor-step-display').querySelectorAll('.step-pill').forEach(function(p, i) {
+    p.classList.remove('active', 'done');
+    if (i < torStep) p.classList.add('done');
+    else if (i === torStep) p.classList.add('active');
+  });
+
+  // 读数显示
+  if (torStep === 3) {
+    $('tor-height').textContent = '760 mm';
+    $('tor-pressure').textContent = '1.01×10⁵ Pa';
+  } else if (torStep === 2) {
+    $('tor-height').textContent = '~800 mm（下降中）';
+    $('tor-pressure').textContent = '约 1.07×10⁵ Pa';
+  } else {
+    $('tor-height').textContent = '— mm';
+    $('tor-pressure').textContent = '— Pa';
+  }
+
+  // SVG 绘制
+  var content = '';
+  var tubeX = 200, tubeTopY = 30, tubeW = 28, tubeBottomY = 320;
+  var tubeLen = tubeBottomY - tubeTopY;  // 像素，对应 1000mm
+  var mercuryH = tubeH; // mm
+  var mercuryPx = (mercuryH / 1000) * tubeLen;
+
+  // 水银槽
+  var troughY = tubeBottomY - 5;
+  content += '<rect x="120" y="' + (troughY) + '" width="180" height="40" rx="4" fill="#7F8C8D" stroke="#555" stroke-width="2"/>';
+  content += '<rect x="125" y="' + (troughY + 5) + '" width="170" height="32" rx="3" fill="#BDC3C7"/>';
+  // 槽内水银
+  content += '<rect x="125" y="' + (troughY + 8) + '" width="170" height="29" fill="#888" stroke="#555" stroke-width="1"/>';
+
+  // 玻璃管
+  content += '<rect x="' + tubeX + '" y="' + tubeTopY + '" width="' + tubeW + '" height="' + tubeLen + '" fill="rgba(200,230,255,0.4)" stroke="#555" stroke-width="2"/>';
+
+  // 管内水银柱
+  var mercuryTopY = tubeBottomY - mercuryPx;
+  if (torStep === 0) {
+    // 管装满，水平放置
+    content += '<rect x="' + (tubeX + 2) + '" y="' + (tubeTopY + 2) + '" width="' + (tubeW - 4) + '" height="' + (tubeLen - 4) + '" fill="#888"/>';
+  } else {
+    content += '<rect x="' + (tubeX + 2) + '" y="' + mercuryTopY + '" width="' + (tubeW - 4) + '" height="' + mercuryPx + '" fill="#888" stroke="#666" stroke-width="1"/>';
+    // 真空标识
+    if (torStep === 3) {
+      content += '<rect x="' + (tubeX + 4) + '" y="' + (tubeTopY + 4) + '" width="' + (tubeW - 8) + '" height="' + (mercuryTopY - tubeTopY - 4) + '" fill="rgba(255,255,255,0.7)"/>';
+      content += '<text x="' + (tubeX + tubeW / 2) + '" y="' + ((tubeTopY + mercuryTopY) / 2 + 4) + '" text-anchor="middle" font-size="11" fill="#999" font-weight="600">真空</text>';
+    } else if (torStep === 2) {
+      content += '<rect x="' + (tubeX + 4) + '" y="' + (tubeTopY + 4) + '" width="' + (tubeW - 8) + '" height="' + (mercuryTopY - tubeTopY - 4) + '" fill="rgba(255,255,255,0.4)"/>';
+    }
+  }
+
+  // 标尺
+  var rulerX = tubeX + tubeW + 10;
+  content += '<line x1="' + rulerX + '" y1="' + tubeTopY + '" x2="' + rulerX + '" y2="' + tubeBottomY + '" stroke="#666" stroke-width="1.5"/>';
+  // 刻度
+  for (var t = 0; t <= 1000; t += 100) {
+    var y = tubeBottomY - (t / 1000) * tubeLen;
+    content += '<line x1="' + rulerX + '" y1="' + y + '" x2="' + (rulerX + 8) + '" y2="' + y + '" stroke="#666" stroke-width="1"/>';
+    if (t % 200 === 0) {
+      content += '<text x="' + (rulerX + 12) + '" y="' + (y + 4) + '" font-size="10" fill="#666">' + t + 'mm</text>';
+    }
+  }
+  // 760mm 高亮
+  var y760 = tubeBottomY - (760 / 1000) * tubeLen;
+  content += '<line x1="' + (rulerX - 4) + '" y1="' + y760 + '" x2="' + (rulerX + 8) + '" y2="' + y760 + '" stroke="#E74C3C" stroke-width="2"/>';
+  if (torStep === 3) {
+    content += '<text x="' + (rulerX - 70) + '" y="' + (y760 - 4) + '" font-size="13" fill="#E74C3C" font-weight="700">760 mm ←</text>';
+  } else {
+    content += '<text x="' + (rulerX + 12) + '" y="' + (y760 + 4) + '" font-size="10" fill="#E74C3C" font-weight="600">760</text>';
+  }
+
+  // 大气压箭头（压向槽内水银）
+  if (torStep >= 2) {
+    content += '<path d="M 60 ' + (troughY + 20) + ' L 110 ' + (troughY + 20) + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#torArrow)"/>';
+    content += '<text x="50" y="' + (troughY + 14) + '" font-size="12" fill="#E74C3C" font-weight="600">大气压</text>';
+    content += '<text x="40" y="' + (troughY + 36) + '" font-size="11" fill="#888">压向水银面</text>';
+  }
+
+  // 说明文字
+  content += '<text x="380" y="60" font-size="13" fill="#2C3E50" font-weight="600">📐 原理：</text>';
+  content += '<text x="380" y="84" font-size="11" fill="#666">大气压 = 水银柱压强</text>';
+  content += '<text x="380" y="104" font-size="11" fill="#666">p = ρ水银 · g · h</text>';
+  content += '<text x="380" y="124" font-size="11" fill="#666">= 13.6×10³ × 10 × 0.76</text>';
+  content += '<text x="380" y="144" font-size="12" fill="#E74C3C" font-weight="700">≈ 1.01×10⁵ Pa</text>';
+
+  if (torStep === 3) {
+    content += '<text x="380" y="180" font-size="11" fill="#27AE60">✓ 管内水银面以上为真空</text>';
+    content += '<text x="380" y="200" font-size="11" fill="#27AE60">✓ 水银柱高度 = 760 mm</text>';
+    content += '<text x="380" y="220" font-size="11" fill="#27AE60">✓ 这就是"标准大气压"</text>';
+  }
+
+  content = '<defs><marker id="torArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/></marker></defs>' + content;
+
+  svg.innerHTML = content;
+}
+
+function initTor() {
+  $('tor-next').addEventListener('click', function() {
+    if (torStep < 3) { torStep++; renderTorSVG(); }
+  });
+  $('tor-prev').addEventListener('click', function() {
+    if (torStep > 0) { torStep--; renderTorSVG(); }
+  });
+  $('tor-reset').addEventListener('click', function() {
+    torStep = 0; renderTorSVG();
+  });
+  renderTorSVG();
+}
+
+// ============================================================
+// 交互 5：马德堡半球
+// ============================================================
+var hemiState = {
+  pumped: false,    // 是否已抽气
+  pulled: false,    // 是否尝试拉开
+  innerPct: 0       // 球内残余气压百分比（0=真空，100=大气压）
+};
+
+function renderHemiSVG() {
+  var svg = $('hemi-svg');
+  var innerP = hemiState.innerPct / 100 * 1.01e5;
+  var outerP = 1.01e5;
+  var diffP = outerP - innerP;
+  var separated = hemiState.pulled && hemiState.innerPct > 70;  // 残余气压大时拉得开
+
+  var content = '';
+  var cx = 240, cy = 140;
+
+  // 拉力箭头
+  var pullOffset = separated ? 50 : 0;
+
+  // 左半球
+  content += '<g transform="translate(' + (cx - 60 - pullOffset) + ',' + cy + ')">';
+  content += '<path d="M 0 -50 A 50 50 0 0 1 0 50 L 0 -50 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>';
+  content += '<path d="M 0 -50 A 50 50 0 0 1 0 50" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>';
+  content += '<circle cx="-25" cy="0" r="4" fill="#fff" opacity="0.4"/>';
+  content += '</g>';
+
+  // 右半球
+  content += '<g transform="translate(' + (cx + 60 + pullOffset) + ',' + cy + ')">';
+  content += '<path d="M 0 -50 A 50 50 0 0 0 0 50 L 0 -50 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>';
+  content += '<path d="M 0 -50 A 50 50 0 0 0 0 50" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>';
+  content += '<circle cx="25" cy="0" r="4" fill="#fff" opacity="0.4"/>';
+  content += '</g>';
+
+  // 拉绳
+  content += '<line x1="' + (cx - 110 - pullOffset) + '" y1="' + cy + '" x2="20" y2="' + cy + '" stroke="#5D4037" stroke-width="3"/>';
+  content += '<line x1="' + (cx + 110 + pullOffset) + '" y1="' + cy + '" x2="460" y2="' + cy + '" stroke="#5D4037" stroke-width="3"/>';
+  // 拉力箭头
+  if (hemiState.pulled) {
+    content += '<path d="M 80 ' + (cy - 20) + ' L 80 ' + (cy - 50) + '" stroke="#F5A623" stroke-width="2.5" marker-end="url(#hemiArrow)"/>';
+    content += '<text x="80" y="' + (cy - 56) + '" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="600">拉力↑</text>';
+    content += '<path d="M 400 ' + (cy - 20) + ' L 400 ' + (cy - 50) + '" stroke="#F5A623" stroke-width="2.5" marker-end="url(#hemiArrow)"/>';
+    content += '<text x="400" y="' + (cy - 56) + '" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="600">拉力↑</text>';
+  }
+
+  // 抽气管
+  if (hemiState.pumped && !separated) {
+    content += '<line x1="' + cx + '" y1="' + (cy + 50) + '" x2="' + cx + '" y2="230" stroke="#888" stroke-width="3"/>';
+    content += '<rect x="' + (cx - 20) + '" y="230" width="40" height="20" rx="3" fill="#7F8C8D" stroke="#555" stroke-width="1.5"/>';
+    content += '<text x="' + cx + '" y="270" text-anchor="middle" font-size="11" fill="#666">抽气泵</text>';
+  }
+
+  // 球内气压指示
+  if (hemiState.pumped) {
+    var innerColor = hemiState.innerPct < 30 ? '#E74C3C' : (hemiState.innerPct < 70 ? '#F5A623' : '#27AE60');
+    content += '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="12" fill="' + innerColor + '" font-weight="700">球内</text>';
+    content += '<text x="' + cx + '" y="' + (cy + 22) + '" text-anchor="middle" font-size="10" fill="' + innerColor + '">' + (innerP / 1000).toFixed(1) + ' kPa</text>';
+  }
+
+  // 外部大气压箭头
+  content += '<path d="M ' + (cx - 130 - pullOffset) + ' 60 L ' + (cx - 80 - pullOffset) + ' 60" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#hemiArrowBlue)"/>';
+  content += '<text x="' + (cx - 130 - pullOffset) + '" y="50" font-size="11" fill="#4A90D9" font-weight="600">大气压</text>';
+  content += '<path d="M ' + (cx + 130 + pullOffset) + ' 60 L ' + (cx + 80 + pullOffset) + ' 60" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#hemiArrowBlue)"/>';
+  content += '<text x="' + (cx + 80 + pullOffset) + '" y="50" text-anchor="end" font-size="11" fill="#4A90D9" font-weight="600">大气压</text>';
+
+  // 标题
+  if (!hemiState.pumped) {
+    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">两半球合拢，球内气压 = 大气压</text>';
+  } else if (separated) {
+    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#27AE60" font-weight="600">球内气压较高，被拉开了！</text>';
+  } else {
+    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#E74C3C" font-weight="600">球内气压低，大气压把半球压紧</text>';
+  }
+
+  content = '<defs><marker id="hemiArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/></marker><marker id="hemiArrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/></marker></defs>' + content;
+
+  svg.innerHTML = content;
+
+  // 更新状态显示
+  $('hemi-display').textContent = hemiState.innerPct + '%';
+  $('hemi-inner').textContent = (innerP / 1000).toFixed(1) + ' kPa';
+  $('hemi-inner').className = 'status-value ' + (hemiState.innerPct < 50 ? 'warn' : 'ok');
+  $('hemi-outer').textContent = (outerP / 100000).toFixed(2) + '×10⁵ Pa';
+  $('hemi-diff').textContent = fmtPa(diffP);
+  $('hemi-diff').className = 'status-value ' + (diffP > 30000 ? 'warn' : 'ok');
+
+  // 拉开结果
+  var result = $('hemi-result');
+  result.className = 'pull-result';
+  if (!hemiState.pumped) {
+    result.textContent = '先点击"抽出空气"开始实验';
+    result.style.background = 'var(--bg-soft)';
+  } else if (!hemiState.pulled) {
+    result.textContent = '球内已抽气，现在点击"拉开半球"试试';
+    result.style.background = 'rgba(74,144,217,0.12)';
+    result.style.color = 'var(--primary-dark)';
+  } else if (separated) {
+    result.className = 'pull-result open';
+    result.textContent = '✓ 球内残余气压较高（' + hemiState.innerPct + '%），压力差小，拉力大于压力差——半球被拉开了！';
+  } else {
+    result.className = 'pull-result stuck';
+    result.textContent = '✗ 球内气压低，大气压把两半球紧紧压在一起（压力差 ' + fmtPa(diffP) + '）——拉不开！';
+  }
+}
+
+function initHemi() {
+  $('hemi-slider').addEventListener('input', function() {
+    hemiState.innerPct = parseInt($('hemi-slider').value);
+    // 调节后重置拉开状态
+    hemiState.pulled = false;
+    if (hemiState.innerPct === 100) hemiState.pumped = false;
+    else hemiState.pumped = true;
+    renderHemiSVG();
+  });
+  $('hemi-pump').addEventListener('click', function() {
+    hemiState.pumped = true;
+    hemiState.innerPct = 0;
+    hemiState.pulled = false;
+    $('hemi-slider').value = 0;
+    renderHemiSVG();
+  });
+  $('hemi-pull').addEventListener('click', function() {
+    if (!hemiState.pumped) {
+      $('hemi-result').className = 'pull-result stuck';
+      $('hemi-result').textContent = '请先点击"抽出空气"再尝试拉开！';
+      return;
+    }
+    hemiState.pulled = true;
+    renderHemiSVG();
+  });
+  $('hemi-reset').addEventListener('click', function() {
+    hemiState = { pumped: false, pulled: false, innerPct: 0 };
+    $('hemi-slider').value = 0;
+    renderHemiSVG();
+  });
+  renderHemiSVG();
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  initCalc();
+  initCompare();
+  initLiquid();
+  initTor();
+  initHemi();
+
+  // 练习题
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: '书平放在水平桌面上，压力 F = G = 3 N。p = F / S = 3 N ÷ 0.05 m² = <strong>60 Pa</strong>。注意：水平面自由放置时 F = G，要代入受力面积（接触面积）。',
+    hint: '先确认压力大小：水平面上自由放置，F = G = 3 N；再代入 p = F/S，注意 S 单位是 m²。'
+  });
+
+  initQuiz('quiz2', {
+    correct: 2,
+    explain: '减小压强的方法：减小压力或<strong>增大受力面积</strong>。推土机履带做得很宽，正是通过<strong>增大受力面积</strong>来减小压强，防止陷入泥土。A、B、D 都是通过减小面积来<strong>增大</strong>压强。',
+    hint: '从 p = F/S 看：要减小 p，要么减小 F，要么增大 S。看看哪个选项是在"增大面积"。'
+  });
+
+  initQuiz('quiz3', {
+    correct: 2,
+    explain: 'p = ρgh = 1.0×10³ kg/m³ × 10 N/kg × 20 m = <strong>2×10⁵ Pa</strong>。注意深度 h 是从液面到所求点的竖直距离，g 取 10 N/kg。',
+    hint: '直接套公式 p = ρgh，ρ=1.0×10³，g=10，h=20，注意结果的数量级。'
+  });
+});
+</script>
+
 </body>
 </html>

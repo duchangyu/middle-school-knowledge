@@ -6,53 +6,271 @@
   <title>电与磁 · 九年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    /* 演示容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 64px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 模式切换按钮组 */
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 4px;
+      margin: 8px 4px;
+      flex-wrap: wrap;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .mode-toggle button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .mode-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .mode-toggle button:hover:not(.active) {
+      background: rgba(74,144,217,0.1);
+    }
+
+    /* 信息读数 */
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* 属性列表 */
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 两列布局 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    /* 磁感线流动动画 */
+    .field-line {
+      fill: none;
+      stroke: #4A90D9;
+      stroke-width: 1.8;
+      stroke-dasharray: 7 6;
+      opacity: 0.85;
+      animation: fieldFlow 1.1s linear infinite;
+    }
+    .field-axis {
+      fill: none;
+      stroke: #4A90D9;
+      stroke-width: 1.8;
+      stroke-dasharray: 7 6;
+      opacity: 0.85;
+      animation: fieldFlow 1.1s linear infinite;
+    }
+    @keyframes fieldFlow {
+      to { stroke-dashoffset: -13; }
+    }
+
+    /* 奥斯特实验电流流动 */
+    .current-flow {
+      stroke-dasharray: 8 6;
+      animation: fieldFlow 0.9s linear infinite;
+    }
+
+    /* 答题按钮 */
+    .answer-btn {
+      padding: 10px 26px;
+      border: 2px solid var(--primary);
+      background: white;
+      color: var(--primary-dark);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      transition: all 0.2s;
+      margin: 0 6px;
+    }
+    .answer-btn:hover { background: rgba(74,144,217,0.12); }
+    .answer-btn:disabled { opacity: 0.55; cursor: default; }
+    .answer-btn.picked-right {
+      background: rgba(39,174,96,0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .answer-btn.picked-wrong {
+      background: rgba(231,76,60,0.15);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* 反馈框 */
+    .game-feedback {
+      margin-top: 12px;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      line-height: 1.7;
+      text-align: left;
+      display: none;
+    }
+    .game-feedback.ok {
+      display: block;
+      background: rgba(39,174,96,0.1);
+      border: 1px solid var(--success);
+    }
+    .game-feedback.no {
+      display: block;
+      background: rgba(231,76,60,0.08);
+      border: 1px solid var(--danger);
+    }
+
+    /* 回形针 */
+    .clip-shape {
+      fill: none;
+      stroke: #7F8C8D;
+      stroke-width: 2.2;
+    }
+
+    /* 能量流向标签 */
+    .energy-label {
+      display: inline-block;
+      background: linear-gradient(90deg, #4A90D9, #27AE60);
+      color: white;
+      font-weight: 700;
+      padding: 8px 22px;
+      border-radius: 20px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .energy-label.gen {
+      background: linear-gradient(90deg, #F39C12, #E74C3C);
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">🔌 电与磁</div>
+  <div class="navbar-brand">🧲 电与磁</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级物理目录</a></li>
+    <li><a href="../../数学/九年级/index.html">📐 数学九年级</a></li>
   </ul>
 </nav>
 
@@ -60,31 +278,1073 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">物理</a>
+    <a href="../index.html">物理</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>电与磁</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🔌</div>
-    <h2>电与磁</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🧲 电与磁</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从磁现象到电磁感应：电流产生磁场，磁场也能产生电流——电动机与发电机的奥秘</p>
+
+  <!-- ===== 第一部分：磁现象 ===== -->
+  <div class="card">
+    <div class="section-header">🧲 1. 磁现象 —— 磁体与磁极</div>
+
+    <p>小时候玩过吸铁石吗？它能吸起铁钉、回形针，却吸不动塑料尺和铜钥匙。这种能吸引<strong>铁、钴、镍</strong>等物质的性质叫做<strong>磁性</strong>，具有磁性的物体叫做<strong>磁体</strong>。</p>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">磁极：磁性最强的部位</h3>
+    <p>磁体上磁性最强的两个部位叫做<strong>磁极</strong>。把条形磁体扔进铁屑堆再拿出来，你会发现<strong>两端吸的铁屑最多，中间几乎没有</strong>——磁极在磁体的两端。</p>
+
+    <ul class="property-list">
+      <li><strong>南极（S 极）</strong>：能自由转动的磁体（如小磁针、悬吊的条形磁体）静止时，<strong>指南</strong>的那个磁极</li>
+      <li><strong>北极（N 极）</strong>：静止时<strong>指北</strong>的那个磁极</li>
+      <li><strong>指南针的原理</strong>：指南针就是一个小磁针，它的 N 极指向地理北极附近，所以能指示方向</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">磁极间的相互作用</h3>
+    <div class="formula-box" style="font-size: 20px;">
+      <strong style="color: var(--danger);">同名磁极</strong>相互<strong>排斥</strong>，
+      <strong style="color: var(--primary);">异名磁极</strong>相互<strong>吸引</strong>
+    </div>
+    <p>把两辆小车上各放一块条形磁体，N 极对 N 极，轻轻一推，两车会"隔空弹开"；N 极对 S 极，则会"隔空吸拢"。磁力是一种<strong>不接触也能产生</strong>的力。</p>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">磁化</h3>
+    <p>一些物体在磁体或电流的作用下会获得磁性，这种现象叫做<strong>磁化</strong>。</p>
+    <ul class="property-list">
+      <li><strong>能被磁化</strong>：铁钉、钢针（铁、钴、镍类材料）。钢针磁化后能长期保持磁性，可做指南针</li>
+      <li><strong>不能被磁化</strong>：铜、铝、塑料、木头——所以磁铁吸不住它们</li>
+      <li><strong>生活应用</strong>：磁卡、冰箱贴、螺丝刀磁化后吸小螺丝；<strong>危害</strong>：机械手表受磁走时不准、磁卡靠近磁铁会消磁</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 易错辨析</div>
+      • 每个磁体都有<strong>两个</strong>磁极，把磁体掰成两段，每一段仍然是"N+S"完整的磁体，不存在单独的 N 极或 S 极<br>
+      • "相互吸引"不一定是异名磁极——也可能是磁体吸引铁块（铁块本无磁性）；但<strong>相互排斥</strong>的一定是同名磁极
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：磁场与磁感线 ===== -->
+  <div class="card">
+    <div class="section-header">🧭 2. 磁场与磁感线</div>
+
+    <p>磁体之间没有接触，为什么能相互吸引或排斥？因为磁体周围存在一种看不见、摸不着的物质——<strong>磁场</strong>。磁体间的相互作用就是通过磁场发生的。</p>
+
+    <ul class="property-list">
+      <li><strong>磁场的基本性质</strong>：对放入其中的磁体产生<strong>磁力</strong>的作用</li>
+      <li><strong>磁场的方向</strong>：小磁针静止时<strong>N 极所指的方向</strong>，就是该点磁场的方向</li>
+      <li><strong>研究方法</strong>：用小磁针"探测"磁场——磁场虽然看不见，但能通过小磁针的偏转显现出来（转换法）</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">磁感线：描述磁场的假想曲线</h3>
+    <p>为了形象、方便地描述磁场，人们仿照铁屑的排列，在磁场中画一些有方向的曲线，叫做<strong>磁感线</strong>。</p>
+
+    <div class="formula-box" style="font-size: 16px;">
+      磁体<strong>外部</strong>：磁感线从 <strong style="color: var(--danger);">N 极</strong> 出发，回到 <strong style="color: var(--primary);">S 极</strong>
+      （磁体内部则从 S 极回到 N 极，形成闭合曲线）
+    </div>
+
+    <ul class="property-list">
+      <li>磁感线上任意一点的<strong>切线方向</strong> = 该点的磁场方向 = 小磁针静止时 N 极指向</li>
+      <li>磁感线分布的<strong>疏密</strong>表示磁场强弱：磁极附近最密，磁场最强</li>
+      <li>任意两条磁感线<strong>不相交</strong>（同一点磁场方向唯一）</li>
+      <li><strong>注意</strong>：磁场真实存在，磁感线是为了描述磁场而引入的<strong>假想曲线</strong>，并不存在！</li>
+    </ul>
+
+    <!-- ===== 交互1：磁感线可视化 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🧪 交互1：条形磁体的磁场实验室</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">观察磁感线的分布与小磁针的指向——每个小磁针的方向都是按真实磁场方向（磁偶极子模型）计算的</p>
+
+      <svg id="fldSvg" viewBox="0 0 600 340" width="600" height="340">
+        <defs>
+          <marker id="fldArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
+
+        <rect x="0" y="0" width="600" height="340" fill="#FBFDFF"/>
+
+        <!-- 磁感线（外部 N → S），先画线后画磁体 -->
+        <g id="fieldLines"></g>
+
+        <!-- 小磁针层 -->
+        <g id="needleLayer"></g>
+
+        <!-- 条形磁体 -->
+        <g id="barMagnet">
+          <rect x="220" y="145" width="80" height="50" rx="4" fill="#4A90D9" stroke="#2E6BA8" stroke-width="2"/>
+          <rect x="300" y="145" width="80" height="50" rx="4" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+          <text x="260" y="175" text-anchor="middle" font-size="20" fill="white" font-weight="bold">S</text>
+          <text x="340" y="175" text-anchor="middle" font-size="20" fill="white" font-weight="bold">N</text>
+        </g>
+
+        <text x="300" y="330" text-anchor="middle" font-size="13" fill="#7F8C8D">红针为 N 极：小磁针静止时 N 极指向该点磁场方向</text>
+      </svg>
+
+      <div style="margin-top: 10px;">
+        <button class="btn btn-outline" id="btnTglLines">👁 隐藏磁感线</button>
+        <button class="btn btn-outline" id="btnTglNeedles">👁 隐藏小磁针</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">磁感线方向（外部）：</span><span class="value">N 极 → S 极</span></div>
+        <div class="readout-item"><span class="label">磁极附近：</span><span class="value">磁感线最密、磁场最强</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        <span id="fldTip">磁感线从红色 N 极出发，绕一圈回到蓝色 S 极；任意位置的小磁针 N 极（红色）都沿着磁感线切线方向。两极附近磁感线最密——那里磁场最强，铁屑也吸得最多。</span>
+      </div>
+    </div>
+
+    <h3 style="margin: 22px 0 8px; color: var(--primary-dark);">🌏 地磁场</h3>
+    <p>地球本身就是一个巨大的磁体，它周围存在的磁场叫做<strong>地磁场</strong>。指南针能指南北，就是因为受到地磁场的作用。</p>
+    <ul class="property-list">
+      <li>地磁的两极与地理两极<strong>不重合</strong>：<strong>地磁北极在地理南极附近，地磁南极在地理北极附近</strong></li>
+      <li>所以指南针的 N 极指向地理北方——因为那里是<strong>地磁的 S 极</strong>（异名相吸）</li>
+      <li>地理两极与地磁两极之间的夹角叫做<strong>磁偏角</strong>。我国宋代的<strong>沈括</strong>在《梦溪笔谈》中最早记述了磁偏角，比西方早四百多年</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 记忆窍门</div>
+      "指北的是 N 极，可北方吸引它的恰恰是地磁 S 极"——<strong>地理北极附近 = 地磁南极</strong>，千万别记反！
+    </div>
   </div>
+
+  <!-- ===== 第三部分：电生磁 ===== -->
+  <div class="card">
+    <div class="section-header">⚡ 3. 电生磁 —— 奥斯特实验与通电螺线管</div>
+
+    <p>1820 年，丹麦物理学家<strong>奥斯特</strong>在课堂上偶然发现：给导线通电的瞬间，旁边的小磁针竟然<strong>偏转</strong>了！这是人类第一次发现<strong>电与磁之间的联系</strong>。</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      <strong>奥斯特实验结论</strong>：通电导线周围存在<strong>磁场</strong>（电流的磁效应），
+      磁场方向与<strong>电流方向</strong>有关
+    </div>
+
+    <!-- ===== 小交互：奥斯特实验 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🔬 动手做：重现奥斯特实验</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">点击开关给导线通电/断电，观察小磁针的变化</p>
+
+      <svg viewBox="0 0 560 240" width="560" height="240">
+        <rect x="0" y="0" width="560" height="240" fill="#FBFDFF"/>
+
+        <!-- 电池 -->
+        <g transform="translate(60,180)">
+          <line x1="-14" y1="-14" x2="-14" y2="14" stroke="#2C3E50" stroke-width="2.5"/>
+          <line x1="-4" y1="-22" x2="-4" y2="22" stroke="#2C3E50" stroke-width="5"/>
+          <text x="-24" y="-18" font-size="13" fill="#2C3E50">+</text>
+          <text x="8" y="5" font-size="13" fill="#2C3E50">−</text>
+          <text x="-18" y="42" font-size="12" fill="#7F8C8D">电源</text>
+        </g>
+
+        <!-- 导线回路 -->
+        <path d="M 56 158 L 56 60 L 504 60 L 504 158 L 90 158"
+              fill="none" stroke="#B0BEC5" stroke-width="4"/>
+        <path id="oeWireHot" d="M 56 158 L 56 60 L 504 60 L 504 158 L 90 158"
+              fill="none" stroke="#E74C3C" stroke-width="4" class="current-flow" style="display:none;"/>
+
+        <!-- 开关 -->
+        <g transform="translate(90,158)">
+          <circle cx="0" cy="0" r="4" fill="#2C3E50"/>
+          <circle cx="34" cy="0" r="4" fill="#2C3E50"/>
+          <line id="oeBlade" x1="0" y1="0" x2="30" y2="-18" stroke="#2C3E50" stroke-width="4" stroke-linecap="round"/>
+          <text x="-4" y="24" font-size="12" fill="#7F8C8D">开关</text>
+        </g>
+
+        <!-- 电流方向箭头（通电时显示） -->
+        <g id="oeArrows" style="display:none;">
+          <g fill="#E74C3C">
+            <polygon points="150,54 164,60 150,66"/>
+            <polygon points="250,54 264,60 250,66"/>
+            <polygon points="350,54 364,60 350,66"/>
+            <polygon points="450,54 464,60 450,66"/>
+          </g>
+          <text x="280" y="44" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold">电流方向 →</text>
+        </g>
+
+        <!-- 小磁针（指南针） -->
+        <g transform="translate(280,130)">
+          <circle cx="0" cy="0" r="34" fill="white" stroke="#90A4AE" stroke-width="2.5"/>
+          <text x="0" y="-40" text-anchor="middle" font-size="12" fill="#7F8C8D">小磁针</text>
+          <text x="-24" y="5" font-size="10" fill="#90A4AE">W</text>
+          <text x="18" y="5" font-size="10" fill="#90A4AE">E</text>
+          <text x="-3" y="-22" font-size="10" fill="#90A4AE">N</text>
+          <text x="-3" y="28" font-size="10" fill="#90A4AE">S</text>
+          <g id="oeNeedle">
+            <polygon points="0,-26 5,0 -5,0" fill="#E74C3C"/>
+            <polygon points="0,26 5,0 -5,0" fill="#4A90D9"/>
+            <circle cx="0" cy="0" r="3" fill="#2C3E50"/>
+          </g>
+        </g>
+
+        <text id="oeStateText" x="430" y="140" text-anchor="middle" font-size="14" fill="#7F8C8D" font-weight="bold">电路断开：磁针指向南北</text>
+      </svg>
+
+      <div style="margin-top: 10px;">
+        <button class="btn btn-primary" id="oeSwitchBtn">🔌 闭合开关（通电）</button>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 现象与结论</div>
+        <span id="oeTip">断电时，小磁针指向南北方向（受地磁场作用）。闭合开关试试！</span>
+      </div>
+    </div>
+
+    <h3 style="margin: 22px 0 8px; color: var(--primary-dark);">通电螺线管：加强版的"电生磁"</h3>
+    <p>把导线绕在圆筒上做成<strong>螺线管</strong>（线圈），通电后各圈导线产生的磁场叠加在一起，磁场就强多了。实验发现：</p>
+    <div class="formula-box" style="font-size: 17px;">
+      通电螺线管外部的磁场和<strong>条形磁体</strong>的磁场一样——一端相当于 N 极，另一端相当于 S 极
+    </div>
+    <ul class="property-list">
+      <li>通电螺线管的极性与<strong>电流方向</strong>有关：电流方向改变，两端的 N、S 极对调</li>
+      <li>两端极性可用<strong>安培定则</strong>判断（下一节专门学习）</li>
+    </ul>
+  </div>
+
+  <!-- ===== 第四部分：安培定则 ===== -->
+  <div class="card">
+    <div class="section-header">✋ 4. 安培定则（右手螺旋定则）</div>
+
+    <p>通电螺线管的极性与电流方向之间的关系，可以用<strong>安培定则</strong>来判定：</p>
+
+    <div class="formula-box" style="font-size: 17px; line-height: 1.8;">
+      用<strong>右手</strong>握住螺线管，让<strong>四指指向螺线管中电流的方向</strong>，<br>
+      则<strong>拇指所指的那端</strong>就是螺线管的 <strong style="color: var(--danger);">N 极</strong>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 使用三步曲</div>
+      ① 伸出<strong>右手</strong>（千万别用左手！）<br>
+      ② 四指弯曲，顺着线圈中<strong>电流的方向</strong>握住螺线管<br>
+      ③ 竖起拇指——拇指指向的那端就是 <strong>N 极</strong>
+    </div>
+
+    <!-- ===== 交互2：安培定则练习器 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🎮 交互2：安培定则判断挑战</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+        观察螺线管<strong>正面（朝向你的一侧）导线中的电流方向</strong>，用右手比划一下，判断右端是什么极
+      </p>
+
+      <svg viewBox="0 0 620 260" width="620" height="260">
+        <rect x="0" y="0" width="620" height="260" fill="#FBFDFF"/>
+
+        <!-- 电源 -->
+        <g transform="translate(80,214)">
+          <line x1="-12" y1="-12" x2="-12" y2="12" stroke="#2C3E50" stroke-width="2.5"/>
+          <line x1="-3" y1="-19" x2="-3" y2="19" stroke="#2C3E50" stroke-width="5"/>
+          <text x="-22" y="-15" font-size="12" fill="#2C3E50">+</text>
+          <text x="8" y="4" font-size="12" fill="#2C3E50">−</text>
+          <text x="-16" y="36" font-size="11" fill="#7F8C8D">电源</text>
+        </g>
+
+        <!-- 引线 -->
+        <path d="M 77 196 L 77 226 L 210 226 L 210 176" fill="none" stroke="#90A4AE" stroke-width="3"/>
+        <path d="M 410 176 L 410 226 L 100 226 L 100 205" fill="none" stroke="#90A4AE" stroke-width="3" opacity="0.55"/>
+
+        <!-- 螺线管 -->
+        <g id="ampCoil"></g>
+        <!-- 正面电流箭头（JS 生成两组，按题切换） -->
+        <g id="ampArrowsUp" style="display:none;"></g>
+        <g id="ampArrowsDown" style="display:none;"></g>
+
+        <!-- 两端极性标签（答题后显示） -->
+        <text id="ampLeftTag" x="176" y="126" text-anchor="middle" font-size="18" font-weight="bold" style="display:none;">?</text>
+        <text id="ampRightTag" x="444" y="126" text-anchor="middle" font-size="18" font-weight="bold" style="display:none;">?</text>
+
+        <!-- 说明文字 -->
+        <text id="ampDirLabel" x="310" y="246" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold"></text>
+
+        <!-- 眼睛标记：正面 -->
+        <text x="310" y="30" text-anchor="middle" font-size="13" fill="#7F8C8D">👁 你从这里看：箭头是线圈正面（朝向你一侧）导线中的电流方向</text>
+      </svg>
+
+      <div style="margin: 10px 0;">
+        <span style="font-size: 15px; font-weight: 600; color: var(--primary-dark);">问：螺线管的<strong>右端</strong>是什么极？</span><br><br>
+        <button class="answer-btn" id="ampBtnN">右端是 N 极</button>
+        <button class="answer-btn" id="ampBtnS">右端是 S 极</button>
+      </div>
+
+      <div class="game-feedback" id="ampFeedback"></div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">答对：</span><span class="value" id="ampScoreRight">0</span></div>
+        <div class="readout-item"><span class="label">总题数：</span><span class="value" id="ampScoreTotal">0</span></div>
+        <div class="readout-item">
+          <button class="btn btn-outline" id="ampNextBtn" style="padding: 4px 14px; font-size: 13px;">🎲 换一题</button>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🖐 右手比划提示</div>
+        <span id="ampHint">正面电流<strong>向上</strong>时：右手四指从线圈正面向上弯曲，拇指会指向<strong>左端</strong>——左端是 N 极，右端是 S 极。反之，正面电流向下时右端是 N 极。先自己比划，再答题！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：电磁铁 ===== -->
+  <div class="card">
+    <div class="section-header">🔩 5. 电磁铁 —— 可控的磁体</div>
+
+    <p>在通电螺线管中插入一根<strong>铁芯</strong>，铁芯被磁化后，磁场会大大增强——这就做成了<strong>电磁铁</strong>。</p>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">影响电磁铁磁性强弱的因素</h3>
+    <ul class="property-list">
+      <li><strong>电流大小</strong>：匝数一定时，电流越大，磁性越强</li>
+      <li><strong>线圈匝数</strong>：电流一定时，匝数越多，磁性越强</li>
+      <li><strong>有无铁芯</strong>：插入铁芯后磁性显著增强（铁芯被磁化，磁场叠加）</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">电磁铁的优点与应用</h3>
+    <ul class="property-list">
+      <li><strong>磁性有无可控</strong>：通电有磁性，断电无磁性 → <strong>电磁继电器</strong>、电磁起重机</li>
+      <li><strong>磁性强弱可控</strong>：调节电流大小即可 → 电铃、扬声器（喇叭）</li>
+      <li><strong>极性可控</strong>：改变电流方向，N、S 极对调</li>
+    </ul>
+    <p><strong>电磁继电器</strong>的本质：用<strong>低电压、弱电流</strong>的电路去控制<strong>高电压、强电流</strong>电路的"自动开关"，可实现远距离操纵和自动控制（如温度自动报警器、水位自动报警器）。</p>
+
+    <!-- ===== 交互3：电磁铁强弱探究 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🧪 交互3：电磁铁磁性强弱探究</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">调节电流、匝数，切换有无铁芯，数一数能吸起多少枚回形针</p>
+
+      <svg viewBox="0 0 560 300" width="560" height="300">
+        <rect x="0" y="0" width="560" height="300" fill="#FBFDFF"/>
+
+        <!-- 电源 -->
+        <g transform="translate(70,238)">
+          <line x1="-12" y1="-12" x2="-12" y2="12" stroke="#2C3E50" stroke-width="2.5"/>
+          <line x1="-3" y1="-19" x2="-3" y2="19" stroke="#2C3E50" stroke-width="5"/>
+          <text x="-16" y="36" font-size="11" fill="#7F8C8D">电源</text>
+        </g>
+        <path d="M 67 220 L 67 70 L 170 70" fill="none" stroke="#90A4AE" stroke-width="3"/>
+        <path d="M 390 70 L 470 70 L 470 226 L 88 226" fill="none" stroke="#90A4AE" stroke-width="3"/>
+
+        <!-- 铁芯 -->
+        <rect id="emCoreBar" x="170" y="56" width="220" height="28" rx="6" fill="#90A4AE" stroke="#607D8B" stroke-width="2"/>
+        <text id="emCoreLabel" x="280" y="48" text-anchor="middle" font-size="12" fill="#607D8B" font-weight="bold">铁芯</text>
+
+        <!-- 线圈（JS 按匝数绘制） -->
+        <g id="emCoilTurns"></g>
+
+        <!-- 被吸住的回形针（JS 绘制） -->
+        <g id="emClips"></g>
+
+        <!-- 回形针盒 -->
+        <rect x="170" y="252" width="220" height="36" rx="8" fill="#ECEFF1" stroke="#B0BEC5" stroke-width="2"/>
+        <text x="280" y="275" text-anchor="middle" font-size="12" fill="#7F8C8D">回形针盒</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>电流 I：</label>
+        <input type="range" id="emI" min="0" max="3" value="1.5" step="0.5">
+        <span class="value-display"><span id="emIVal">1.5</span> A</span>
+      </div>
+      <div class="slider-row">
+        <label>线圈匝数：</label>
+        <input type="range" id="emN" min="10" max="50" value="30" step="5">
+        <span class="value-display"><span id="emNVal">30</span> 匝</span>
+      </div>
+      <div class="slider-row" style="margin-top: 12px;">
+        <label style="cursor: pointer; font-size: 15px;">
+          <input type="checkbox" id="emCore" checked style="width: 18px; height: 18px; vertical-align: -3px;"> 插入铁芯
+        </label>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">吸起回形针：</span><span class="value"><span id="emClipCount">9</span> 枚</span></div>
+        <div class="readout-item"><span class="label">磁性强弱：</span><span class="value" id="emStrength">较强</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">📊 实验结论</div>
+        <span id="emConclusion">电流越大、匝数越多、插入铁芯，电磁铁磁性越强，吸起的回形针越多。试一试：把电流调到 0——电磁铁立刻"失效"，这就是它"磁性可控"的最大优点！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：电动机与发电机 ===== -->
+  <div class="card">
+    <div class="section-header">🔁 6. 磁场对电流的作用 · 电磁感应</div>
+
+    <h3 style="margin: 6px 0 8px; color: var(--primary-dark);">⚙ 磁场对电流的作用 → 电动机</h3>
+    <p><strong>通电导体在磁场中会受到力的作用</strong>，力的方向与<strong>电流方向</strong>和<strong>磁感线方向</strong>都有关。把通电线圈放入磁场，线圈两边受力方向相反，形成<strong>转动力偶</strong>，线圈就转起来了。</p>
+    <ul class="property-list">
+      <li><strong>电动机</strong>：利用通电线圈在磁场中受力转动制成，<strong>电能 → 机械能</strong></li>
+      <li><strong>换向器的作用</strong>：当线圈由于惯性转过<strong>平衡位置</strong>（线圈平面与磁感线垂直）时，<strong>自动改变线圈中的电流方向</strong>，使线圈受力方向不变，从而<strong>持续转动</strong>下去</li>
+      <li><strong>生活应用</strong>：电风扇、洗衣机、电动车、电吹风……凡是"通电就转"的电器里都有电动机</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">🔦 磁生电 → 发电机</h3>
+    <p>1831 年，英国物理学家<strong>法拉第</strong>发现了<strong>电磁感应现象</strong>：</p>
+    <div class="formula-box" style="font-size: 16px; line-height: 1.8;">
+      <strong>闭合电路</strong>的<strong>一部分导体</strong>在磁场中做<strong>切割磁感线运动</strong>时，<br>
+      导体中就会产生电流——叫<strong>感应电流</strong>
+    </div>
+    <ul class="property-list">
+      <li><strong>产生条件</strong>（缺一不可）：电路<strong>闭合</strong>；只有<strong>一部分</strong>导体；导体做<strong>切割磁感线</strong>运动</li>
+      <li>感应电流的方向与<strong>导体运动方向</strong>和<strong>磁场方向</strong>有关</li>
+      <li><strong>发电机</strong>：利用电磁感应制成，<strong>机械能 → 电能</strong>。线圈转一圈，感应电流方向改变两次——发出的是<strong>交流电</strong></li>
+      <li><strong>生活应用</strong>：水电站、火电厂、风力发电，手摇手电筒、动圈式话筒</li>
+    </ul>
+
+    <!-- ===== 交互4：电动机 vs 发电机 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🎛 交互4：电动机 vs 发电机 对比实验</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+        同一台"线圈+磁体"装置：接上电源它是电动机，接上灯泡它就是发电机——注意换向器与滑环的区别！
+      </p>
+
+      <div class="mode-toggle" id="mgModeToggle">
+        <button class="active" data-mode="motor">⚙ 电动机模式（接电源）</button>
+        <button data-mode="gen">🔦 发电机模式（接灯泡）</button>
+      </div>
+
+      <svg viewBox="0 0 620 320" width="620" height="320">
+        <rect x="0" y="0" width="620" height="320" fill="#FBFDFF"/>
+
+        <!-- 磁体 N 上 S 下 -->
+        <rect x="180" y="20" width="240" height="40" rx="6" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+        <text x="300" y="47" text-anchor="middle" font-size="18" fill="white" font-weight="bold">N</text>
+        <rect x="180" y="240" width="240" height="40" rx="6" fill="#4A90D9" stroke="#2E6BA8" stroke-width="2"/>
+        <text x="300" y="267" text-anchor="middle" font-size="18" fill="white" font-weight="bold">S</text>
+
+        <!-- 磁感线（向下） -->
+        <g stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.6">
+          <line x1="215" y1="64" x2="215" y2="234"/>
+          <line x1="385" y1="64" x2="385" y2="234"/>
+        </g>
+        <polygon points="215,238 210,226 220,226" fill="#4A90D9" opacity="0.6"/>
+        <polygon points="385,238 380,226 390,226" fill="#4A90D9" opacity="0.6"/>
+
+        <!-- 旋转的线圈 -->
+        <g id="mgCoilGroup">
+          <rect id="mgCoilRect" x="255" y="90" width="90" height="120" fill="rgba(243,156,18,0.35)" stroke="#E67E22" stroke-width="3"/>
+          <line id="mgCoilDiag" x1="255" y1="90" x2="345" y2="210" stroke="#E67E22" stroke-width="1.5" stroke-dasharray="4 3"/>
+        </g>
+        <text id="mgCoilFace" x="300" y="82" text-anchor="middle" font-size="11" fill="#E67E22" font-weight="bold">A 面朝前</text>
+
+        <!-- 转轴 -->
+        <line x1="300" y1="66" x2="300" y2="90" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="300" y1="210" x2="300" y2="222" stroke="#2C3E50" stroke-width="3"/>
+
+        <!-- 换向器（电动机）：两个半环 -->
+        <g id="mgComm">
+          <path d="M 288 226 A 12 12 0 0 1 288 234" fill="none" stroke="#B03A2E" stroke-width="5"/>
+          <path d="M 312 226 A 12 12 0 0 0 312 234" fill="none" stroke="#B03A2E" stroke-width="5"/>
+          <text x="300" y="254" text-anchor="middle" font-size="11" fill="#B03A2E" font-weight="bold">换向器（两个半环）</text>
+        </g>
+        <!-- 滑环（发电机）：两个整环 -->
+        <g id="mgSlip" style="display:none;">
+          <circle cx="292" cy="230" r="7" fill="none" stroke="#8E44AD" stroke-width="4"/>
+          <circle cx="308" cy="230" r="7" fill="none" stroke="#8E44AD" stroke-width="4"/>
+          <text x="300" y="254" text-anchor="middle" font-size="11" fill="#8E44AD" font-weight="bold">滑环（两个整环）</text>
+        </g>
+
+        <!-- 左侧电路盒：电源（电动机） -->
+        <g id="mgBatteryBox">
+          <rect x="30" y="120" width="90" height="60" rx="8" fill="white" stroke="#2C3E50" stroke-width="2"/>
+          <line x1="62" y1="150" x2="62" y2="170" stroke="#2C3E50" stroke-width="2"/>
+          <line x1="78" y1="142" x2="78" y2="178" stroke="#2C3E50" stroke-width="5"/>
+          <text x="52" y="146" font-size="12" fill="#2C3E50">+</text>
+          <text x="88" y="146" font-size="12" fill="#2C3E50">−</text>
+          <text x="45" y="200" font-size="12" fill="#7F8C8D">直流电源</text>
+          <path d="M 120 150 L 250 150 L 286 226" fill="none" stroke="#90A4AE" stroke-width="3"/>
+          <path d="M 120 170 L 264 170 L 314 226" fill="none" stroke="#90A4AE" stroke-width="3"/>
+        </g>
+
+        <!-- 左侧电路盒：灯泡（发电机） -->
+        <g id="mgBulbBox" style="display:none;">
+          <circle id="mgBulbGlow" cx="75" cy="150" r="40" fill="rgba(253,184,19,0)"/>
+          <circle cx="75" cy="150" r="26" fill="rgba(255,244,200,0.9)" stroke="#B7950B" stroke-width="2.5"/>
+          <path d="M 65 150 Q 75 138 85 150 M 70 158 L 80 158" fill="none" stroke="#B7950B" stroke-width="2.5"/>
+          <rect x="69" y="174" width="12" height="10" fill="#7F8C8D"/>
+          <text x="45" y="205" font-size="12" fill="#7F8C8D">小灯泡</text>
+          <path d="M 101 150 L 250 150 L 286 226" fill="none" stroke="#90A4AE" stroke-width="3"/>
+          <path d="M 101 170 L 264 170 L 314 226" fill="none" stroke="#90A4AE" stroke-width="3"/>
+        </g>
+
+        <!-- 手摇柄（发电机） -->
+        <g id="mgCrank" style="display:none;">
+          <text x="500" y="120" text-anchor="middle" font-size="12" fill="#7F8C8D">外力（水流/风力/手摇）</text>
+          <path d="M 460 130 L 300 90" stroke="#7F8C8D" stroke-width="2" stroke-dasharray="6 4"/>
+          <polygon points="300,90 306,80 310,90" fill="#7F8C8D"/>
+          <text x="470" y="146" font-size="12" fill="#7F8C8D">带动线圈转动 ↻</text>
+        </g>
+      </svg>
+
+      <div class="energy-label" id="mgEnergyText">电能 → 机械能</div>
+
+      <div class="slider-row">
+        <label id="mgSpeedLabel">电源电压（转速）：</label>
+        <input type="range" id="mgSpeed" min="0" max="100" value="50">
+        <span class="value-display"><span id="mgSpeedVal">50</span>%</span>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <button class="btn btn-primary" id="mgPlayBtn">⏸ 暂停</button>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">模式：</span><span class="value" id="mgModeLabel">电动机</span></div>
+        <div class="readout-item"><span class="label">能量转化：</span><span class="value" id="mgConvLabel">电能 → 机械能</span></div>
+        <div class="readout-item" id="mgBrightRow" style="display:none;"><span class="label">灯泡亮度（感应电流）：</span><span class="value"><span id="mgBright">0</span>%</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🔍 关键区别</div>
+        <span id="mgTip"><strong>电动机</strong>：有电源，通电线圈受力转动；<strong>换向器</strong>（两个半环）在转过平衡位置时自动改变电流方向，让线圈持续同向转动。<strong>发电机</strong>：没有电源，靠外力转动线圈切割磁感线产生感应电流；用<strong>滑环</strong>（两个整环）引出电流，发出方向周期性变化的交流电——所以灯泡亮度会随转动一闪一闪地脉动！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第七部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 7. 练习题</div>
+    <p>检验一下你对电与磁知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 关于磁体和磁感线，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 磁感线是磁体周围真实存在的曲线，用铁屑可以拼出来</div>
+      <div class="quiz-option" data-idx="1">B. 磁感线在磁体外部从 S 极出发，回到 N 极</div>
+      <div class="quiz-option" data-idx="2">C. 磁感线是为描述磁场假想的曲线，磁体外部从 N 极出发回到 S 极</div>
+      <div class="quiz-option" data-idx="3">D. 两条磁感线在磁场较弱的地方可以相交</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 用安培定则判断通电螺线管的极性，正确的做法是：</div>
+      <div class="quiz-option" data-idx="0">A. 用左手握住螺线管，四指指向电流方向，拇指所指为 S 极</div>
+      <div class="quiz-option" data-idx="1">B. 用右手握住螺线管，四指指向电流方向，拇指所指的那端是 N 极</div>
+      <div class="quiz-option" data-idx="2">C. 用右手握住螺线管，拇指指向电流方向，四指所指为 N 极</div>
+      <div class="quiz-option" data-idx="3">D. 通电螺线管的极性与电流方向无关，只与匝数有关</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于电动机和发电机，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 电动机工作时将机械能转化为电能</div>
+      <div class="quiz-option" data-idx="1">B. 发电机是利用"通电导体在磁场中受力"的原理制成的</div>
+      <div class="quiz-option" data-idx="2">C. 电动机将电能转化为机械能，发电机利用电磁感应将机械能转化为电能</div>
+      <div class="quiz-option" data-idx="3">D. 电动机和发电机的能量转化方向相同</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 电磁铁、电磁继电器中的电路 ↔ <a href="13-电流和电路.html">物理 · 电流和电路</a>、<a href="15-欧姆定律.html">物理 · 欧姆定律</a>（电流大小的计算）</p>
+    <p>· 电动机的能量转化 ↔ <a href="16-电功率.html">物理 · 电功率</a>（电能的计算）、<a href="17-内能.html">物理 · 内能</a>（能量转化与守恒）</p>
+    <p>· 家庭电路中的漏电保护、保险装置 ↔ <a href="18-生活用电.html">物理 · 生活用电</a></p>
+    <p>· 能被磁化的铁钴镍 ↔ <a href="../../化学/九年级/08-金属和金属材料.html">化学 · 金属和金属材料</a></p>
+    <p>· 线圈的转动 ↔ <a href="../../数学/九年级/03-旋转.html">数学 · 旋转</a>（旋转中心与旋转角）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="18-生活用电.html" class="btn btn-outline">← 上一章：生活用电</a>
+    <a href="20-能源与可持续发展.html" class="btn btn-primary">下一章：能源与可持续发展 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：条形磁体的磁场实验室（磁感线 + 小磁针）
+// ============================================================
+(function() {
+  var NS = 'http://www.w3.org/2000/svg';
+  var CX = 300, CY = 170; // 磁体中心，磁矩方向 +x（N 在右）
+  var fieldLines = document.getElementById('fieldLines');
+  var needleLayer = document.getElementById('needleLayer');
+
+  // ---- 绘制磁感线（手工贝塞尔曲线，方向均为 N → S）----
+  function addPath(d, cls, markerMid) {
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    p.setAttribute('class', cls);
+    if (markerMid) p.setAttribute('marker-mid', 'url(#fldArrow)');
+    fieldLines.appendChild(p);
+  }
+
+  // 上下各 4 条环形磁感线
+  for (var k = 1; k <= 4; k++) {
+    var topY = 130 - 35 * (k - 1);
+    var botY = 210 + 35 * (k - 1);
+    addPath('M 382,158 C 400,' + topY + ' 340,' + topY + ' 300,' + topY +
+            ' C 260,' + topY + ' 200,' + topY + ' 218,158', 'field-line', true);
+    addPath('M 382,182 C 400,' + botY + ' 340,' + botY + ' 300,' + botY +
+            ' C 260,' + botY + ' 200,' + botY + ' 218,182', 'field-line', true);
+  }
+  // 轴线上的磁感线：右侧从 N 极向外，左侧回到 S 极
+  var axisR = document.createElementNS(NS, 'line');
+  axisR.setAttribute('x1', 386); axisR.setAttribute('y1', 170);
+  axisR.setAttribute('x2', 552); axisR.setAttribute('y2', 170);
+  axisR.setAttribute('class', 'field-axis');
+  axisR.setAttribute('marker-end', 'url(#fldArrow)');
+  fieldLines.appendChild(axisR);
+
+  var axisL = document.createElementNS(NS, 'line');
+  axisL.setAttribute('x1', 48); axisL.setAttribute('y1', 170);
+  axisL.setAttribute('x2', 214); axisL.setAttribute('y2', 170);
+  axisL.setAttribute('class', 'field-axis');
+  axisL.setAttribute('marker-end', 'url(#fldArrow)');
+  fieldLines.appendChild(axisL);
+
+  // ---- 小磁针：按磁偶极子模型计算每点磁场方向 ----
+  // m = (1, 0)，B ∝ 3(m·r̂)r̂ − m
+  function fieldDir(px, py) {
+    var rx = px - CX, ry = py - CY;
+    var r = Math.sqrt(rx * rx + ry * ry);
+    if (r < 1) return null;
+    var ux = rx / r, uy = ry / r;
+    var mdot = ux; // m·r̂，m=(1,0)
+    var bx = 3 * mdot * ux - 1;
+    var by = 3 * mdot * uy - 0;
+    return Math.atan2(by, bx) * 180 / Math.PI;
+  }
+
+  var rowsY = [60, 105, 170, 235, 280];
+  var gridX = [60, 115, 170, 225, 280, 335, 390, 445, 500, 555];
+  var gridXMid = [60, 120, 180, 420, 480, 545]; // 中间行避开磁体
+
+  rowsY.forEach(function(ny) {
+    var xs = (ny === 170) ? gridXMid : gridX;
+    xs.forEach(function(nx) {
+      // 避开磁体内部区域
+      if (nx > 212 && nx < 388 && ny > 138 && ny < 202) return;
+      var deg = fieldDir(nx, ny);
+      if (deg === null) return;
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('transform', 'translate(' + nx + ',' + ny + ') rotate(' + deg.toFixed(1) + ')');
+      g.innerHTML =
+        '<line x1="-10" y1="0" x2="0" y2="0" stroke="#4A90D9" stroke-width="3.5" stroke-linecap="round"/>' +
+        '<line x1="0" y1="0" x2="10" y2="0" stroke="#E74C3C" stroke-width="3.5" stroke-linecap="round"/>' +
+        '<circle cx="0" cy="0" r="2" fill="#2C3E50"/>';
+      needleLayer.appendChild(g);
+    });
+  });
+
+  // ---- 显示/隐藏切换 ----
+  var linesOn = true, needlesOn = true;
+  document.getElementById('btnTglLines').addEventListener('click', function() {
+    linesOn = !linesOn;
+    fieldLines.style.display = linesOn ? '' : 'none';
+    this.textContent = linesOn ? '👁 隐藏磁感线' : '👁 显示磁感线';
+    document.getElementById('fldTip').innerHTML = linesOn
+      ? '磁感线从红色 N 极出发，绕一圈回到蓝色 S 极；任意位置的小磁针 N 极（红色）都沿着磁感线切线方向。两极附近磁感线最密——那里磁场最强，铁屑也吸得最多。'
+      : '磁感线隐藏了，但<strong>磁场依然存在</strong>！看，小磁针的指向并没有改变——这正说明磁感线只是描述磁场的工具，磁场才是真实存在的物质。';
+  });
+  document.getElementById('btnTglNeedles').addEventListener('click', function() {
+    needlesOn = !needlesOn;
+    needleLayer.style.display = needlesOn ? '' : 'none';
+    this.textContent = needlesOn ? '👁 隐藏小磁针' : '👁 显示小磁针';
+  });
+})();
+
+// ============================================================
+// 小交互：奥斯特实验
+// ============================================================
+(function() {
+  var on = false;
+  var blade = document.getElementById('oeBlade');
+  var wireHot = document.getElementById('oeWireHot');
+  var arrows = document.getElementById('oeArrows');
+  var needle = document.getElementById('oeNeedle');
+  var stateText = document.getElementById('oeStateText');
+  var tip = document.getElementById('oeTip');
+  var btn = document.getElementById('oeSwitchBtn');
+  var angle = 0, target = 0, rafId = null;
+
+  function animateNeedle() {
+    var diff = target - angle;
+    if (Math.abs(diff) < 0.2) { angle = target; }
+    else { angle += diff * 0.08; }
+    needle.setAttribute('transform', 'rotate(' + angle + ')');
+    if (angle !== target) { rafId = requestAnimationFrame(animateNeedle); }
+    else { rafId = null; }
+  }
+
+  function setOn(state) {
+    on = state;
+    blade.setAttribute('x2', state ? 34 : 30);
+    blade.setAttribute('y2', state ? 0 : -18);
+    wireHot.style.display = state ? '' : 'none';
+    arrows.style.display = state ? '' : 'none';
+    stateText.textContent = state ? '通电：小磁针发生偏转！' : '电路断开：磁针指向南北';
+    stateText.setAttribute('fill', state ? '#E74C3C' : '#7F8C8D');
+    btn.textContent = state ? '🔌 断开开关（断电）' : '🔌 闭合开关（通电）';
+    target = state ? 42 : 0;
+    if (!rafId) rafId = requestAnimationFrame(animateNeedle);
+    tip.innerHTML = state
+      ? '导线一<strong>通电</strong>，小磁针立刻<strong>偏转</strong>——磁针没有碰到任何东西，说明通电导线周围产生了<strong>磁场</strong>，对磁针施加了磁力。这就是<strong>电流的磁效应</strong>。改变电流方向，磁针偏转方向也会反过来——磁场方向与电流方向有关！'
+      : '断电时，小磁针指向南北方向（受地磁场作用）。闭合开关试试！';
+  }
+
+  btn.addEventListener('click', function() { setOn(!on); });
+})();
+
+// ============================================================
+// 交互2：安培定则判断挑战
+// 物理规则：正面（朝向观察者一侧）导线电流向上 → 左端 N 极（右端 S 极）
+//           正面电流向下 → 右端 N 极
+// ============================================================
+(function() {
+  var NS = 'http://www.w3.org/2000/svg';
+  var loopsX = [210, 250, 290, 330, 370, 410];
+  var coilG = document.getElementById('ampCoil');
+  var upG = document.getElementById('ampArrowsUp');
+  var downG = document.getElementById('ampArrowsDown');
+
+  // 绘制螺线管：每个线圈的背面（上半弧，浅色）与正面（下半弧，深色）
+  loopsX.forEach(function(x) {
+    var back = document.createElementNS(NS, 'path');
+    back.setAttribute('d', 'M ' + (x - 16) + ',130 A 16 46 0 0 1 ' + (x + 16) + ',130');
+    back.setAttribute('fill', 'none');
+    back.setAttribute('stroke', '#B0BEC5');
+    back.setAttribute('stroke-width', '3');
+    coilG.appendChild(back);
+
+    var front = document.createElementNS(NS, 'path');
+    front.setAttribute('d', 'M ' + (x - 16) + ',130 A 16 46 0 0 0 ' + (x + 16) + ',130');
+    front.setAttribute('fill', 'none');
+    front.setAttribute('stroke', '#E67E22');
+    front.setAttribute('stroke-width', '4');
+    coilG.appendChild(front);
+  });
+  // 螺线管轴线两端的圆头
+  var endL = document.createElementNS(NS, 'circle');
+  endL.setAttribute('cx', 194); endL.setAttribute('cy', 130); endL.setAttribute('r', 8);
+  endL.setAttribute('fill', '#8D6E63');
+  coilG.appendChild(endL);
+  var endR = document.createElementNS(NS, 'circle');
+  endR.setAttribute('cx', 426); endR.setAttribute('cy', 130); endR.setAttribute('r', 8);
+  endR.setAttribute('fill', '#8D6E63');
+  coilG.appendChild(endR);
+
+  // 正面电流箭头：画在每个线圈正面弧线的左下部
+  loopsX.forEach(function(x) {
+    var up = document.createElementNS(NS, 'polygon');
+    up.setAttribute('points', (x - 13) + ',158 ' + (x - 19) + ',170 ' + (x - 7) + ',170');
+    up.setAttribute('fill', '#E74C3C');
+    upG.appendChild(up);
+
+    var dn = document.createElementNS(NS, 'polygon');
+    dn.setAttribute('points', (x - 13) + ',186 ' + (x - 19) + ',174 ' + (x - 7) + ',174');
+    dn.setAttribute('fill', '#E74C3C');
+    downG.appendChild(dn);
+  });
+
+  var frontUp = true; // 当前题：正面电流是否向上
+  var scoreRight = 0, scoreTotal = 0;
+  var answered = false;
+
+  var btnN = document.getElementById('ampBtnN');
+  var btnS = document.getElementById('ampBtnS');
+  var feedback = document.getElementById('ampFeedback');
+  var leftTag = document.getElementById('ampLeftTag');
+  var rightTag = document.getElementById('ampRightTag');
+  var dirLabel = document.getElementById('ampDirLabel');
+
+  function render() {
+    upG.style.display = frontUp ? '' : 'none';
+    downG.style.display = frontUp ? 'none' : '';
+    dirLabel.textContent = frontUp ? '正面电流方向：向上 ↑' : '正面电流方向：向下 ↓';
+    leftTag.style.display = 'none';
+    rightTag.style.display = 'none';
+    feedback.className = 'game-feedback';
+    feedback.style.display = 'none';
+    btnN.className = 'answer-btn';
+    btnS.className = 'answer-btn';
+    btnN.disabled = false;
+    btnS.disabled = false;
+    answered = false;
+  }
+
+  // frontUp=true → 左端 N、右端 S；frontUp=false → 右端 N、左端 S
+  function answer(pickedN) {
+    if (answered) return;
+    answered = true;
+    scoreTotal++;
+    var rightIsN = !frontUp;
+    var correct = (pickedN === rightIsN);
+
+    // 显示两端极性标签
+    leftTag.textContent = frontUp ? 'N' : 'S';
+    leftTag.setAttribute('fill', frontUp ? '#E74C3C' : '#4A90D9');
+    rightTag.textContent = frontUp ? 'S' : 'N';
+    rightTag.setAttribute('fill', frontUp ? '#4A90D9' : '#E74C3C');
+    leftTag.style.display = '';
+    rightTag.style.display = '';
+
+    var ruleText = frontUp
+      ? '正面电流<strong>向上</strong>：右手四指沿线圈正面向上弯曲握住螺线管，拇指指向<strong>左端</strong> → 左端是 N 极，<strong>右端是 S 极</strong>。'
+      : '正面电流<strong>向下</strong>：右手四指沿线圈正面向下弯曲握住螺线管，拇指指向<strong>右端</strong> → <strong>右端是 N 极</strong>，左端是 S 极。';
+
+    if (correct) {
+      scoreRight++;
+      feedback.className = 'game-feedback ok';
+      feedback.innerHTML = '<strong style="color:#27AE60;">✓ 判断正确！</strong>' + ruleText;
+      (pickedN ? btnN : btnS).classList.add('picked-right');
+    } else {
+      feedback.className = 'game-feedback no';
+      feedback.innerHTML = '<strong style="color:#E74C3C;">✗ 再想想。</strong>' + ruleText;
+      (pickedN ? btnN : btnS).classList.add('picked-wrong');
+    }
+    btnN.disabled = true;
+    btnS.disabled = true;
+    document.getElementById('ampScoreRight').textContent = scoreRight;
+    document.getElementById('ampScoreTotal').textContent = scoreTotal;
+  }
+
+  btnN.addEventListener('click', function() { answer(true); });
+  btnS.addEventListener('click', function() { answer(false); });
+  document.getElementById('ampNextBtn').addEventListener('click', function() {
+    frontUp = Math.random() < 0.5;
+    render();
+  });
+
+  render();
+})();
+
+// ============================================================
+// 交互3：电磁铁磁性强弱探究
+// ============================================================
+(function() {
+  var NS = 'http://www.w3.org/2000/svg';
+  var turnsG = document.getElementById('emCoilTurns');
+  var clipsG = document.getElementById('emClips');
+  var coreBar = document.getElementById('emCoreBar');
+  var coreLabel = document.getElementById('emCoreLabel');
+  var MAXCLIPS = 20;
+
+  var I = 1.5, N = 30, hasCore = true;
+
+  function drawTurns() {
+    turnsG.innerHTML = '';
+    // 把匝数映射到要画的圈数：每 5 匝画 1 圈
+    var draw = Math.round(N / 5);
+    var x0 = 178, x1 = 382;
+    for (var i = 0; i < draw; i++) {
+      var x = x0 + (x1 - x0) * (draw === 1 ? 0.5 : i / (draw - 1));
+      var ell = document.createElementNS(NS, 'ellipse');
+      ell.setAttribute('cx', x);
+      ell.setAttribute('cy', 70);
+      ell.setAttribute('rx', 7);
+      ell.setAttribute('ry', 24);
+      ell.setAttribute('fill', 'none');
+      ell.setAttribute('stroke', '#B03A2E');
+      ell.setAttribute('stroke-width', '3.2');
+      turnsG.appendChild(ell);
+    }
+  }
+
+  function clipCount() {
+    if (I <= 0) return 0;
+    var strength = (I / 3) * (N / 50) * (hasCore ? 1 : 0.25);
+    return Math.min(MAXCLIPS, Math.round(strength * MAXCLIPS));
+  }
+
+  function drawClips() {
+    clipsG.innerHTML = '';
+    var c = clipCount();
+    for (var i = 0; i < c; i++) {
+      var col = i % 10;
+      var row = Math.floor(i / 10);
+      var x = 186 + col * 21;
+      var y = 104 + row * 26;
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('transform', 'translate(' + x + ',' + y + ') rotate(' + ((i * 37) % 13 - 6) + ')');
+      g.innerHTML = '<rect x="-8" y="0" width="16" height="6" rx="3" class="clip-shape"/>' +
+                    '<rect x="-5" y="1.5" width="10" height="3" rx="1.5" class="clip-shape"/>';
+      clipsG.appendChild(g);
+    }
+    return c;
+  }
+
+  function update() {
+    drawTurns();
+    var c = drawClips();
+
+    coreBar.style.display = hasCore ? '' : 'none';
+    coreLabel.style.display = hasCore ? '' : 'none';
+
+    document.getElementById('emClipCount').textContent = c;
+
+    var level;
+    if (c === 0) level = '无磁性';
+    else if (c <= 5) level = '很弱';
+    else if (c <= 10) level = '较弱';
+    else if (c <= 16) level = '较强';
+    else level = '很强';
+    document.getElementById('emStrength').textContent = level;
+
+    var concl;
+    if (I === 0) {
+      concl = '电流为 0：<strong>电磁铁失去磁性</strong>，回形针全部掉落——断电无磁性，这正是电磁铁"磁性可控"的优点（电磁起重机放下废铁、继电器断开都是这个原理）。';
+    } else if (!hasCore) {
+      concl = '没有铁芯：同样的电流和匝数，只能吸起很少回形针。<strong>铁芯被磁化后磁场叠加</strong>，磁性会显著增强——插上铁芯对比一下！';
+    } else if (I >= 2.5 && N >= 45) {
+      concl = '电流大 + 匝数多 + 有铁芯：磁性<strong>最强</strong>！三者共同决定电磁铁磁性的强弱。';
+    } else {
+      concl = '电流越大、匝数越多、插入铁芯，电磁铁磁性越强，吸起的回形针越多。试一试：把电流调到 0——电磁铁立刻"失效"，这就是它"磁性可控"的最大优点！';
+    }
+    document.getElementById('emConclusion').innerHTML = concl;
+  }
+
+  document.getElementById('emI').addEventListener('input', function(e) {
+    I = parseFloat(e.target.value);
+    document.getElementById('emIVal').textContent = I.toFixed(1);
+    update();
+  });
+  document.getElementById('emN').addEventListener('input', function(e) {
+    N = parseFloat(e.target.value);
+    document.getElementById('emNVal').textContent = N;
+    update();
+  });
+  document.getElementById('emCore').addEventListener('change', function(e) {
+    hasCore = e.target.checked;
+    update();
+  });
+
+  update();
+})();
+
+// ============================================================
+// 交互4：电动机 vs 发电机 对比实验
+// ============================================================
+(function() {
+  var mode = 'motor'; // motor | gen
+  var speed = 50;     // 0~100
+  var playing = true;
+  var angle = 0;
+  var lastTime = 0;
+
+  var coilRect = document.getElementById('mgCoilRect');
+  var coilDiag = document.getElementById('mgCoilDiag');
+  var coilFace = document.getElementById('mgCoilFace');
+  var comm = document.getElementById('mgComm');
+  var slip = document.getElementById('mgSlip');
+  var batteryBox = document.getElementById('mgBatteryBox');
+  var bulbBox = document.getElementById('mgBulbBox');
+  var bulbGlow = document.getElementById('mgBulbGlow');
+  var crank = document.getElementById('mgCrank');
+  var energyText = document.getElementById('mgEnergyText');
+  var modeLabel = document.getElementById('mgModeLabel');
+  var convLabel = document.getElementById('mgConvLabel');
+  var brightRow = document.getElementById('mgBrightRow');
+  var brightVal = document.getElementById('mgBright');
+  var speedLabel = document.getElementById('mgSpeedLabel');
+  var tip = document.getElementById('mgTip');
+  var playBtn = document.getElementById('mgPlayBtn');
+
+  var CX = 300, CY = 150, FULLW = 90, HALFH = 60;
+
+  function setMode(newMode) {
+    mode = newMode;
+    document.querySelectorAll('#mgModeToggle button').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.mode === newMode);
+    });
+
+    var isMotor = mode === 'motor';
+    comm.style.display = isMotor ? '' : 'none';
+    slip.style.display = isMotor ? 'none' : '';
+    batteryBox.style.display = isMotor ? '' : 'none';
+    bulbBox.style.display = isMotor ? 'none' : '';
+    crank.style.display = isMotor ? 'none' : '';
+    brightRow.style.display = isMotor ? 'none' : '';
+
+    modeLabel.textContent = isMotor ? '电动机' : '发电机';
+    convLabel.textContent = isMotor ? '电能 → 机械能' : '机械能 → 电能';
+    energyText.textContent = isMotor ? '电能 → 机械能' : '机械能 → 电能';
+    energyText.className = isMotor ? 'energy-label' : 'energy-label gen';
+    speedLabel.textContent = isMotor ? '电源电压（转速）：' : '外力大小（转速）：';
+
+    tip.innerHTML = isMotor
+      ? '<strong>电动机</strong>：有电源，通电线圈在磁场中受力转动；<strong>换向器</strong>（两个半环）在线圈转过平衡位置时自动改变电流方向，使线圈能<strong>持续朝一个方向</strong>转动。调高"电压"，线圈转得更快！'
+      : '<strong>发电机</strong>：没有电源，靠外力（水流、风力、手摇）带动线圈转动，<strong>切割磁感线</strong>产生感应电流；电流经<strong>滑环</strong>（两个整环）引出。线圈每转半圈，感应电流方向改变一次——发出的是<strong>交流电</strong>，所以灯泡亮度随转动一明一暗地脉动！';
+  }
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (playing) {
+      angle += (speed / 100) * dt * Math.PI * 1.6;
+      if (angle > Math.PI * 2000) angle -= Math.PI * 2000;
+    }
+
+    var c = Math.cos(angle);
+    var w = Math.max(6, FULLW * Math.abs(c));
+    coilRect.setAttribute('x', CX - w / 2);
+    coilRect.setAttribute('width', w);
+    // A 面 / B 面交替朝前
+    var faceA = c >= 0;
+    coilRect.setAttribute('fill', faceA ? 'rgba(243,156,18,0.4)' : 'rgba(230,126,34,0.18)');
+    coilFace.textContent = faceA ? 'A 面朝前' : 'B 面朝前';
+    // 对角线示意线圈平面朝向
+    coilDiag.setAttribute('x1', CX - w / 2);
+    coilDiag.setAttribute('x2', CX + w / 2);
+    coilDiag.setAttribute('y1', CY - HALFH);
+    coilDiag.setAttribute('y2', CY + HALFH);
+
+    // 发电机：感应电动势 ∝ 转速 × |sinθ|，灯泡亮度随之脉动（交流电）
+    if (mode === 'gen') {
+      var emf = (speed / 100) * Math.abs(Math.sin(angle));
+      var pct = Math.round(emf * 100);
+      brightVal.textContent = pct;
+      bulbGlow.setAttribute('fill', 'rgba(253,184,19,' + (emf * 0.75).toFixed(2) + ')');
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.querySelectorAll('#mgModeToggle button').forEach(function(btn) {
+    btn.addEventListener('click', function() { setMode(btn.dataset.mode); });
+  });
+
+  document.getElementById('mgSpeed').addEventListener('input', function(e) {
+    speed = parseFloat(e.target.value);
+    document.getElementById('mgSpeedVal').textContent = speed;
+  });
+
+  playBtn.addEventListener('click', function() {
+    playing = !playing;
+    this.textContent = playing ? '⏸ 暂停' : '▶ 转动';
+  });
+
+  setMode('motor');
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 练习题
+// ============================================================
+initQuiz('quiz1', {
+  correct: 2,
+  explain: '磁感线是为形象描述磁场而引入的假想曲线，并不真实存在（铁屑显示的是磁场，不是磁感线本身）；磁体外部磁感线从 N 极出发回到 S 极；由于每一点磁场方向唯一，磁感线不能相交。',
+  hint: '磁场是真实存在的，磁感线是假想的；方向"出 N 入 S"，且永不相交。'
+});
+
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '安培定则（右手螺旋定则）：右手握螺线管，四指指向电流方向，拇指所指的那端就是 N 极。注意必须用右手，且四指指电流、拇指指 N 极，不能颠倒。',
+  hint: '关键词：右手、四指→电流方向、拇指→N 极。'
+});
+
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '电动机利用"通电导体在磁场中受力运动"制成，电能→机械能；发电机利用电磁感应现象制成，机械能→电能。两者构造相似但原理和能量转化方向正好相反。',
+  hint: '看哪个"有电源"：有电源耗电的是电动机，发电输出的是发电机。'
+});
+</script>
+
 </body>
 </html>

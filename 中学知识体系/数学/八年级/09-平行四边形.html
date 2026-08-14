@@ -6,57 +6,375 @@
   <title>平行四边形 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 14px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 13px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .formula-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .formula-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.08), rgba(155,89,182,0.02));
+      border: 2px solid rgba(155,89,182,0.18);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .formula-card:hover {
+      border-color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .formula-card .f-name { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+    .formula-card .f-eq { font-size: 17px; font-weight: 700; color: var(--math); font-family: Georgia, serif; }
+    .formula-card .f-cond { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 90px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] { flex: 1; accent-color: var(--math); }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num {
+      font-size: 19px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+      word-break: break-all;
+    }
+    .data-cell.hl-red { border-color: rgba(231,76,60,0.5); background: rgba(231,76,60,0.08); }
+    .data-cell.hl-red .num { color: #E74C3C; }
+    .data-cell.hl-blue { border-color: rgba(52,152,219,0.5); background: rgba(52,152,219,0.08); }
+    .data-cell.hl-blue .num { color: #3498DB; }
+    .data-cell.hl-green { border-color: rgba(39,174,96,0.5); background: rgba(39,174,96,0.08); }
+    .data-cell.hl-green .num { color: #27AE60; }
+    .data-cell.hl-orange { border-color: rgba(230,126,34,0.5); background: rgba(230,126,34,0.08); }
+    .data-cell.hl-orange .num { color: #E67E22; }
+    .data-cell.hl-purple { border-color: rgba(155,89,182,0.5); background: rgba(155,89,182,0.08); }
+    .data-cell.hl-purple .num { color: #8E44AD; }
+    .data-cell.hl-cyan { border-color: rgba(26,188,156,0.5); background: rgba(26,188,156,0.08); }
+    .data-cell.hl-cyan .num { color: #1ABC9C; }
+
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 8px 0 4px;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    .live-formula {
+      font-family: Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      text-align: center;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(155,89,182,0.10), rgba(155,89,182,0.02));
+      border-radius: var(--radius-sm);
+      margin: 12px 0;
+      color: var(--math);
+      letter-spacing: 1px;
+      line-height: 1.8;
+    }
+    .live-formula .res { color: var(--success); }
+
+    /* ===== 知识要点列表 ===== */
+    .know-list { list-style: none; padding-left: 0; }
+    .know-list li {
+      padding: 10px 14px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      transition: transform 0.2s;
+    }
+    .know-list li:hover { transform: translateX(4px); }
+    .know-list li strong { color: var(--math); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== 拖拽配对 ===== */
+    .drag-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin: 14px 0;
+      min-height: 64px;
+    }
+    .drag-item {
+      padding: 10px 16px;
+      background: #fff;
+      border: 2px solid var(--math);
+      border-radius: var(--radius-sm);
+      cursor: grab;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--math);
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .drag-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(155,89,182,0.3); }
+    .drag-item.dragging { opacity: 0.4; }
+    .drag-item.selected { background: rgba(155,89,182,0.15); box-shadow: 0 0 0 3px rgba(155,89,182,0.3); }
+
+    .drop-zones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .drop-zone {
+      min-height: 90px;
+      padding: 14px;
+      background: rgba(155,89,182,0.05);
+      border: 2px dashed rgba(155,89,182,0.4);
+      border-radius: var(--radius);
+      text-align: center;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .drop-zone.drag-over { background: rgba(155,89,182,0.15); border-color: var(--math); border-style: solid; }
+    .drop-zone .zone-title { font-weight: 700; color: var(--math); margin-bottom: 8px; font-size: 14px; }
+    .drop-zone .zone-items { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 40px; }
+    .drop-zone.correct { border-color: var(--success); background: rgba(39,174,96,0.08); }
+    .drop-zone.wrong { border-color: var(--danger); background: rgba(231,76,60,0.08); }
+    .zone-detail {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(39,174,96,0.06);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-main);
+      display: none;
+      text-align: left;
+      line-height: 1.7;
     }
+    .zone-detail.show { display: block; animation: fadeIn 0.4s ease; }
+
+    /* ===== 层级图节点 ===== */
+    .hierarchy-node {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .hierarchy-node:hover { filter: brightness(1.1); }
+    .hierarchy-node.active rect { stroke-width: 4; }
+
+    .node-info-panel {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 14px 0;
+      min-height: 100px;
+    }
+    .node-info-panel .ni-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--math);
+      margin-bottom: 8px;
+    }
+    .node-info-panel .ni-prop {
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .node-info-panel .ni-prop strong { color: var(--math); }
+
+    /* ===== 图形类型提示 ===== */
+    .shape-type-banner {
+      text-align: center;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 18px;
+      font-weight: 700;
+      margin: 12px 0;
+      transition: all 0.3s;
+    }
+
+    .step-nav .btn-disabled { opacity: 0.4; pointer-events: none; }
+
+    /* ===== 面积计算器标签页 ===== */
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .tab-btn:hover { border-color: var(--math); color: var(--math); }
+    .tab-btn.active { border-color: var(--math); background: var(--math); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.4s ease; }
+
+    .ans-feedback {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .ans-feedback.show { display: block; }
+    .ans-feedback.right { background: rgba(39,174,96,0.12); color: var(--success); }
+    .ans-feedback.wrong { background: rgba(231,76,60,0.12); color: var(--danger); }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📐 平行四边形</div>
+  <div class="navbar-brand">▱ 平行四边形</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>▱ 平行四边形</h1>
+  <p>定义 · 性质 · 判定 · 特殊平行四边形（矩形·菱形·正方形）—— 几何图形的核心，从对边平行的基本特征出发</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +385,1238 @@
     <span>平行四边形</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>平行四边形</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 平行四边形的定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 平行四边形的定义</h2>
+  <div class="card">
+    <p><strong class="math-accent">两组对边分别平行</strong>的四边形叫做<strong class="math-accent">平行四边形</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        ▱ABCD：AB ∥ CD，AD ∥ BC
+      </div>
+      <div class="formula-note">记作 ▱ABCD，读作"平行四边形 ABCD"，顶点字母按逆时针（或顺时针）顺序排列</div>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="def-svg" viewBox="0 0 460 240" width="460" height="240"></svg>
+    </div>
+
+    <ul class="know-list">
+      <li><strong>对边：</strong>AB 与 CD 是一组对边，AD 与 BC 是另一组对边</li>
+      <li><strong>对角：</strong>∠A 与 ∠C 是一组对角，∠B 与 ∠D 是另一组对角</li>
+      <li><strong>对角线：</strong>连接不相邻顶点的线段，AC 和 BD 是两条对角线，它们的交点记为 O</li>
+      <li><strong>邻边：</strong>有公共顶点的两条边，如 AB 与 AD 是邻边</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 记号说明</div>
+      ▱ 是平行四边形的专用符号。书写 ▱ABCD 时，四个字母必须<strong>按顺序</strong>排列（顺时针或逆时针均可），不能跳着写。相邻字母代表邻边，相对字母代表对角顶点。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 交互1：平行四边形性质探索器 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 交互·平行四边形性质探索器</h2>
+  <div class="card">
+    <p>拖动顶点 <strong class="math-accent">A、B、D</strong>（红色圆点），四边形形状改变但<strong class="math-accent">始终满足平行四边形的定义</strong>（顶点 C 自动调整，保证 AB∥CD、AD∥BC）。实时观察：对边相等、对角相等、对角线互相平分。所有相等关系用<strong>同色</strong>标注。</p>
+
+    <div class="svg-wrap">
+      <svg id="explore-svg" viewBox="0 0 500 380" width="500" height="380" style="touch-action:none;"></svg>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:#E74C3C;"></div>AB = CD（对边）</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#3498DB;"></div>AD = BC（对边）</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#27AE60;"></div>∠A = ∠C（对角）</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#E67E22;"></div>∠B = ∠D（对角）</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#8E44AD;"></div>AO = OC（对角线）</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#1ABC9C;"></div>BO = OD（对角线）</div>
+    </div>
+
+    <div class="data-panel" id="explore-data"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 观察要点</div>
+      无论怎样拖动顶点，<strong>对边长度始终相等</strong>（AB=CD，AD=BC），<strong>对角始终相等</strong>（∠A=∠C，∠B=∠D），<strong>对角线交点 O 始终是对角线的中点</strong>（AO=OC，BO=OD）。这就是平行四边形的三大性质。
+    </div>
   </div>
+
+  <!-- ===== 3. 平行四边形的性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 平行四边形的性质</h2>
+  <div class="card">
+    <p>平行四边形有以下三条重要性质，它们是证明线段相等、角相等的重要依据。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">性质 1·对边相等</div>
+        <div class="f-eq">AB = CD，AD = BC</div>
+        <div class="f-cond">平行四边形的对边相等</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">性质 2·对角相等</div>
+        <div class="f-eq">∠A = ∠C，∠B = ∠D</div>
+        <div class="f-cond">平行四边形的对角相等</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">性质 3·对角线互相平分</div>
+        <div class="f-eq">AO = OC，BO = OD</div>
+        <div class="f-cond">O 是两条对角线的交点</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 补充性质</div>
+      平行四边形还有以下常用结论：<br>
+      · <strong>邻角互补</strong>：∠A + ∠B = 180°（因为 AB∥CD，AD 为截线，同旁内角互补）<br>
+      · <strong>中心对称图形</strong>：平行四边形是中心对称图形，对称中心是对角线的交点 O<br>
+      · <strong>夹在两平行线间的平行线段相等</strong>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 注意区分</div>
+      "对边相等"是<strong>两组</strong>对边分别相等，不是只有一组。"对角线互相平分"是指两条对角线<strong>互相</strong>平分（每条都被另一条平分），不是只有一条被平分。性质是平行四边形<strong>固有</strong>的，不需要额外条件。
+    </div>
+  </div>
+
+  <!-- ===== 4. 平行四边形的判定 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 平行四边形的判定</h2>
+  <div class="card">
+    <p>判定一个四边形是平行四边形，除定义外还有以下 <strong class="math-accent">4 条判定定理</strong>，加上定义共 <strong class="math-accent">5 种方法</strong>。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">定义</div>
+        <div class="f-eq">两组对边分别平行</div>
+        <div class="f-cond">AB∥CD 且 AD∥BC</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">判定定理 1</div>
+        <div class="f-eq">两组对边分别相等</div>
+        <div class="f-cond">AB=CD 且 AD=BC</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">判定定理 2</div>
+        <div class="f-eq">一组对边平行且相等</div>
+        <div class="f-cond">AB∥CD 且 AB=CD</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">判定定理 3</div>
+        <div class="f-eq">两组对角分别相等</div>
+        <div class="f-cond">∠A=∠C 且 ∠B=∠D</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">判定定理 4</div>
+        <div class="f-eq">对角线互相平分</div>
+        <div class="f-cond">AO=OC 且 BO=OD</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 易错警示</div>
+      <strong>错误判定：</strong>"一组对边相等，另一组对边平行" <strong>不能</strong>判定为平行四边形！<br>
+      例如等腰梯形：一组对边平行（两底），另一组对边相等（两腰），但它不是平行四边形。<br><br>
+      <strong>必须注意：</strong>判定定理 2 是"一组对边<strong>平行且相等</strong>"，两个条件缺一不可。"平行"和"相等"必须针对<strong>同一组</strong>对边。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 判定方法的选择策略</div>
+      · 已知<strong>边的关系</strong>：优先用判定定理 1（两组对边相等）或定理 2（一组对边平行且相等）<br>
+      · 已知<strong>角的关系</strong>：用判定定理 3（两组对角相等）<br>
+      · 已知<strong>对角线</strong>：用判定定理 4（对角线互相平分）<br>
+      · 已知<strong>平行关系</strong>：直接用定义
+    </div>
+  </div>
+
+  <!-- ===== 5. 交互2：判定方法配对 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 交互·判定方法配对</h2>
+  <div class="card">
+    <p>下面有 5 个<strong class="math-accent">条件描述</strong>（已打乱顺序）。请将每个条件拖到下方对应的<strong class="math-accent">判定方法</strong>框中（也可点击条件选中后，再点击目标框）。配对正确后，框内会展开该判定方法的图示说明。</p>
+
+    <div class="drag-pool" id="judge-pool"></div>
+    <div class="drop-zones" id="judge-zones"></div>
+
+    <div style="text-align:center; margin: 10px 0;">
+      <button class="btn btn-primary btn-sm" id="judge-check" style="background:var(--math);">检查配对</button>
+      <button class="btn btn-outline btn-sm" id="judge-reset" style="border-color:var(--text-light);color:var(--text-secondary);">↻ 重置</button>
+    </div>
+    <div class="ans-feedback" id="judge-feedback"></div>
+  </div>
+
+  <!-- ===== 6. 特殊的平行四边形 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 特殊的平行四边形</h2>
+  <div class="card">
+    <p>当平行四边形满足额外条件时，就变成更特殊的图形：<strong class="math-accent">矩形</strong>、<strong class="math-accent">菱形</strong>、<strong class="math-accent">正方形</strong>。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">矩形（长方形）</div>
+        <div class="f-eq">有一个角是直角的平行四边形</div>
+        <div class="f-cond">性质：四个角都是直角、对角线相等</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">菱形</div>
+        <div class="f-eq">有一组邻边相等的平行四边形</div>
+        <div class="f-cond">性质：四条边都相等、对角线互相垂直且平分对角</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">正方形</div>
+        <div class="f-eq">既是矩形又是菱形的平行四边形</div>
+        <div class="f-cond">性质：四角直角、四边相等、对角线相等且互相垂直平分</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 层级关系</div>
+      <strong>正方形 ⊂ 矩形 ⊂ 平行四边形 ⊂ 四边形</strong><br>
+      <strong>正方形 ⊂ 菱形 ⊂ 平行四边形 ⊂ 四边形</strong><br><br>
+      正方形是<strong>矩形和菱形的交集</strong>——它同时满足矩形和菱形的全部性质。矩形"特殊"在角，菱形"特殊"在边，正方形"两者都特殊"。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 从平行四边形到特殊图形的"升级"条件</div>
+      · 平行四边形 + <strong>一个角是直角</strong> → 矩形<br>
+      · 平行四边形 + <strong>一组邻边相等</strong> → 菱形<br>
+      · 平行四边形 + <strong>一个角是直角 + 一组邻边相等</strong> → 正方形<br>
+      · 矩形 + <strong>一组邻边相等</strong> → 正方形<br>
+      · 菱形 + <strong>一个角是直角</strong> → 正方形
+    </div>
+  </div>
+
+  <!-- ===== 7. 交互3：特殊平行四边形关系图 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 交互·特殊平行四边形关系图</h2>
+  <div class="card">
+    <p>点击下方层级图中的任一图形，查看其性质。拖动滑块调节平行四边形的<strong class="math-accent">角度</strong>和<strong class="math-accent">邻边比</strong>，观察它何时变成矩形、菱形或正方形。</p>
+
+    <div class="svg-wrap">
+      <svg id="hierarchy-svg" viewBox="0 0 500 290" width="500" height="290"></svg>
+    </div>
+
+    <div class="node-info-panel" id="node-info">
+      <div class="ni-title">点击上方图形查看性质</div>
+      <div class="ni-prop">提示：从上到下是"一般到特殊"的包含关系。正方形既是矩形又是菱形。</div>
+    </div>
+
+    <h3 style="color:var(--math); margin: 20px 0 10px; font-size:17px;">滑块调节：从平行四边形到特殊图形</h3>
+
+    <div class="slider-row">
+      <label>∠A 的度数</label>
+      <input type="range" id="shape-angle" min="30" max="150" value="70" step="1">
+      <span class="value-badge" id="shape-angle-val">70°</span>
+    </div>
+    <div class="slider-row">
+      <label>邻边比 AD/AB</label>
+      <input type="range" id="shape-ratio" min="50" max="200" value="80" step="1">
+      <span class="value-badge" id="shape-ratio-val">0.80</span>
+    </div>
+
+    <div class="shape-type-banner" id="shape-type-banner"></div>
+
+    <div class="svg-wrap">
+      <svg id="shape-svg" viewBox="0 0 460 260" width="460" height="260"></svg>
+    </div>
+
+    <div class="data-panel" id="shape-data"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 观察要点</div>
+      · 当 <strong>∠A = 90°</strong>（且邻边比 ≠ 1）时，变成<strong>矩形</strong><br>
+      · 当 <strong>邻边比 = 1</strong>（且 ∠A ≠ 90°）时，变成<strong>菱形</strong><br>
+      · 当 <strong>∠A = 90° 且 邻边比 = 1</strong> 时，变成<strong>正方形</strong><br>
+      · 其他情况是普通的<strong>平行四边形</strong>
+    </div>
+  </div>
+
+  <!-- ===== 8. 交互4：菱形对角线性质验证 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 交互·菱形对角线性质验证</h2>
+  <div class="card">
+    <p>菱形是特殊的平行四边形，除了具有平行四边形的所有性质外，还有独特的<strong class="math-accent">对角线性质</strong>。拖动滑块改变菱形的形状，验证以下性质：AC⊥BD、AC 平分一组对角、BD 平分另一组对角、四条边都相等。</p>
+
+    <div class="slider-row">
+      <label>边长 AB</label>
+      <input type="range" id="rhombus-side" min="60" max="120" value="90" step="1">
+      <span class="value-badge" id="rhombus-side-val">90</span>
+    </div>
+    <div class="slider-row">
+      <label>对角线 AC 的一半</label>
+      <input type="range" id="rhombus-half-ac" min="20" max="115" value="70" step="1">
+      <span class="value-badge" id="rhombus-half-ac-val">70</span>
+    </div>
+
+    <div class="svg-wrap">
+      <svg id="rhombus-svg" viewBox="0 0 460 320" width="460" height="320"></svg>
+    </div>
+
+    <div class="data-panel" id="rhombus-data"></div>
+
+    <div class="live-formula" id="rhombus-area-display"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 菱形对角线性质</div>
+      <strong>① AC ⊥ BD</strong>：两条对角线互相垂直<br>
+      <strong>② AC 平分 ∠BAD 和 ∠BCD</strong>：每条对角线平分一组对角<br>
+      <strong>③ BD 平分 ∠ABC 和 ∠ADC</strong>：另一条对角线平分另一组对角<br>
+      <strong>④ AB = BC = CD = DA</strong>：四条边都相等<br>
+      <strong>⑤ 菱形面积 = AC × BD ÷ 2</strong>：对角线乘积的一半
+    </div>
+  </div>
+
+  <!-- ===== 9. 交互5：面积计算器 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 交互·面积计算器</h2>
+  <div class="card">
+    <p>选择图形类型，拖动滑块调节参数，实时计算面积。注意不同图形的面积公式不同——平行四边形用<strong>底×高</strong>，菱形还可以用<strong>对角线乘积÷2</strong>。</p>
+
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="para">▱ 平行四边形</button>
+      <button class="tab-btn" data-tab="rect">▭ 矩形</button>
+      <button class="tab-btn" data-tab="rhombus">◇ 菱形</button>
+    </div>
+
+    <!-- 平行四边形面积 -->
+    <div class="tab-panel active" id="tab-para">
+      <div class="slider-row">
+        <label>底（AB）</label>
+        <input type="range" id="area-p-base" min="4" max="14" value="8" step="0.5">
+        <span class="value-badge" id="area-p-base-val">8.0</span>
+      </div>
+      <div class="slider-row">
+        <label>高（h）</label>
+        <input type="range" id="area-p-height" min="2" max="10" value="5" step="0.5">
+        <span class="value-badge" id="area-p-height-val">5.0</span>
+      </div>
+      <div class="live-formula" id="area-p-formula"></div>
+      <div class="svg-wrap"><svg id="area-p-svg" viewBox="0 0 460 240" width="460" height="240"></svg></div>
+    </div>
+
+    <!-- 矩形面积 -->
+    <div class="tab-panel" id="tab-rect">
+      <div class="slider-row">
+        <label>长（长边）</label>
+        <input type="range" id="area-r-length" min="4" max="14" value="9" step="0.5">
+        <span class="value-badge" id="area-r-length-val">9.0</span>
+      </div>
+      <div class="slider-row">
+        <label>宽（短边）</label>
+        <input type="range" id="area-r-width" min="2" max="10" value="5" step="0.5">
+        <span class="value-badge" id="area-r-width-val">5.0</span>
+      </div>
+      <div class="live-formula" id="area-r-formula"></div>
+      <div class="svg-wrap"><svg id="area-r-svg" viewBox="0 0 460 240" width="460" height="240"></svg></div>
+    </div>
+
+    <!-- 菱形面积 -->
+    <div class="tab-panel" id="tab-rhombus">
+      <div class="slider-row">
+        <label>对角线 AC</label>
+        <input type="range" id="area-d-ac" min="4" max="14" value="10" step="0.5">
+        <span class="value-badge" id="area-d-ac-val">10.0</span>
+      </div>
+      <div class="slider-row">
+        <label>对角线 BD</label>
+        <input type="range" id="area-d-bd" min="4" max="14" value="8" step="0.5">
+        <span class="value-badge" id="area-d-bd-val">8.0</span>
+      </div>
+      <div class="live-formula" id="area-d-formula"></div>
+      <div class="svg-wrap"><svg id="area-d-svg" viewBox="0 0 460 260" width="460" height="260"></svg></div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 面积公式总结</div>
+      · <strong>平行四边形</strong>：S = 底 × 高 = a × h（高是底边上的垂线段长度）<br>
+      · <strong>矩形</strong>：S = 长 × 宽（矩形的高就是另一边）<br>
+      · <strong>菱形</strong>：S = 对角线 × 对角线 ÷ 2 = d₁ × d₂ ÷ 2（因为对角线互相垂直）<br>
+      · <strong>正方形</strong>：S = 边长²（也可用对角线公式 S = d²÷2）<br><br>
+      菱形面积公式 S = d₁d₂÷2 的原理：两条对角线把菱形分成 4 个全等的直角三角形，每个面积为 (d₁÷2)(d₂÷2)÷2，共 4 个，总面积 = d₁d₂÷2。
+    </div>
+  </div>
+
+  <!-- ===== 10. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 在 ▱ABCD 中，∠A : ∠B = 3 : 2，则 ∠C 的度数是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 36°</div>
+    <div class="quiz-option" data-idx="1">B. 72°</div>
+    <div class="quiz-option" data-idx="2">C. 108°</div>
+    <div class="quiz-option" data-idx="3">D. 144°</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 下列条件中，能判定四边形 ABCD 是平行四边形的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. AB∥CD，AD = BC</div>
+    <div class="quiz-option" data-idx="1">B. AB = CD，AD = BC</div>
+    <div class="quiz-option" data-idx="2">C. ∠A = ∠B，∠C = ∠D</div>
+    <div class="quiz-option" data-idx="3">D. AB∥CD，AB = AD</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 下列说法正确的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 矩形的对角线互相垂直</div>
+    <div class="quiz-option" data-idx="1">B. 菱形的四个角都是直角</div>
+    <div class="quiz-option" data-idx="2">C. 正方形的对角线相等且互相垂直平分</div>
+    <div class="quiz-option" data-idx="3">D. 菱形的对角线相等</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 11. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">11</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 平行四边形的延伸与应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        📐 <a href="08-勾股定理.html"><strong>数学·勾股定理</strong></a>——
+        平行四边形的对角线长度计算、菱形边长与对角线的关系，都离不开<strong>勾股定理</strong>。例如菱形的对角线互相垂直，每条边长 = √((d₁÷2)² + (d₂÷2)²)，正是勾股定理的直接应用。
+        <span class="tag tag-math">对角线计算</span>
+      </li>
+      <li>
+        📈 <a href="10-一次函数.html"><strong>数学·一次函数</strong></a>——
+        平行四边形的顶点坐标、对角线交点（中点）等问题常与<strong>坐标系</strong>结合。利用中点坐标公式（两对角顶点坐标的平均值）可以快速求出对角线交点，这是平行四边形性质与一次函数的交汇点。
+        <span class="tag tag-math">坐标几何</span>
+      </li>
+      <li>
+        💪 <a href="../../物理/八年级/09-压强.html"><strong>物理·压强</strong></a>——
+        物理学中<strong>力的合成与分解</strong>遵循"平行四边形定则"：两个力合成时，以这两个力为邻边作平行四边形，对角线就表示合力的大小和方向。这是平行四边形在物理中最经典的应用，理解平行四边形的几何性质有助于分析力的关系。
+        <span class="tag tag-cross">力的平行四边形定则</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="08-勾股定理.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：勾股定理</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="10-一次函数.html" class="btn btn-primary" style="background: var(--math);">下一章：一次函数 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  工具函数
+ * ============================================================ */
+const $ = (id) => document.getElementById(id);
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function makeSvg(tag, attrs) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+function dist(p, q) {
+  return Math.sqrt((p.x - q.x) ** 2 + (p.y - q.y) ** 2);
+}
+
+function mid(p, q) {
+  return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 };
+}
+
+/* 计算 ∠PVQ（V 为顶点）的度数 */
+function angleAt(p, v, q) {
+  const v1 = { x: p.x - v.x, y: p.y - v.y };
+  const v2 = { x: q.x - v.x, y: q.y - v.y };
+  const dot = v1.x * v2.x + v1.y * v2.y;
+  const m1 = Math.sqrt(v1.x ** 2 + v1.y ** 2);
+  const m2 = Math.sqrt(v2.x ** 2 + v2.y ** 2);
+  if (m1 < 1e-9 || m2 < 1e-9) return 0;
+  const cos = Math.max(-1, Math.min(1, dot / (m1 * m2)));
+  return Math.acos(cos) * 180 / Math.PI;
+}
+
+function fmtLen(n) {
+  return (Math.round(n * 10) / 10).toFixed(1);
+}
+function fmtAng(n) {
+  return (Math.round(n * 10) / 10).toFixed(1) + '°';
+}
+
+/* SVG 坐标转换 */
+function svgPoint(svg, evt) {
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+/* ============================================================
+ *  定义示意图
+ * ============================================================ */
+function drawDefFigure() {
+  const svg = $('def-svg');
+  svg.innerHTML = '';
+  const A = { x: 90, y: 180 }, B = { x: 370, y: 180 };
+  const D = { x: 150, y: 60 }, C = { x: 430, y: 60 };
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+
+  /* 填充 */
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: 'rgba(155,89,182,0.12)', stroke: '#9B59B6', 'stroke-width': 2.5 }));
+  /* 对角线 */
+  svg.appendChild(makeSvg('line', { x1: A.x, y1: A.y, x2: C.x, y2: C.y, stroke: '#BDC3C7', 'stroke-width': 1.5, 'stroke-dasharray': '5,4' }));
+  svg.appendChild(makeSvg('line', { x1: B.x, y1: B.y, x2: D.x, y2: D.y, stroke: '#BDC3C7', 'stroke-width': 1.5, 'stroke-dasharray': '5,4' }));
+  /* 交点 O */
+  const O = mid(A, C);
+  svg.appendChild(makeSvg('circle', { cx: O.x, cy: O.y, r: 3.5, fill: '#7F8C8D' }));
+  /* 平行标记 */
+  const mk = (x, y) => makeSvg('text', { x, y, 'font-size': 11, fill: '#27AE60', 'text-anchor': 'middle' });
+  /* 顶点标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -16, dy: 6 },
+    { p: B, t: 'B', dx: 16, dy: 6 },
+    { p: C, t: 'C', dx: 16, dy: -4 },
+    { p: D, t: 'D', dx: -16, dy: -4 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 16, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  /* O 标签 */
+  const oLabel = makeSvg('text', { x: O.x + 8, y: O.y - 8, 'font-size': 13, fill: '#7F8C8D', 'font-style': 'italic', 'font-family': 'Georgia,serif' });
+  oLabel.textContent = 'O';
+  svg.appendChild(oLabel);
+  /* 顶点圆点 */
+  [A, B, C, D].forEach(p => {
+    svg.appendChild(makeSvg('circle', { cx: p.x, cy: p.y, r: 4, fill: '#9B59B6' }));
+  });
+  /* 平行符号标注 */
+  const an1 = mk(230, 175); an1.textContent = '∥'; svg.appendChild(an1);
+  const an2 = mk(290, 65); an2.textContent = '∥'; svg.appendChild(an2);
+}
+
+/* ============================================================
+ *  交互1：平行四边形性质探索器
+ * ============================================================ */
+const exploreSvg = () => $('explore-svg');
+let expA = { x: 100, y: 290 };
+let expB = { x: 400, y: 290 };
+let expD = { x: 170, y: 80 };
+let expDrag = null;
+
+function expC() {
+  /* C = B + D - A，保证 ABCD 是平行四边形 */
+  return { x: expB.x + expD.x - expA.x, y: expB.y + expD.y - expA.y };
+}
+
+function drawExplore() {
+  const svg = exploreSvg();
+  svg.innerHTML = '';
+  const A = expA, B = expB, D = expD, C = expC();
+  const O = mid(A, C);
+
+  /* 平行四边形填充 */
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: 'rgba(155,89,182,0.08)', stroke: '#9B59B6', 'stroke-width': 2 }));
+
+  /* 对角线 AC（紫色） */
+  svg.appendChild(makeSvg('line', { x1: A.x, y1: A.y, x2: C.x, y2: C.y, stroke: '#8E44AD', 'stroke-width': 2 }));
+  /* 对角线 BD（青色） */
+  svg.appendChild(makeSvg('line', { x1: B.x, y1: B.y, x2: D.x, y2: D.y, stroke: '#1ABC9C', 'stroke-width': 2 }));
+
+  /* 对角线交点 O */
+  svg.appendChild(makeSvg('circle', { cx: O.x, cy: O.y, r: 4, fill: '#2C3E50' }));
+
+  /* 顶点标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -14, dy: 14 },
+    { p: B, t: 'B', dx: 14, dy: 14 },
+    { p: C, t: 'C', dx: 14, dy: -6 },
+    { p: D, t: 'D', dx: -14, dy: -6 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 16, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  const oLabel = makeSvg('text', { x: O.x + 8, y: O.y - 8, 'font-size': 13, fill: '#2C3E50', 'font-style': 'italic', 'font-family': 'Georgia,serif' });
+  oLabel.textContent = 'O';
+  svg.appendChild(oLabel);
+
+  /* 可拖动顶点 A, B, D */
+  const handles = [
+    { p: A, color: '#E74C3C' },
+    { p: B, color: '#E74C3C' },
+    { p: D, color: '#E74C3C' }
+  ];
+  handles.forEach((h, i) => {
+    const c = makeSvg('circle', { cx: h.p.x, cy: h.p.y, r: 9, fill: h.color, stroke: '#fff', 'stroke-width': 2.5, style: 'cursor:move;', class: 'exp-handle', 'data-idx': i });
+    svg.appendChild(c);
+  });
+  /* C 不可拖动（自动） */
+  svg.appendChild(makeSvg('circle', { cx: C.x, cy: C.y, r: 5, fill: '#9B59B6', stroke: '#fff', 'stroke-width': 2 }));
+
+  /* 计算并显示数据 */
+  const AB = dist(A, B), CD = dist(C, D);
+  const AD = dist(A, D), BC = dist(B, C);
+  const AC = dist(A, C), BD = dist(B, D);
+  const angA = angleAt(D, A, B), angB = angleAt(A, B, C);
+  const angC = angleAt(B, C, D), angD = angleAt(C, D, A);
+
+  const dp = $('explore-data');
+  dp.innerHTML = '';
+  const cells = [
+    { label: 'AB（对边）', val: fmtLen(AB), cls: 'hl-red' },
+    { label: 'CD（对边）', val: fmtLen(CD), cls: 'hl-red' },
+    { label: 'AD（对边）', val: fmtLen(AD), cls: 'hl-blue' },
+    { label: 'BC（对边）', val: fmtLen(BC), cls: 'hl-blue' },
+    { label: '∠A（对角）', val: fmtAng(angA), cls: 'hl-green' },
+    { label: '∠C（对角）', val: fmtAng(angC), cls: 'hl-green' },
+    { label: '∠B（对角）', val: fmtAng(angB), cls: 'hl-orange' },
+    { label: '∠D（对角）', val: fmtAng(angD), cls: 'hl-orange' },
+    { label: 'AO（对角线）', val: fmtLen(AC / 2), cls: 'hl-purple' },
+    { label: 'OC（对角线）', val: fmtLen(AC / 2), cls: 'hl-purple' },
+    { label: 'BO（对角线）', val: fmtLen(BD / 2), cls: 'hl-cyan' },
+    { label: 'OD（对角线）', val: fmtLen(BD / 2), cls: 'hl-cyan' }
+  ];
+  cells.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = 'data-cell ' + c.cls;
+    cell.innerHTML = `<div class="label">${c.label}</div><div class="num">${c.val}</div>`;
+    dp.appendChild(cell);
+  });
+}
+
+function bindExplore() {
+  const svg = exploreSvg();
+  svg.addEventListener('pointerdown', (e) => {
+    if (e.target.classList && e.target.classList.contains('exp-handle')) {
+      expDrag = parseInt(e.target.dataset.idx);
+      e.target.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+  });
+  svg.addEventListener('pointermove', (e) => {
+    if (expDrag === null) return;
+    const p = svgPoint(svg, e);
+    /* 限制在画布范围内 */
+    p.x = Math.max(30, Math.min(470, p.x));
+    p.y = Math.max(30, Math.min(350, p.y));
+    if (expDrag === 0) expA = p;
+    else if (expDrag === 1) expB = p;
+    else if (expDrag === 2) expD = p;
+    drawExplore();
+  });
+  svg.addEventListener('pointerup', () => { expDrag = null; });
+  svg.addEventListener('pointercancel', () => { expDrag = null; });
+}
+
+/* ============================================================
+ *  交互2：判定方法配对
+ * ============================================================ */
+const judgeConditions = [
+  { id: 'c1', text: '两组对边分别平行', method: 'm1' },
+  { id: 'c2', text: '两组对边分别相等', method: 'm2' },
+  { id: 'c3', text: '一组对边平行且相等', method: 'm3' },
+  { id: 'c4', text: '两组对角分别相等', method: 'm4' },
+  { id: 'c5', text: '对角线互相平分', method: 'm5' }
+];
+const judgeMethods = [
+  { id: 'm1', title: '定义法', detail: 'AB∥CD 且 AD∥BC ⟹ ▱ABCD。这是平行四边形的<strong>定义</strong>本身，是最基本的判定依据。' },
+  { id: 'm2', title: '判定定理 1', detail: 'AB=CD 且 AD=BC ⟹ ▱ABCD。两组对边分别相等，可推出两组对边分别平行（通过全等三角形证明）。' },
+  { id: 'm3', title: '判定定理 2', detail: 'AB∥CD 且 AB=CD ⟹ ▱ABCD。<strong>同一组</strong>对边既平行又相等。注意：必须针对同一组对边！' },
+  { id: 'm4', title: '判定定理 3', detail: '∠A=∠C 且 ∠B=∠D ⟹ ▱ABCD。两组对角分别相等，利用四边形内角和 360° 可推出邻角互补，从而对边平行。' },
+  { id: 'm5', title: '判定定理 4', detail: 'AO=OC 且 BO=OD ⟹ ▱ABCD。对角线互相平分，通过全等三角形（SAS）可证明对边平行。' }
+];
+let judgeSelected = null;
+let judgeShowDetail = {};
+
+function renderJudgeGame() {
+  /* 打乱条件顺序 */
+  const shuffled = [...judgeConditions].sort(() => Math.random() - 0.5);
+  const pool = $('judge-pool');
+  pool.innerHTML = '';
+  shuffled.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.textContent = item.text;
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', () => {
+      document.querySelectorAll('#judge-pool .drag-item').forEach(d => d.classList.remove('selected'));
+      if (judgeSelected === item.id) { judgeSelected = null; }
+      else { judgeSelected = item.id; el.classList.add('selected'); }
+    });
+    pool.appendChild(el);
+  });
+
+  const zonesEl = $('judge-zones');
+  zonesEl.innerHTML = '';
+  judgeMethods.forEach(m => {
+    const zone = document.createElement('div');
+    zone.className = 'drop-zone';
+    zone.dataset.method = m.id;
+    zone.innerHTML = `
+      <div class="zone-title">${m.title}</div>
+      <div class="zone-items" data-zone="${m.id}"></div>
+      <div class="zone-detail" id="detail-${m.id}">${m.detail}</div>
+    `;
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const itemId = e.dataTransfer.getData('text/plain');
+      placeJudgeItem(itemId, m.id);
+    });
+    zone.addEventListener('click', (e) => {
+      if (e.target.closest('.zone-items') && e.target.classList.contains('drag-item')) return;
+      if (judgeSelected) {
+        placeJudgeItem(judgeSelected, m.id);
+        judgeSelected = null;
+      }
+    });
+    zonesEl.appendChild(zone);
+  });
+  judgeShowDetail = {};
+}
+
+function placeJudgeItem(itemId, methodId) {
+  const item = judgeConditions.find(c => c.id === itemId);
+  if (!item) return;
+  /* 从所有 zone 中移除 */
+  document.querySelectorAll('#judge-zones .zone-items').forEach(z => {
+    const el = z.querySelector(`[data-id="${itemId}"]`);
+    if (el) el.remove();
+  });
+  /* 添加到目标 */
+  const target = document.querySelector(`.zone-items[data-zone="${methodId}"]`);
+  if (target) {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.textContent = item.text;
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      el.remove();
+      renderJudgePoolOnly();
+    });
+    target.appendChild(el);
+  }
+  /* 如果配对正确，展开详情 */
+  if (item.method === methodId) {
+    $('detail-' + methodId).classList.add('show');
+  } else {
+    $('detail-' + methodId).classList.remove('show');
+  }
+  renderJudgePoolOnly();
+  /* 清除选中状态 */
+  document.querySelectorAll('#judge-pool .drag-item').forEach(d => d.classList.remove('selected'));
+  judgeSelected = null;
+}
+
+function renderJudgePoolOnly() {
+  const pool = $('judge-pool');
+  pool.innerHTML = '';
+  const placedIds = new Set();
+  document.querySelectorAll('#judge-zones .zone-items .drag-item').forEach(el => placedIds.add(el.dataset.id));
+  /* 保持原来的打乱顺序：用 pool 中已有的顺序，如果没有就重新生成 */
+  judgeConditions.forEach(item => {
+    if (placedIds.has(item.id)) return;
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.textContent = item.text;
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', () => {
+      document.querySelectorAll('#judge-pool .drag-item').forEach(d => d.classList.remove('selected'));
+      if (judgeSelected === item.id) { judgeSelected = null; }
+      else { judgeSelected = item.id; el.classList.add('selected'); }
+    });
+    pool.appendChild(el);
+  });
+}
+
+function checkJudge() {
+  let allCorrect = true;
+  let allPlaced = true;
+  const poolCount = $('judge-pool').querySelectorAll('.drag-item').length;
+  if (poolCount > 0) allPlaced = false;
+  judgeMethods.forEach(m => {
+    const zone = document.querySelector(`.zone-items[data-zone="${m.id}"]`).closest('.drop-zone');
+    const items = zone.querySelectorAll('.drag-item');
+    zone.classList.remove('correct', 'wrong');
+    if (items.length === 0) { allPlaced = false; return; }
+    items.forEach(el => {
+      const item = judgeConditions.find(c => c.id === el.dataset.id);
+      if (item && item.method === m.id) {
+        el.style.borderColor = 'var(--success)';
+        el.style.background = 'rgba(39,174,96,0.08)';
+        zone.classList.add('correct');
+      } else {
+        el.style.borderColor = 'var(--danger)';
+        el.style.background = 'rgba(231,76,60,0.08)';
+        zone.classList.add('wrong');
+        allCorrect = false;
+      }
+    });
+  });
+  const fb = $('judge-feedback');
+  if (!allPlaced) {
+    fb.className = 'ans-feedback show wrong';
+    fb.innerHTML = `还有 ${poolCount} 个条件未配对，请把所有条件拖入对应的判定方法框后再检查。`;
+  } else if (allCorrect) {
+    fb.className = 'ans-feedback show right';
+    fb.innerHTML = '✓ 全部配对正确！5 种判定方法：定义 + 4 条判定定理。注意判定定理 2"一组对边平行且相等"必须针对同一组对边。';
+  } else {
+    fb.className = 'ans-feedback show wrong';
+    fb.innerHTML = '✗ 有配对错误（红色边框）。提示：每组条件对应一个判定方法，注意"平行且相等"是同一组对边同时满足两个条件。';
+  }
+}
+
+/* ============================================================
+ *  交互3：特殊平行四边形关系图
+ * ============================================================ */
+const hierarchyNodes = [
+  { id: 'quad', name: '四边形', x: 250, y: 30, color: '#BDC3C7', w: 120, h: 40,
+    props: '<strong>四边形</strong>：由四条线段首尾相接组成的图形。内角和 360°。<br>是范围最广的概念，以下所有图形都是特殊的四边形。' },
+  { id: 'para', name: '平行四边形', x: 250, y: 110, color: '#9B59B6', w: 140, h: 40,
+    props: '<strong>平行四边形</strong>：两组对边分别平行的四边形。<br>性质：①对边相等 ②对角相等 ③对角线互相平分<br>是矩形、菱形、正方形的<strong>基础</strong>。' },
+  { id: 'rect', name: '矩形', x: 130, y: 200, color: '#3498DB', w: 110, h: 40,
+    props: '<strong>矩形（长方形）</strong>：有一个角是直角的平行四边形。<br>性质：①具有平行四边形所有性质 ②四个角都是直角 ③对角线相等' },
+  { id: 'rhombus', name: '菱形', x: 370, y: 200, color: '#E74C3C', w: 110, h: 40,
+    props: '<strong>菱形</strong>：有一组邻边相等的平行四边形。<br>性质：①具有平行四边形所有性质 ②四条边都相等 ③对角线互相垂直 ④每条对角线平分一组对角' },
+  { id: 'square', name: '正方形', x: 250, y: 260, color: '#27AE60', w: 110, h: 40,
+    props: '<strong>正方形</strong>：既是矩形又是菱形的平行四边形。<br>性质：①四个角都是直角 ②四条边都相等 ③对角线相等且互相垂直平分 ④每条对角线平分一组对角<br>是<strong>最特殊</strong>的四边形，拥有矩形和菱形的全部性质。' }
+];
+
+function drawHierarchy() {
+  const svg = $('hierarchy-svg');
+  svg.innerHTML = '';
+  /* 连线 */
+  const lines = [
+    ['quad', 'para'],
+    ['para', 'rect'],
+    ['para', 'rhombus'],
+    ['rect', 'square'],
+    ['rhombus', 'square']
+  ];
+  lines.forEach(([a, b]) => {
+    const na = hierarchyNodes.find(n => n.id === a);
+    const nb = hierarchyNodes.find(n => n.id === b);
+    svg.appendChild(makeSvg('line', { x1: na.x, y1: na.y, x2: nb.x, y2: nb.y, stroke: '#BDC3C7', 'stroke-width': 2 }));
+  });
+  /* 节点 */
+  hierarchyNodes.forEach(n => {
+    const g = makeSvg('g', { class: 'hierarchy-node', 'data-id': n.id });
+    const rect = makeSvg('rect', { x: n.x - n.w / 2, y: n.y - n.h / 2, width: n.w, height: n.h, rx: 8, fill: n.color, stroke: '#fff', 'stroke-width': 2 });
+    g.appendChild(rect);
+    const text = makeSvg('text', { x: n.x, y: n.y + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 'bold', fill: '#fff' });
+    text.textContent = n.name;
+    g.appendChild(text);
+    g.addEventListener('click', () => selectNode(n.id));
+    svg.appendChild(g);
+  });
+  selectNode('quad');
+}
+
+function selectNode(id) {
+  const n = hierarchyNodes.find(nn => nn.id === id);
+  if (!n) return;
+  document.querySelectorAll('.hierarchy-node').forEach(g => g.classList.remove('active'));
+  document.querySelector(`.hierarchy-node[data-id="${id}"]`).classList.add('active');
+  const panel = $('node-info');
+  panel.innerHTML = `<div class="ni-title" style="color:${n.color};">${n.name}</div><div class="ni-prop">${n.props}</div>`;
+}
+
+/* 滑块调节图形 */
+function updateShape() {
+  const ang = parseFloat($('shape-angle').value);
+  const ratio = parseFloat($('shape-ratio').value) / 100; /* AD/AB */
+  $('shape-angle-val').textContent = ang + '°';
+  $('shape-ratio-val').textContent = ratio.toFixed(2);
+
+  /* 判断图形类型 */
+  const isRect = Math.abs(ang - 90) < 0.5;
+  const isRhombus = Math.abs(ratio - 1) < 0.01;
+  let typeName, typeColor, typeBg;
+  if (isRect && isRhombus) { typeName = '■ 正方形（∠A=90° 且 邻边比=1）'; typeColor = '#fff'; typeBg = '#27AE60'; }
+  else if (isRect) { typeName = '▭ 矩形（∠A=90°）'; typeColor = '#fff'; typeBg = '#3498DB'; }
+  else if (isRhombus) { typeName = '◇ 菱形（邻边比=1）'; typeColor = '#fff'; typeBg = '#E74C3C'; }
+  else { typeName = '▱ 平行四边形'; typeColor = '#fff'; typeBg = '#9B59B6'; }
+
+  const banner = $('shape-type-banner');
+  banner.textContent = typeName;
+  banner.style.background = typeBg;
+  banner.style.color = typeColor;
+
+  /* 绘制图形 */
+  const svg = $('shape-svg');
+  svg.innerHTML = '';
+  const cx = 230, cy = 140;
+  const baseLen = 120; /* AB 的像素长度 */
+  const ab = baseLen;
+  const ad = ab * ratio;
+  const rad = ang * Math.PI / 180;
+
+  /* A 左下，B 右下，D 左上方向（按角度 ang） */
+  /* AB 沿水平方向 */
+  const A = { x: cx - ab / 2, y: cy + 50 };
+  const B = { x: A.x + ab, y: A.y };
+  /* D 从 A 出发，方向角 ang（向上偏 ang 度） */
+  const D = { x: A.x + ad * Math.cos(rad), y: A.y - ad * Math.sin(rad) };
+  const C = { x: B.x + (D.x - A.x), y: B.y + (D.y - A.y) };
+
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: typeBg + '22', stroke: typeBg, 'stroke-width': 2.5 }));
+
+  /* 标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -14, dy: 14 },
+    { p: B, t: 'B', dx: 14, dy: 14 },
+    { p: C, t: 'C', dx: 14, dy: -6 },
+    { p: D, t: 'D', dx: -14, dy: -6 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 15, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  /* 顶点 */
+  [A, B, C, D].forEach(p => svg.appendChild(makeSvg('circle', { cx: p.x, cy: p.y, r: 4, fill: typeBg })));
+
+  /* 显示数据 */
+  const realAB = 6; /* AB 代表 6 单位 */
+  const realAD = realAB * ratio;
+  const dp = $('shape-data');
+  dp.innerHTML = '';
+  const cells = [
+    { label: '∠A', val: ang.toFixed(0) + '°' },
+    { label: '邻边比 AD/AB', val: ratio.toFixed(2) },
+    { label: 'AB（底）', val: realAB.toFixed(1) },
+    { label: 'AD（邻边）', val: realAD.toFixed(1) },
+    { label: '∠A=90°？', val: isRect ? '是' : '否' },
+    { label: '邻边相等？', val: isRhombus ? '是' : '否' }
+  ];
+  cells.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = 'data-cell';
+    cell.innerHTML = `<div class="label">${c.label}</div><div class="num">${c.val}</div>`;
+    dp.appendChild(cell);
+  });
+}
+
+/* ============================================================
+ *  交互4：菱形对角线性质验证
+ * ============================================================ */
+function updateRhombus() {
+  const side = parseFloat($('rhombus-side').value);
+  const halfAC = parseFloat($('rhombus-half-ac').value);
+  $('rhombus-side-val').textContent = side;
+  $('rhombus-half-ac-val').textContent = halfAC;
+
+  /* 菱形：A 左，C 右，B 上，D 下 */
+  /* AC = 2 * halfAC，BD = 2 * halfBD，halfBD = sqrt(side^2 - halfAC^2) */
+  const halfACreal = halfAC / 10; /* 转为"单位" */
+  let halfBDreal;
+  const under = (side / 10) ** 2 - halfACreal ** 2;
+  if (under < 0) {
+    /* 不合法：halfAC 太大，无法构成菱形 */
+    halfBDreal = 0;
+  } else {
+    halfBDreal = Math.sqrt(under);
+  }
+  /* 限制 halfAC 最大值为 side（边长） */
+  const acReal = halfACreal * 2;
+  const bdReal = halfBDreal * 2;
+
+  const svg = $('rhombus-svg');
+  svg.innerHTML = '';
+  const cx = 230, cy = 160;
+  const A = { x: cx - halfAC, y: cy };
+  const C = { x: cx + halfAC, y: cy };
+  const halfBDpx = halfBDreal * 10;
+  const B = { x: cx, y: cy - halfBDpx };
+  const D = { x: cx, y: cy + halfBDpx };
+
+  /* 菱形填充 */
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: 'rgba(231,76,60,0.08)', stroke: '#E74C3C', 'stroke-width': 2.5 }));
+
+  /* 对角线 AC（红色） */
+  svg.appendChild(makeSvg('line', { x1: A.x, y1: A.y, x2: C.x, y2: C.y, stroke: '#E74C3C', 'stroke-width': 2 }));
+  /* 对角线 BD（蓝色） */
+  svg.appendChild(makeSvg('line', { x1: B.x, y1: B.y, x2: D.x, y2: D.y, stroke: '#3498DB', 'stroke-width': 2 }));
+
+  /* 直角标记（在 O 点） */
+  if (halfBDpx > 5) {
+    svg.appendChild(makeSvg('rect', { x: cx - 6, y: cy - 6, width: 12, height: 12, fill: 'none', stroke: '#27AE60', 'stroke-width': 1.5 }));
+  }
+
+  /* 交点 O */
+  svg.appendChild(makeSvg('circle', { cx: cx, cy: cy, r: 4, fill: '#2C3E50' }));
+
+  /* 顶点标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -14, dy: 5 },
+    { p: B, t: 'B', dx: 0, dy: -10 },
+    { p: C, t: 'C', dx: 14, dy: 5 },
+    { p: D, t: 'D', dx: 0, dy: 18 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 16, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  const oLabel = makeSvg('text', { x: cx + 8, y: cy + 14, 'font-size': 13, fill: '#2C3E50', 'font-style': 'italic', 'font-family': 'Georgia,serif' });
+  oLabel.textContent = 'O';
+  svg.appendChild(oLabel);
+
+  /* 顶点圆点 */
+  [A, B, C, D].forEach(p => svg.appendChild(makeSvg('circle', { cx: p.x, cy: p.y, r: 4, fill: '#E74C3C' })));
+
+  /* 计算验证数据 */
+  const AB = dist(A, B) / 10;
+  const BC = dist(B, C) / 10;
+  const CD = dist(C, D) / 10;
+  const DA = dist(D, A) / 10;
+
+  /* 角度：AC 平分 ∠BAD，BD 平分 ∠ABC 等 */
+  const angBAC = angleAt(B, A, C); /* ∠BAC */
+  const angDAC = angleAt(D, A, C); /* ∠DAC */
+  const angBAD = angleAt(B, A, D); /* ∠BAD */
+  const angABD = angleAt(A, B, D); /* ∠ABD */
+  const angCBD = angleAt(C, B, D); /* ∠CBD */
+  const angABC = angleAt(A, B, C); /* ∠ABC */
+
+  const dp = $('rhombus-data');
+  dp.innerHTML = '';
+  const valid = under >= 0;
+  const cells = [
+    { label: 'AB', val: fmtLen(AB), cls: 'hl-red' },
+    { label: 'BC', val: fmtLen(BC), cls: 'hl-red' },
+    { label: 'CD', val: fmtLen(CD), cls: 'hl-red' },
+    { label: 'DA', val: fmtLen(DA), cls: 'hl-red' },
+    { label: 'AC（对角线）', val: fmtLen(acReal), cls: 'hl-green' },
+    { label: 'BD（对角线）', val: fmtLen(bdReal), cls: 'hl-blue' },
+    { label: '∠BAC', val: fmtAng(angBAC), cls: 'hl-orange' },
+    { label: '∠DAC', val: fmtAng(angDAC), cls: 'hl-orange' },
+    { label: '∠ABD', val: fmtAng(angABD), cls: 'hl-purple' },
+    { label: '∠CBD', val: fmtAng(angCBD), cls: 'hl-purple' }
+  ];
+  cells.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = 'data-cell ' + (c.cls || '');
+    cell.innerHTML = `<div class="label">${c.label}</div><div class="num">${valid ? c.val : '—'}</div>`;
+    dp.appendChild(cell);
+  });
+
+  /* 面积 */
+  const area = acReal * bdReal / 2;
+  $('rhombus-area-display').innerHTML = valid
+    ? `菱形面积 = AC × BD ÷ 2 = ${acReal.toFixed(1)} × ${bdReal.toFixed(1)} ÷ 2 = <span class="res">${area.toFixed(2)}</span>`
+    : `<span style="color:var(--danger);">对角线一半超过边长，无法构成菱形！请减小 AC 的一半。</span>`;
+}
+
+/* ============================================================
+ *  交互5：面积计算器
+ * ============================================================ */
+function updateAreaPara() {
+  const base = parseFloat($('area-p-base').value);
+  const height = parseFloat($('area-p-height').value);
+  $('area-p-base-val').textContent = base.toFixed(1);
+  $('area-p-height-val').textContent = height.toFixed(1);
+  const area = base * height;
+  $('area-p-formula').innerHTML = `S = 底 × 高 = ${base.toFixed(1)} × ${height.toFixed(1)} = <span class="res">${area.toFixed(2)}</span>`;
+
+  const svg = $('area-p-svg');
+  svg.innerHTML = '';
+  const cx = 230, cy = 140;
+  const scale = 18;
+  const abPx = base * scale;
+  const hPx = height * scale;
+  const skew = 30; /* 倾斜偏移 */
+  const A = { x: cx - abPx / 2, y: cy + hPx / 2 };
+  const B = { x: A.x + abPx, y: A.y };
+  const D = { x: A.x + skew, y: A.y - hPx };
+  const C = { x: B.x + skew, y: B.y - hPx };
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: 'rgba(155,89,182,0.12)', stroke: '#9B59B6', 'stroke-width': 2.5 }));
+  /* 高（虚线） */
+  svg.appendChild(makeSvg('line', { x1: B.x, y1: B.y, x2: B.x, y2: B.y - hPx, stroke: '#E74C3C', 'stroke-width': 2, 'stroke-dasharray': '5,4' }));
+  /* 直角标记 */
+  svg.appendChild(makeSvg('rect', { x: B.x, y: B.y - hPx - 10, width: 10, height: 10, fill: 'none', stroke: '#E74C3C', 'stroke-width': 1.5 }));
+  /* 标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -14, dy: 14 },
+    { p: B, t: 'B', dx: 14, dy: 14 },
+    { p: C, t: 'C', dx: 14, dy: -6 },
+    { p: D, t: 'D', dx: -14, dy: -6 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 15, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  /* 底标注 */
+  const baseLabel = makeSvg('text', { x: (A.x + B.x) / 2, y: A.y + 24, 'text-anchor': 'middle', 'font-size': 13, fill: '#9B59B6', 'font-weight': 'bold' });
+  baseLabel.textContent = `底=${base.toFixed(1)}`;
+  svg.appendChild(baseLabel);
+  /* 高标注 */
+  const hLabel = makeSvg('text', { x: B.x + 20, y: B.y - hPx / 2, 'text-anchor': 'start', 'font-size': 13, fill: '#E74C3C', 'font-weight': 'bold' });
+  hLabel.textContent = `高=${height.toFixed(1)}`;
+  svg.appendChild(hLabel);
+}
+
+function updateAreaRect() {
+  const len = parseFloat($('area-r-length').value);
+  const wid = parseFloat($('area-r-width').value);
+  $('area-r-length-val').textContent = len.toFixed(1);
+  $('area-r-width-val').textContent = wid.toFixed(1);
+  const area = len * wid;
+  $('area-r-formula').innerHTML = `S = 长 × 宽 = ${len.toFixed(1)} × ${wid.toFixed(1)} = <span class="res">${area.toFixed(2)}</span>`;
+
+  const svg = $('area-r-svg');
+  svg.innerHTML = '';
+  const scale = 18;
+  const wPx = Math.max(len, wid) * scale;
+  const hPx = Math.min(len, wid) * scale;
+  const cx = 230, cy = 120;
+  const x = cx - wPx / 2, y = cy - hPx / 2;
+  svg.appendChild(makeSvg('rect', { x: x, y: y, width: wPx, height: hPx, fill: 'rgba(52,152,219,0.12)', stroke: '#3498DB', 'stroke-width': 2.5 }));
+  /* 标注 */
+  const lLabel = makeSvg('text', { x: cx, y: y - 8, 'text-anchor': 'middle', 'font-size': 13, fill: '#3498DB', 'font-weight': 'bold' });
+  lLabel.textContent = `长=${len.toFixed(1)}`;
+  svg.appendChild(lLabel);
+  const wLabel = makeSvg('text', { x: x - 10, y: cy + 4, 'text-anchor': 'end', 'font-size': 13, fill: '#3498DB', 'font-weight': 'bold' });
+  wLabel.textContent = `宽=${wid.toFixed(1)}`;
+  svg.appendChild(wLabel);
+}
+
+function updateAreaRhombus() {
+  const ac = parseFloat($('area-d-ac').value);
+  const bd = parseFloat($('area-d-bd').value);
+  $('area-d-ac-val').textContent = ac.toFixed(1);
+  $('area-d-bd-val').textContent = bd.toFixed(1);
+  const area = ac * bd / 2;
+  $('area-d-formula').innerHTML = `S = AC × BD ÷ 2 = ${ac.toFixed(1)} × ${bd.toFixed(1)} ÷ 2 = <span class="res">${area.toFixed(2)}</span>`;
+
+  const svg = $('area-d-svg');
+  svg.innerHTML = '';
+  const cx = 230, cy = 130;
+  const scale = 18;
+  const acPx = ac * scale;
+  const bdPx = bd * scale;
+  const A = { x: cx - acPx / 2, y: cy };
+  const C = { x: cx + acPx / 2, y: cy };
+  const B = { x: cx, y: cy - bdPx / 2 };
+  const D = { x: cx, y: cy + bdPx / 2 };
+  const pts = `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`;
+  svg.appendChild(makeSvg('polygon', { points: pts, fill: 'rgba(231,76,60,0.10)', stroke: '#E74C3C', 'stroke-width': 2.5 }));
+  /* 对角线 */
+  svg.appendChild(makeSvg('line', { x1: A.x, y1: A.y, x2: C.x, y2: C.y, stroke: '#9B59B6', 'stroke-width': 1.5, 'stroke-dasharray': '4,3' }));
+  svg.appendChild(makeSvg('line', { x1: B.x, y1: B.y, x2: D.x, y2: D.y, stroke: '#9B59B6', 'stroke-width': 1.5, 'stroke-dasharray': '4,3' }));
+  /* 标签 */
+  const labels = [
+    { p: A, t: 'A', dx: -14, dy: 5 },
+    { p: B, t: 'B', dx: 0, dy: -10 },
+    { p: C, t: 'C', dx: 14, dy: 5 },
+    { p: D, t: 'D', dx: 0, dy: 18 }
+  ];
+  labels.forEach(l => {
+    const tx = makeSvg('text', { x: l.p.x + l.dx, y: l.p.y + l.dy, 'font-size': 15, 'font-weight': 'bold', fill: '#2C3E50', 'font-family': 'Georgia,serif', 'text-anchor': 'middle' });
+    tx.textContent = l.t;
+    svg.appendChild(tx);
+  });
+  /* 对角线标注 */
+  const acLabel = makeSvg('text', { x: cx, y: cy + 18, 'text-anchor': 'middle', 'font-size': 12, fill: '#9B59B6', 'font-weight': 'bold' });
+  acLabel.textContent = `AC=${ac.toFixed(1)}`;
+  svg.appendChild(acLabel);
+  const bdLabel = makeSvg('text', { x: cx + 14, y: cy, 'text-anchor': 'start', 'font-size': 12, fill: '#9B59B6', 'font-weight': 'bold' });
+  bdLabel.textContent = `BD=${bd.toFixed(1)}`;
+  svg.appendChild(bdLabel);
+}
+
+function bindAreaTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.tab;
+      $('tab-' + target).classList.add('active');
+    });
+  });
+}
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+function initQuizzes() {
+  initQuiz('quiz1', {
+    correct: 2,
+    explain: '平行四边形邻角互补：∠A + ∠B = 180°。设 ∠A = 3x，∠B = 2x，则 3x + 2x = 180°，x = 36°。∠A = 108°，∠B = 72°。又因为对角相等，∠C = ∠A = 108°。',
+    hint: '利用平行四边形邻角互补（∠A+∠B=180°）和対角相等（∠C=∠A）。'
+  });
+  initQuiz('quiz2', {
+    correct: 1,
+    explain: 'A 选项"AB∥CD，AD=BC"是错誤的（等腰梯形也满足）。B 选项"AB=CD，AD=BC"是判定定理 1（两组对边分别相等），正确。C 选项"∠A=∠B，∠C=∠D"不能判定（如等腰梯形）。D 选项"AB∥CD，AB=AD"不能判定。',
+    hint: '逐一验证每种判定方法。注意"一组对边平行，另一组对边相等"不能判定平行四边形。'
+  });
+  initQuiz('quiz3', {
+    correct: 2,
+    explain: 'A 错：矩形的对角线相等但不一定垂直。B 错：菱形的四边相等，但角不一定直角。C 对：正方形既是矩形（对角线相等）又是菱形（对角线互相垂直平分）。D 错：菱形的对角线互相垂直但不一定相等。',
+    hint: '逐一分析各特殊平行四边形的对角线性质。'
+  });
+}
+
+/* ============================================================
+ *  初始化
+ * ============================================================ */
+function init() {
+  /* 定义图 */
+  drawDefFigure();
+  /* 交互1 */
+  drawExplore();
+  bindExplore();
+  /* 交互2 */
+  renderJudgeGame();
+  $('judge-check').addEventListener('click', checkJudge);
+  $('judge-reset').addEventListener('click', () => {
+    renderJudgeGame();
+    $('judge-feedback').className = 'ans-feedback';
+    $('judge-feedback').innerHTML = '';
+  });
+  /* 交互3 */
+  drawHierarchy();
+  $('shape-angle').addEventListener('input', updateShape);
+  $('shape-ratio').addEventListener('input', updateShape);
+  updateShape();
+  /* 交互4 */
+  $('rhombus-side').addEventListener('input', updateRhombus);
+  $('rhombus-half-ac').addEventListener('input', updateRhombus);
+  updateRhombus();
+  /* 交互5 */
+  bindAreaTabs();
+  $('area-p-base').addEventListener('input', updateAreaPara);
+  $('area-p-height').addEventListener('input', updateAreaPara);
+  updateAreaPara();
+  $('area-r-length').addEventListener('input', updateAreaRect);
+  $('area-r-width').addEventListener('input', updateAreaRect);
+  updateAreaRect();
+  $('area-d-ac').addEventListener('input', updateAreaRhombus);
+  $('area-d-bd').addEventListener('input', updateAreaRhombus);
+  updateAreaRhombus();
+  /* 练习题 */
+  initQuizzes();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>

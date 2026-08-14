@@ -6,50 +6,218 @@
   <title>电压 电阻 · 九年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    /* 演示容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 64px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+    .formula-box .var-u { color: #E74C3C; }
+    .formula-box .var-r { color: #27AE60; }
+    .formula-box .var-i { color: #4A90D9; }
+
+    /* 模式切换按钮组 */
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 4px;
+      margin: 8px 4px;
+      flex-wrap: wrap;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .mode-toggle button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .mode-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .mode-toggle button:hover:not(.active) {
+      background: rgba(74,144,217,0.1);
+    }
+
+    /* 信息读数 */
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* 对比结果 */
+    .compare-result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .compare-result .box {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .compare-result .box.plain {
+      background: rgba(74,144,217,0.08);
+      border: 2px solid var(--primary);
+    }
+    .compare-result .box.plain .title { font-size: 14px; margin-bottom: 6px; font-weight: 700; color: var(--primary-dark); }
+    .compare-result .box .num { font-size: 24px; font-weight: 700; font-family: 'Cambria', serif; color: var(--primary-dark); }
+    .compare-result .box .sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* 属性列表 */
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 常见电压网格 */
+    .volt-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .volt-example {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      border-top: 3px solid var(--primary);
+      transition: transform 0.2s;
+    }
+    .volt-example:hover { transform: translateY(-3px); }
+    .volt-example .icon { font-size: 28px; }
+    .volt-example .name { font-size: 14px; margin: 4px 0; font-weight: 600; }
+    .volt-example .volt { font-size: 16px; color: var(--primary-dark); font-weight: 700; }
+
+    /* 两列布局 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    /* 可点击元素 */
+    .clickable { cursor: pointer; }
+    .clickable:hover { opacity: 0.85; }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .compare-result { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">🔌 电压 电阻</div>
+  <div class="navbar-brand">🔋 电压 电阻</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级物理目录</a></li>
@@ -67,24 +235,1003 @@
     <span>电压 电阻</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🔌</div>
-    <h2>电压 电阻</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">🔋 电压 电阻</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">用水压理解电压，用电压表探究串并联规律，再揭开电阻与滑动变阻器的秘密</p>
+
+  <!-- ===== 第一部分：电压 ===== -->
+  <div class="card">
+    <div class="section-header">⚡ 1. 电压 —— 形成电流的原因</div>
+
+    <p>上一章我们知道：电荷<strong>定向移动</strong>形成电流。可是，电荷为什么会乖乖地定向移动呢？答案是——<strong>电压</strong>。</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      <strong>电压</strong>使自由电荷发生<strong>定向移动</strong>形成电流；<strong>电源</strong>是提供电压的装置
+    </div>
+
+    <p>可以用<strong>水压</strong>来类比：水管两端有<strong>水位差（水压）</strong>，水才会流动；电路两端有<strong>电压</strong>，电荷才会定向移动形成电流。抽水机不断维持水位差，就像电源不断维持电压。</p>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">电压的单位</h3>
+    <ul class="property-list">
+      <li><strong>单位</strong>：伏特，简称伏，符号 <strong>V</strong>（纪念物理学家伏打）</li>
+      <li><strong>常用单位</strong>：千伏（kV）、毫伏（mV）</li>
+      <li><strong>换算</strong>：1 kV = 1000 V；1 V = 1000 mV</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">生活中常见的电压（必记！）</h3>
+    <div class="volt-examples">
+      <div class="volt-example">
+        <div class="icon">🔋</div>
+        <div class="name">一节干电池</div>
+        <div class="volt">1.5 V</div>
+      </div>
+      <div class="volt-example">
+        <div class="icon">🚗</div>
+        <div class="name">一节蓄电池</div>
+        <div class="volt">2 V</div>
+      </div>
+      <div class="volt-example">
+        <div class="icon">📱</div>
+        <div class="name">手机电池</div>
+        <div class="volt">约 3.7 V</div>
+      </div>
+      <div class="volt-example">
+        <div class="icon">🏠</div>
+        <div class="name">我国家庭电路</div>
+        <div class="volt">220 V</div>
+      </div>
+      <div class="volt-example">
+        <div class="icon">⚠️</div>
+        <div class="name">对人体安全电压</div>
+        <div class="volt">不高于 36 V</div>
+      </div>
+      <div class="volt-example">
+        <div class="icon">🌩️</div>
+        <div class="name">闪电云层间</div>
+        <div class="volt">可达 10⁸ V</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 易错提醒</div>
+      • 说"电压"必须指明是"<strong>谁（哪段电路）两端</strong>"的电压<br>
+      • 有电压<strong>不一定</strong>有电流——电路还必须<strong>闭合</strong>（通路）<br>
+      • 有电流则<strong>一定有</strong>电压
+    </div>
+
+    <!-- ===== 交互1：水压-电压类比 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🌊 交互1：水压 - 电压类比动画</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">调节"水位差 / 电压"，同时观察左边水流推动水轮机、右边电流点亮灯泡</p>
+
+      <svg viewBox="0 0 700 300" width="700" height="300">
+        <line x1="350" y1="16" x2="350" y2="286" stroke="#D5DCE4" stroke-width="2" stroke-dasharray="6,4"/>
+        <text x="180" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E6BA8">水压 → 水流</text>
+        <text x="535" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E6BA8">电压 → 电流</text>
+
+        <!-- ===== 左：水压装置 ===== -->
+        <!-- 高位水箱 -->
+        <rect x="40" y="70" width="100" height="180" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <rect id="hiWater" x="44" y="190" width="92" height="56" fill="#4A90D9" opacity="0.55"/>
+        <text x="90" y="60" text-anchor="middle" font-size="12" fill="#7F8C8D" font-weight="bold">高位水箱</text>
+        <!-- 低位水箱 -->
+        <rect x="220" y="150" width="100" height="100" fill="none" stroke="#7F8C8D" stroke-width="3"/>
+        <rect x="224" y="190" width="92" height="56" fill="#4A90D9" opacity="0.55"/>
+        <text x="270" y="140" text-anchor="middle" font-size="12" fill="#7F8C8D" font-weight="bold">低位水箱</text>
+        <!-- 水位差箭头 -->
+        <line id="hArrow" x1="165" y1="190" x2="165" y2="190" stroke="#E74C3C" stroke-width="3"/>
+        <polygon id="hArrowTop" points="165,190 160,202 170,202" fill="#E74C3C"/>
+        <polygon points="160,178 170,178 165,190" fill="#E74C3C"/>
+        <text id="hText" x="175" y="185" font-size="13" fill="#E74C3C" font-weight="bold">h = 0 m</text>
+        <!-- 管道 -->
+        <path d="M 90 250 L 90 278 L 270 278 L 270 250" fill="none" stroke="#95A5A6" stroke-width="12" stroke-linejoin="round"/>
+        <path id="waterPath" d="M 90 250 L 90 278 L 270 278 L 270 250" fill="none" stroke="none"/>
+        <!-- 水轮机 -->
+        <g id="turbine">
+          <circle cx="180" cy="278" r="17" fill="#F8F9F9" stroke="#2C3E50" stroke-width="3"/>
+          <g id="turbineBlades" stroke="#4A90D9" stroke-width="4" stroke-linecap="round">
+            <line x1="180" y1="266" x2="180" y2="290"/>
+            <line x1="168" y1="278" x2="192" y2="278"/>
+          </g>
+          <circle cx="180" cy="278" r="4" fill="#2C3E50"/>
+        </g>
+        <text x="180" y="245" text-anchor="middle" font-size="11" fill="#7F8C8D">水轮机</text>
+        <g id="waterDots" fill="#2980B9"></g>
+
+        <!-- ===== 右：电路 ===== -->
+        <path id="ePath" d="M 545 250 L 660 250 L 660 70 L 410 70 L 410 250 L 505 250" fill="none" stroke="none"/>
+        <path d="M 545 250 L 660 250 L 660 70 L 410 70 L 410 250 L 505 250" fill="none" stroke="#7F8C8D" stroke-width="4"/>
+        <!-- 电池 -->
+        <line x1="545" y1="234" x2="545" y2="266" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="505" y1="240" x2="505" y2="260" stroke="#2C3E50" stroke-width="8"/>
+        <text x="545" y="228" text-anchor="middle" font-size="14" font-weight="bold" fill="#E74C3C">+</text>
+        <text x="505" y="228" text-anchor="middle" font-size="14" font-weight="bold" fill="#2980B9">−</text>
+        <!-- 灯泡 -->
+        <circle id="anaGlow" cx="535" cy="70" r="32" fill="#FFE066" opacity="0"/>
+        <circle id="anaGlass" cx="535" cy="70" r="17" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+        <path d="M 526 70 L 531 63 L 539 77 L 544 70" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+        <g id="anaElectrons" fill="#2980B9"></g>
+        <text id="anaULabel" x="535" y="290" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="bold">电压 U = 0 V</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>水位差 / 电压等级：</label>
+        <input type="range" id="anaLevel" min="0" max="3" value="0" step="1">
+        <span class="value-display"><span id="anaLevelVal">0</span> 级</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">水位差 h：</span><span class="value" id="anaH">0 m</span></div>
+        <div class="readout-item"><span class="label">水流：</span><span class="value" id="anaFlow">停止</span></div>
+        <div class="readout-item"><span class="label">电压 U：</span><span class="value" id="anaU">0 V</span></div>
+        <div class="readout-item"><span class="label">灯泡：</span><span class="value" id="anaLamp">不亮</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 类比对照</div>
+        <strong>水位差（水压）↔ 电压</strong>　<strong>水流 ↔ 电流</strong>　<strong>水轮机 ↔ 小灯泡</strong>　<strong>抽水机 ↔ 电源</strong><br>
+        没有水位差就没有水流；同样，<strong>没有电压就没有持续电流</strong>——电压是形成电流的原因！
+      </div>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：电压表 ===== -->
+  <div class="card">
+    <div class="section-header">📟 2. 电压的测量 —— 电压表</div>
+
+    <p>测量电压的仪表叫做<strong>电压表</strong>，电路符号是圆圈里写字母 <strong>V</strong>。实验室电压表有两个量程：</p>
+
+    <ul class="property-list">
+      <li><strong>量程 0~3 V</strong>：接"−"和"3"接线柱，分度值（每小格）<strong>0.1 V</strong></li>
+      <li><strong>量程 0~15 V</strong>：接"−"和"15"接线柱，分度值 <strong>0.5 V</strong></li>
+      <li>同一个指针位置，用 15 V 量程读出的数正好是 3 V 量程的 <strong>5 倍</strong></li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">电压表的使用规则</h3>
+    <ul class="property-list">
+      <li>① 电压表必须<strong>并联</strong>在被测用电器（或电源）<strong>两端</strong></li>
+      <li>② 电流从"<strong>+</strong>"接线柱流入，从"<strong>−</strong>"接线柱流出（否则指针反向偏转）</li>
+      <li>③ 被测电压不能超过<strong>量程</strong>；未知时先用大量程"<strong>试触</strong>"</li>
+      <li>④ 电压表内阻很大，<strong>可以直接接在电源两极</strong>上测电源电压</li>
+    </ul>
+
+    <!-- ===== 交互2：电压表读数练习 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">📏 交互2：电压表读数练习</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">拖动滑块移动指针，练习两个量程的读数；也可以点"随机出题"考考自己</p>
+
+      <svg viewBox="0 0 400 280" width="400" height="280">
+        <!-- 表盘 -->
+        <path d="M 50 235 A 150 150 0 0 1 350 235" fill="#F8F9F9" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="30" y1="235" x2="370" y2="235" stroke="#2C3E50" stroke-width="3"/>
+        <g id="vmTicks"></g>
+        <!-- 指针 -->
+        <g id="vmNeedle">
+          <line x1="200" y1="235" x2="200" y2="100" stroke="#E74C3C" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <circle cx="200" cy="235" r="8" fill="#2C3E50"/>
+        <text x="200" y="262" text-anchor="middle" font-size="16" font-weight="bold" fill="#2C3E50">V</text>
+        <!-- 接线柱 -->
+        <circle cx="120" cy="272" r="6" fill="#2C3E50"/>
+        <circle cx="200" cy="272" r="6" fill="#2C3E50"/>
+        <circle cx="280" cy="272" r="6" fill="#2C3E50"/>
+        <text x="120" y="270" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">−</text>
+        <text x="200" y="270" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">3</text>
+        <text x="280" y="270" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">15</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>指针位置：</label>
+        <input type="range" id="vmPos" min="0" max="100" value="50" step="1">
+        <span class="value-display"><span id="vmPosVal">50</span> %</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">用 0~3V 量程读数：</span><span class="value" id="vmR3">1.5 V</span></div>
+        <div class="readout-item"><span class="label">用 0~15V 量程读数：</span><span class="value" id="vmR15">7.5 V</span></div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button class="btn btn-primary" id="vmQuizBtn">🎲 随机出题（遮住答案）</button>
+        <button class="btn btn-outline" id="vmShowBtn">👁 显示答案</button>
+      </div>
+      <div class="formula-box" id="vmAnswer" style="font-size: 17px; margin-top: 12px;">
+        若接"−、3"接线柱：读数 = <strong id="vmAns3">1.5 V</strong>　|　若接"−、15"接线柱：读数 = <strong id="vmAns15">7.5 V</strong>
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">📖 读数方法</div>
+        ① 先看接了哪个量程 → ② 确定分度值（0.1 V 或 0.5 V）→ ③ 数格子读数。<br>
+        同一指针位置，<strong>15V 量程读数 = 3V 量程读数 × 5</strong>。
+      </div>
+    </div>
   </div>
+
+  <!-- ===== 第三部分：串并联电路的电压规律 ===== -->
+  <div class="card">
+    <div class="section-header">📊 3. 串、并联电路的电压规律</div>
+
+    <p>用电压表分别测量电路中各部分的电压，可以发现重要的规律：</p>
+
+    <div class="formula-box" style="font-size: 19px;">
+      串联电路：<span class="var-u">U</span> = <span class="var-u">U₁</span> + <span class="var-u">U₂</span>（总电压等于各部分电压之<strong>和</strong>）
+    </div>
+    <div class="formula-box" style="font-size: 19px;">
+      并联电路：<span class="var-u">U</span> = <span class="var-u">U₁</span> = <span class="var-u">U₂</span>（各支路两端电压<strong>相等</strong>，等于电源电压）
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 串联分压</div>
+      串联电路中，电阻大的用电器分得的电压多（"按电阻大小分配"）。例如两灯电阻之比为 1:2，则电压之比也是 1:2。
+    </div>
+
+    <!-- ===== 交互3：电压测量探究 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🔬 交互3：电压测量探究</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">切换电路连接方式，选择电压表测量位置（红虚线 = 电压表表笔），调节电源电压，验证规律</p>
+
+      <div class="mode-toggle" id="vcToggle">
+        <button class="active" data-vcmode="series">🔗 串联电路</button>
+        <button data-vcmode="parallel">🔀 并联电路</button>
+      </div>
+      <div class="mode-toggle" id="vcPtToggle">
+        <button class="active" data-pt="u1">测 L₁ 两端</button>
+        <button data-pt="u2">测 L₂ 两端</button>
+        <button data-pt="u">测电源（总）电压</button>
+      </div>
+
+      <svg viewBox="0 0 640 400" width="640" height="400">
+        <!-- ============ 串联 ============ -->
+        <g id="vcSeries">
+          <g stroke="#7F8C8D" stroke-width="4" fill="none">
+            <path d="M 300 260 L 500 260 L 500 60 L 100 60 L 100 260 L 260 260"/>
+          </g>
+          <!-- 电池 -->
+          <line x1="300" y1="244" x2="300" y2="276" stroke="#2C3E50" stroke-width="3"/>
+          <line x1="260" y1="250" x2="260" y2="270" stroke="#2C3E50" stroke-width="8"/>
+          <text x="300" y="238" text-anchor="middle" font-size="14" font-weight="bold" fill="#E74C3C">+</text>
+          <text x="260" y="238" text-anchor="middle" font-size="14" font-weight="bold" fill="#2980B9">−</text>
+          <!-- L1 左 -->
+          <circle cx="100" cy="160" r="30" fill="#FFE066" opacity="0.5"/>
+          <circle cx="100" cy="160" r="17" fill="#FFF3B0" stroke="#2C3E50" stroke-width="3"/>
+          <path d="M 91 160 L 96 153 L 104 167 L 109 160" stroke="#E67E22" stroke-width="2.5" fill="none"/>
+          <text x="100" y="215" text-anchor="middle" font-size="13" fill="#7F8C8D" font-weight="bold">L₁（10Ω）</text>
+          <!-- L2 右 -->
+          <circle cx="500" cy="160" r="30" fill="#FFE066" opacity="0.5"/>
+          <circle cx="500" cy="160" r="17" fill="#FFF3B0" stroke="#2C3E50" stroke-width="3"/>
+          <path d="M 491 160 L 496 153 L 504 167 L 509 160" stroke="#E67E22" stroke-width="2.5" fill="none"/>
+          <text x="500" y="215" text-anchor="middle" font-size="13" fill="#7F8C8D" font-weight="bold">L₂（20Ω）</text>
+          <!-- 高亮框 -->
+          <circle id="hlS1" cx="100" cy="160" r="36" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4"/>
+          <circle id="hlS2" cx="500" cy="160" r="36" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4" style="display:none;"/>
+          <rect id="hlSU" x="238" y="230" width="84" height="56" rx="8" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4" style="display:none;"/>
+        </g>
+
+        <!-- ============ 并联 ============ -->
+        <g id="vcParallel" style="display:none;">
+          <g stroke="#7F8C8D" stroke-width="4" fill="none">
+            <path d="M 200 60 L 500 60 L 500 260 L 300 260"/>
+            <path d="M 260 260 L 200 260 L 200 60"/>
+            <path d="M 380 60 L 380 260"/>
+          </g>
+          <!-- 电池 -->
+          <line x1="300" y1="244" x2="300" y2="276" stroke="#2C3E50" stroke-width="3"/>
+          <line x1="260" y1="250" x2="260" y2="270" stroke="#2C3E50" stroke-width="8"/>
+          <text x="300" y="238" text-anchor="middle" font-size="14" font-weight="bold" fill="#E74C3C">+</text>
+          <text x="260" y="238" text-anchor="middle" font-size="14" font-weight="bold" fill="#2980B9">−</text>
+          <!-- L1 -->
+          <circle cx="200" cy="160" r="30" fill="#FFE066" opacity="0.5"/>
+          <circle cx="200" cy="160" r="17" fill="#FFF3B0" stroke="#2C3E50" stroke-width="3"/>
+          <path d="M 191 160 L 196 153 L 204 167 L 209 160" stroke="#E67E22" stroke-width="2.5" fill="none"/>
+          <text x="200" y="215" text-anchor="middle" font-size="13" fill="#7F8C8D" font-weight="bold">L₁</text>
+          <!-- L2 -->
+          <circle cx="380" cy="160" r="30" fill="#FFE066" opacity="0.5"/>
+          <circle cx="380" cy="160" r="17" fill="#FFF3B0" stroke="#2C3E50" stroke-width="3"/>
+          <path d="M 371 160 L 376 153 L 384 167 L 389 160" stroke="#E67E22" stroke-width="2.5" fill="none"/>
+          <text x="380" y="215" text-anchor="middle" font-size="13" fill="#7F8C8D" font-weight="bold">L₂</text>
+          <!-- 高亮框 -->
+          <circle id="hlP1" cx="200" cy="160" r="36" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4" style="display:none;"/>
+          <circle id="hlP2" cx="380" cy="160" r="36" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4" style="display:none;"/>
+          <rect id="hlPU" x="238" y="230" width="84" height="56" rx="8" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,4" style="display:none;"/>
+        </g>
+
+        <!-- 电压表 -->
+        <g>
+          <circle cx="570" cy="330" r="28" fill="#F8F9F9" stroke="#2C3E50" stroke-width="3"/>
+          <text x="570" y="326" text-anchor="middle" font-size="16" font-weight="bold" fill="#2C3E50">V</text>
+          <text id="vcMeterVal" x="570" y="346" text-anchor="middle" font-size="13" font-weight="bold" fill="#E74C3C">1.0 V</text>
+        </g>
+        <!-- 表笔（红虚线） -->
+        <line id="vcLead1" x1="556" y1="306" x2="100" y2="130" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="7,5"/>
+        <line id="vcLead2" x1="584" y1="306" x2="100" y2="190" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="7,5"/>
+      </svg>
+
+      <div class="slider-row">
+        <label>电源电压 U：</label>
+        <input type="range" id="vcU" min="1.5" max="6" value="3" step="0.5">
+        <span class="value-display"><span id="vcUVal">3.0</span> V</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">U₁ =</span><span class="value" id="vcR1">1.0 V</span></div>
+        <div class="readout-item"><span class="label">U₂ =</span><span class="value" id="vcR2">2.0 V</span></div>
+        <div class="readout-item"><span class="label">电源电压 U =</span><span class="value" id="vcRU">3.0 V</span></div>
+      </div>
+
+      <div class="formula-box" id="vcFormula" style="font-size: 18px;">
+        串联：U = U₁ + U₂ → 3.0 = 1.0 + 2.0 ✓
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">🎯 探究结论</div>
+        <span id="vcTip">串联电路中，电源电压被两个灯泡"分掉"：U = U₁ + U₂。而且 L₂ 电阻大，分得的电压也多（2:1 = 20Ω:10Ω）。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：电阻 ===== -->
+  <div class="card">
+    <div class="section-header">🧵 4. 电阻 —— 导体对电流的阻碍作用</div>
+
+    <p>导线能让电流通过，但电流通过时总会受到一定的<strong>阻碍</strong>。物理学中用电阻来表示这种阻碍作用的大小。</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      导体对电流的<strong>阻碍作用</strong>叫做电阻，符号 <span class="var-r">R</span>，单位<strong>欧姆（Ω）</strong>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>常用单位</strong>：千欧（kΩ）、兆欧（MΩ）；1 MΩ = 1000 kΩ = 10⁶ Ω</li>
+      <li><strong>电阻是导体本身的性质</strong>：与是否接入电路、有无电流无关</li>
+      <li><strong>类比</strong>：电流像人流，电阻像通道里的"拥挤程度"——通道越窄越长，越难通过</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">影响电阻大小的因素</h3>
+    <ul class="property-list">
+      <li><strong>材料</strong>：不同材料导电能力不同（铜好，镍铬合金差）</li>
+      <li><strong>长度</strong>：材料、粗细相同时，导体<strong>越长，电阻越大</strong>（成正比）</li>
+      <li><strong>横截面积</strong>：材料、长度相同时，导体<strong>越细，电阻越大</strong>（成反比）</li>
+      <li><strong>温度</strong>：大多数金属的电阻随温度升高而<strong>增大</strong>（灯丝通电后电阻变大）</li>
+    </ul>
+
+    <div class="formula-box" style="font-size: 19px;">
+      <span class="var-r">R</span> = ρ · L / S　（ρ 电阻率 · 材料，L 长度，S 横截面积）
+    </div>
+
+    <!-- ===== 交互4：电阻影响因素探究 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🧪 交互4：电阻影响因素探究</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">换材料、调长度、调粗细，观察电阻如何变化（定量计算 R = ρL/S）</p>
+
+      <div class="mode-toggle" id="matToggle">
+        <button data-mat="cu">🟠 铜</button>
+        <button data-mat="fe">⚙️ 铁</button>
+        <button class="active" data-mat="ncr">🔩 镍铬合金</button>
+      </div>
+
+      <svg viewBox="0 0 640 230" width="640" height="230">
+        <!-- 左引线 -->
+        <line x1="20" y1="110" x2="80" y2="110" stroke="#7F8C8D" stroke-width="4"/>
+        <!-- 电阻体 -->
+        <rect id="resBody" x="80" y="82" width="180" height="56" rx="5" fill="#6E7B8B" stroke="#2C3E50" stroke-width="2.5"/>
+        <!-- 右引线 -->
+        <line id="resLeadR" x1="260" y1="110" x2="320" y2="110" stroke="#7F8C8D" stroke-width="4"/>
+        <text id="resMatLabel" x="170" y="115" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">镍铬合金</text>
+        <!-- 长度标尺 -->
+        <line id="resLenLine" x1="80" y1="175" x2="260" y2="175" stroke="#2E6BA8" stroke-width="2"/>
+        <polygon id="resLenL" points="80,175 90,170 90,180" fill="#2E6BA8"/>
+        <polygon id="resLenR" points="260,175 250,170 250,180" fill="#2E6BA8"/>
+        <text id="resLenText" x="170" y="197" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="bold">长度 L = 1.5 m</text>
+        <!-- 粗细标尺 -->
+        <line id="resThLine" x1="60" y1="82" x2="60" y2="138" stroke="#27AE60" stroke-width="2"/>
+        <polygon id="resThT" points="60,82 55,92 65,92" fill="#27AE60"/>
+        <polygon id="resThB" points="60,138 55,128 65,128" fill="#27AE60"/>
+        <text id="resThText" x="48" y="114" text-anchor="end" font-size="13" fill="#27AE60" font-weight="bold">S = 1.0 mm²</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>长度 L：</label>
+        <input type="range" id="resL" min="0.5" max="5" value="1.5" step="0.5">
+        <span class="value-display"><span id="resLVal">1.5</span> m</span>
+      </div>
+      <div class="slider-row">
+        <label>横截面积 S：</label>
+        <input type="range" id="resS" min="0.2" max="2" value="1" step="0.2">
+        <span class="value-display"><span id="resSVal">1.0</span> mm²</span>
+      </div>
+
+      <div class="compare-result">
+        <div class="box plain">
+          <div class="title">当前导体（<span id="resNowMat">镍铬合金</span>）</div>
+          <div class="num"><span id="resNow">1.65</span> Ω</div>
+          <div class="sub">R = ρL/S，ρ = <span id="resRho">1.10</span> Ω·mm²/m</div>
+        </div>
+        <div class="box plain">
+          <div class="title">同规格的铜导线</div>
+          <div class="num"><span id="resCu">0.026</span> Ω</div>
+          <div class="sub">同样的 L 和 S，铜的 ρ = 0.0172，电阻小得多 → 电线用铜做</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">🎯 探究结论</div>
+        • 只增大 <strong>L</strong> → R 变大（<strong>正比</strong>）　• 只增大 <strong>S</strong> → R 变小（<strong>反比</strong>）<br>
+        • 换材料 → ρ 不同，R 完全不同。镍铬合金电阻大，常用来做<strong>电热丝</strong>；铜电阻小，用来做<strong>导线</strong><br>
+        • 大多数金属温度升高，电阻<strong>变大</strong>——所以灯泡刚开灯瞬间（灯丝冷、电阻小）最容易烧断
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：滑动变阻器 ===== -->
+  <div class="card">
+    <div class="section-header">🎚️ 5. 滑动变阻器</div>
+
+    <p>台灯的旋钮可以调节亮度，音响的旋钮可以调节音量——它们的核心部件都是<strong>滑动变阻器</strong>。</p>
+
+    <ul class="property-list">
+      <li><strong>原理</strong>：靠改变接入电路中<strong>电阻丝的长度</strong>来改变电阻（长度变 → 电阻变 → 电流变）</li>
+      <li><strong>接法</strong>：必须"<strong>一上一下</strong>"——上面金属杆的接线柱（C 或 D）接一个，下面电阻丝的接线柱（A 或 B）接一个</li>
+      <li><strong>作用</strong>：① 改变电路中的<strong>电流</strong>和部分电路两端的电压；② <strong>保护电路</strong>（开关闭合前滑片移到阻值最大处）</li>
+      <li><strong>铭牌</strong>：如"20Ω　2A"表示最大阻值 20Ω，允许通过的最大电流 2A</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">⚠️ 错误接法</div>
+      • 只接上面两个接线柱（C、D）→ 相当于一根<strong>导线</strong>，电阻约为 0，不起调节作用<br>
+      • 只接下面两个接线柱（A、B）→ 相当于一个<strong>定值电阻</strong>，滑片移动也不起作用
+    </div>
+
+    <!-- ===== 交互5：滑动变阻器调光 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">💡 交互5：滑动变阻器调光台灯</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">接线柱接的是"A 和 D"（一上一下）。拖动滑片，红色部分是接入电路的电阻丝（AP 段），观察电流与灯泡亮度</p>
+
+      <svg viewBox="0 0 660 400" width="660" height="400">
+        <!-- 导线 -->
+        <g stroke="#7F8C8D" stroke-width="4" fill="none">
+          <!-- 左：A 接线柱到左竖线 -->
+          <path d="M 140 84 L 60 84 L 60 300 L 280 300"/>
+          <!-- 底部：电流表到右边 -->
+          <path d="M 320 300 L 458 300 M 502 300 L 600 300 L 600 208"/>
+          <!-- 右上：灯泡到 D 接线柱 -->
+          <path d="M 600 172 L 600 48 L 480 48"/>
+        </g>
+
+        <!-- 金属杆 -->
+        <line x1="120" y1="48" x2="480" y2="48" stroke="#BDC3C7" stroke-width="7" stroke-linecap="round"/>
+        <text x="120" y="36" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">C</text>
+        <text x="480" y="36" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">D</text>
+
+        <!-- 电阻丝线圈 -->
+        <rect x="140" y="72" width="320" height="24" rx="4" fill="#F4E9DA" stroke="#8D6E63" stroke-width="2.5"/>
+        <path d="M 145 72 L 152 96 L 159 72 L 166 96 L 173 72 L 180 96 L 187 72 L 194 96 L 201 72 L 208 96 L 215 72 L 222 96 L 229 72 L 236 96 L 243 72 L 250 96 L 257 72 L 264 96 L 271 72 L 278 96 L 285 72 L 292 96 L 299 72 L 306 96 L 313 72 L 320 96 L 327 72 L 334 96 L 341 72 L 348 96 L 355 72 L 362 96 L 369 72 L 376 96 L 383 72 L 390 96 L 397 72 L 404 96 L 411 72 L 418 96 L 425 72 L 432 96 L 439 72 L 446 96 L 453 72" stroke="#8D6E63" stroke-width="1.5" fill="none" opacity="0.7"/>
+        <!-- 接入电路的电阻丝（AP段，红色高亮） -->
+        <rect id="rheoActive" x="140" y="72" width="160" height="24" rx="4" fill="rgba(231,76,60,0.45)" stroke="#E74C3C" stroke-width="2"/>
+        <text x="140" y="112" text-anchor="start" font-size="13" font-weight="bold" fill="#2C3E50">A</text>
+        <text x="460" y="112" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C3E50">B</text>
+        <text id="rheoApLabel" x="220" y="66" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">接入电路的 AP 段</text>
+
+        <!-- 滑片 -->
+        <g id="rheoKnob">
+          <line x1="300" y1="48" x2="300" y2="72" stroke="#2C3E50" stroke-width="4"/>
+          <rect x="286" y="40" width="28" height="16" rx="4" fill="#2C3E50"/>
+          <text x="300" y="30" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E6BA8">滑片 P</text>
+        </g>
+
+        <!-- 电池 3V -->
+        <line x1="320" y1="284" x2="320" y2="316" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="280" y1="290" x2="280" y2="310" stroke="#2C3E50" stroke-width="8"/>
+        <text x="320" y="278" text-anchor="middle" font-size="14" font-weight="bold" fill="#E74C3C">+</text>
+        <text x="280" y="278" text-anchor="middle" font-size="14" font-weight="bold" fill="#2980B9">−</text>
+        <text x="300" y="336" text-anchor="middle" font-size="12" fill="#7F8C8D">电源 3V</text>
+
+        <!-- 电流表 -->
+        <circle cx="480" cy="300" r="22" fill="#F8F9F9" stroke="#2C3E50" stroke-width="3"/>
+        <text x="480" y="306" text-anchor="middle" font-size="15" font-weight="bold" fill="#2C3E50">A</text>
+        <text x="480" y="336" text-anchor="middle" font-size="12" fill="#7F8C8D">电流表</text>
+
+        <!-- 灯泡 -->
+        <circle id="dimGlow" cx="600" cy="190" r="36" fill="#FFE066" opacity="0.9"/>
+        <circle id="dimGlass" cx="600" cy="190" r="18" fill="#FFF3B0" stroke="#2C3E50" stroke-width="3"/>
+        <path id="dimFil" d="M 590 190 L 596 182 L 604 198 L 610 190" stroke="#E67E22" stroke-width="2.5" fill="none"/>
+        <text x="600" y="240" text-anchor="middle" font-size="12" fill="#7F8C8D">小灯泡（灯丝 10Ω）</text>
+      </svg>
+
+      <div class="slider-row">
+        <label>滑片位置（向右移，AP 变长）：</label>
+        <input type="range" id="rheoSlider" min="0" max="100" value="50" step="1">
+        <span class="value-display"><span id="rheoSliderVal">50</span> %</span>
+      </div>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">接入电阻 R：</span><span class="value" id="dimR">10.0 Ω</span></div>
+        <div class="readout-item"><span class="label">电流 I：</span><span class="value" id="dimI">0.15 A</span></div>
+        <div class="readout-item"><span class="label">灯泡亮度：</span><span class="value" id="dimBright">较亮</span></div>
+      </div>
+
+      <div class="formula-box" id="dimFormula" style="font-size: 17px;">
+        I = U / (R<sub>灯</sub> + R<sub>滑</sub>) = 3 / (10 + 10.0) = <strong style="color: var(--primary);">0.15</strong> A
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        • 滑片向<strong>右</strong>移 → 接入的电阻丝 AP <strong>变长</strong> → 电阻<strong>变大</strong> → 电流<strong>变小</strong> → 灯<strong>变暗</strong><br>
+        • 闭合开关前，应把滑片移到<strong>阻值最大处</strong>（本图最右端）——让电流最小，<strong>保护电路</strong><br>
+        • 改变电阻靠的不是"变魔术"，而是<strong>改变接入电阻丝的长度</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 6. 练习题</div>
+    <p>检验一下你对电压和电阻知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 下列关于电压的说法中，正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 一节新干电池的电压是 2 V</div>
+      <div class="quiz-option" data-idx="1">B. 对人体安全的电压就是 36 V</div>
+      <div class="quiz-option" data-idx="2">C. 电压表内阻很小，应串联在电路中使用</div>
+      <div class="quiz-option" data-idx="3">D. 我国家庭电路的电压是 220 V</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 两灯串联，电源电压为 6 V，测得 L₁ 两端电压为 2.5 V，则 L₂ 两端电压为：</div>
+      <div class="quiz-option" data-idx="0">A. 6 V</div>
+      <div class="quiz-option" data-idx="1">B. 3.5 V</div>
+      <div class="quiz-option" data-idx="2">C. 2.5 V</div>
+      <div class="quiz-option" data-idx="3">D. 无法确定</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 关于滑动变阻器的使用，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 只接上面两个接线柱，调节效果最好</div>
+      <div class="quiz-option" data-idx="1">B. 只接下面两个接线柱，移动滑片就能改变电阻</div>
+      <div class="quiz-option" data-idx="2">C. 应"一上一下"接线，且闭合开关前滑片应移到阻值最大处</div>
+      <div class="quiz-option" data-idx="3">D. 它是靠改变电阻丝的材料来改变电阻的</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 公式 R = ρL/S 的变形与计算 ↔ <a href="../../数学/八年级/06-分式.html">数学 · 分式</a>（分式运算）</p>
+    <p>· 电阻 R 与横截面积 S 成反比 ↔ <a href="../../数学/九年级/06-反比例函数.html">数学 · 反比例函数</a>（y = k/x 的实际意义）</p>
+    <p>· 用"水压"类比"电压" ↔ <a href="../八年级/09-压强.html">物理八年级 · 压强</a>（压力与压强的作用效果）</p>
+    <p>· 电压 U、电流 I、电阻 R 三者的定量关系 → 下一章 <a href="15-欧姆定律.html">欧姆定律</a>（I = U/R）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="13-电流和电路.html" class="btn btn-outline">← 上一章：电流和电路</a>
+    <a href="15-欧姆定律.html" class="btn btn-primary">下一章：欧姆定律 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：水压 - 电压类比动画
+// ============================================================
+(function() {
+  var level = 0;
+  var U_LIST = [0, 1.5, 3, 4.5];
+  var H_LIST = [0, 1, 2, 3];
+
+  var hiWater = document.getElementById('hiWater');
+  var hArrow = document.getElementById('hArrow');
+  var hArrowTop = document.getElementById('hArrowTop');
+  var hText = document.getElementById('hText');
+  var turbineBlades = document.getElementById('turbineBlades');
+  var waterPath = document.getElementById('waterPath');
+  var ePath = document.getElementById('ePath');
+  var anaGlow = document.getElementById('anaGlow');
+  var anaGlass = document.getElementById('anaGlass');
+  var anaULabel = document.getElementById('anaULabel');
+
+  var waterDots = [];
+  var wDotsG = document.getElementById('waterDots');
+  for (var i = 0; i < 6; i++) {
+    var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('r', '4');
+    wDotsG.appendChild(c);
+    waterDots.push(c);
+  }
+  var eDots = [];
+  var eDotsG = document.getElementById('anaElectrons');
+  for (var j = 0; j < 8; j++) {
+    var c2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c2.setAttribute('r', '4.5');
+    eDotsG.appendChild(c2);
+    eDots.push(c2);
+  }
+
+  var wOffset = 0, eOffset = 0, angle = 0, lastTime = 0;
+  var LOW_LEVEL = 190; // 低位水箱水面 y
+
+  function refresh() {
+    var h = H_LIST[level];
+    var U = U_LIST[level];
+    document.getElementById('anaLevelVal').textContent = level;
+    document.getElementById('anaH').textContent = h + ' m';
+    document.getElementById('anaU').textContent = U + ' V';
+    document.getElementById('anaFlow').textContent = h === 0 ? '停止' : (h === 1 ? '缓慢' : (h === 2 ? '较快' : '湍急'));
+    document.getElementById('anaLamp').textContent = U === 0 ? '不亮' : (U <= 1.5 ? '微亮' : (U <= 3 ? '较亮' : '很亮'));
+    anaULabel.textContent = '电压 U = ' + U + ' V';
+
+    // 高水位：h=0 与低位齐平(190)，每级抬高 36px
+    var top = LOW_LEVEL - h * 36;
+    hiWater.setAttribute('y', top);
+    hiWater.setAttribute('height', 246 - top);
+
+    // 水位差箭头
+    hArrow.setAttribute('y1', top);
+    hArrow.setAttribute('y2', LOW_LEVEL);
+    hArrowTop.setAttribute('points', '165,' + top + ' 160,' + (top + 12) + ' 170,' + (top + 12));
+    hText.setAttribute('y', (top + LOW_LEVEL) / 2 + 4);
+    hText.textContent = 'h = ' + h + ' m';
+    var showArrow = h > 0;
+    hArrow.style.display = showArrow ? '' : 'none';
+    hArrowTop.style.display = showArrow ? '' : 'none';
+
+    // 灯泡
+    var bright = U / 4.5;
+    anaGlow.setAttribute('opacity', (bright * 0.9).toFixed(2));
+    anaGlass.setAttribute('fill', U > 0 ? '#FFF3B0' : '#E8EEF4');
+  }
+
+  document.getElementById('anaLevel').addEventListener('input', function(e) {
+    level = parseInt(e.target.value);
+    refresh();
+  });
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    var h = H_LIST[level];
+    var U = U_LIST[level];
+
+    // 水轮机旋转
+    angle = (angle + h * dt * 160) % 360;
+    turbineBlades.setAttribute('transform', 'rotate(' + angle + ' 180 278)');
+
+    // 水流点
+    var wTotal = waterPath.getTotalLength();
+    if (h > 0) wOffset = (wOffset + dt * h * 40) % wTotal;
+    for (var i = 0; i < waterDots.length; i++) {
+      if (h === 0) { waterDots[i].style.display = 'none'; continue; }
+      waterDots[i].style.display = '';
+      var L = (wOffset + i * (wTotal / waterDots.length)) % wTotal;
+      var pt = waterPath.getPointAtLength(L);
+      waterDots[i].setAttribute('cx', pt.x);
+      waterDots[i].setAttribute('cy', pt.y);
+    }
+
+    // 电子点（沿路径反向，与规定电流方向相反）
+    var eTotal = ePath.getTotalLength();
+    if (U > 0) eOffset = (eOffset + dt * U * 35) % eTotal;
+    for (var j = 0; j < eDots.length; j++) {
+      if (U === 0) { eDots[j].style.display = 'none'; continue; }
+      eDots[j].style.display = '';
+      var L2 = (eOffset + j * (eTotal / eDots.length)) % eTotal;
+      var pt2 = ePath.getPointAtLength(eTotal - L2);
+      eDots[j].setAttribute('cx', pt2.x);
+      eDots[j].setAttribute('cy', pt2.y);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  refresh();
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 交互2：电压表读数练习
+// ============================================================
+(function() {
+  var frac = 0.5;
+  var needle = document.getElementById('vmNeedle');
+  var answerBox = document.getElementById('vmAnswer');
+
+  // 生成表盘刻度：-75° ~ +75°，共31格
+  var ticks = document.getElementById('vmTicks');
+  var html = '';
+  var CX = 200, CY = 235;
+  for (var i = 0; i <= 30; i++) {
+    var a = (-75 + i * 5) * Math.PI / 180;
+    var major = (i % 10 === 0);
+    var r1 = 150, r2 = major ? 132 : 141;
+    var x1 = CX + r1 * Math.sin(a), y1 = CY - r1 * Math.cos(a);
+    var x2 = CX + r2 * Math.sin(a), y2 = CY - r2 * Math.cos(a);
+    html += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1)
+      + '" stroke="#2C3E50" stroke-width="' + (major ? 2.5 : 1.2) + '"/>';
+    if (major) {
+      // 内圈数字 0,1,2,3；外圈数字 0,5,10,15
+      var ri = 118, ro = 172;
+      var xi = CX + ri * Math.sin(a), yi = CY - ri * Math.cos(a) + 5;
+      var xo = CX + ro * Math.sin(a), yo = CY - ro * Math.cos(a) + 5;
+      html += '<text x="' + xi.toFixed(1) + '" y="' + yi.toFixed(1) + '" text-anchor="middle" font-size="15" font-weight="bold" fill="#2C3E50">' + (i / 10) + '</text>';
+      html += '<text x="' + xo.toFixed(1) + '" y="' + yo.toFixed(1) + '" text-anchor="middle" font-size="13" fill="#7F8C8D">' + (i / 2) + '</text>';
+    }
+  }
+  ticks.innerHTML = html;
+
+  function refresh() {
+    var angle = -75 + frac * 150;
+    needle.setAttribute('transform', 'rotate(' + angle + ' 200 235)');
+    var r3 = (frac * 3).toFixed(1);
+    var r15 = (frac * 15).toFixed(1);
+    document.getElementById('vmR3').textContent = r3 + ' V';
+    document.getElementById('vmR15').textContent = r15 + ' V';
+    document.getElementById('vmAns3').textContent = r3 + ' V';
+    document.getElementById('vmAns15').textContent = r15 + ' V';
+    document.getElementById('vmPosVal').textContent = Math.round(frac * 100);
+  }
+
+  document.getElementById('vmPos').addEventListener('input', function(e) {
+    frac = parseFloat(e.target.value) / 100;
+    answerBox.style.display = '';
+    refresh();
+  });
+
+  document.getElementById('vmQuizBtn').addEventListener('click', function() {
+    frac = Math.round(Math.random() * 20) / 20; // 0, 0.05, ..., 1.0
+    document.getElementById('vmPos').value = Math.round(frac * 100);
+    answerBox.style.display = 'none';
+    refresh();
+  });
+
+  document.getElementById('vmShowBtn').addEventListener('click', function() {
+    answerBox.style.display = '';
+  });
+
+  refresh();
+})();
+
+// ============================================================
+// 交互3：串并联电压测量探究
+// ============================================================
+(function() {
+  var mode = 'series';   // series | parallel
+  var pt = 'u1';         // u1 | u2 | u
+  var U = 3.0;
+
+  var meterVal = document.getElementById('vcMeterVal');
+  var lead1 = document.getElementById('vcLead1');
+  var lead2 = document.getElementById('vcLead2');
+
+  // 表笔落点（各模式下各测量点的两个触点坐标）
+  var POINTS = {
+    series: {
+      u1: [[100, 124], [100, 196]],
+      u2: [[500, 124], [500, 196]],
+      u:  [[260, 270], [300, 270]]
+    },
+    parallel: {
+      u1: [[200, 124], [200, 196]],
+      u2: [[380, 124], [380, 196]],
+      u:  [[260, 270], [300, 270]]
+    }
+  };
+  var HILIGHTS = {
+    series: { u1: 'hlS1', u2: 'hlS2', u: 'hlSU' },
+    parallel: { u1: 'hlP1', u2: 'hlP2', u: 'hlPU' }
+  };
+
+  function getU1() { return mode === 'series' ? U / 3 : U; }
+  function getU2() { return mode === 'series' ? U * 2 / 3 : U; }
+
+  function refresh() {
+    document.getElementById('vcSeries').style.display = mode === 'series' ? '' : 'none';
+    document.getElementById('vcParallel').style.display = mode === 'parallel' ? '' : 'none';
+
+    var U1 = getU1(), U2 = getU2();
+
+    // 高亮
+    ['hlS1', 'hlS2', 'hlSU', 'hlP1', 'hlP2', 'hlPU'].forEach(function(id) {
+      document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById(HILIGHTS[mode][pt]).style.display = '';
+
+    // 表笔
+    var p = POINTS[mode][pt];
+    lead1.setAttribute('x2', p[0][0]); lead1.setAttribute('y2', p[0][1]);
+    lead2.setAttribute('x2', p[1][0]); lead2.setAttribute('y2', p[1][1]);
+
+    // 电表读数
+    var reading = pt === 'u1' ? U1 : (pt === 'u2' ? U2 : U);
+    meterVal.textContent = reading.toFixed(1) + ' V';
+
+    // 读数栏
+    document.getElementById('vcR1').textContent = U1.toFixed(1) + ' V';
+    document.getElementById('vcR2').textContent = U2.toFixed(1) + ' V';
+    document.getElementById('vcRU').textContent = U.toFixed(1) + ' V';
+
+    // 公式与结论
+    var formula = document.getElementById('vcFormula');
+    var tip = document.getElementById('vcTip');
+    if (mode === 'series') {
+      formula.innerHTML = '串联：U = U₁ + U₂ → ' + U.toFixed(1) + ' = ' + U1.toFixed(1) + ' + ' + U2.toFixed(1) + ' ✓';
+      tip.innerHTML = '串联电路中，电源电压被两个灯泡"分掉"：<strong>U = U₁ + U₂</strong>。L₂ 的电阻是 L₁ 的 2 倍，分得的电压也是 2 倍（串联<strong>按电阻比分压</strong>）。调节电源电压，规律始终成立！';
+    } else {
+      formula.innerHTML = '并联：U = U₁ = U₂ = ' + U.toFixed(1) + ' V ✓';
+      tip.innerHTML = '并联电路中，各支路直接"跨接"在电源两端：<strong>U = U₁ = U₂</strong>，无论测哪条支路，电压表读数都等于电源电压。这就是为什么家用电器并联后都能得到 220V！';
+    }
+  }
+
+  document.querySelectorAll('#vcToggle button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      mode = b.dataset.vcmode;
+      document.querySelectorAll('#vcToggle button').forEach(function(x) { x.classList.toggle('active', x === b); });
+      refresh();
+    });
+  });
+  document.querySelectorAll('#vcPtToggle button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      pt = b.dataset.pt;
+      document.querySelectorAll('#vcPtToggle button').forEach(function(x) { x.classList.toggle('active', x === b); });
+      refresh();
+    });
+  });
+  document.getElementById('vcU').addEventListener('input', function(e) {
+    U = parseFloat(e.target.value);
+    document.getElementById('vcUVal').textContent = U.toFixed(1);
+    refresh();
+  });
+
+  refresh();
+})();
+
+// ============================================================
+// 交互4：电阻影响因素探究
+// ============================================================
+(function() {
+  var RHO = { cu: 0.0172, fe: 0.0978, ncr: 1.10 };
+  var NAMES = { cu: '铜', fe: '铁', ncr: '镍铬合金' };
+  var COLORS = { cu: '#B87333', fe: '#95A5A6', ncr: '#6E7B8B' };
+  var mat = 'ncr', L = 1.5, S = 1.0;
+
+  var body = document.getElementById('resBody');
+  var leadR = document.getElementById('resLeadR');
+
+  function fmt(r) {
+    if (r >= 100) return r.toFixed(1);
+    if (r >= 1) return r.toFixed(2);
+    return r.toFixed(3);
+  }
+
+  function refresh() {
+    var R = RHO[mat] * L / S;
+    var Rcu = RHO.cu * L / S;
+
+    // 视觉：长度 60 + L*60，粗细 8 + S*26
+    var lenPx = 60 + L * 60;
+    var thPx = 8 + S * 26;
+    body.setAttribute('width', lenPx);
+    body.setAttribute('y', 110 - thPx / 2);
+    body.setAttribute('height', thPx);
+    body.setAttribute('fill', COLORS[mat]);
+    leadR.setAttribute('x1', 80 + lenPx);
+    leadR.setAttribute('x2', 120 + lenPx);
+
+    document.getElementById('resMatLabel').textContent = NAMES[mat];
+    document.getElementById('resMatLabel').setAttribute('x', 80 + lenPx / 2);
+    document.getElementById('resMatLabel').setAttribute('fill', mat === 'fe' ? '#2C3E50' : '#fff');
+
+    // 长度标尺
+    document.getElementById('resLenLine').setAttribute('x2', 80 + lenPx);
+    document.getElementById('resLenR').setAttribute('points', (80 + lenPx) + ',175 ' + (70 + lenPx) + ',170 ' + (70 + lenPx) + ',180');
+    document.getElementById('resLenText').setAttribute('x', 80 + lenPx / 2);
+    document.getElementById('resLenText').textContent = '长度 L = ' + L.toFixed(1) + ' m';
+
+    // 粗细标尺
+    var top = 110 - thPx / 2, bot = 110 + thPx / 2;
+    document.getElementById('resThLine').setAttribute('y1', top);
+    document.getElementById('resThLine').setAttribute('y2', bot);
+    document.getElementById('resThT').setAttribute('points', '60,' + top + ' 55,' + (top + 10) + ' 65,' + (top + 10));
+    document.getElementById('resThB').setAttribute('points', '60,' + bot + ' 55,' + (bot - 10) + ' 65,' + (bot - 10));
+    document.getElementById('resThText').textContent = 'S = ' + S.toFixed(1) + ' mm²';
+
+    document.getElementById('resRho').textContent = RHO[mat];
+    document.getElementById('resNowMat').textContent = NAMES[mat];
+    document.getElementById('resNow').textContent = fmt(R);
+    document.getElementById('resCu').textContent = fmt(Rcu);
+  }
+
+  document.querySelectorAll('#matToggle button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      mat = b.dataset.mat;
+      document.querySelectorAll('#matToggle button').forEach(function(x) { x.classList.toggle('active', x === b); });
+      refresh();
+    });
+  });
+  document.getElementById('resL').addEventListener('input', function(e) {
+    L = parseFloat(e.target.value);
+    document.getElementById('resLVal').textContent = L.toFixed(1);
+    refresh();
+  });
+  document.getElementById('resS').addEventListener('input', function(e) {
+    S = parseFloat(e.target.value);
+    document.getElementById('resSVal').textContent = S.toFixed(1);
+    refresh();
+  });
+
+  refresh();
+})();
+
+// ============================================================
+// 交互5：滑动变阻器调光台灯
+// ============================================================
+(function() {
+  var p = 50; // 滑片位置 0~100（%）
+  var U = 3, R_LAMP = 10, R_MAX = 20;
+
+  var knob = document.getElementById('rheoKnob');
+  var active = document.getElementById('rheoActive');
+  var apLabel = document.getElementById('rheoApLabel');
+  var glow = document.getElementById('dimGlow');
+  var glass = document.getElementById('dimGlass');
+  var fil = document.getElementById('dimFil');
+
+  function refresh() {
+    var knobX = 140 + 3.2 * p;
+    var R = R_MAX * p / 100;
+    var I = U / (R_LAMP + R);
+    var P = I * I * R_LAMP;      // 灯泡实际功率
+    var bright = P / 0.9;        // 最大功率 0.9W（R滑=0 时）
+
+    knob.setAttribute('transform', 'translate(' + (knobX - 300) + ',0)');
+    active.setAttribute('width', Math.max(0, knobX - 140));
+    apLabel.setAttribute('x', Math.max(160, 140 + (knobX - 140) / 2));
+    apLabel.style.display = p < 8 ? 'none' : '';
+
+    glow.setAttribute('opacity', (bright * 0.9).toFixed(2));
+    glass.setAttribute('fill', bright > 0.55 ? '#FFF3B0' : (bright > 0.2 ? '#F5EDCB' : '#E8EEF4'));
+    fil.setAttribute('stroke', bright > 0.55 ? '#E67E22' : (bright > 0.2 ? '#B9770E' : '#7F8C8D'));
+
+    document.getElementById('rheoSliderVal').textContent = p;
+    document.getElementById('dimR').textContent = R.toFixed(1) + ' Ω';
+    document.getElementById('dimI').textContent = I.toFixed(2) + ' A';
+    document.getElementById('dimBright').textContent =
+      bright > 0.7 ? '很亮 ✨' : (bright > 0.4 ? '较亮' : (bright > 0.15 ? '较暗' : '很暗'));
+    document.getElementById('dimFormula').innerHTML =
+      'I = U / (R<sub>灯</sub> + R<sub>滑</sub>) = ' + U + ' / (' + R_LAMP + ' + ' + R.toFixed(1) + ') = <strong style="color: var(--primary);">' + I.toFixed(2) + '</strong> A';
+  }
+
+  document.getElementById('rheoSlider').addEventListener('input', function(e) {
+    p = parseInt(e.target.value);
+    refresh();
+  });
+
+  refresh();
+})();
+
+// ============================================================
+// 练习题
+// ============================================================
+initQuiz('quiz1', {
+  correct: 3,
+  explain: '一节新干电池是 1.5V（A错）；对人体安全的电压是"不高于36V"而不是"就是36V"（B错）；电压表内阻很大，必须并联使用（C错）；我国家庭电路电压为 220V，D正确。',
+  hint: '回忆常见电压值：干电池 1.5V、蓄电池 2V、家庭电路 220V、安全电压"不高于"36V；电压表要并联。'
+});
+
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '串联电路中 U = U₁ + U₂，所以 U₂ = U − U₁ = 6V − 2.5V = 3.5V。',
+  hint: '串联电路的电压规律：总电压等于各部分电路两端电压之和。'
+});
+
+initQuiz('quiz3', {
+  correct: 2,
+  explain: '滑动变阻器必须"一上一下"接线：只接上面相当于导线，只接下面相当于定值电阻。它靠改变接入电阻丝的长度（不是材料）来改变电阻；闭合开关前滑片移到阻值最大处可保护电路。',
+  hint: '想想"一上一下"四个字，以及开关闭合前滑片应该放在哪里（保护电路）。'
+});
+</script>
+
 </body>
 </html>

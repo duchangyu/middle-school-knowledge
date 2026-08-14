@@ -6,57 +6,507 @@
   <title>二次根式 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 14px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 13px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .formula-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .formula-card {
+      background: linear-gradient(135deg, rgba(155,89,182,0.08), rgba(155,89,182,0.02));
+      border: 2px solid rgba(155,89,182,0.18);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .formula-card:hover {
+      border-color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .formula-card .f-name {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .formula-card .f-eq {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+    }
+    .formula-card .f-cond {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .slider-row label {
+      font-weight: 600;
+      min-width: 80px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      color: var(--math);
+      word-break: break-all;
+    }
+    .data-cell.highlight {
+      background: rgba(39,174,96,0.10);
+      border-color: rgba(39,174,96,0.4);
+    }
+    .data-cell.highlight .num { color: var(--success); }
+    .data-cell.danger {
+      background: rgba(231,76,60,0.12);
+      border-color: rgba(231,76,60,0.5);
+    }
+    .data-cell.danger .num { color: var(--danger); }
+
+    /* ===== 警告横幅 ===== */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.05));
+      border: 2px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-align: center;
+      margin: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--danger);
+      display: none;
+      animation: pulse 1.2s infinite;
+    }
+    .alert-banner.show { display: block; }
+    .alert-banner .alert-icon { font-size: 24px; margin-right: 8px; }
+
+    .safe-banner {
+      background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(39,174,96,0.03));
+      border: 2px solid var(--success);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      text-align: center;
+      margin: 14px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    /* ===== Canvas / SVG 容器 ===== */
+    .canvas-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      text-align: center;
+    }
+    .canvas-wrap canvas { max-width: 100%; height: auto; }
+
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 8px 0 4px;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 公式实时显示 ===== */
+    .live-formula {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(155,89,182,0.10), rgba(155,89,182,0.02));
+      border-radius: var(--radius-sm);
+      margin: 12px 0;
+      color: var(--math);
+      letter-spacing: 1px;
+      line-height: 1.8;
+    }
+    .live-formula .op { color: var(--text-secondary); margin: 0 6px; }
+    .live-formula .res { color: var(--success); }
+    .live-formula .err { color: var(--danger); }
+
+    /* ===== 答题输入区 ===== */
+    .ans-input {
+      width: 130px;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-family: Georgia, serif;
+      text-align: center;
       color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .ans-input:focus { outline: none; border-color: var(--math); }
+    .ans-input.ok { border-color: var(--success); background: rgba(39,174,96,0.08); }
+    .ans-input.bad { border-color: var(--danger); background: rgba(231,76,60,0.08); }
+
+    .ans-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .ans-feedback {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .ans-feedback.show { display: block; }
+    .ans-feedback.right { background: rgba(39,174,96,0.12); color: var(--success); }
+    .ans-feedback.wrong { background: rgba(231,76,60,0.12); color: var(--danger); }
+
+    .problem-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--math);
+    }
+    .problem-card .poly-display {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .problem-card .prob-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .prob-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ===== 方法选择按钮 ===== */
+    .method-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .method-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .method-btn:hover { border-color: var(--math); color: var(--math); }
+    .method-btn.selected {
+      border-color: var(--math);
+      background: var(--math);
+      color: #fff;
+    }
+
+    /* ===== 步骤展示 ===== */
+    .step-line {
+      padding: 12px 18px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+      font-size: 18px;
+      text-align: center;
+      border-left: 4px solid var(--text-light);
+      margin-bottom: 8px;
+      display: none;
+    }
+    .step-line.show { display: block; animation: fadeIn 0.4s ease; }
+    .step-line.active {
+      border-left-color: var(--math);
+      background: rgba(155,89,182,0.08);
+    }
+    .step-line .step-label {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-right: 10px;
+      font-family: -apple-system, sans-serif;
+      vertical-align: middle;
+      background: #fff;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .step-line .hl-a { color: #E74C3C; font-weight: 700; }
+    .step-line .hl-b { color: #3498DB; font-weight: 700; }
+    .step-line .hl-c { color: #27AE60; font-weight: 700; }
+    .step-line .hl-d { color: #E67E22; font-weight: 700; }
+    .step-line .hl-m { color: var(--math); font-weight: 700; }
+
+    .steps-container { margin: 14px 0; }
+    .steps-toolbar {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .step-progress {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 6px 0;
+    }
+
+    /* ===== 知识要点列表 ===== */
+    .know-list { list-style: none; padding-left: 0; }
+    .know-list li {
+      padding: 10px 14px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border-left: 4px solid var(--math);
+      transition: transform 0.2s;
+    }
+    .know-list li:hover { transform: translateX(4px); }
+    .know-list li strong { color: var(--math); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .step-nav .btn-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== 拖拽分组 ===== */
+    .drag-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin: 14px 0;
+      min-height: 64px;
+    }
+    .drag-item {
+      padding: 10px 18px;
+      background: #fff;
+      border: 2px solid var(--math);
+      border-radius: var(--radius-sm);
+      cursor: grab;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--math);
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .drag-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(155,89,182,0.3); }
+    .drag-item.dragging { opacity: 0.4; }
+    .drag-item.selected { background: rgba(155,89,182,0.15); box-shadow: 0 0 0 3px rgba(155,89,182,0.3); }
+    .drag-item .simp { display: block; font-size: 12px; color: var(--text-secondary); font-weight: 400; margin-top: 2px; }
+
+    .drop-zones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .drop-zone {
+      min-height: 130px;
+      padding: 14px;
+      background: rgba(155,89,182,0.05);
+      border: 2px dashed rgba(155,89,182,0.4);
+      border-radius: var(--radius);
+      text-align: center;
       transition: all 0.2s;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .drop-zone.drag-over { background: rgba(155,89,182,0.15); border-color: var(--math); border-style: solid; }
+    .drop-zone .zone-title { font-weight: 700; color: var(--math); margin-bottom: 10px; font-size: 15px; }
+    .drop-zone .zone-items { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .drop-zone.correct { border-color: var(--success); background: rgba(39,174,96,0.08); }
+    .drop-zone.wrong { border-color: var(--danger); background: rgba(231,76,60,0.08); }
+
+    /* ===== 几何正方形可视化 ===== */
+    .geom-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 14px 0;
     }
+    .geom-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-main);
+      max-width: 280px;
+    }
+    .geom-text strong { color: var(--math); }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📐 二次根式</div>
+  <div class="navbar-brand">√ 二次根式</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/九年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>√ 二次根式</h1>
+  <p>定义 · 性质 · 最简二次根式 · 四则运算 —— 形如 √a 的式子，实数范围内被开方数 a 必须非负</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +517,1139 @@
     <span>二次根式</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>二次根式</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 二次根式的定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 二次根式的定义</h2>
+  <div class="card">
+    <p>一般地，形如 <strong class="math-accent">√a (a ≥ 0)</strong> 的式子叫做<strong class="math-accent">二次根式</strong>。其中符号"√"叫做二次根号，a 叫做<strong>被开方数</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        二次根式 = √a &nbsp;&nbsp;<span style="font-size:16px;color:var(--danger);">(a ≥ 0)</span>
+      </div>
+      <div class="formula-note">被开方数 a 必须是非负数，这是二次根式有意义的根本条件</div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 核心条件：被开方数必须非负</div>
+      在实数范围内，负数没有平方根，所以<strong>被开方数 a 必须 ≥ 0</strong>。当 a &lt; 0 时，√a <strong>无意义</strong>。<br><br>
+      <strong>判断方法：</strong>看到 √( )，就问"括号里的式子是否 ≥ 0？"<br>
+      · √5 —— 被开方数 5 > 0，有意义<br>
+      · √(−3) —— 被开方数 −3 < 0，无意义<br>
+      · √0 —— 被开方数 0 = 0，有意义，√0 = 0<br>
+      · √(x−2) —— 有意义要求 x − 2 ≥ 0，即 x ≥ 2
+    </div>
+
+    <ul class="know-list">
+      <li><strong>是二次根式：</strong>√5、√(a²+1)、√0 —— 被开方数 ≥ 0</li>
+      <li><strong>无意义：</strong>√(−7)、√(−x²−1) —— 被开方数 < 0</li>
+      <li><strong>条件有意义：</strong>√(x−3) —— 要求 x ≥ 3；√(2−x) —— 要求 x ≤ 2</li>
+    </ul>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 交互1：√a 的定义域探索 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 交互·√a 的定义域探索</h2>
+  <div class="card">
+    <p>拖动滑块改变 a 的值（−10 到 20），观察 √a 的变化。当 <strong class="math-accent">a &lt; 0</strong> 时，二次根式<strong class="math-accent">无意义</strong>（负数在实数范围内没有二次根式）；当 <strong class="math-accent">a ≥ 0</strong> 时，√a 有意义。下方 Canvas 绘制 y = √x 的函数图像，红点标注当前位置。</p>
+
+    <div class="live-formula" id="domain-display"></div>
+
+    <div class="slider-row">
+      <label>a 的值</label>
+      <input type="range" id="domain-slider" min="-10" max="20" value="4" step="1">
+      <span class="value-badge" id="domain-x-val">4</span>
+    </div>
+
+    <div class="alert-banner" id="domain-alert">
+      <span class="alert-icon">⚠️</span><span id="domain-alert-text">无意义！负数没有实数范围内的二次根式</span>
+    </div>
+
+    <div class="safe-banner" id="domain-condition" style="display:none;"></div>
+
+    <div class="data-panel">
+      <div class="data-cell" id="domain-cell-a">
+        <div class="label">被开方数 a</div>
+        <div class="num" id="domain-a-val">4</div>
+      </div>
+      <div class="data-cell highlight" id="domain-cell-val">
+        <div class="label">√a 的值</div>
+        <div class="num" id="domain-sqrt-val">2</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="sqrt-canvas" width="500" height="300"></canvas>
+    </div>
+
+    <div class="geom-row" id="domain-geom">
+      <div class="svg-wrap" style="margin:0;flex:0 0 auto;">
+        <svg id="geom-square" width="180" height="180" viewBox="0 0 180 180"></svg>
+      </div>
+      <div class="geom-text" id="geom-text">
+        <strong>几何意义：</strong>√a 表示面积为 a 的正方形的<strong>边长</strong>。<br><br>
+        因为边长 × 边长 = 面积，即 (√a)² = a，所以反过来 a 的算术平方根就是边长 √a。<br><br>
+        这与<strong>勾股定理</strong>紧密相关：直角三角形两直角边的平方和等于斜边的平方，计算斜边时常出现二次根式。
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 观察要点</div>
+      当 a &lt; 0 时，红点消失并显示红色警告——<strong>负数没有实数范围内的二次根式</strong>。当 a ≥ 0 时，红点沿 y = √x 曲线移动。注意曲线只在 y 轴右侧（x ≥ 0），这正是"被开方数必须非负"的图形体现。
+    </div>
   </div>
+
+  <!-- ===== 3. 二次根式的性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 二次根式的性质</h2>
+  <div class="card">
+    <p>二次根式有以下重要性质，它们是二次根式运算的理论基础。请特别注意每条性质中<strong class="math-accent">字母的取值范围</strong>。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">性质 1</div>
+        <div class="f-eq">(√a)² = a</div>
+        <div class="f-cond">a ≥ 0（先开方再平方，回到本身）</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">性质 2（最重要）</div>
+        <div class="f-eq">√(a²) = |a|</div>
+        <div class="f-cond">a 为任意实数（必须取绝对值！）</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">性质 3·乘法</div>
+        <div class="f-eq">√(ab) = √a · √b</div>
+        <div class="f-cond">a ≥ 0，b ≥ 0</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">性质 4·除法</div>
+        <div class="f-eq">√(a/b) = √a / √b</div>
+        <div class="f-cond">a ≥ 0，b > 0</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 最易错：√(a²) = |a|，不是 a！</div>
+      <strong>性质 2 是中考高频考点。</strong>√(a²) 的结果一定是<strong>非负数</strong>，所以必须加绝对值符号：<br>
+      <br>
+      · 当 <strong>a ≥ 0</strong> 时，√(a²) = |a| = a<br>
+      · 当 <strong>a &lt; 0</strong> 时，√(a²) = |a| = <strong>−a</strong>（注意是 −a，不是 a！）<br>
+      <br>
+      <strong>例：</strong>√(−5)² = |−5| = 5，<strong>不等于</strong> −5。<br>
+      <strong>例：</strong>√(x²) = |x|（不知道 x 正负时必须保留绝对值）。<br>
+      <br>
+      <strong>对比性质 1 和性质 2：</strong>(√a)² = a 要求 a ≥ 0；而 √(a²) = |a| 对任意实数 a 都成立。<strong>先平方后开方</strong>与<strong>先开方后平方</strong>的运算顺序不同，条件和结果也不同！
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 性质 3、4 的记忆</div>
+      乘法性质 √(ab) = √a · √b 可以"拆开"：根号内的乘积可以拆成两个根号的乘积。<br>
+      除法性质 √(a/b) = √a / √b 可以"拆开"：根号内的商可以拆成两个根号的商。<br>
+      这两个性质反过来用，就是<strong>化简二次根式</strong>和<strong>二次根式乘除运算</strong>的依据。
+    </div>
+  </div>
+
+  <!-- ===== 4. 交互2：√(a²) = |a| 性质验证 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 交互·√(a²) = |a| 性质验证</h2>
+  <div class="card">
+    <p>拖动滑块改变 a 的值（−10 到 10），实时观察 a²、√(a²)、|a| 三个值。无论 a 是正数、负数还是零，<strong class="math-accent">√(a²) 始终等于 |a|</strong>。特别注意当 a &lt; 0 时的红色警告——<strong>不能直接写 √(a²) = a</strong>，必须取绝对值！</p>
+
+    <div class="live-formula" id="abs-display"></div>
+
+    <div class="slider-row">
+      <label>a 的值</label>
+      <input type="range" id="abs-slider" min="-10" max="10" value="-3" step="1">
+      <span class="value-badge" id="abs-x-val">−3</span>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell">
+        <div class="label">a 的值</div>
+        <div class="num" id="abs-a-val">−3</div>
+      </div>
+      <div class="data-cell">
+        <div class="label">a²</div>
+        <div class="num" id="abs-sq-val">9</div>
+      </div>
+      <div class="data-cell highlight">
+        <div class="label">√(a²)</div>
+        <div class="num" id="abs-sqrt-val">3</div>
+      </div>
+      <div class="data-cell highlight">
+        <div class="label">|a|</div>
+        <div class="num" id="abs-abs-val">3</div>
+      </div>
+    </div>
+
+    <div class="alert-banner" id="abs-alert">
+      <span class="alert-icon">⚠️</span><span id="abs-alert-text">a &lt; 0 时，√(a²) = |a| = −a，不能直接等于 a！</span>
+    </div>
+
+    <div class="safe-banner" id="abs-safe" style="display:none;">
+      a ≥ 0 时，√(a²) = |a| = a，此时可以直接等于 a。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 常见错误对比</div>
+      <strong style="color:var(--danger);">错误：</strong>√(a²) = a &nbsp;&nbsp;（当 a &lt; 0 时不成立！如 √(−3)² = √9 = 3 ≠ −3）<br>
+      <strong style="color:var(--success);">正确：</strong>√(a²) = |a| &nbsp;&nbsp;（对任意实数 a 都成立）<br><br>
+      口诀：<strong>"先平方后开方，加个绝对值不会差"</strong>。因为平方把负数变正了，开方结果一定是非负的，所以必须用绝对值保证非负性。
+    </div>
+  </div>
+
+  <!-- ===== 5. 最简二次根式 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 最简二次根式</h2>
+  <div class="card">
+    <p>满足以下两个条件的二次根式，叫做<strong class="math-accent">最简二次根式</strong>：</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">条件 1</div>
+        <div class="f-eq">被开方数不含分母</div>
+        <div class="f-cond">如 √3、2√5 满足，√(1/2) 不满足</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">条件 2</div>
+        <div class="f-eq">被开方数不含能开尽方的因数</div>
+        <div class="f-cond">如 √3 满足，√12 = 2√3 不满足（含 4）</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 化简方法</div>
+      把被开方数分解因数，找出其中<strong>最大的完全平方因数</strong>（如 4、9、16、25、36、49、64……），利用 √(ab) = √a · √b 把它"开出来"。<br><br>
+      <strong>示例：</strong>√12 = √(4×3) = √4 × √3 = 2√3 &nbsp;&nbsp;（4 = 2² 是完全平方数，开出来变成 2）<br>
+      <strong>示例：</strong>√50 = √(25×2) = √25 × √2 = 5√2 &nbsp;&nbsp;（25 = 5² 开出来变成 5）
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 找"最大"完全平方因数</div>
+      化简时一定要找<strong>最大的</strong>完全平方因数，否则还需继续化简。<br>
+      如 √72：72 = 4×18 = 36×2，其中 4 和 36 都是完全平方数，但 36 更大。应该用 36×2：<br>
+      √72 = √(36×2) = 6√2 &nbsp;&nbsp;✓<br>
+      如果用 4×18：√72 = √(4×18) = 2√18，但 √18 还能继续化简（18 = 9×2），所以 2√18 = 2×3√2 = 6√2，多走了一步。
+    </div>
+  </div>
+
+  <!-- ===== 6. 交互3：化简二次根式练习器 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 交互·化简二次根式练习器</h2>
+  <div class="card">
+    <p>共 6 道化简题。第一步：填入被开方数的因数分解（找出完全平方因数，如 12 = 4×3）；第二步：写出化简结果（如 √12 = 2√3）。点击"检查"验证，右侧矩形面积模型帮助理解化简过程。</p>
+
+    <div class="prob-nav">
+      <button class="btn btn-outline btn-sm" id="simp-prev" style="border-color:var(--math);color:var(--math);">← 上一题</button>
+      <span style="font-weight:700;color:var(--math);" id="simp-progress">第 1 / 6 题</span>
+      <button class="btn btn-outline btn-sm" id="simp-next" style="border-color:var(--math);color:var(--math);">下一题 →</button>
+    </div>
+
+    <div class="problem-card" id="simp-card">
+      <div class="poly-display" id="simp-poly">—</div>
+      <div class="prob-meta" id="simp-hint">找出被开方数中最大的完全平方因数</div>
+      <div class="ans-row" id="simp-input-row"></div>
+      <div class="ans-feedback" id="simp-feedback"></div>
+    </div>
+
+    <div class="svg-wrap" id="simp-area-wrap"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 化简口诀</div>
+      一分（分解因数）、二找（找最大完全平方因数）、三开（把完全平方因数开出来）、四乘（整数乘到根号前面）。<br>
+      常用完全平方数：4=2²、9=3²、16=4²、25=5²、36=6²、49=7²、64=8²、81=9²、100=10²。
+    </div>
+  </div>
+
+  <!-- ===== 7. 同类二次根式 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 同类二次根式</h2>
+  <div class="card">
+    <p>把几个二次根式化为<strong class="math-accent">最简二次根式</strong>后，如果它们的<strong class="math-accent">被开方数相同</strong>，那么这几个二次根式就叫做<strong>同类二次根式</strong>。</p>
+
+    <div class="formula-box">
+      <div class="formula">同类二次根式 ⟺ 化为最简后，被开方数相同</div>
+      <div class="formula-note">与"同类项"类似：同类项是字母和指数相同，同类二次根式是被开方数相同</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 判断步骤</div>
+      <strong>第一步：</strong>把每个二次根式化为最简二次根式。<br>
+      <strong>第二步：</strong>比较被开方数是否相同。<br><br>
+      <strong>示例：</strong>√8、√18、√50 是否为同类二次根式？<br>
+      √8 = 2√2，√18 = 3√2，√50 = 5√2<br>
+      化简后被开方数都是 2，所以它们是<strong>同类二次根式</strong>。<br><br>
+      <strong>注意：</strong>√2 和 √3 不是同类（被开方数 2 ≠ 3）；√12 = 2√3 和 √3 是同类（化简后都是 √3）。
+    </div>
+  </div>
+
+  <!-- ===== 8. 交互4：同类二次根式识别（拖拽分组） ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 交互·同类二次根式识别（拖拽分组）</h2>
+  <div class="card">
+    <p>下面有 7 个二次根式。请先将它们<strong class="math-accent">化简</strong>，然后按化简后的<strong class="math-accent">被开方数</strong>拖入对应的分组。把所有被开方数为 2 的拖入"被开方数为 2"组，被开方数为 3 的拖入"被开方数为 3"组。完成后点击"检查分组"。（也可以点击选中后再点击目标分组框）</p>
+
+    <div class="drag-pool" id="drag-pool"></div>
+
+    <div class="drop-zones" id="drop-zones"></div>
+
+    <div class="steps-toolbar">
+      <button class="btn btn-primary btn-sm" id="drag-check" style="background:var(--math);">检查分组</button>
+      <button class="btn btn-outline btn-sm" id="drag-show" style="border-color:var(--text-light);color:var(--text-secondary);">查看化简</button>
+      <button class="btn btn-outline btn-sm" id="drag-reset" style="border-color:var(--text-light);color:var(--text-secondary);">↻ 重置</button>
+    </div>
+    <div class="ans-feedback" id="drag-feedback"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 提示</div>
+      先把每个根式化简：√2 已最简；√8 = 2√2；√18 = 3√2；√50 = 5√2；√3 已最简；√12 = 2√3；√27 = 3√3。<br>
+      化简后，被开方数为 2 的有 4 个，被开方数为 3 的有 3 个。
+    </div>
+  </div>
+
+  <!-- ===== 9. 二次根式的运算 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 二次根式的运算</h2>
+  <div class="card">
+    <p>二次根式的运算与整式、分式的运算<strong class="math-accent">一脉相承</strong>，关键是先化为最简二次根式，再进行运算。</p>
+
+    <div class="formula-row">
+      <div class="formula-card">
+        <div class="f-name">加减法</div>
+        <div class="f-eq">先化最简，再合并同类</div>
+        <div class="f-cond">类似于合并同类项</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">乘法</div>
+        <div class="f-eq">√a · √b = √(ab)</div>
+        <div class="f-cond">a ≥ 0，b ≥ 0</div>
+      </div>
+      <div class="formula-card">
+        <div class="f-name">除法</div>
+        <div class="f-eq">√a / √b = √(a/b)</div>
+        <div class="f-cond">a ≥ 0，b > 0</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 加减法的核心步骤</div>
+      <strong>第一步：化简</strong>——把每个二次根式化为最简二次根式。<br>
+      <strong>第二步：合并同类</strong>——把同类二次根式（被开方数相同）的系数相加减，被开方数不变。<br><br>
+      这与合并同类项完全类似：3√2 + 2√2 = (3+2)√2 = 5√2，就像 3x + 2x = 5x。<br>
+      <strong>注意：只有同类二次根式才能合并！</strong>√2 + √3 不能合并，就像 x + y 不能合并一样。
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 乘除法示例</div>
+      <strong>乘法：</strong>√2 × √6 = √(2×6) = √12 = 2√3（结果要化为最简）<br>
+      <strong>除法：</strong>√8 ÷ √2 = √(8/2) = √4 = 2<br>
+      <strong>混合：</strong>√3 × √2 = √6，√6 ÷ √2 = √3
+    </div>
+  </div>
+
+  <!-- ===== 10. 交互5：二次根式加减法 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 交互·二次根式加减法（分步展示）</h2>
+  <div class="card">
+    <p>选择一道加减法题，点击"下一步"逐步查看运算过程，每步用不同颜色高亮关键变形。核心思路：<strong class="math-accent">先化简 → 再合并同类二次根式</strong>。共有 4 道典型题。</p>
+
+    <div class="prob-nav">
+      <button class="btn btn-outline btn-sm" id="add-prev" style="border-color:var(--math);color:var(--math);">← 上一题</button>
+      <span style="font-weight:700;color:var(--math);" id="add-progress">第 1 / 4 题</span>
+      <button class="btn btn-outline btn-sm" id="add-next" style="border-color:var(--math);color:var(--math);">下一题 →</button>
+    </div>
+
+    <div class="problem-card" id="add-card">
+      <div class="poly-display" id="add-expr">—</div>
+      <div class="prob-meta" id="add-type">—</div>
+    </div>
+
+    <div class="steps-container" id="add-steps"></div>
+
+    <div class="steps-toolbar">
+      <button class="btn btn-primary btn-sm" id="add-next-step" style="background:var(--math);">下一步 ▶</button>
+      <button class="btn btn-outline btn-sm" id="add-show-all" style="border-color:var(--math);color:var(--math);">显示全部</button>
+      <button class="btn btn-outline btn-sm" id="add-reset-steps" style="border-color:var(--text-light);color:var(--text-secondary);">↻ 重新开始</button>
+    </div>
+    <div class="step-progress" id="add-step-progress"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 加减法策略</div>
+      <strong>化简</strong>：把每个根式化为最简 → <strong>识别同类</strong>：找被开方数相同的 → <strong>合并</strong>：系数加减，根式不变。<br>
+      关键：<strong>不是同类的不能合并</strong>！如 2√3 + 3√2 就无法进一步合并。
+    </div>
+  </div>
+
+  <!-- ===== 11. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">11</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 若 √(x−2) 在实数范围内有意义，则 x 的取值范围是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. x ≠ 2</div>
+    <div class="quiz-option" data-idx="1">B. x ≥ 2</div>
+    <div class="quiz-option" data-idx="2">C. x &gt; 2</div>
+    <div class="quiz-option" data-idx="3">D. x ≤ 2</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 化简 √(−5)² 的结果是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. −5</div>
+    <div class="quiz-option" data-idx="1">B. 5</div>
+    <div class="quiz-option" data-idx="2">C. ±5</div>
+    <div class="quiz-option" data-idx="3">D. 25</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 计算 √8 + √18 − √2 的结果是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 2√2</div>
+    <div class="quiz-option" data-idx="1">B. 3√2</div>
+    <div class="quiz-option" data-idx="2">C. 4√2</div>
+    <div class="quiz-option" data-idx="3">D. 5√2</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 12. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">12</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 二次根式的延伸与应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ✂️ <a href="06-分式.html"><strong>数学·分式</strong></a>——
+        二次根式与分式有相似的<strong>化简思想</strong>：分式约分去公因式，二次根式化简去完全平方因数。此外，<strong>分母有理化</strong>（如把 1/√2 化为 √2/2）本质上就是分子分母同乘 √2，是分式基本性质在二次根式中的应用。
+        <span class="tag tag-math">化简思想</span>
+      </li>
+      <li>
+        📐 <a href="08-勾股定理.html"><strong>数学·勾股定理</strong></a>——
+        勾股定理 a² + b² = c² 的计算中<strong>大量出现二次根式</strong>。例如直角边为 1 和 2 时，斜边 c = √(1²+2²) = √5。化简勾股定理的结果时，需要用到二次根式的化简技巧。二次根式是勾股定理计算的必备工具。
+        <span class="tag tag-math">几何应用</span>
+      </li>
+      <li>
+        🔢 <a href="04-整式的乘除.html"><strong>数学·整式的乘除</strong></a>——
+        二次根式的乘除法则 √(ab) = √a·√b 与整式乘法的<strong>运算律</strong>一致，二次根式的加减合并同类也与整式加减合并同类项<strong>完全类似</strong>。整式运算的法则可以直接迁移到二次根式。
+        <span class="tag tag-math">运算迁移</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="06-分式.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：分式</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="08-勾股定理.html" class="btn btn-primary" style="background: var(--math);">下一章：勾股定理 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  工具函数
+ * ============================================================ */
+const $ = (id) => document.getElementById(id);
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function makeSvg(tag, attrs) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+/* 格式化数字显示 */
+function fmtNum(n) {
+  if (isNaN(n) || !isFinite(n)) return '无意义';
+  if (Math.abs(n) < 1e-10) return '0';
+  const r = Math.round(n * 1000) / 1000;
+  return String(r);
+}
+
+/* 规范化答案字符串 */
+function normAns(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\s/g, '')
+    .replace(/−|–|—/g, '-')
+    .toLowerCase();
+}
+
+/* 规范化因数分解（排序后比较） */
+function normFactor(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\s/g, '')
+    .replace(/×|·/g, '*')
+    .replace(/−|–|—/g, '-')
+    .split('*')
+    .filter(x => x.length > 0)
+    .sort((a, b) => parseInt(a) - parseInt(b))
+    .join('*');
+}
+
+/* 规范化根式结果（去掉 * 号） */
+function normResult(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\s/g, '')
+    .replace(/\*/g, '')
+    .replace(/−|–|—/g, '-')
+    .toLowerCase();
+}
+
+/* ============================================================
+ *  交互1：√a 的定义域探索
+ * ============================================================ */
+function drawSqrtGraph(canvas, a) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const xMax = 20, yMax = 5;
+  const padL = 44, padB = 36, padT = 20, padR = 24;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  const x2px = (x) => padL + (x / xMax) * plotW;
+  const y2px = (y) => H - padB - (y / yMax) * plotH;
+
+  /* 网格 */
+  ctx.strokeStyle = '#E8EEF4';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= xMax; i += 2) {
+    ctx.beginPath(); ctx.moveTo(x2px(i), padT); ctx.lineTo(x2px(i), H - padB); ctx.stroke();
+  }
+  for (let i = 0; i <= yMax; i++) {
+    ctx.beginPath(); ctx.moveTo(padL, y2px(i)); ctx.lineTo(W - padR, y2px(i)); ctx.stroke();
+  }
+
+  /* 坐标轴 */
+  ctx.strokeStyle = '#7F8C8D';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB);
+  ctx.stroke();
+
+  /* 箭头 */
+  ctx.fillStyle = '#7F8C8D';
+  ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL - 4, padT + 8); ctx.lineTo(padL + 4, padT + 8); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(W - padR, H - padB); ctx.lineTo(W - padR - 8, H - padB - 4); ctx.lineTo(W - padR - 8, H - padB + 4); ctx.fill();
+
+  /* 刻度标签 */
+  ctx.fillStyle = '#7F8C8D';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= xMax; i += 4) ctx.fillText(i, x2px(i), H - padB + 18);
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= yMax; i++) ctx.fillText(i, padL - 8, y2px(i) + 4);
+
+  /* 轴名 */
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'italic 15px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('x', W - padR + 4, H - padB + 4);
+  ctx.fillText('y', padL - 12, padT - 4);
+
+  /* y = √x 曲线 */
+  ctx.strokeStyle = '#9B59B6';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let x = 0; x <= xMax; x += 0.1) {
+    const y = Math.sqrt(x);
+    const px = x2px(x), py = y2px(y);
+    if (x === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  /* 曲线标签 */
+  ctx.fillStyle = '#9B59B6';
+  ctx.font = 'italic 14px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('y = √x', x2px(13), y2px(Math.sqrt(13)) - 14);
+
+  /* 当前点 */
+  if (a >= 0) {
+    const y = Math.sqrt(a);
+    const px = x2px(a), py = y2px(y);
+    /* 虚线 */
+    ctx.strokeStyle = 'rgba(231,76,60,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(px, H - padB); ctx.lineTo(px, py); ctx.lineTo(padL, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    /* 红点 */
+    ctx.fillStyle = '#E74C3C';
+    ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    /* 坐标标注 */
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 13px Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`(${a}, ${fmtNum(y)})`, px + 10, py - 8);
+  } else {
+    /* a < 0 区域标注 */
+    ctx.fillStyle = 'rgba(231,76,60,0.08)';
+    ctx.fillRect(padL + x2px(-10) - x2px(0), padT, x2px(0) - x2px(-10), plotH);
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('a < 0：无意义', x2px(-5), H / 2);
+  }
+}
+
+function drawGeomSquare(a, sqrtA) {
+  const svg = $('geom-square');
+  svg.innerHTML = '';
+  const W = 180, H = 180;
+  const cx = W / 2, cy = H / 2;
+  const maxSide = 130;
+  const side = Math.max(2, (sqrtA / Math.sqrt(20)) * maxSide);
+  const x0 = cx - side / 2, y0 = cy - side / 2;
+
+  /* 正方形 */
+  svg.appendChild(makeSvg('rect', {
+    x: x0, y: y0, width: side, height: side,
+    fill: 'rgba(155,89,182,0.25)', stroke: '#9B59B6', 'stroke-width': 2, rx: 2
+  }));
+  /* 边长标注（下方） */
+  const labBottom = makeSvg('text', {
+    x: cx, y: y0 + side + 16, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 'bold',
+    fill: '#9B59B6', 'font-family': 'Georgia,serif'
+  });
+  labBottom.textContent = `边长 = √${a} = ${sqrtA.toFixed(2)}`;
+  svg.appendChild(labBottom);
+  /* 面积标注（内部） */
+  const labArea = makeSvg('text', {
+    x: cx, y: cy + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 'bold',
+    fill: '#7D3C98', 'font-family': 'Georgia,serif'
+  });
+  labArea.textContent = `面积 = ${a}`;
+  svg.appendChild(labArea);
+}
+
+function updateDomain() {
+  const a = parseFloat($('domain-slider').value);
+  $('domain-x-val').textContent = a;
+  $('domain-a-val').textContent = a;
+
+  const alertEl = $('domain-alert');
+  const condEl = $('domain-condition');
+  const cellVal = $('domain-cell-val');
+  const geomEl = $('domain-geom');
+
+  if (a < 0) {
+    alertEl.classList.add('show');
+    $('domain-alert-text').textContent = `a = ${a} < 0，无意义！负数没有实数范围内的二次根式。`;
+    condEl.style.display = 'none';
+    cellVal.classList.remove('highlight');
+    cellVal.classList.add('danger');
+    $('domain-sqrt-val').textContent = '无意义';
+    $('domain-display').innerHTML = `√(${a}) = <span class="err">无意义</span>`;
+    geomEl.style.display = 'none';
+  } else {
+    alertEl.classList.remove('show');
+    const sqrtA = Math.sqrt(a);
+    cellVal.classList.remove('danger');
+    cellVal.classList.add('highlight');
+    $('domain-sqrt-val').textContent = sqrtA.toFixed(3);
+    $('domain-display').innerHTML = `√(${a}) = <span class="res">${sqrtA.toFixed(3)}</span>`;
+    condEl.style.display = 'block';
+    condEl.innerHTML = `✓ a = ${a} ≥ 0，二次根式 √a 有意义，值为 ${sqrtA.toFixed(3)}`;
+    geomEl.style.display = 'flex';
+    drawGeomSquare(a, sqrtA);
+  }
+  drawSqrtGraph($('sqrt-canvas'), a);
+}
+
+/* ============================================================
+ *  交互2：√(a²) = |a| 性质验证
+ * ============================================================ */
+function updateAbs() {
+  const a = parseFloat($('abs-slider').value);
+  const aDisp = a;
+  $('abs-x-val').textContent = aDisp;
+  $('abs-a-val').textContent = aDisp;
+
+  const sq = a * a;
+  const sqrtSq = Math.sqrt(sq);   /* √(a²) */
+  const absA = Math.abs(a);        /* |a| */
+
+  $('abs-sq-val').textContent = sq;
+  $('abs-sqrt-val').textContent = sqrtSq.toFixed(3);
+  $('abs-abs-val').textContent = absA.toFixed(3);
+
+  const alertEl = $('abs-alert');
+  const safeEl = $('abs-safe');
+
+  if (a < 0) {
+    alertEl.classList.add('show');
+    safeEl.style.display = 'none';
+    $('abs-alert-text').textContent = `a = ${a} < 0，√(a²) = |a| = ${absA} = −(${a})，不能直接等于 a（${a}）！`;
+    $('abs-display').innerHTML = `√((${a})²) = √${sq} = <span class="res">${sqrtSq.toFixed(0)}</span> = |${a}| = <span class="res">${absA}</span> &nbsp;<span class="err">≠ a = ${a}</span>`;
+  } else {
+    alertEl.classList.remove('show');
+    safeEl.style.display = 'block';
+    safeEl.textContent = `a = ${a} ≥ 0，√(a²) = |a| = a = ${absA}，此时可以直接等于 a。`;
+    $('abs-display').innerHTML = `√((${a})²) = √${sq} = <span class="res">${sqrtSq.toFixed(0)}</span> = |${a}| = <span class="res">${absA}</span> = a`;
+  }
+}
+
+/* ============================================================
+ *  交互3：化简二次根式练习器（6 题）
+ * ============================================================ */
+const simpProblems = [
+  { n: 12, k: 4, m: 3, factor: '4×3', result: '2√3', hint: '12 = 4×3，4 = 2² 是完全平方数，√4 = 2 开出来' },
+  { n: 18, k: 9, m: 2, factor: '9×2', result: '3√2', hint: '18 = 9×2，9 = 3² 是完全平方数，√9 = 3 开出来' },
+  { n: 50, k: 25, m: 2, factor: '25×2', result: '5√2', hint: '50 = 25×2，25 = 5² 是完全平方数，√25 = 5 开出来' },
+  { n: 72, k: 36, m: 2, factor: '36×2', result: '6√2', hint: '72 = 36×2，36 = 6² 是最大的完全平方因数' },
+  { n: 8,  k: 4,  m: 2, factor: '4×2',  result: '2√2', hint: '8 = 4×2，4 = 2² 是完全平方数' },
+  { n: 98, k: 49, m: 2, factor: '49×2', result: '7√2', hint: '98 = 49×2，49 = 7² 是完全平方数' }
+];
+
+let simpIdx = 0;
+
+function drawSimpArea(p) {
+  const wrap = $('simp-area-wrap');
+  wrap.innerHTML = '';
+  const W = 440, H = 170;
+  const svg = makeSvg('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: H });
+  wrap.appendChild(svg);
+
+  /* 左侧：被开方数 n 的矩形（k × m，但按面积比例缩放） */
+  const k = p.k, m = p.m;
+  const maxDim = 110;
+  const ratio = Math.sqrt(k / m);
+  let rw, rh;
+  if (ratio >= 1) { rw = maxDim; rh = maxDim / ratio; }
+  else { rh = maxDim; rw = maxDim * ratio; }
+  const ox1 = 50, oy1 = (H - rh) / 2;
+
+  /* 整体矩形框 */
+  svg.appendChild(makeSvg('rect', { x: ox1, y: oy1, width: rw, height: rh, fill: 'rgba(155,89,182,0.12)', stroke: '#9B59B6', 'stroke-width': 2, rx: 3 }));
+  /* k 部分高亮（完全平方因数部分用深色） */
+  const kw = rw; /* 宽度代表 k */
+  svg.appendChild(makeSvg('rect', { x: ox1, y: oy1 + rh - rh, width: kw, height: rh, fill: 'rgba(155,89,182,0.08)' }));
+  /* 分隔线 */
+  /* 标签 */
+  const lab1 = makeSvg('text', { x: ox1 + rw / 2, y: oy1 + rh / 2, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 'bold', fill: '#7D3C98', 'font-family': 'Georgia,serif' });
+  lab1.textContent = `${k} × ${m} = ${p.n}`;
+  svg.appendChild(lab1);
+  const labW = makeSvg('text', { x: ox1 + rw / 2, y: oy1 + rh + 18, 'text-anchor': 'middle', 'font-size': 12, fill: '#E74C3C', 'font-weight': 'bold' });
+  labW.textContent = `${k}（完全平方数 ${Math.sqrt(k)}²）`;
+  svg.appendChild(labW);
+  const labH = makeSvg('text', { x: ox1 - 8, y: oy1 + rh / 2, 'text-anchor': 'end', 'font-size': 12, fill: '#3498DB', 'font-weight': 'bold' });
+  labH.textContent = `${m}`;
+  svg.appendChild(labH);
+
+  /* 中间箭头 */
+  const arrow = makeSvg('text', { x: W / 2 + 20, y: H / 2 + 5, 'text-anchor': 'middle', 'font-size': 28, fill: '#27AE60', 'font-weight': 'bold' });
+  arrow.textContent = '→';
+  svg.appendChild(arrow);
+  const aLabel = makeSvg('text', { x: W / 2 + 20, y: H / 2 + 26, 'text-anchor': 'middle', 'font-size': 11, fill: '#27AE60', 'font-weight': 'bold' });
+  aLabel.textContent = '开出来';
+  svg.appendChild(aLabel);
+
+  /* 右侧：结果 */
+  const ox2 = W - 140, oy2 = (H - 40) / 2;
+  const resBox = makeSvg('rect', { x: ox2, y: oy2, width: 100, height: 40, fill: 'rgba(39,174,96,0.12)', stroke: '#27AE60', 'stroke-width': 2, rx: 6 });
+  svg.appendChild(resBox);
+  const resText = makeSvg('text', { x: ox2 + 50, y: oy2 + 26, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 'bold', fill: '#27AE60', 'font-family': 'Georgia,serif' });
+  resText.textContent = p.result;
+  svg.appendChild(resText);
+  const resLabel = makeSvg('text', { x: ox2 + 50, y: oy2 + 56, 'text-anchor': 'middle', 'font-size': 12, fill: '#7F8C8D' });
+  resLabel.textContent = `√${p.n} = √${k} × √${m} = ${p.result}`;
+  svg.appendChild(resLabel);
+}
+
+function loadSimpProblem() {
+  const p = simpProblems[simpIdx];
+  $('simp-poly').innerHTML = `√${p.n}`;
+  $('simp-progress').textContent = `第 ${simpIdx + 1} / ${simpProblems.length} 题`;
+  $('simp-hint').textContent = `将 ${p.n} 分解为一个完全平方数 × 另一个因数，再写出化简结果`;
+
+  const row = $('simp-input-row');
+  row.innerHTML = '';
+  /* 第一步：因数分解 */
+  const lab1 = document.createElement('span');
+  lab1.style.cssText = 'font-family:Georgia,serif;font-size:16px;';
+  lab1.textContent = `${p.n} =`;
+  row.appendChild(lab1);
+  const inp1 = document.createElement('input');
+  inp1.type = 'text'; inp1.className = 'ans-input'; inp1.id = 'simp-ans1';
+  inp1.placeholder = '如 4×3'; inp1.style.width = '90px';
+  row.appendChild(inp1);
+  /* 第二步：化简结果 */
+  const lab2 = document.createElement('span');
+  lab2.style.cssText = 'font-family:Georgia,serif;font-size:16px;';
+  lab2.textContent = `√${p.n} =`;
+  row.appendChild(lab2);
+  const inp2 = document.createElement('input');
+  inp2.type = 'text'; inp2.className = 'ans-input'; inp2.id = 'simp-ans2';
+  inp2.placeholder = '如 2√3';
+  row.appendChild(inp2);
+  /* 检查按钮 */
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn btn-primary btn-sm'; checkBtn.style.background = 'var(--math)';
+  checkBtn.textContent = '检查';
+  checkBtn.addEventListener('click', checkSimp);
+  row.appendChild(checkBtn);
+  /* 查看答案按钮 */
+  const showBtn = document.createElement('button');
+  showBtn.className = 'btn btn-outline btn-sm';
+  showBtn.style.cssText = 'border-color:var(--text-light);color:var(--text-secondary);';
+  showBtn.textContent = '查看答案';
+  showBtn.addEventListener('click', () => {
+    const fb = $('simp-feedback');
+    fb.className = 'ans-feedback show right';
+    fb.innerHTML = `答案：${p.n} = <strong>${p.factor}</strong>，√${p.n} = <strong>${p.result}</strong><br>提示：${p.hint}`;
+  });
+  row.appendChild(showBtn);
+
+  $('simp-feedback').className = 'ans-feedback';
+  $('simp-feedback').innerHTML = '';
+  drawSimpArea(p);
+}
+
+function checkSimp() {
+  const p = simpProblems[simpIdx];
+  const a1 = normFactor($('simp-ans1').value);
+  const ok1 = normFactor(p.factor) === a1;
+  const a2 = normResult($('simp-ans2').value);
+  const ok2 = normResult(p.result) === a2;
+  $('simp-ans1').classList.toggle('ok', ok1);
+  $('simp-ans1').classList.toggle('bad', !ok1 && $('simp-ans1').value !== '');
+  $('simp-ans2').classList.toggle('ok', ok2);
+  $('simp-ans2').classList.toggle('bad', !ok2 && $('simp-ans2').value !== '');
+
+  const fb = $('simp-feedback');
+  if (ok1 && ok2) {
+    fb.className = 'ans-feedback show right';
+    fb.innerHTML = `✓ 完全正确！√${p.n} = √(${p.factor}) = ${p.result}`;
+  } else {
+    fb.className = 'ans-feedback show wrong';
+    let msg = '✗ ';
+    if (!ok1 && !ok2) msg += `两步都不对。${p.n} 的最大完全平方因数是 ${p.k}（${Math.sqrt(p.k)}²）。`;
+    else if (!ok1) msg += `因数分解不对。${p.n} = ${p.k} × ${p.m}，其中 ${p.k} 是最大的完全平方因数。`;
+    else msg += `化简结果不对。√${p.k} = ${Math.sqrt(p.k)}，所以 √${p.n} = ${p.result}。`;
+    fb.innerHTML = msg;
+  }
+}
+
+/* ============================================================
+ *  交互4：同类二次根式识别（拖拽分组）
+ * ============================================================ */
+const dragItems = [
+  { id: 'd0', raw: '√2',  simp: '√2',   radicand: 2 },
+  { id: 'd1', raw: '√8',  simp: '2√2',  radicand: 2 },
+  { id: 'd2', raw: '√18', simp: '3√2',  radicand: 2 },
+  { id: 'd3', raw: '√50', simp: '5√2',  radicand: 2 },
+  { id: 'd4', raw: '√3',  simp: '√3',   radicand: 3 },
+  { id: 'd5', raw: '√12', simp: '2√3',  radicand: 3 },
+  { id: 'd6', raw: '√27', simp: '3√3',  radicand: 3 }
+];
+const dragZones = [
+  { id: 'z2', radicand: 2, title: '被开方数为 2（化简后）' },
+  { id: 'z3', radicand: 3, title: '被开方数为 3（化简后）' }
+];
+let dragSelected = null;
+let dragShowSimp = false;
+
+function renderDragGame() {
+  /* 渲染池 */
+  const pool = $('drag-pool');
+  pool.innerHTML = '';
+  dragItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.innerHTML = item.raw + (dragShowSimp ? `<span class="simp">= ${item.simp}</span>` : '');
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.drag-item').forEach(d => d.classList.remove('selected'));
+      if (dragSelected === item.id) { dragSelected = null; }
+      else { dragSelected = item.id; el.classList.add('selected'); }
+    });
+    pool.appendChild(el);
+  });
+
+  /* 渲染分组框 */
+  const zonesEl = $('drop-zones');
+  zonesEl.innerHTML = '';
+  dragZones.forEach(z => {
+    const zone = document.createElement('div');
+    zone.className = 'drop-zone';
+    zone.dataset.radicand = z.radicand;
+    zone.innerHTML = `<div class="zone-title">${z.title}</div><div class="zone-items" data-zone="${z.radicand}"></div>`;
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const itemId = e.dataTransfer.getData('text/plain');
+      placeDragItem(itemId, z.radicand);
+    });
+    zone.addEventListener('click', () => {
+      if (dragSelected) { placeDragItem(dragSelected, z.radicand); dragSelected = null; }
+    });
+    zonesEl.appendChild(zone);
+  });
+}
+
+function placeDragItem(itemId, radicand) {
+  const item = dragItems.find(d => d.id === itemId);
+  if (!item) return;
+  /* 从所有 zone-items 中移除 */
+  document.querySelectorAll('.zone-items').forEach(z => {
+    const el = z.querySelector(`[data-id="${itemId}"]`);
+    if (el) el.remove();
+  });
+  /* 如果目标 radicand 是 0（放回池），不需要添加 */
+  if (radicand === 0) {
+    renderDragGame(); /* 重新渲染池以显示该项 */
+    return;
+  }
+  /* 添加到目标 zone */
+  const target = document.querySelector(`.zone-items[data-zone="${radicand}"]`);
+  if (target) {
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.innerHTML = item.raw + (dragShowSimp ? `<span class="simp">= ${item.simp}</span>` : '');
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      /* 点击已放置的项，放回池 */
+      el.remove();
+      renderDragPoolOnly();
+    });
+    target.appendChild(el);
+  }
+  /* 重新渲染池（只渲染池中的项） */
+  renderDragPoolOnly();
+}
+
+function renderDragPoolOnly() {
+  const pool = $('drag-pool');
+  pool.innerHTML = '';
+  /* 找出不在任何 zone 中的项 */
+  const placedIds = new Set();
+  document.querySelectorAll('.zone-items .drag-item').forEach(el => placedIds.add(el.dataset.id));
+  dragItems.forEach(item => {
+    if (placedIds.has(item.id)) return;
+    const el = document.createElement('div');
+    el.className = 'drag-item';
+    el.draggable = true;
+    el.dataset.id = item.id;
+    el.innerHTML = item.raw + (dragShowSimp ? `<span class="simp">= ${item.simp}</span>` : '');
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', item.id);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.drag-item').forEach(d => d.classList.remove('selected'));
+      if (dragSelected === item.id) { dragSelected = null; }
+      else { dragSelected = item.id; el.classList.add('selected'); }
+    });
+    pool.appendChild(el);
+  });
+}
+
+function checkDragGroup() {
+  let allCorrect = true;
+  let allPlaced = true;
+  dragZones.forEach(z => {
+    const zone = document.querySelector(`.zone-items[data-zone="${z.radicand}"]`).closest('.drop-zone');
+    const items = zone.querySelectorAll('.drag-item');
+    zone.classList.remove('correct', 'wrong');
+    if (items.length === 0) { allPlaced = false; }
+    items.forEach(el => {
+      const item = dragItems.find(d => d.id === el.dataset.id);
+      if (item && item.radicand === z.radicand) {
+        el.style.borderColor = 'var(--success)';
+        el.style.background = 'rgba(39,174,96,0.08)';
+      } else {
+        el.style.borderColor = 'var(--danger)';
+        el.style.background = 'rgba(231,76,60,0.08)';
+        allCorrect = false;
+      }
+    });
+    if (items.length > 0) {
+      zone.classList.add(allCorrect ? 'correct' : 'wrong');
+    }
+  });
+  const fb = $('drag-feedback');
+  const poolCount = $('drag-pool').querySelectorAll('.drag-item').length;
+  if (poolCount > 0) { allPlaced = false; }
+  if (!allPlaced) {
+    fb.className = 'ans-feedback show wrong';
+    fb.innerHTML = `还有 ${poolCount} 个根式未分组，请把所有根式拖入对应的分组框后再检查。`;
+  } else if (allCorrect) {
+    fb.className = 'ans-feedback show right';
+    fb.innerHTML = '✓ 全部分组正确！被开方数为 2 的组有 √2、√8=2√2、√18=3√2、√50=5√2（共 4 个）；被开方数为 3 的组有 √3、√12=2√3、√27=3√3（共 3 个）。它们化简后分别是同类二次根式。';
+  } else {
+    fb.className = 'ans-feedback show wrong';
+    fb.innerHTML = '✗ 有分组错误（红色边框）。请重新化简每个根式，按化简后的被开方数重新分组。';
+  }
+}
+
+function bindDragGame() {
+  $('drag-check').addEventListener('click', checkDragGroup);
+  $('drag-show').addEventListener('click', () => {
+    dragShowSimp = !dragShowSimp;
+    $('drag-show').textContent = dragShowSimp ? '隐藏化简' : '查看化简';
+    /* 更新所有显示 */
+    document.querySelectorAll('.drag-item').forEach(el => {
+      const item = dragItems.find(d => d.id === el.dataset.id);
+      if (item) {
+        el.innerHTML = item.raw + (dragShowSimp ? `<span class="simp">= ${item.simp}</span>` : '');
+      }
+    });
+  });
+  $('drag-reset').addEventListener('click', () => {
+    renderDragGame();
+    $('drag-feedback').className = 'ans-feedback';
+    $('drag-feedback').innerHTML = '';
+  });
+}
+
+/* ============================================================
+ *  交互5：二次根式加减法（4 题，分步展示）
+ * ============================================================ */
+const addProblems = [
+  {
+    type: '同类合并',
+    exprHTML: '3√2 + √8 − √18',
+    steps: [
+      { label: '原式', html: `<span class="hl-m">3√2 + √8 − √18</span>` },
+      { label: '化简 √8 和 √18', html: `√<span class="hl-a">8</span> = √(4×2) = <span class="hl-a">2√2</span>，&nbsp; √<span class="hl-b">18</span> = √(9×2) = <span class="hl-b">3√2</span>` },
+      { label: '代入化简结果', html: `3√2 + <span class="hl-a">2√2</span> − <span class="hl-b">3√2</span>` },
+      { label: '合并同类二次根式', html: `(<span class="hl-c">3 + 2 − 3</span>)√2 = <span class="hl-c">2</span>√2` },
+      { label: '最终结果', html: `<span class="hl-c">结果 = 2√2</span>` }
+    ]
+  },
+  {
+    type: '同类合并',
+    exprHTML: '√12 + √27 − √3',
+    steps: [
+      { label: '原式', html: `<span class="hl-m">√12 + √27 − √3</span>` },
+      { label: '化简 √12 和 √27', html: `√<span class="hl-a">12</span> = √(4×3) = <span class="hl-a">2√3</span>，&nbsp; √<span class="hl-b">27</span> = √(9×3) = <span class="hl-b">3√3</span>` },
+      { label: '代入化简结果', html: `<span class="hl-a">2√3</span> + <span class="hl-b">3√3</span> − √3` },
+      { label: '合并同类二次根式', html: `(<span class="hl-c">2 + 3 − 1</span>)√3 = <span class="hl-c">4</span>√3` },
+      { label: '最终结果', html: `<span class="hl-c">结果 = 4√3</span>` }
+    ]
+  },
+  {
+    type: '同类合并',
+    exprHTML: '√50 − √8 + √2',
+    steps: [
+      { label: '原式', html: `<span class="hl-m">√50 − √8 + √2</span>` },
+      { label: '化简 √50 和 √8', html: `√<span class="hl-a">50</span> = √(25×2) = <span class="hl-a">5√2</span>，&nbsp; √<span class="hl-b">8</span> = √(4×2) = <span class="hl-b">2√2</span>` },
+      { label: '代入化简结果', html: `<span class="hl-a">5√2</span> − <span class="hl-b">2√2</span> + √2` },
+      { label: '合并同类二次根式', html: `(<span class="hl-c">5 − 2 + 1</span>)√2 = <span class="hl-c">4</span>√2` },
+      { label: '最终结果', html: `<span class="hl-c">结果 = 4√2</span>` }
+    ]
+  },
+  {
+    type: '含乘法化简',
+    exprHTML: '√2 × √6 + √3 × √12',
+    steps: [
+      { label: '原式', html: `<span class="hl-m">√2 × √6 + √3 × √12</span>` },
+      { label: '乘法法则 √a·√b = √(ab)', html: `√(2×6) + √(3×12) = <span class="hl-a">√12</span> + <span class="hl-b">√36</span>` },
+      { label: '化简 √12 和 √36', html: `<span class="hl-a">√12 = 2√3</span>，&nbsp; <span class="hl-b">√36 = 6</span>` },
+      { label: '代入', html: `<span class="hl-a">2√3</span> + <span class="hl-b">6</span>` },
+      { label: '最终结果', html: `<span class="hl-c">结果 = 2√3 + 6</span>（√3 和 6 不是同类，无法合并）` }
+    ]
+  }
+];
+
+let addIdx = 0;
+let addStepShown = 0;
+
+function loadAddProblem() {
+  const p = addProblems[addIdx];
+  $('add-expr').innerHTML = p.exprHTML;
+  $('add-type').textContent = `${p.type}（共 ${p.steps.length} 步）`;
+  $('add-progress').textContent = `第 ${addIdx + 1} / ${addProblems.length} 题`;
+  addStepShown = 0;
+  renderAddSteps();
+}
+
+function renderAddSteps() {
+  const p = addProblems[addIdx];
+  const container = $('add-steps');
+  container.innerHTML = '';
+  for (let i = 0; i < p.steps.length; i++) {
+    const step = p.steps[i];
+    const line = document.createElement('div');
+    line.className = 'step-line';
+    if (i < addStepShown) line.classList.add('show', 'active');
+    line.innerHTML = `<span class="step-label">第${i + 1}步·${step.label}</span>${step.html}`;
+    container.appendChild(line);
+  }
+  $('add-step-progress').textContent = `已展示 ${addStepShown} / ${p.steps.length} 步`;
+}
+
+function bindAdd() {
+  $('add-next-step').addEventListener('click', () => {
+    const p = addProblems[addIdx];
+    if (addStepShown < p.steps.length) { addStepShown++; renderAddSteps(); }
+  });
+  $('add-show-all').addEventListener('click', () => {
+    addStepShown = addProblems[addIdx].steps.length; renderAddSteps();
+  });
+  $('add-reset-steps').addEventListener('click', () => { addStepShown = 0; renderAddSteps(); });
+  $('add-prev').addEventListener('click', () => { addIdx = (addIdx - 1 + addProblems.length) % addProblems.length; loadAddProblem(); });
+  $('add-next').addEventListener('click', () => { addIdx = (addIdx + 1) % addProblems.length; loadAddProblem(); });
+}
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+function initQuizzes() {
+  initQuiz('quiz1', {
+    correct: 1,
+    explain: '二次根式有意义的条件是被开方数 ≥ 0。x − 2 ≥ 0，解得 x ≥ 2。注意不是 x > 2，因为 x = 2 时 √0 = 0 有意义。',
+    hint: '被开方数必须 ≥ 0，令 x − 2 ≥ 0 求解。'
+  });
+  initQuiz('quiz2', {
+    correct: 1,
+    explain: '根据性质 √(a²) = |a|，√(−5)² = |−5| = 5。不能直接等于 −5！因为平方后再开方，结果一定是非负的。',
+    hint: '√(a²) = |a|，不要漏掉绝对值。'
+  });
+  initQuiz('quiz3', {
+    correct: 2,
+    explain: '先化简：√8 = 2√2，√18 = 3√2。原式 = 2√2 + 3√2 − √2 = (2+3−1)√2 = 4√2。关键是先化为最简再合并同类。',
+    hint: '先化简每个根式，再合并同类二次根式。'
+  });
+}
+
+/* ============================================================
+ *  初始化
+ * ============================================================ */
+function init() {
+  /* 交互1 */
+  updateDomain();
+  $('domain-slider').addEventListener('input', updateDomain);
+  /* 交互2 */
+  updateAbs();
+  $('abs-slider').addEventListener('input', updateAbs);
+  /* 交互3 */
+  loadSimpProblem();
+  $('simp-prev').addEventListener('click', () => { simpIdx = (simpIdx - 1 + simpProblems.length) % simpProblems.length; loadSimpProblem(); });
+  $('simp-next').addEventListener('click', () => { simpIdx = (simpIdx + 1) % simpProblems.length; loadSimpProblem(); });
+  /* 交互4 */
+  renderDragGame();
+  bindDragGame();
+  /* 交互5 */
+  loadAddProblem();
+  bindAdd();
+  /* 练习题 */
+  initQuizzes();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>

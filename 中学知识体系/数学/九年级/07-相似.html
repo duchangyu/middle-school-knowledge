@@ -6,57 +6,264 @@
   <title>相似 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 28px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row label {
+      font-weight: 600;
+      min-width: 110px;
+      color: var(--math);
+      font-size: 16px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row .value-badge, .value-display {
+      min-width: 64px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== 演示容器 ===== */
+    .demo-container {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .data-cell.math-color { border-color: rgba(155,89,182,0.3); }
+    .data-cell.math-color .num { color: var(--math); }
+
+    /* ===== 信息读数条 ===== */
+    .info-readout {
+      text-align: center;
+      font-size: 18px;
+      font-family: Georgia, serif;
+      padding: 16px;
+      background: rgba(155,89,182,0.1);
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      color: var(--math);
+      line-height: 1.9;
+    }
+
+    /* ===== 性质列表 ===== */
+    .property-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+    .property-list li {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--math); }
+
+    /* ===== 模式切换 ===== */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .mode-toggle .mode-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid transparent;
+      background: var(--bg-soft);
       transition: all 0.2s;
+      color: var(--text-main);
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .mode-toggle .mode-btn.active {
+      background: var(--math);
+      color: #fff;
     }
+
+    /* ===== 判定游戏 ===== */
+    .judge-scenario {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-size: 17px;
+      line-height: 1.9;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--math);
+    }
+    .judge-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .judge-opt {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: 15px;
+      text-align: left;
+      transition: all 0.15s;
+      line-height: 1.6;
+    }
+    .judge-opt:hover { border-color: var(--math); background: rgba(155,89,182,0.06); }
+    .judge-opt.correct { border-color: var(--success); background: rgba(39,174,96,0.12); }
+    .judge-opt.wrong { border-color: var(--danger); background: rgba(231,76,60,0.1); }
+    .judge-opt:disabled { cursor: default; opacity: 0.85; }
+    .judge-feedback {
+      display: none;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .judge-feedback.ok { display: block; background: rgba(39,174,96,0.12); color: var(--success); }
+    .judge-feedback.no { display: block; background: rgba(231,76,60,0.1); color: var(--danger); }
+
+    /* ===== 生活实例卡片 ===== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .example-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid var(--math);
+    }
+    .example-card h4 { color: var(--math); margin-bottom: 8px; font-size: 17px; }
+    .example-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); line-height: 1.8; }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 相似</div>
+  <div class="navbar-brand">📐 相似</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="../../物理/八年级/04-光现象.html">⚡ 物理·光现象</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📐 相似</h1>
+  <p>形状相同、大小可以不同——从照片放大到影子测高，比例中的几何世界</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +274,586 @@
     <span>相似</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>相似</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 1 引入：相似图形 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：什么是相似图形</h2>
+  <div class="card">
+    <p>生活中到处都有"形状相同、大小不同"的图形：</p>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>🖼️ 照片放大</h4>
+        <p>同一张照片冲洗成 5 寸、8 寸，画面形状完全一样，只是大小不同——放大后的照片与原照片相似。</p>
+      </div>
+      <div class="example-card">
+        <h4>🗺️ 地图</h4>
+        <p>地图是实际地形按同一比例缩小的图形。地图上的每条边都是实际距离的同一个倍数（比例尺）。</p>
+      </div>
+      <div class="example-card">
+        <h4>✈️ 飞机模型</h4>
+        <p>航模与真飞机形状相同，模型各部分长度都是真机对应部分的同一比值。</p>
+      </div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">形状相同，大小不一定相等</div>
+      <div class="formula-note">我们把形状相同的图形叫做<strong>相似图形</strong>。两个图形相似，其中一个可以看作由另一个<strong>放大或缩小</strong>得到。</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">📐 相似多边形的特征</div>
+      <p style="margin-top:4px;">两个边数相同的多边形，如果<strong>对应角相等</strong>，<strong>对应边成比例</strong>，就说这两个多边形相似。相似多边形对应边的比叫做<strong class="math-accent">相似比</strong>（记作 k）。</p>
+      <p style="margin-top:6px;">⚠️ 注意：<strong>全等是相似比 k = 1 的特殊相似</strong>。全等要求形状、大小都相同；相似只要求形状相同。</p>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2 比例线段 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 比例线段</h2>
+  <div class="card">
+    <p>四条线段 a、b、c、d，如果 <strong class="math-accent">a : b = c : d</strong>（即 a/b = c/d），就说这四条线段是<strong class="math-accent">成比例线段</strong>。</p>
+    <div class="formula-box">
+      <div class="formula">a/b = c/d &nbsp;⇔&nbsp; ad = bc</div>
+      <div class="formula-note">比例的基本性质：两个外项的积等于两个内项的积（交叉相乘相等）</div>
+    </div>
+    <ul class="property-list">
+      <li><strong>比例基本性质</strong>：若 a/b = c/d，则 ad = bc（b、d ≠ 0）；反之亦然。</li>
+      <li><strong>合比性质</strong>：若 a/b = c/d，则 (a+b)/b = (c+d)/d。</li>
+      <li><strong>等比性质</strong>：若 a/b = c/d = … = m/n，则 (a+c+…+m)/(b+d+…+n) = a/b（分母之和不为 0）。</li>
+    </ul>
+    <div class="tip-box">
+      <div class="tip-title">💡 为什么先学比例</div>
+      <p style="margin-top:4px;">相似的核心就是"对应边成比例"。判断边是否成比例、由比例求未知边，都要用到上面的性质。例如已知 2 : 3 = x : 6，由 3x = 2 × 6 得 x = 4。</p>
+    </div>
   </div>
+
+  <!-- ===== 3 交互探索①：相似缩放器 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互探索①：相似缩放器</h2>
+  <div class="card">
+    <p>左边是原三角形（三边为 3、4、5 的直角三角形）。拖动滑块改变<strong class="math-accent">相似比 k</strong>，观察右边相似三角形的边长、周长、面积如何变化。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>相似比 k</label>
+        <input type="range" id="slider-k" min="0.5" max="1.4" value="1" step="0.1">
+        <span class="value-badge" id="display-k">1.0</span>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-scaler" viewBox="0 0 640 400" width="640" height="400"></svg>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell math-color">
+        <div class="label">相似比 k</div>
+        <div class="num" id="sc-k">1.0</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">周长比</div>
+        <div class="num" id="sc-perim">1.0</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">面积比</div>
+        <div class="num" id="sc-area">1.00</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">新三角形周长</div>
+        <div class="num" id="sc-p-val">12</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">新三角形面积</div>
+        <div class="num" id="sc-a-val">6</div>
+      </div>
+    </div>
+
+    <div class="info-readout" id="sc-readout">
+      原三角形：边 3、4、5，周长 12，面积 6 ｜ 新三角形：边 3k、4k、5k，周长 12k，面积 6k²
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 观察要点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>相似三角形的<strong>对应边之比 = k</strong>，对应角相等（形状不变）</li>
+        <li><strong>周长之比 = k</strong>（边长放大 k 倍，周长也放大 k 倍）</li>
+        <li><strong>面积之比 = k²</strong>（底和高都放大 k 倍，面积放大 k×k 倍）</li>
+        <li>k = 1 时两三角形<strong>全等</strong>；k &gt; 1 是放大；k &lt; 1 是缩小</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 4 相似三角形的判定 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 相似三角形的判定</h2>
+  <div class="card">
+    <p>要判定两个三角形相似，不需要验证所有角和所有边，只要满足下列条件之一即可：</p>
+    <ul class="property-list">
+      <li><strong>AA（两角）</strong>：两角分别相等的两个三角形相似。<br>∵ ∠A = ∠D，∠B = ∠E &nbsp;∴ △ABC ∽ △DEF</li>
+      <li><strong>SAS 相似（两边夹角）</strong>：两边成比例<strong>且夹角相等</strong>的两个三角形相似。<br>∵ AB/DE = AC/DF，∠A = ∠D &nbsp;∴ △ABC ∽ △DEF</li>
+      <li><strong>SSS 相似（三边）</strong>：三边成比例的两个三角形相似。<br>∵ AB/DE = BC/EF = AC/DF &nbsp;∴ △ABC ∽ △DEF</li>
+      <li><strong>平行线判定</strong>：平行于三角形一边的直线截其他两边（或延长线），所得的三角形与原三角形相似。<br>∵ DE ∥ BC &nbsp;∴ △ADE ∽ △ABC</li>
+    </ul>
+    <div class="tip-box">
+      <div class="tip-title">📏 平行线分线段成比例</div>
+      <p style="margin-top:4px;">两条直线被一组平行线所截，所得的对应线段成比例。特别地，在 △ABC 中，若 DE ∥ BC（D 在 AB 上，E 在 AC 上），则 <strong>AD/AB = AE/AC = DE/BC</strong>，同时 AD/DB = AE/EC。</p>
+    </div>
+  </div>
+
+  <!-- ===== 5 交互探索②：判定条件选择器 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 交互探索②：判定条件选择器</h2>
+  <div class="card">
+    <p>在 △ABC 与 △DEF 中，给出下列条件，你能判断用什么方法判定它们相似吗？选择正确的判定方法，看看能答对几题！</p>
+
+    <div class="judge-scenario" id="judge-scenario"></div>
+    <div class="judge-options" id="judge-options"></div>
+    <div class="judge-feedback" id="judge-feedback"></div>
+
+    <div style="text-align:center;">
+      <button class="btn btn-primary btn-sm" id="judge-next" style="background:var(--math); display:none;">下一题 →</button>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell math-color">
+        <div class="label">当前题号</div>
+        <div class="num" id="judge-q-num">1 / 4</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">答对</div>
+        <div class="num" id="judge-score" style="color:var(--success);">0</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">答错</div>
+        <div class="num" id="judge-miss" style="color:var(--danger);">0</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">⚠️ 易错提醒</div>
+      <p style="margin-top:4px;">"两边成比例"必须搭配<strong>夹角</strong>相等才能判定相似！如果只是"两边成比例 + 其中一边的对角相等"（类似 SSA），<strong>不能</strong>保证相似——第 4 题就是这种情况。</p>
+    </div>
+  </div>
+
+  <!-- ===== 6 相似三角形的性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 相似三角形的性质</h2>
+  <div class="card">
+    <p>已知两个三角形相似（相似比为 k），可以推出一系列重要结论：</p>
+    <div class="formula-box">
+      <div class="formula">周长比 = k，&nbsp;&nbsp;面积比 = k²</div>
+      <div class="formula-note">相似三角形的对应边、对应高、对应中线、对应角平分线的比都等于相似比 k；面积比等于相似比的平方</div>
+    </div>
+    <ul class="property-list">
+      <li><strong>对应角相等</strong>，对应边成比例（比值 = k）。</li>
+      <li><strong>对应线段的比 = k</strong>：对应高、对应中线、对应角平分线的比都等于相似比。</li>
+      <li><strong>周长的比 = k</strong>：C′/C = k。</li>
+      <li><strong>面积的比 = k²</strong>：S′/S = k²。⚠️ 最常考也最容易错——面积比是<strong>平方</strong>关系！</li>
+    </ul>
+    <div class="info-readout">
+      例：相似比 k = 2 : 3，则周长比 = 2 : 3，面积比 = 4 : 9。<br>
+      若小三角形面积为 8，则大三角形面积为 8 × (9/4) = 18。
+    </div>
+  </div>
+
+  <!-- ===== 7 位似 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 位似：特殊的相似</h2>
+  <div class="card">
+    <p>如果两个相似图形的<strong>对应顶点连线都经过同一点 O</strong>，且对应边互相平行，这样的两个图形叫做<strong class="math-accent">位似图形</strong>，点 O 叫做<strong class="math-accent">位似中心</strong>。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 640 380" width="640" height="380">
+        <!-- 位似中心 O 与两个位似三角形 -->
+        <line x1="320" y1="310" x2="240" y2="180" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="320" y1="310" x2="400" y2="180" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="320" y1="310" x2="320" y2="40" stroke="#BDC3C7" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <polygon points="280,245 360,245 320,180" fill="rgba(52,152,219,0.15)" stroke="#3498DB" stroke-width="2.5"/>
+        <polygon points="240,180 400,180 320,40" fill="rgba(155,89,182,0.12)" stroke="#9B59B6" stroke-width="2.5"/>
+        <circle cx="320" cy="310" r="6" fill="#E74C3C"/>
+        <text x="334" y="314" font-size="16" font-weight="bold" fill="#E74C3C">O（位似中心）</text>
+        <text x="272" y="262" font-size="14" fill="#3498DB" font-weight="bold">A</text>
+        <text x="356" y="262" font-size="14" fill="#3498DB" font-weight="bold">B</text>
+        <text x="326" y="200" font-size="14" fill="#3498DB" font-weight="bold">C</text>
+        <text x="224" y="196" font-size="14" fill="#9B59B6" font-weight="bold">A′</text>
+        <text x="406" y="196" font-size="14" fill="#9B59B6" font-weight="bold">B′</text>
+        <text x="332" y="60" font-size="14" fill="#9B59B6" font-weight="bold">C′</text>
+        <text x="420" y="120" font-size="14" fill="#7F8C8D">OA′ = 2·OA，位似比 k = 2</text>
+      </svg>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>位似 = 相似 + 位置关系</strong>：位似图形一定是相似图形，但相似图形不一定是位似图形。</li>
+      <li>对应顶点的连线<strong>交于位似中心 O</strong>，且 OA′/OA = OB′/OB = OC′/OC = k（位似比）。</li>
+      <li>位似图形可以看作从位似中心"投射放大/缩小"得到的——这正是<strong>幻灯机、投影仪</strong>成像的原理。</li>
+      <li>在平面直角坐标系中，以原点为位似中心、位似比为 k 时，点 (x, y) 的对应点为 (kx, ky) 或 (−kx, −ky)。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 8 应用：影子测高 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 应用：利用相似测高</h2>
+  <div class="card">
+    <p>同一时刻，太阳光可以看作<strong>平行光线</strong>，所以物体与它的影子构成的直角三角形都<strong>相似</strong>。利用这个原理，只需一根标杆就能测出旗杆的高度！</p>
+
+    <div class="formula-box">
+      <div class="formula">物高 / 影长 = 物高′ / 影长′</div>
+      <div class="formula-note">同一时刻、同一地点：所有物体的高度与影长之比相等（相似三角形对应边成比例）</div>
+    </div>
+
+    <p>调节下方滑块，改变人的身高、人的影长和旗杆的影长，观察旗杆高度如何由相似关系算出。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>身高 h₁ (m)</label>
+        <input type="range" id="slider-h1" min="1.2" max="2.0" value="1.6" step="0.1">
+        <span class="value-badge" id="display-h1">1.6</span>
+      </div>
+      <div class="slider-row">
+        <label>人影长 s₁ (m)</label>
+        <input type="range" id="slider-s1" min="1" max="3" value="2" step="0.1">
+        <span class="value-badge" id="display-s1">2.0</span>
+      </div>
+      <div class="slider-row">
+        <label>旗杆影长 s₂ (m)</label>
+        <input type="range" id="slider-s2" min="3" max="20" value="10" step="0.5">
+        <span class="value-badge" id="display-s2">10.0</span>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-shadow" viewBox="0 0 720 360" width="720" height="360"></svg>
+    </div>
+
+    <div class="info-readout" id="shadow-readout"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">🌞 为什么可以这样测</div>
+      <p style="margin-top:4px;">太阳光是平行光，同一时刻照射角度相同，所以"人—人影"和"旗杆—旗杆影"构成的两个直角三角形<strong>两角对应相等（AA）</strong>：都有直角，且太阳光与地面的夹角相同。因此对应边成比例，身高/人影 = 杆高/杆影。</p>
+    </div>
+  </div>
+
+  <!-- ===== 9 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 两个相似三角形的相似比为 2 : 3，则它们的面积比为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 2 : 3</div>
+    <div class="quiz-option" data-idx="1">B. 4 : 9</div>
+    <div class="quiz-option" data-idx="2">C. 3 : 2</div>
+    <div class="quiz-option" data-idx="3">D. √2 : √3</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 在 △ABC 和 △DEF 中，下列条件中<strong>不能</strong>判定 △ABC ∽ △DEF 的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. ∠A = ∠D，∠B = ∠E</div>
+    <div class="quiz-option" data-idx="1">B. AB/DE = AC/DF，∠A = ∠D</div>
+    <div class="quiz-option" data-idx="2">C. AB/DE = BC/EF = AC/DF</div>
+    <div class="quiz-option" data-idx="3">D. AB/DE = BC/EF，∠A = ∠D</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 🌞 同一时刻，身高 1.6 m 的小明影长 2 m，旁边一棵树的影长为 10 m，则树高为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 6 m</div>
+    <div class="quiz-option" data-idx="1">B. 8 m</div>
+    <div class="quiz-option" data-idx="2">C. 10 m</div>
+    <div class="quiz-option" data-idx="3">D. 12.5 m</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 10 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">10</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 相似在其他学科中的应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/04-光现象.html"><strong>物理·光现象（光沿直线传播）</strong></a>——
+        影子的形成是光沿直线传播的直接证据。同一时刻太阳光近似平行，"物体—影子"构成的直角三角形彼此相似，这正是"影子测高"的物理基础。
+        <span class="tag tag-cross">光的直线传播</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/04-光现象.html"><strong>物理·小孔成像</strong></a>——
+        小孔成像中，物体、像与小孔构成的两个三角形是相似（位似）关系：像高/物高 = 像距/物距。小孔就是位似中心。
+        <span class="tag tag-cross">小孔成像</span>
+      </li>
+      <li>
+        📐 <a href="09-投影与视图.html"><strong>数学·投影与视图</strong></a>——
+        平行投影保持相似关系，下一章学习的投影与本章的位似、相似测高一脉相承。
+        <span class="tag tag-cross">投影</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="06-反比例函数.html" class="btn btn-outline">← 上一章：反比例函数</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="08-锐角三角函数.html" class="btn btn-primary" style="background: var(--math);">下一章：锐角三角函数 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 交互探索1：相似缩放器
+ * ======================================== */
+(function() {
+  var svg = document.getElementById('svg-scaler');
+  var slider = document.getElementById('slider-k');
+  var UNIT = 45; // 1 单位 = 45px，原三角形边 3、4、5
+
+  function fmt(n, d) {
+    var v = parseFloat(n.toFixed(d));
+    return (Math.abs(v - Math.round(v)) < 1e-9) ? String(Math.round(v)) : String(v);
+  }
+
+  function draw() {
+    var k = parseFloat(slider.value);
+    document.getElementById('display-k').textContent = k.toFixed(1);
+
+    // 原三角形：直角在 A，AB 水平 4 单位，AC 竖直 3 单位
+    var Ax = 70, Ay = 330;
+    var Bx = Ax + 4 * UNIT, By = Ay;
+    var Cx = Ax, Cy = Ay - 3 * UNIT;
+
+    // 相似三角形：直角在 A′，按 k 缩放
+    var A2x = 370, A2y = 330;
+    var B2x = A2x + 4 * UNIT * k, B2y = A2y;
+    var C2x = A2x, C2y = A2y - 3 * UNIT * k;
+
+    var s = '';
+
+    // 原三角形
+    s += '<polygon points="' + Ax + ',' + Ay + ' ' + Bx + ',' + By + ' ' + Cx + ',' + Cy + '" fill="rgba(52,152,219,0.15)" stroke="#3498DB" stroke-width="3"/>';
+    // 直角标记
+    s += '<rect x="' + Ax + '" y="' + (Ay - 18) + '" width="18" height="18" fill="none" stroke="#3498DB" stroke-width="1.5"/>';
+    // 顶点标签
+    s += '<text x="' + (Ax - 20) + '" y="' + (Ay + 6) + '" font-size="16" font-weight="bold" fill="#3498DB">A</text>';
+    s += '<text x="' + (Bx + 8) + '" y="' + (By + 6) + '" font-size="16" font-weight="bold" fill="#3498DB">B</text>';
+    s += '<text x="' + (Cx - 20) + '" y="' + (Cy + 6) + '" font-size="16" font-weight="bold" fill="#3498DB">C</text>';
+    // 边长标签
+    s += '<text x="' + ((Ax + Bx) / 2) + '" y="' + (Ay + 24) + '" font-size="15" fill="#3498DB" text-anchor="middle" font-weight="bold">4</text>';
+    s += '<text x="' + (Ax - 24) + '" y="' + ((Ay + Cy) / 2) + '" font-size="15" fill="#3498DB" text-anchor="middle" font-weight="bold">3</text>';
+    s += '<text x="' + ((Bx + Cx) / 2 - 20) + '" y="' + ((By + Cy) / 2 - 6) + '" font-size="15" fill="#3498DB" text-anchor="middle" font-weight="bold">5</text>';
+    s += '<text x="' + Ax + '" y="40" font-size="15" fill="#2C3E50" font-weight="bold">原三角形：周长 12，面积 6</text>';
+
+    // 相似三角形
+    s += '<polygon points="' + A2x + ',' + A2y + ' ' + B2x + ',' + B2y + ' ' + C2x + ',' + C2y + '" fill="rgba(155,89,182,0.15)" stroke="#9B59B6" stroke-width="3"/>';
+    var rm = 18 * Math.min(k, 1.2);
+    s += '<rect x="' + A2x + '" y="' + (A2y - rm) + '" width="' + rm + '" height="' + rm + '" fill="none" stroke="#9B59B6" stroke-width="1.5"/>';
+    s += '<text x="' + (A2x - 24) + '" y="' + (A2y + 6) + '" font-size="16" font-weight="bold" fill="#9B59B6">A′</text>';
+    s += '<text x="' + (B2x + 8) + '" y="' + (B2y + 6) + '" font-size="16" font-weight="bold" fill="#9B59B6">B′</text>';
+    s += '<text x="' + (C2x - 24) + '" y="' + (C2y + 6) + '" font-size="16" font-weight="bold" fill="#9B59B6">C′</text>';
+    s += '<text x="' + ((A2x + B2x) / 2) + '" y="' + (A2y + 24) + '" font-size="15" fill="#9B59B6" text-anchor="middle" font-weight="bold">4k = ' + fmt(4 * k, 1) + '</text>';
+    s += '<text x="' + (A2x - 26) + '" y="' + ((A2y + C2y) / 2) + '" font-size="15" fill="#9B59B6" text-anchor="middle" font-weight="bold">3k = ' + fmt(3 * k, 1) + '</text>';
+    s += '<text x="' + ((B2x + C2x) / 2 - 24) + '" y="' + ((B2y + C2y) / 2 - 6) + '" font-size="15" fill="#9B59B6" text-anchor="middle" font-weight="bold">5k = ' + fmt(5 * k, 1) + '</text>';
+    s += '<text x="' + A2x + '" y="40" font-size="15" fill="#2C3E50" font-weight="bold">相似三角形：周长 12k，面积 6k²</text>';
+
+    svg.innerHTML = s;
+
+    // 更新数据面板
+    document.getElementById('sc-k').textContent = k.toFixed(1);
+    document.getElementById('sc-perim').textContent = k.toFixed(1);
+    document.getElementById('sc-area').textContent = (k * k).toFixed(2);
+    document.getElementById('sc-p-val').textContent = fmt(12 * k, 1);
+    document.getElementById('sc-a-val').textContent = (6 * k * k).toFixed(2);
+
+    document.getElementById('sc-readout').innerHTML =
+      '△ABC ∽ △A′B′C′，相似比 k = ' + k.toFixed(1) +
+      ' ｜ 周长比 = ' + k.toFixed(1) +
+      ' ｜ 面积比 = k² = ' + (k * k).toFixed(2) +
+      '<br>新边长：' + fmt(3*k,1) + '、' + fmt(4*k,1) + '、' + fmt(5*k,1) +
+      '，周长 = ' + fmt(12*k,1) + '，面积 = ' + (6*k*k).toFixed(2);
+  }
+
+  slider.addEventListener('input', draw);
+  draw();
+})();
+
+/* ========================================
+ * 交互探索2：判定条件选择器
+ * ======================================== */
+(function() {
+  var scenarios = [
+    {
+      text: '第 1 题：已知 ∠A = ∠D，∠B = ∠E。能判定 △ABC ∽ △DEF 吗？依据是什么？',
+      options: ['AA：两角对应相等', 'SAS 相似：两边成比例且夹角相等', 'SSS 相似：三边成比例', '无法判定相似'],
+      correct: 0,
+      explain: '正确！两角分别相等的两个三角形相似（AA）。其实有两角相等，第三角必然也相等，形状就确定了。'
+    },
+    {
+      text: '第 2 题：已知 AB/DE = AC/DF = 2/3，且 ∠A = ∠D（∠A 是 AB 与 AC 的夹角）。',
+      options: ['AA：两角对应相等', 'SAS 相似：两边成比例且夹角相等', 'SSS 相似：三边成比例', '无法判定相似'],
+      correct: 1,
+      explain: '正确！AB 与 AC 的夹角正是 ∠A，DE 与 DF 的夹角正是 ∠D。两边成比例且夹角相等，可判定相似（SAS 相似）。'
+    },
+    {
+      text: '第 3 题：已知 AB/DE = BC/EF = AC/DF = 1/2。',
+      options: ['AA：两角对应相等', 'SAS 相似：两边成比例且夹角相等', 'SSS 相似：三边成比例', '无法判定相似'],
+      correct: 2,
+      explain: '正确！三边对应成比例的两个三角形相似（SSS 相似），相似比为 1/2。'
+    },
+    {
+      text: '第 4 题：已知 AB/DE = BC/EF，且 ∠A = ∠D（∠A 不是 AB 与 BC 的夹角）。',
+      options: ['AA：两角对应相等', 'SAS 相似：两边成比例且夹角相等', 'SSS 相似：三边成比例', '无法判定相似'],
+      correct: 3,
+      explain: '正确！∠A 是 BC 的对角，不是 AB 与 BC 的夹角。"两边成比例 + 非夹角相等"不能保证相似——这与全等中"SSA 不能判定全等"同理。'
+    }
+  ];
+
+  var current = 0, score = 0, miss = 0, answered = false;
+  var scenarioEl = document.getElementById('judge-scenario');
+  var optionsEl = document.getElementById('judge-options');
+  var feedbackEl = document.getElementById('judge-feedback');
+  var nextBtn = document.getElementById('judge-next');
+
+  function render() {
+    var sc = scenarios[current];
+    answered = false;
+    scenarioEl.textContent = sc.text;
+    feedbackEl.className = 'judge-feedback';
+    feedbackEl.innerHTML = '';
+    nextBtn.style.display = 'none';
+    document.getElementById('judge-q-num').textContent = (current + 1) + ' / ' + scenarios.length;
+
+    optionsEl.innerHTML = '';
+    sc.options.forEach(function(opt, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'judge-opt';
+      btn.textContent = opt;
+      btn.addEventListener('click', function() {
+        if (answered) return;
+        answered = true;
+        var all = optionsEl.querySelectorAll('.judge-opt');
+        all.forEach(function(b) { b.disabled = true; });
+        if (idx === sc.correct) {
+          btn.classList.add('correct');
+          score++;
+          feedbackEl.className = 'judge-feedback ok';
+          feedbackEl.innerHTML = '✓ ' + sc.explain;
+        } else {
+          btn.classList.add('wrong');
+          all[sc.correct].classList.add('correct');
+          miss++;
+          feedbackEl.className = 'judge-feedback no';
+          feedbackEl.innerHTML = '✗ 正确答案是「' + sc.options[sc.correct] + '」。' + sc.explain;
+        }
+        document.getElementById('judge-score').textContent = score;
+        document.getElementById('judge-miss').textContent = miss;
+        nextBtn.style.display = 'inline-block';
+        nextBtn.textContent = (current === scenarios.length - 1) ? '重新开始 ↺' : '下一题 →';
+      });
+      optionsEl.appendChild(btn);
+    });
+  }
+
+  nextBtn.addEventListener('click', function() {
+    current = (current + 1) % scenarios.length;
+    if (current === 0) { score = 0; miss = 0;
+      document.getElementById('judge-score').textContent = 0;
+      document.getElementById('judge-miss').textContent = 0;
+    }
+    render();
+  });
+
+  render();
+})();
+
+/* ========================================
+ * 交互探索3：影子测高
+ * ======================================== */
+(function() {
+  var svg = document.getElementById('svg-shadow');
+  var GROUND = 310;
+  var PX_H1 = 70;  // 人：70 px/m
+  var PX_S1 = 70;  // 人影：70 px/m
+  var PX_H2 = 6;   // 旗杆：6 px/m
+  var PX_S2 = 9;   // 旗杆影：9 px/m
+  var MAN_X = 110, POLE_X = 440;
+
+  function draw() {
+    var h1 = parseFloat(document.getElementById('slider-h1').value);
+    var s1 = parseFloat(document.getElementById('slider-s1').value);
+    var s2 = parseFloat(document.getElementById('slider-s2').value);
+    document.getElementById('display-h1').textContent = h1.toFixed(1);
+    document.getElementById('display-s1').textContent = s1.toFixed(1);
+    document.getElementById('display-s2').textContent = s2.toFixed(1);
+
+    var H = h1 * s2 / s1; // 旗杆高度
+
+    var manTopY = GROUND - h1 * PX_H1;
+    var manShadowEnd = MAN_X + s1 * PX_S1;
+    var poleTopY = GROUND - H * PX_H2;
+    var poleShadowEnd = POLE_X + s2 * PX_S2;
+
+    var s = '';
+    // 地面
+    s += '<line x1="30" y1="' + GROUND + '" x2="700" y2="' + GROUND + '" stroke="#7F8C8D" stroke-width="3"/>';
+    // 草地装饰
+    for (var gx = 50; gx < 700; gx += 45) {
+      s += '<line x1="' + gx + '" y1="' + GROUND + '" x2="' + (gx - 4) + '" y2="' + (GROUND + 8) + '" stroke="#27AE60" stroke-width="1.5"/>';
+      s += '<line x1="' + gx + '" y1="' + GROUND + '" x2="' + (gx + 4) + '" y2="' + (GROUND + 8) + '" stroke="#27AE60" stroke-width="1.5"/>';
+    }
+    // 太阳
+    s += '<circle cx="70" cy="55" r="26" fill="#F39C12"/>';
+    for (var i = 0; i < 8; i++) {
+      var ang = i * Math.PI / 4;
+      s += '<line x1="' + (70 + 32 * Math.cos(ang)) + '" y1="' + (55 + 32 * Math.sin(ang)) + '" x2="' + (70 + 44 * Math.cos(ang)) + '" y2="' + (55 + 44 * Math.sin(ang)) + '" stroke="#F39C12" stroke-width="3"/>';
+    }
+
+    // 人影
+    s += '<line x1="' + MAN_X + '" y1="' + GROUND + '" x2="' + manShadowEnd + '" y2="' + GROUND + '" stroke="#5D6D7E" stroke-width="6" stroke-linecap="round" opacity="0.5"/>';
+    // 人（简单小人）
+    s += '<line x1="' + MAN_X + '" y1="' + GROUND + '" x2="' + MAN_X + '" y2="' + (manTopY + 12) + '" stroke="#2C3E50" stroke-width="6" stroke-linecap="round"/>';
+    s += '<circle cx="' + MAN_X + '" cy="' + (manTopY + 2) + '" r="10" fill="#F5B7B1" stroke="#2C3E50" stroke-width="2"/>';
+    // 人的高度标注
+    s += '<line x1="' + (MAN_X - 16) + '" y1="' + GROUND + '" x2="' + (MAN_X - 16) + '" y2="' + manTopY + '" stroke="#3498DB" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    s += '<text x="' + (MAN_X - 22) + '" y="' + ((GROUND + manTopY) / 2) + '" font-size="14" fill="#3498DB" text-anchor="end" font-weight="bold">h₁=' + h1.toFixed(1) + 'm</text>';
+    s += '<text x="' + ((MAN_X + manShadowEnd) / 2) + '" y="' + (GROUND + 24) + '" font-size="14" fill="#5D6D7E" text-anchor="middle" font-weight="bold">影 s₁=' + s1.toFixed(1) + 'm</text>';
+
+    // 旗杆影
+    s += '<line x1="' + POLE_X + '" y1="' + GROUND + '" x2="' + poleShadowEnd + '" y2="' + GROUND + '" stroke="#5D6D7E" stroke-width="8" stroke-linecap="round" opacity="0.5"/>';
+    // 旗杆
+    s += '<line x1="' + POLE_X + '" y1="' + GROUND + '" x2="' + POLE_X + '" y2="' + poleTopY + '" stroke="#7D3C98" stroke-width="7" stroke-linecap="round"/>';
+    // 旗帜
+    s += '<polygon points="' + POLE_X + ',' + poleTopY + ' ' + (POLE_X + 34) + ',' + (poleTopY + 10) + ' ' + POLE_X + ',' + (poleTopY + 20) + '" fill="#E74C3C"/>';
+    // 旗杆高度标注
+    s += '<line x1="' + (POLE_X - 18) + '" y1="' + GROUND + '" x2="' + (POLE_X - 18) + '" y2="' + poleTopY + '" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    s += '<text x="' + (POLE_X - 24) + '" y="' + ((GROUND + poleTopY) / 2) + '" font-size="14" fill="#9B59B6" text-anchor="end" font-weight="bold">H=?</text>';
+    s += '<text x="' + ((POLE_X + poleShadowEnd) / 2) + '" y="' + (GROUND + 24) + '" font-size="14" fill="#5D6D7E" text-anchor="middle" font-weight="bold">影 s₂=' + s2.toFixed(1) + 'm</text>';
+
+    // 平行太阳光线（虚线，同样的斜率）
+    s += '<line x1="' + MAN_X + '" y1="' + manTopY + '" x2="' + manShadowEnd + '" y2="' + GROUND + '" stroke="#F39C12" stroke-width="2" stroke-dasharray="7,5"/>';
+    s += '<line x1="' + POLE_X + '" y1="' + poleTopY + '" x2="' + poleShadowEnd + '" y2="' + GROUND + '" stroke="#F39C12" stroke-width="2" stroke-dasharray="7,5"/>';
+
+    // 直角标记
+    s += '<rect x="' + MAN_X + '" y="' + (GROUND - 14) + '" width="14" height="14" fill="none" stroke="#3498DB" stroke-width="1.5"/>';
+    s += '<rect x="' + POLE_X + '" y="' + (GROUND - 14) + '" width="14" height="14" fill="none" stroke="#9B59B6" stroke-width="1.5"/>';
+
+    svg.innerHTML = s;
+
+    document.getElementById('shadow-readout').innerHTML =
+      '由相似（AA：直角 + 同一束平行阳光）：h₁ / s₁ = H / s₂<br>' +
+      'H = h₁ × s₂ ÷ s₁ = ' + h1.toFixed(1) + ' × ' + s2.toFixed(1) + ' ÷ ' + s1.toFixed(1) +
+      ' = <strong style="font-size:24px;">' + H.toFixed(2) + ' m</strong>';
+  }
+
+  ['slider-h1', 'slider-s1', 'slider-s2'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', draw);
+  });
+  draw();
+})();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '面积比等于相似比的平方：(2/3)² = 4/9，即 4 : 9。注意周长比才是 2 : 3。',
+  hint: '回忆：周长比 = k，面积比 = k²。'
+});
+initQuiz('quiz2', {
+  correct: 3,
+  explain: 'D 中 ∠A 不是 AB 与 BC 的夹角（夹角是 ∠B），"两边成比例 + 非夹角相等"不能判定相似。A 是 AA，B 是 SAS 相似，C 是 SSS 相似。',
+  hint: 'SAS 相似要求相等角必须是两组成比例边的夹角。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: '树高 = 1.6 × 10 ÷ 2 = 8 m。同一时刻物高与影长成正比（相似三角形）。',
+  hint: '列比例：1.6 / 2 = 树高 / 10。'
+});
+</script>
 </body>
 </html>

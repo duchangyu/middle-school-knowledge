@@ -6,57 +6,284 @@
   <title>锐角三角函数 · 九年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 24px 28px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
+    .formula-box .formula {
       font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
     }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 10px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+    .slider-row label {
+      font-weight: 600;
+      min-width: 110px;
+      color: var(--math);
+      font-size: 16px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row .value-badge, .value-display {
+      min-width: 64px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== 演示容器 ===== */
+    .demo-container {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 16px 0;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+    /* ===== 数据面板 ===== */
+    .data-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .data-cell {
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
+      padding: 14px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .data-cell .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .data-cell .num { font-size: 24px; font-weight: 700; font-family: Georgia, serif; }
+    .data-cell.math-color { border-color: rgba(155,89,182,0.3); }
+    .data-cell.math-color .num { color: var(--math); }
+
+    /* ===== 信息读数条 ===== */
+    .info-readout {
+      text-align: center;
+      font-size: 17px;
+      font-family: Georgia, serif;
+      padding: 16px;
+      background: rgba(155,89,182,0.1);
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      color: var(--math);
+      line-height: 2;
+    }
+
+    /* ===== 性质列表 ===== */
+    .property-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+    .property-list li {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--math);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    .property-list li strong { color: var(--math); }
+
+    /* ===== 模式切换 ===== */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .mode-toggle .mode-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      border: 2px solid transparent;
+      background: var(--bg-soft);
       transition: all 0.2s;
+      color: var(--text-main);
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+    .mode-toggle .mode-btn.active {
+      background: var(--math);
+      color: #fff;
     }
+
+    /* ===== 特殊值表格 ===== */
+    .special-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 17px;
+    }
+    .special-table th, .special-table td {
+      border: 2px solid rgba(155,89,182,0.25);
+      padding: 12px 16px;
+      text-align: center;
+      font-family: Georgia, serif;
+    }
+    .special-table th {
+      background: var(--math);
+      color: #fff;
+      font-weight: 700;
+    }
+    .special-table td.angle-cell {
+      background: rgba(155,89,182,0.1);
+      font-weight: 700;
+      color: var(--math);
+      font-size: 19px;
+    }
+    .special-table td.sv-cell {
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 19px;
+      font-weight: 600;
+    }
+    .special-table tr.highlight td { background: rgba(243,156,18,0.18); }
+    .special-table tr.highlight td.angle-cell { background: rgba(243,156,18,0.35); }
+
+    .angle-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .angle-btn {
+      padding: 10px 22px;
+      border-radius: 24px;
+      border: 2px solid var(--math);
+      background: #fff;
+      color: var(--math);
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      transition: all 0.15s;
+    }
+    .angle-btn.active { background: var(--math); color: #fff; }
+
+    /* ===== 计算器 ===== */
+    .calc-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .calc-field {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+    }
+    .calc-field label {
+      display: block;
+      font-weight: 600;
+      color: var(--math);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    .calc-field input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 2px solid rgba(155,89,182,0.3);
+      border-radius: var(--radius-sm);
+      font-size: 17px;
+      font-family: Georgia, serif;
+      box-sizing: border-box;
+    }
+    .calc-field input:focus { outline: none; border-color: var(--math); }
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); line-height: 1.8; }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .quiz-feedback { display: none; margin-top: 10px; font-size: 14px; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">📊 锐角三角函数</div>
+  <div class="navbar-brand">📐 锐角三角函数</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级数学目录</a></li>
+    <li><a href="../../物理/八年级/07-力.html">⚡ 物理·力</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📐 锐角三角函数</h1>
+  <p>角度与边长之间的桥梁——知道了角，就能算出看不见的高度和距离</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +294,668 @@
     <span>锐角三角函数</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📊</div>
-    <h2>锐角三角函数</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级数学目录</a>
+  <!-- ===== 1 引入 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 引入：为什么要学三角函数</h2>
+  <div class="card">
+    <p>上一章我们用"相似 + 影子"测旗杆高度，但阴天没有影子怎么办？</p>
+    <p style="margin-top:8px;">其实只要站在离旗杆一段距离处，<strong>测出看旗杆顶端的仰角</strong>，就能算出旗杆高度。这背后需要一个新工具：<strong class="math-accent">锐角三角函数</strong>——它建立了直角三角形中<strong>锐角的大小</strong>与<strong>边的比值</strong>之间的对应关系。</p>
+    <div class="tip-box">
+      <div class="tip-title">💡 核心思想</div>
+      <p style="margin-top:4px;">由相似的知识可知：直角三角形中，<strong>当锐角 A 的大小确定时，无论三角形放大或缩小，它的对边与斜边之比、邻边与斜边之比、对边与邻边之比都是固定不变的</strong>。这些比值只由角度决定，因此可以定义成"角的函数"。</p>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2 定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 正弦、余弦、正切的定义</h2>
+  <div class="card">
+    <p>在 Rt△ABC 中，∠C = 90°。把 ∠A 的<strong style="color:#E74C3C;">对边</strong>记作 a（即 BC），∠A 的<strong style="color:#27AE60;">邻边</strong>记作 b（即 AC），<strong style="color:#9B59B6;">斜边</strong>记作 c（即 AB）。</p>
+
+    <div class="demo-container">
+      <svg viewBox="0 0 480 360" width="480" height="360">
+        <polygon points="80,300 360,300 360,120" fill="rgba(155,89,182,0.08)" stroke="none"/>
+        <line x1="80" y1="300" x2="360" y2="300" stroke="#27AE60" stroke-width="4"/>
+        <line x1="360" y1="300" x2="360" y2="120" stroke="#E74C3C" stroke-width="4"/>
+        <line x1="80" y1="300" x2="360" y2="120" stroke="#9B59B6" stroke-width="4"/>
+        <rect x="342" y="282" width="18" height="18" fill="none" stroke="#2C3E50" stroke-width="1.5"/>
+        <path d="M 130 300 A 50 50 0 0 0 121.7 270.2" fill="none" stroke="#E67E22" stroke-width="2.5"/>
+        <text x="140" y="290" font-size="16" fill="#E67E22" font-weight="bold">∠A</text>
+        <text x="62" y="312" font-size="17" font-weight="bold" fill="#2C3E50">A</text>
+        <text x="370" y="310" font-size="17" font-weight="bold" fill="#2C3E50">C（直角）</text>
+        <text x="370" y="122" font-size="17" font-weight="bold" fill="#2C3E50">B</text>
+        <text x="210" y="322" font-size="16" font-weight="bold" fill="#27AE60" text-anchor="middle">邻边 b = AC</text>
+        <text x="384" y="215" font-size="16" font-weight="bold" fill="#E74C3C">对边 a = BC</text>
+        <text x="195" y="196" font-size="16" font-weight="bold" fill="#9B59B6" text-anchor="middle" transform="rotate(-33, 195, 196)">斜边 c = AB</text>
+      </svg>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula">sin A = 对边 / 斜边 = a / c</div>
+      <div class="formula-note">∠A 的<strong>正弦</strong>（sine）</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">cos A = 邻边 / 斜边 = b / c</div>
+      <div class="formula-note">∠A 的<strong>余弦</strong>（cosine）</div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">tan A = 对边 / 邻边 = a / b</div>
+      <div class="formula-note">∠A 的<strong>正切</strong>（tangent）</div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">📌 记忆口诀与注意事项</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>正弦 = 对/斜，余弦 = 邻/斜，正切 = 对/邻</strong></li>
+        <li>sin A、cos A、tan A 都是<strong>比值</strong>，没有单位；它们的大小只与 ∠A 有关</li>
+        <li>由三角形三边关系可知：0 &lt; sin A &lt; 1，0 &lt; cos A &lt; 1，tan A &gt; 0</li>
+        <li>tan A = sin A / cos A（由定义直接推出）</li>
+        <li>⚠️ 一定要看清是"<strong>哪个锐角</strong>"的对边和邻边：同一个三角形中，∠A 的对边恰是 ∠B 的邻边</li>
+      </ul>
+    </div>
   </div>
+
+  <!-- ===== 3 交互探索①：动态直角三角形 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互探索①：角度定，比值定</h2>
+  <div class="card">
+    <p>拖动滑块改变锐角 A 的大小，观察直角三角形的形状和三个比值的变化。注意：<strong class="math-accent">三角形的大小不变（斜边固定），只有角度在变</strong>——比值完全由角度决定。</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>锐角 A</label>
+        <input type="range" id="slider-angle" min="5" max="85" value="30" step="1">
+        <span class="value-badge" id="display-angle">30°</span>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-tri" viewBox="0 0 560 360" width="560" height="360"></svg>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell math-color">
+        <div class="label">sin A = 对边/斜边</div>
+        <div class="num" id="tri-sin" style="color:#E74C3C;">0.5000</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">cos A = 邻边/斜边</div>
+        <div class="num" id="tri-cos" style="color:#27AE60;">0.8660</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">tan A = 对边/邻边</div>
+        <div class="num" id="tri-tan" style="color:#E67E22;">0.5774</div>
+      </div>
+    </div>
+
+    <div class="info-readout" id="tri-readout"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">📊 观察要点</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li>∠A 越大（越陡），<strong>sin A 越大</strong>，<strong>cos A 越小</strong>，<strong>tan A 越大</strong></li>
+        <li>∠A 接近 90° 时，邻边几乎缩为 0，tan A 会急剧变大（趋向无穷大）</li>
+        <li>验证一下：任意角度都有 sin²A + cos²A = 1，tan A = sin A / cos A</li>
+        <li>角度确定 ⇒ 比值确定。这正是"三角函数"名称的由来：<strong>比值是角度的函数</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 4 特殊角的三角函数值 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 特殊角：30°、45°、60° 的三角函数值</h2>
+  <div class="card">
+    <p>这三个特殊角的三角函数值必须熟记。点击角度按钮查看它的推导图形；点击"📝 自测模式"遮住数值，再点击单元格逐个检验记忆。</p>
+
+    <div class="angle-btns">
+      <button class="angle-btn active" data-angle="30">30°</button>
+      <button class="angle-btn" data-angle="45">45°</button>
+      <button class="angle-btn" data-angle="60">60°</button>
+      <button class="angle-btn" id="btn-self-test" style="border-color:#E67E22; color:#E67E22;">📝 自测模式：关</button>
+    </div>
+
+    <table class="special-table" id="special-table">
+      <thead>
+        <tr><th>锐角 A</th><th>sin A</th><th>cos A</th><th>tan A</th></tr>
+      </thead>
+      <tbody>
+        <tr data-angle="30" class="highlight">
+          <td class="angle-cell">30°</td>
+          <td class="sv-cell" data-v="1/2">1/2</td>
+          <td class="sv-cell" data-v="√3/2">√3/2</td>
+          <td class="sv-cell" data-v="√3/3">√3/3</td>
+        </tr>
+        <tr data-angle="45">
+          <td class="angle-cell">45°</td>
+          <td class="sv-cell" data-v="√2/2">√2/2</td>
+          <td class="sv-cell" data-v="√2/2">√2/2</td>
+          <td class="sv-cell" data-v="1">1</td>
+        </tr>
+        <tr data-angle="60">
+          <td class="angle-cell">60°</td>
+          <td class="sv-cell" data-v="√3/2">√3/2</td>
+          <td class="sv-cell" data-v="1/2">1/2</td>
+          <td class="sv-cell" data-v="√3">√3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="demo-container">
+      <svg id="svg-special" viewBox="0 0 520 320" width="520" height="320"></svg>
+    </div>
+    <div class="info-readout" id="special-readout"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">🧠 记忆技巧</div>
+      <ul style="margin-top:6px; padding-left:20px; line-height:2;">
+        <li><strong>sin</strong> 30°、45°、60° = <strong>√1/2、√2/2、√3/2</strong>（分子根号里依次 1、2、3）</li>
+        <li><strong>cos</strong> 正好倒过来：√3/2、√2/2、√1/2（sin 与 cos 互余互换：sin A = cos(90°−A)）</li>
+        <li>tan = sin ÷ cos，所以 tan 30° = √3/3，tan 45° = 1，tan 60° = √3</li>
+        <li>图形来源：30°-60°-90° 三角形三边为 1 : √3 : 2；45°-45°-90° 三角形三边为 1 : 1 : √2</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 5 解直角三角形 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 解直角三角形</h2>
+  <div class="card">
+    <p>直角三角形中，除直角外共有 5 个元素（3 条边 + 2 个锐角）。<strong>已知其中 2 个元素（至少有一条边），就能求出其余所有元素</strong>——这叫做<strong class="math-accent">解直角三角形</strong>。</p>
+    <ul class="property-list">
+      <li><strong>三边关系</strong>：勾股定理 a² + b² = c²</li>
+      <li><strong>两锐角关系</strong>：∠A + ∠B = 90°</li>
+      <li><strong>边角关系</strong>：sin A = a/c，cos A = b/c，tan A = a/b</li>
+    </ul>
+
+    <p style="margin-top:14px;">试试下面的<strong>解直角三角形计算器</strong>（约定：Rt△ABC 中 ∠C = 90°，a = BC 是 ∠A 的对边，b = AC 是 ∠A 的邻边，c = AB 是斜边）：</p>
+
+    <div class="mode-toggle" id="solve-mode-toggle">
+      <button class="mode-btn active" data-mode="cA">已知：斜边 c + 锐角 A</button>
+      <button class="mode-btn" data-mode="ab">已知：两直角边 a、b</button>
+      <button class="mode-btn" data-mode="aA">已知：对边 a + 锐角 A</button>
+    </div>
+
+    <div class="calc-inputs">
+      <div class="calc-field" id="field-c">
+        <label>斜边 c</label>
+        <input type="number" id="input-c" value="10" min="0.01" step="any">
+      </div>
+      <div class="calc-field" id="field-a" style="display:none;">
+        <label>直角边 a（∠A 对边）</label>
+        <input type="number" id="input-a" value="3" min="0.01" step="any">
+      </div>
+      <div class="calc-field" id="field-b" style="display:none;">
+        <label>直角边 b（∠A 邻边）</label>
+        <input type="number" id="input-b" value="4" min="0.01" step="any">
+      </div>
+      <div class="calc-field" id="field-A">
+        <label>锐角 A（度）</label>
+        <input type="number" id="input-A" value="30" min="1" max="89" step="any">
+      </div>
+    </div>
+
+    <div style="text-align:center; margin: 8px 0;">
+      <button class="btn btn-primary" id="btn-solve" style="background:var(--math);">🧮 求解其余边角</button>
+    </div>
+
+    <div class="info-readout" id="solve-readout">选择已知条件，点击"求解"查看完整解题过程。</div>
+  </div>
+
+  <!-- ===== 6 应用：仰角、俯角与坡度 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 应用：仰角测高与坡度</h2>
+  <div class="card">
+    <ul class="property-list">
+      <li><strong>仰角与俯角</strong>：视线与水平线的夹角。视线在水平线<strong>上方</strong>叫仰角，在<strong>下方</strong>叫俯角。</li>
+      <li><strong>坡度（坡比）i</strong>：坡面的铅直高度 h 与水平距离 l 的比，i = h / l = <strong>tan α</strong>（α 为坡角）。常写成 1 : m 的形式。</li>
+      <li><strong>方位角</strong>：以正北或正南方向为基准，如"北偏东 30°"表示从正北向东转 30°。</li>
+    </ul>
+
+    <div class="formula-box">
+      <div class="formula">旗杆高 = 距离 × tan 仰角 + 眼高</div>
+      <div class="formula-note">H = d · tan α + h₀ ——仰角测高的核心公式（视线、水平线、旗杆构成直角三角形）</div>
+    </div>
+
+    <p>拖动滑块改变观测距离、仰角和眼睛高度，实时计算旗杆高度：</p>
+
+    <div style="margin-top: 20px;">
+      <div class="slider-row">
+        <label>水平距离 d (m)</label>
+        <input type="range" id="slider-d" min="5" max="50" value="20" step="1">
+        <span class="value-badge" id="display-d">20</span>
+      </div>
+      <div class="slider-row">
+        <label>仰角 α</label>
+        <input type="range" id="slider-alpha" min="5" max="65" value="30" step="1">
+        <span class="value-badge" id="display-alpha">30°</span>
+      </div>
+      <div class="slider-row">
+        <label>眼睛高度 h₀ (m)</label>
+        <input type="range" id="slider-h0" min="1.2" max="1.8" value="1.5" step="0.1">
+        <span class="value-badge" id="display-h0">1.5</span>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <svg id="svg-elevation" viewBox="0 0 640 360" width="640" height="360"></svg>
+    </div>
+
+    <div class="data-panel">
+      <div class="data-cell math-color">
+        <div class="label">tan α</div>
+        <div class="num" id="elev-tan">0.5774</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">d · tan α (m)</div>
+        <div class="num" id="elev-rise">11.55</div>
+      </div>
+      <div class="data-cell math-color">
+        <div class="label">旗杆总高 H (m)</div>
+        <div class="num" id="elev-H" style="color:var(--success);">13.05</div>
+      </div>
+    </div>
+
+    <div class="info-readout" id="elev-readout"></div>
+
+    <div class="tip-box">
+      <div class="tip-title">🏔️ 坡度小练习</div>
+      <p style="margin-top:4px;">一段斜坡的坡度 i = 1 : √3，即 tan α = 1/√3 = √3/3，查特殊值表可知坡角 α = 30°。若沿水平方向前进 100 m，则上升高度 h = 100 × tan 30° = 100√3/3 ≈ 57.7 m。</p>
+    </div>
+  </div>
+
+  <!-- ===== 7 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. sin 30° 的值为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. √3/2</div>
+    <div class="quiz-option" data-idx="1">B. 1/2</div>
+    <div class="quiz-option" data-idx="2">C. √2/2</div>
+    <div class="quiz-option" data-idx="3">D. √3/3</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 在 Rt△ABC 中，∠C = 90°，AC = 3，BC = 4，则 sin A 等于（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 3/5</div>
+    <div class="quiz-option" data-idx="1">B. 4/5</div>
+    <div class="quiz-option" data-idx="2">C. 3/4</div>
+    <div class="quiz-option" data-idx="3">D. 4/3</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 🏔️ 一段斜坡的坡度 i = 1 : √3，则坡角 α 为（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 30°</div>
+    <div class="quiz-option" data-idx="1">B. 45°</div>
+    <div class="quiz-option" data-idx="2">C. 60°</div>
+    <div class="quiz-option" data-idx="3">D. 15°</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ===== 8 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 锐角三角函数在其他学科中的应用</div>
+    <ul class="cross-ref-list">
+      <li>
+        ⚡ <a href="../../物理/八年级/07-力.html"><strong>物理·力（力的分解）</strong></a>——
+        把一个力沿两个互相垂直的方向分解，本质上就是三角函数：若力 F 与水平方向夹角为 θ，则水平分力 F·cos θ，竖直分力 F·sin θ。斜面上物体的重力分解为沿斜面的 G·sin θ 和垂直斜面的 G·cos θ。
+        <span class="tag tag-cross">力的分解</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/12-简单机械.html"><strong>物理·简单机械（斜面）</strong></a>——
+        斜面省力与坡角有关：沿斜面匀速推物体所需拉力约等于 G·sin θ，坡角越小（斜面越平缓）越省力——盘山公路就是利用这个原理。
+        <span class="tag tag-cross">斜面</span>
+      </li>
+      <li>
+        📐 <a href="07-相似.html"><strong>数学·相似</strong></a>——
+        三角函数值"只由角度决定"的根本原因就是相似：锐角相同的直角三角形彼此相似，对应边的比值相等。
+        <span class="tag tag-cross">相似</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="07-相似.html" class="btn btn-outline">← 上一章：相似</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="09-投影与视图.html" class="btn btn-primary" style="background: var(--math);">下一章：投影与视图 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================
+ * 交互探索1：动态直角三角形
+ * ======================================== */
+(function() {
+  var svg = document.getElementById('svg-tri');
+  var slider = document.getElementById('slider-angle');
+  var AX = 70, AY = 300, L = 250; // A 点位置与斜边长度(px)
+
+  function draw() {
+    var deg = parseFloat(slider.value);
+    document.getElementById('display-angle').textContent = deg + '°';
+
+    var rad = deg * Math.PI / 180;
+    var sinA = Math.sin(rad), cosA = Math.cos(rad), tanA = sinA / cosA;
+
+    var AC = L * cosA, BC = L * sinA;
+    var Cx = AX + AC, Cy = AY;
+    var Bx = Cx, By = AY - BC;
+
+    var s = '';
+    // 填充
+    s += '<polygon points="' + AX + ',' + AY + ' ' + Cx + ',' + Cy + ' ' + Bx + ',' + By + '" fill="rgba(155,89,182,0.08)" stroke="none"/>';
+    // 三边（邻边绿、对边红、斜边紫）
+    s += '<line x1="' + AX + '" y1="' + AY + '" x2="' + Cx + '" y2="' + Cy + '" stroke="#27AE60" stroke-width="4"/>';
+    s += '<line x1="' + Cx + '" y1="' + Cy + '" x2="' + Bx + '" y2="' + By + '" stroke="#E74C3C" stroke-width="4"/>';
+    s += '<line x1="' + AX + '" y1="' + AY + '" x2="' + Bx + '" y2="' + By + '" stroke="#9B59B6" stroke-width="4"/>';
+    // 直角标记
+    s += '<rect x="' + (Cx - 16) + '" y="' + (Cy - 16) + '" width="16" height="16" fill="none" stroke="#2C3E50" stroke-width="1.5"/>';
+    // 角度弧
+    var arcR = 42;
+    var ex = AX + arcR * cosA, ey = AY - arcR * sinA;
+    s += '<path d="M ' + (AX + arcR) + ' ' + AY + ' A ' + arcR + ' ' + arcR + ' 0 0 0 ' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" fill="none" stroke="#E67E22" stroke-width="2.5"/>';
+    var labR = arcR + 16;
+    s += '<text x="' + (AX + labR * Math.cos(rad / 2)).toFixed(1) + '" y="' + (AY - labR * Math.sin(rad / 2) + 5).toFixed(1) + '" font-size="15" fill="#E67E22" font-weight="bold">' + deg + '°</text>';
+    // 顶点标签
+    s += '<text x="' + (AX - 22) + '" y="' + (AY + 8) + '" font-size="17" font-weight="bold" fill="#2C3E50">A</text>';
+    s += '<text x="' + (Bx + 10) + '" y="' + (By + 5) + '" font-size="17" font-weight="bold" fill="#2C3E50">B</text>';
+    s += '<text x="' + (Cx + 10) + '" y="' + (Cy + 8) + '" font-size="17" font-weight="bold" fill="#2C3E50">C</text>';
+    // 边标签（归一化：斜边 = 1）
+    s += '<text x="' + ((AX + Cx) / 2) + '" y="' + (AY + 26) + '" font-size="14" font-weight="bold" fill="#27AE60" text-anchor="middle">邻边 b = ' + cosA.toFixed(3) + '</text>';
+    s += '<text x="' + (Cx + 14) + '" y="' + ((Cy + By) / 2) + '" font-size="14" font-weight="bold" fill="#E74C3C">对边 a = ' + sinA.toFixed(3) + '</text>';
+    var mx = (AX + Bx) / 2, my = (AY + By) / 2;
+    s += '<text x="' + (mx - 12) + '" y="' + (my - 10) + '" font-size="14" font-weight="bold" fill="#9B59B6" text-anchor="end">斜边 c = 1</text>';
+
+    svg.innerHTML = s;
+
+    document.getElementById('tri-sin').textContent = sinA.toFixed(4);
+    document.getElementById('tri-cos').textContent = cosA.toFixed(4);
+    document.getElementById('tri-tan').textContent = tanA.toFixed(4);
+
+    document.getElementById('tri-readout').innerHTML =
+      '∠A = ' + deg + '° 时（令斜边 c = 1）：<br>' +
+      'sin ' + deg + '° = a/c = <strong style="color:#E74C3C;">' + sinA.toFixed(4) + '</strong>，' +
+      'cos ' + deg + '° = b/c = <strong style="color:#27AE60;">' + cosA.toFixed(4) + '</strong>，' +
+      'tan ' + deg + '° = a/b = <strong style="color:#E67E22;">' + tanA.toFixed(4) + '</strong><br>' +
+      '验证：sin²A + cos²A = ' + (sinA * sinA + cosA * cosA).toFixed(4) + '，sin A / cos A = ' + (sinA / cosA).toFixed(4) + ' = tan A ✓';
+  }
+
+  slider.addEventListener('input', draw);
+  draw();
+})();
+
+/* ========================================
+ * 交互探索2：特殊角三角函数值
+ * ======================================== */
+(function() {
+  var svg = document.getElementById('svg-special');
+  var readout = document.getElementById('special-readout');
+  var selfTest = false;
+
+  var derivations = {
+    '30': {
+      svg: function() {
+        // 30-60-90 三角形：边 1 : √3 : 2，角 A = 30° 在左下
+        var AX = 90, AY = 260;
+        var AC = 173.2, BC = 100, AB = 200; // 按 1:√3:2 放大 100 倍
+        return '<polygon points="' + AX + ',' + AY + ' ' + (AX + AC) + ',' + AY + ' ' + (AX + AC) + ',' + (AY - BC) + '" fill="rgba(155,89,182,0.1)" stroke="#9B59B6" stroke-width="3"/>' +
+          '<rect x="' + (AX + AC - 14) + '" y="' + (AY - 14) + '" width="14" height="14" fill="none" stroke="#2C3E50" stroke-width="1.5"/>' +
+          '<path d="M ' + (AX + 36) + ' ' + AY + ' A 36 36 0 0 0 ' + (AX + 31.2) + ' ' + (AY - 18) + '" fill="none" stroke="#E67E22" stroke-width="2.5"/>' +
+          '<text x="' + (AX + 48) + '" y="' + (AY - 8) + '" font-size="15" fill="#E67E22" font-weight="bold">30°</text>' +
+          '<text x="' + (AX + AC - 40) + '" y="' + (AY - BC - 12) + '" font-size="15" fill="#E67E22" font-weight="bold">60°</text>' +
+          '<text x="' + (AX + AC / 2) + '" y="' + (AY + 24) + '" font-size="15" font-weight="bold" fill="#27AE60" text-anchor="middle">邻边 = √3</text>' +
+          '<text x="' + (AX + AC + 12) + '" y="' + (AY - BC / 2) + '" font-size="15" font-weight="bold" fill="#E74C3C">对边 = 1</text>' +
+          '<text x="' + (AX + AC / 2 - 30) + '" y="' + (AY - BC / 2 - 12) + '" font-size="15" font-weight="bold" fill="#9B59B6" text-anchor="end">斜边 = 2</text>' +
+          '<text x="60" y="40" font-size="15" fill="#2C3E50" font-weight="bold">含 30° 的直角三角形：三边之比 1 : √3 : 2（30° 对边是斜边的一半）</text>';
+      },
+      text: '30° 角：对边 = 1，邻边 = √3，斜边 = 2 ⇒ sin 30° = 1/2，cos 30° = √3/2，tan 30° = 1/√3 = √3/3'
+    },
+    '45': {
+      svg: function() {
+        var AX = 110, AY = 260, side = 130;
+        return '<polygon points="' + AX + ',' + AY + ' ' + (AX + side) + ',' + AY + ' ' + (AX + side) + ',' + (AY - side) + '" fill="rgba(155,89,182,0.1)" stroke="#9B59B6" stroke-width="3"/>' +
+          '<rect x="' + (AX + side - 14) + '" y="' + (AY - 14) + '" width="14" height="14" fill="none" stroke="#2C3E50" stroke-width="1.5"/>' +
+          '<path d="M ' + (AX + 36) + ' ' + AY + ' A 36 36 0 0 0 ' + (AX + 25.5) + ' ' + (AY - 25.5) + '" fill="none" stroke="#E67E22" stroke-width="2.5"/>' +
+          '<text x="' + (AX + 50) + '" y="' + (AY - 14) + '" font-size="15" fill="#E67E22" font-weight="bold">45°</text>' +
+          '<text x="' + (AX + side - 36) + '" y="' + (AY - side + 20) + '" font-size="15" fill="#E67E22" font-weight="bold">45°</text>' +
+          '<text x="' + (AX + side / 2) + '" y="' + (AY + 24) + '" font-size="15" font-weight="bold" fill="#27AE60" text-anchor="middle">邻边 = 1</text>' +
+          '<text x="' + (AX + side + 12) + '" y="' + (AY - side / 2) + '" font-size="15" font-weight="bold" fill="#E74C3C">对边 = 1</text>' +
+          '<text x="' + (AX + side / 2 - 26) + '" y="' + (AY - side / 2 - 10) + '" font-size="15" font-weight="bold" fill="#9B59B6" text-anchor="end">斜边 = √2</text>' +
+          '<text x="60" y="40" font-size="15" fill="#2C3E50" font-weight="bold">等腰直角三角形：三边之比 1 : 1 : √2</text>';
+      },
+      text: '45° 角：对边 = 邻边 = 1，斜边 = √2 ⇒ sin 45° = cos 45° = 1/√2 = √2/2，tan 45° = 1'
+    },
+    '60': {
+      svg: function() {
+        // 角 A = 60° 在左下：对边 √3，邻边 1，斜边 2
+        var AX = 90, AY = 260;
+        var AC = 100, BC = 173.2;
+        return '<polygon points="' + AX + ',' + AY + ' ' + (AX + AC) + ',' + AY + ' ' + (AX + AC) + ',' + (AY - BC) + '" fill="rgba(155,89,182,0.1)" stroke="#9B59B6" stroke-width="3"/>' +
+          '<rect x="' + (AX + AC - 14) + '" y="' + (AY - 14) + '" width="14" height="14" fill="none" stroke="#2C3E50" stroke-width="1.5"/>' +
+          '<path d="M ' + (AX + 36) + ' ' + AY + ' A 36 36 0 0 0 ' + (AX + 18) + ' ' + (AY - 31.2) + '" fill="none" stroke="#E67E22" stroke-width="2.5"/>' +
+          '<text x="' + (AX + 42) + '" y="' + (AY - 20) + '" font-size="15" fill="#E67E22" font-weight="bold">60°</text>' +
+          '<text x="' + (AX + AC - 40) + '" y="' + (AY - BC + 20) + '" font-size="15" fill="#E67E22" font-weight="bold">30°</text>' +
+          '<text x="' + (AX + AC / 2) + '" y="' + (AY + 24) + '" font-size="15" font-weight="bold" fill="#27AE60" text-anchor="middle">邻边 = 1</text>' +
+          '<text x="' + (AX + AC + 12) + '" y="' + (AY - BC / 2) + '" font-size="15" font-weight="bold" fill="#E74C3C">对边 = √3</text>' +
+          '<text x="' + (AX + AC / 2 - 20) + '" y="' + (AY - BC / 2 - 12) + '" font-size="15" font-weight="bold" fill="#9B59B6" text-anchor="end">斜边 = 2</text>' +
+          '<text x="60" y="40" font-size="15" fill="#2C3E50" font-weight="bold">含 60° 的直角三角形：三边之比 1 : √3 : 2（60° 的邻边是斜边的一半）</text>';
+      },
+      text: '60° 角：对边 = √3，邻边 = 1，斜边 = 2 ⇒ sin 60° = √3/2，cos 60° = 1/2，tan 60° = √3'
+    }
+  };
+
+  function selectAngle(deg) {
+    document.querySelectorAll('.angle-btn[data-angle]').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.angle === deg);
+    });
+    document.querySelectorAll('#special-table tbody tr').forEach(function(tr) {
+      tr.classList.toggle('highlight', tr.dataset.angle === deg);
+    });
+    svg.innerHTML = derivations[deg].svg();
+    readout.textContent = derivations[deg].text;
+  }
+
+  document.querySelectorAll('.angle-btn[data-angle]').forEach(function(b) {
+    b.addEventListener('click', function() { selectAngle(b.dataset.angle); });
+  });
+
+  // 自测模式
+  var testBtn = document.getElementById('btn-self-test');
+  testBtn.addEventListener('click', function() {
+    selfTest = !selfTest;
+    testBtn.textContent = '📝 自测模式：' + (selfTest ? '开（点击单元格揭示答案）' : '关');
+    testBtn.style.background = selfTest ? '#E67E22' : '#fff';
+    testBtn.style.color = selfTest ? '#fff' : '#E67E22';
+    document.querySelectorAll('#special-table .sv-cell').forEach(function(td) {
+      td.textContent = selfTest ? '？' : td.dataset.v;
+    });
+  });
+  document.querySelectorAll('#special-table .sv-cell').forEach(function(td) {
+    td.addEventListener('click', function() {
+      if (selfTest) {
+        td.textContent = td.dataset.v;
+        td.style.background = 'rgba(39,174,96,0.15)';
+        setTimeout(function() { td.style.background = ''; }, 600);
+      }
+    });
+  });
+
+  selectAngle('30');
+})();
+
+/* ========================================
+ * 交互探索3：解直角三角形计算器
+ * ======================================== */
+(function() {
+  var mode = 'cA';
+  var fields = {
+    c: document.getElementById('field-c'),
+    a: document.getElementById('field-a'),
+    b: document.getElementById('field-b'),
+    A: document.getElementById('field-A')
+  };
+
+  function showFields() {
+    fields.c.style.display = (mode === 'cA') ? 'block' : 'none';
+    fields.a.style.display = (mode === 'ab' || mode === 'aA') ? 'block' : 'none';
+    fields.b.style.display = (mode === 'ab') ? 'block' : 'none';
+    fields.A.style.display = (mode === 'cA' || mode === 'aA') ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('#solve-mode-toggle .mode-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#solve-mode-toggle .mode-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      mode = btn.dataset.mode;
+      showFields();
+    });
+  });
+
+  function fmt(n) { return parseFloat(n.toFixed(3)).toString(); }
+  function fmtAngle(n) { return n.toFixed(2) + '°'; }
+
+  document.getElementById('btn-solve').addEventListener('click', function() {
+    var out = document.getElementById('solve-readout');
+    var html = '';
+
+    if (mode === 'cA') {
+      var c = parseFloat(document.getElementById('input-c').value);
+      var A = parseFloat(document.getElementById('input-A').value);
+      if (!(c > 0)) { out.innerHTML = '⚠️ 斜边 c 必须是正数。'; return; }
+      if (!(A > 0 && A < 90)) { out.innerHTML = '⚠️ 锐角 A 必须在 0° 与 90° 之间。'; return; }
+      var rad = A * Math.PI / 180;
+      var a = c * Math.sin(rad), b = c * Math.cos(rad), B = 90 - A;
+      html = '【已知】斜边 c = ' + fmt(c) + '，∠A = ' + fmtAngle(A) + '<br>' +
+        '【求边 a】a = c · sin A = ' + fmt(c) + ' × sin ' + fmtAngle(A) + ' = ' + fmt(c) + ' × ' + Math.sin(rad).toFixed(4) + ' = <strong>' + fmt(a) + '</strong><br>' +
+        '【求边 b】b = c · cos A = ' + fmt(c) + ' × cos ' + fmtAngle(A) + ' = ' + fmt(c) + ' × ' + Math.cos(rad).toFixed(4) + ' = <strong>' + fmt(b) + '</strong><br>' +
+        '【求角 B】∠B = 90° − ∠A = <strong>' + fmtAngle(B) + '</strong><br>' +
+        '✅ 检验：a² + b² = ' + fmt(a * a + b * b) + ' ≈ c² = ' + fmt(c * c);
+    } else if (mode === 'ab') {
+      var a2 = parseFloat(document.getElementById('input-a').value);
+      var b2 = parseFloat(document.getElementById('input-b').value);
+      if (!(a2 > 0 && b2 > 0)) { out.innerHTML = '⚠️ 直角边 a、b 都必须是正数。'; return; }
+      var c2 = Math.sqrt(a2 * a2 + b2 * b2);
+      var A2 = Math.atan(a2 / b2) * 180 / Math.PI;
+      var B2 = 90 - A2;
+      html = '【已知】a = ' + fmt(a2) + '，b = ' + fmt(b2) + '<br>' +
+        '【求斜边 c】c = √(a² + b²) = √(' + fmt(a2 * a2) + ' + ' + fmt(b2 * b2) + ') = <strong>' + fmt(c2) + '</strong>（勾股定理）<br>' +
+        '【求角 A】tan A = a/b = ' + fmt(a2) + '/' + fmt(b2) + ' = ' + (a2 / b2).toFixed(4) + ' ⇒ ∠A = arctan(' + (a2 / b2).toFixed(4) + ') = <strong>' + fmtAngle(A2) + '</strong><br>' +
+        '【求角 B】∠B = 90° − ∠A = <strong>' + fmtAngle(B2) + '</strong><br>' +
+        '✅ 检验：sin A = a/c = ' + (a2 / c2).toFixed(4) + '，sin(' + fmtAngle(A2) + ') = ' + Math.sin(A2 * Math.PI / 180).toFixed(4);
+    } else {
+      var a3 = parseFloat(document.getElementById('input-a').value);
+      var A3 = parseFloat(document.getElementById('input-A').value);
+      if (!(a3 > 0)) { out.innerHTML = '⚠️ 直角边 a 必须是正数。'; return; }
+      if (!(A3 > 0 && A3 < 90)) { out.innerHTML = '⚠️ 锐角 A 必须在 0° 与 90° 之间。'; return; }
+      var rad3 = A3 * Math.PI / 180;
+      var b3 = a3 / Math.tan(rad3);
+      var c3 = a3 / Math.sin(rad3);
+      var B3 = 90 - A3;
+      html = '【已知】a = ' + fmt(a3) + '，∠A = ' + fmtAngle(A3) + '<br>' +
+        '【求边 b】tan A = a/b ⇒ b = a / tan A = ' + fmt(a3) + ' / ' + Math.tan(rad3).toFixed(4) + ' = <strong>' + fmt(b3) + '</strong><br>' +
+        '【求斜边 c】sin A = a/c ⇒ c = a / sin A = ' + fmt(a3) + ' / ' + Math.sin(rad3).toFixed(4) + ' = <strong>' + fmt(c3) + '</strong><br>' +
+        '【求角 B】∠B = 90° − ∠A = <strong>' + fmtAngle(B3) + '</strong><br>' +
+        '✅ 检验：a² + b² = ' + fmt(a3 * a3 + b3 * b3) + ' ≈ c² = ' + fmt(c3 * c3);
+    }
+    out.innerHTML = html;
+  });
+
+  showFields();
+})();
+
+/* ========================================
+ * 交互探索4：仰角测高模拟
+ * ======================================== */
+(function() {
+  var svg = document.getElementById('svg-elevation');
+  var GROUND = 310;
+
+  function draw() {
+    var d = parseFloat(document.getElementById('slider-d').value);
+    var alpha = parseFloat(document.getElementById('slider-alpha').value);
+    var h0 = parseFloat(document.getElementById('slider-h0').value);
+    document.getElementById('display-d').textContent = d;
+    document.getElementById('display-alpha').textContent = alpha + '°';
+    document.getElementById('display-h0').textContent = h0.toFixed(1);
+
+    var rad = alpha * Math.PI / 180;
+    var tanA = Math.tan(rad);
+    var rise = d * tanA;
+    var H = rise + h0;
+
+    // 场景坐标（示意图，不按真实比例）
+    var eyeX = 100, eyeY = GROUND - h0 * 40;         // 眼睛位置
+    var bx = 120 + d * 9.5;                           // 楼的位置
+    var topY = GROUND - H * 2.6;                      // 楼顶
+    if (topY < 30) topY = 30;
+
+    var s = '';
+    // 地面
+    s += '<line x1="30" y1="' + GROUND + '" x2="630" y2="' + GROUND + '" stroke="#7F8C8D" stroke-width="3"/>';
+    // 人
+    s += '<line x1="' + eyeX + '" y1="' + GROUND + '" x2="' + eyeX + '" y2="' + (eyeY + 8) + '" stroke="#2C3E50" stroke-width="5" stroke-linecap="round"/>';
+    s += '<circle cx="' + eyeX + '" cy="' + eyeY + '" r="7" fill="#F5B7B1" stroke="#2C3E50" stroke-width="2"/>';
+    s += '<text x="' + (eyeX - 12) + '" y="' + (GROUND + 22) + '" font-size="13" fill="#2C3E50" text-anchor="middle">观测者</text>';
+    // 楼（旗杆式建筑）
+    s += '<rect x="' + bx + '" y="' + topY + '" width="34" height="' + (GROUND - topY) + '" fill="rgba(155,89,182,0.25)" stroke="#9B59B6" stroke-width="2.5"/>';
+    s += '<polygon points="' + (bx + 4) + ',' + (topY + 14) + ' ' + (bx + 38) + ',' + (topY + 14) + ' ' + (bx + 21) + ',' + (topY - 14) + '" fill="#E74C3C"/>';
+    s += '<text x="' + (bx + 17) + '" y="' + (GROUND + 22) + '" font-size="13" fill="#2C3E50" text-anchor="middle">旗杆/楼</text>';
+    // 水平虚线（眼高水平线）
+    s += '<line x1="' + eyeX + '" y1="' + eyeY + '" x2="' + bx + '" y2="' + eyeY + '" stroke="#3498DB" stroke-width="2" stroke-dasharray="7,5"/>';
+    // 视线
+    s += '<line x1="' + eyeX + '" y1="' + eyeY + '" x2="' + bx + '" y2="' + topY + '" stroke="#E74C3C" stroke-width="2.5"/>';
+    // 仰角弧
+    var arcR = 44;
+    var angPix = Math.atan2(eyeY - topY, bx - eyeX); // 像素坐标下的视线角
+    var ex = eyeX + arcR * Math.cos(angPix), ey = eyeY - arcR * Math.sin(angPix);
+    s += '<path d="M ' + (eyeX + arcR) + ' ' + eyeY + ' A ' + arcR + ' ' + arcR + ' 0 0 0 ' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" fill="none" stroke="#E67E22" stroke-width="2.5"/>';
+    var midA = angPix / 2;
+    s += '<text x="' + (eyeX + (arcR + 20) * Math.cos(midA)).toFixed(1) + '" y="' + (eyeY - (arcR + 20) * Math.sin(midA) + 4).toFixed(1) + '" font-size="14" fill="#E67E22" font-weight="bold">仰角 ' + alpha + '°</text>';
+    // 距离标注
+    s += '<text x="' + ((eyeX + bx) / 2) + '" y="' + (eyeY + 20) + '" font-size="13" fill="#3498DB" text-anchor="middle" font-weight="bold">d = ' + d + ' m</text>';
+    // 高度标注
+    s += '<line x1="' + (bx + 44) + '" y1="' + eyeY + '" x2="' + (bx + 44) + '" y2="' + topY + '" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    s += '<text x="' + (bx + 50) + '" y="' + ((eyeY + topY) / 2) + '" font-size="13" fill="#E74C3C" font-weight="bold">d·tanα</text>';
+    s += '<line x1="' + (eyeX - 14) + '" y1="' + GROUND + '" x2="' + (eyeX - 14) + '" y2="' + eyeY + '" stroke="#2C3E50" stroke-width="1.5" stroke-dasharray="4,3"/>';
+    s += '<text x="' + (eyeX - 18) + '" y="' + ((GROUND + eyeY) / 2) + '" font-size="12" fill="#2C3E50" text-anchor="end">h₀=' + h0.toFixed(1) + '</text>';
+    // 总高标注
+    s += '<text x="' + (bx + 17) + '" y="' + (topY - 22) + '" font-size="14" fill="#9B59B6" text-anchor="middle" font-weight="bold">H = ' + H.toFixed(2) + ' m</text>';
+
+    svg.innerHTML = s;
+
+    document.getElementById('elev-tan').textContent = tanA.toFixed(4);
+    document.getElementById('elev-rise').textContent = rise.toFixed(2);
+    document.getElementById('elev-H').textContent = H.toFixed(2);
+    document.getElementById('elev-readout').innerHTML =
+      '视线与旗杆顶端、水平线构成直角三角形：tan α = 对边 / 邻边 = (H − h₀) / d<br>' +
+      'H = d · tan α + h₀ = ' + d + ' × tan ' + alpha + '° + ' + h0.toFixed(1) +
+      ' = ' + d + ' × ' + tanA.toFixed(4) + ' + ' + h0.toFixed(1) +
+      ' = <strong style="font-size:22px;">' + H.toFixed(2) + ' m</strong>';
+  }
+
+  ['slider-d', 'slider-alpha', 'slider-h0'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', draw);
+  });
+  draw();
+})();
+
+/* ========================================
+ * 练习题初始化
+ * ======================================== */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: 'sin 30° = 1/2。记忆：sin 30°、45°、60° 分别为 √1/2、√2/2、√3/2。',
+  hint: '30° 角的对边是斜边的一半。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '由勾股定理 AB = √(3² + 4²) = 5。∠A 的对边是 BC = 4，所以 sin A = BC/AB = 4/5。注意 AC = 3 是 ∠A 的邻边。',
+  hint: '先求斜边 AB，再看 ∠A 的对边是哪条。'
+});
+initQuiz('quiz3', {
+  correct: 0,
+  explain: '坡度 i = tan α = 1/√3 = √3/3，查特殊值表：tan 30° = √3/3，所以坡角 α = 30°。',
+  hint: 'i = 铅直高度 / 水平距离 = tan α，对照特殊角表。'
+});
+</script>
 </body>
 </html>

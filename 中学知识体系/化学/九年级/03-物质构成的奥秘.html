@@ -1,58 +1,333 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>物质构成的奥秘 · 九年级化学</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物质构成的奥秘 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
-  <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
-    }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
-    }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
-    }
-  </style>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --blue: #2563eb; --blue-l: #dbeafe; --amber: #f59e0b; --amber-l: #fef3c7;
+    --red: #ef4444; --red-l: #fee2e2; --green: #10b981; --green-l: #d1fae5;
+    --purple: #8b5cf6; --purple-l: #ede9fe; --teal: #06b6d4; --teal-l: #cffafe;
+    --slate: #64748b; --slate-l: #f1f5f9; --text: #1e293b; --bg: #F0F4F8;
+    --card: #fff; --shadow: 0 2px 16px rgba(0,0,0,.06);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.7;
+  }
+
+  /* === TOP BAR === */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0; padding: 10px 20px;
+    display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.03);
+  }
+  .topbar-title { font-weight: 800; font-size: 15px; color: var(--text); white-space: nowrap; }
+  .progress-track {
+    flex: 1; display: flex; gap: 4px; align-items: center; margin: 0 8px;
+  }
+  .progress-step {
+    flex: 1; height: 6px; border-radius: 3px; background: #e2e8f0; transition: all .5s;
+  }
+  .progress-step.done { background: var(--green); }
+  .progress-step.current { background: var(--blue); animation: glow 2s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { box-shadow: 0 0 4px var(--blue); } 50% { box-shadow: 0 0 14px var(--blue); } }
+  .topbar-chapter { font-size: 12px; color: var(--slate); min-width: 60px; text-align: right; }
+  .star-badge {
+    display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700;
+    background: var(--amber-l); padding: 4px 10px; border-radius: 12px; color: #92400e;
+  }
+
+  /* === MAIN CONTAINER === */
+  .main-container {
+    max-width: 900px; margin: 0 auto 40px; padding: 0 20px 20px;
+  }
+
+  /* === 学习进度条（项目风格） === */
+  .u3-studybar {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 10px 16px; margin-bottom: 20px;
+  }
+  .u3-studybar .progress-track { flex: 1; margin: 0; }
+  .u3-studybar .star-badge { flex-shrink: 0; }
+
+  /* === CHAPTER PANEL === */
+  .chapter-panel {
+    display: none; animation: slideIn .6s ease;
+  }
+  .chapter-panel.active { display: block; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* === HOOK BANNER === */
+  .hook-banner {
+    background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-radius: 20px;
+    padding: 36px 28px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .hook-banner::after {
+    content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px;
+    border-radius: 50%; background: rgba(255,255,255,.08);
+  }
+  .hook-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
+  .hook-question { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .hook-sub { font-size: 15px; opacity: .9; }
+
+  /* === CARDS === */
+  .card {
+    background: var(--card); border-radius: 16px; padding: 24px; margin-bottom: 18px;
+    box-shadow: var(--shadow); transition: box-shadow .3s;
+  }
+  .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,.1); }
+  .card h3 { font-size: 19px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card p { margin-bottom: 10px; }
+  .highlight { background: var(--amber-l); padding: 3px 10px; border-radius: 6px; font-weight: 700; }
+
+  /* === INTERACTIVE LAB === */
+  .lab-container {
+    background: linear-gradient(135deg, #1e293b, #334155); border-radius: 20px;
+    padding: 24px; margin-bottom: 18px; position: relative; text-align: center;
+  }
+  .lab-title { color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .lab-subtitle { color: rgba(255,255,255,.6); font-size: 13px; margin-bottom: 16px; }
+  .lab-stage { position: relative; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+  canvas { border-radius: 12px; display: block; margin: 0 auto; }
+  .lab-controls { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .lab-btn {
+    padding: 8px 18px; border: 2px solid rgba(255,255,255,.25); border-radius: 20px;
+    background: rgba(255,255,255,.1); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600;
+    transition: all .3s;
+  }
+  .lab-btn:hover { background: rgba(255,255,255,.22); }
+  .lab-btn.active { background: rgba(255,255,255,.3); border-color: rgba(255,255,255,.5); }
+  .lab-feedback {
+    color: rgba(255,255,255,.75); font-size: 13px; margin-top: 12px; min-height: 20px;
+    transition: all .3s;
+  }
+
+  /* === DRAG ZONES === */
+  .drag-zone { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .atom-source {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  }
+  .draggable-atom {
+    width: 48px; height: 48px; border-radius: 50%; cursor: grab; display: flex;
+    align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px;
+    transition: transform .2s; user-select: none; box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  }
+  .draggable-atom:active { cursor: grabbing; transform: scale(1.2); }
+  .draggable-atom.dragging { opacity: .5; transform: scale(.9); }
+  .drop-area {
+    width: 200px; min-height: 200px; border: 3px dashed rgba(255,255,255,.3);
+    border-radius: 16px; display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: center; gap: 10px; padding: 16px; transition: all .3s;
+    position: relative;
+  }
+  .drop-area.highlight { border-color: #60a5fa; background: rgba(96,165,250,.1); }
+  .drop-area.valid { border-color: var(--green); background: rgba(16,185,129,.1); }
+  .drop-area .drop-hint {
+    color: rgba(255,255,255,.35); font-size: 14px; position: absolute; pointer-events: none;
+  }
+  .placed-atom {
+    width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; color: #fff; font-weight: 800; font-size: 13px;
+    animation: popIn .3s ease; cursor: pointer;
+  }
+  @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+  /* === CHECKPOINT QUIZ === */
+  .checkpoint {
+    background: linear-gradient(135deg, var(--green-l), #ecfdf5);
+    border-radius: 16px; padding: 24px; margin-top: 18px;
+  }
+  .checkpoint h4 { font-size: 16px; margin-bottom: 14px; }
+  .cq-option {
+    display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px; border: 2px solid #e2e8f0;
+    border-radius: 10px; background: #fff; cursor: pointer; text-align: left; font-size: 14px;
+    transition: all .3s;
+  }
+  .cq-option:hover { border-color: var(--blue); }
+  .cq-option.chosen { border-color: var(--blue); background: var(--blue-l); }
+  .cq-option.correct { border-color: var(--green); background: var(--green-l); color: #065f46; }
+  .cq-option.wrong { border-color: var(--red); background: var(--red-l); color: #991b1b; }
+  .cq-feedback { margin-top: 10px; font-size: 13px; display: none; padding: 10px; border-radius: 8px; }
+  .cq-feedback.show { display: block; }
+  .cq-feedback.correct { background: #d1fae5; color: #065f46; }
+  .cq-feedback.wrong { background: #fee2e2; color: #991b1b; }
+
+  /* === REVEAL TEXT animation === */
+  .reveal-text { overflow: hidden; }
+  .reveal-step { opacity: 0; transform: translateY(10px); transition: all .5s; }
+  .reveal-step.show { opacity: 1; transform: translateY(0); }
+
+  /* === BUTTONS === */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px;
+    border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+    transition: all .3s;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+  .btn-secondary { background: #e2e8f0; color: var(--text); }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-success:hover { background: #059669; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* === FLOW DIAGRAM === */
+  .flow-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .flow-node {
+    padding: 10px 16px; border-radius: 12px; color: #fff; font-weight: 700; font-size: 14px; text-align: center;
+    animation: popIn .5s ease;
+  }
+  .flow-arrow { font-size: 20px; color: var(--slate); }
+
+  /* === ATOMIC BUILDER === */
+  .atom-builder { text-align: center; }
+  .builder-display { position: relative; width: 260px; height: 260px; margin: 0 auto 16px; }
+  .builder-nucleus {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle, #f59e0b, #d97706);
+    box-shadow: 0 0 24px rgba(245,158,11,.5); z-index: 5;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 10px;
+  }
+  .builder-nucleus .p-count, .builder-nucleus .n-count { font-weight: 700; font-size: 14px; }
+  .builder-orbit {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    border: 1.5px dashed rgba(37,99,235,.2); border-radius: 50%;
+  }
+  .builder-e {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #3b82f6;
+    box-shadow: 0 0 8px rgba(59,130,246,.6); animation: orbitSpin linear infinite;
+  }
+  @keyframes orbitSpin {
+    from { transform: rotate(0deg) translateX(0); }
+    to { transform: rotate(360deg) translateX(0); }
+  }
+  .builder-controls { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .builder-group { text-align: center; }
+  .builder-group label { display: block; font-size: 12px; color: var(--slate); margin-bottom: 6px; font-weight: 600; }
+  .builder-group .counter {
+    display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 10px;
+    padding: 4px 8px; box-shadow: var(--shadow);
+  }
+  .builder-group button {
+    width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+  .btn-minus { background: #fee2e2; color: #991b1b; }
+  .btn-plus { background: #d1fae5; color: #065f46; }
+  .counter-value { font-size: 20px; font-weight: 700; min-width: 30px; }
+
+  /* === ELEMENT BUILDER RESULT === */
+  .builder-result {
+    margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center;
+    min-height: 40px; transition: all .3s;
+  }
+
+  /* === PERIODIC TABLE EXPLORER === */
+  .periodic-grid {
+    display: grid; grid-template-columns: repeat(18, 1fr); gap: 2px; max-width: 750px; margin: 0 auto;
+  }
+  .el-cell {
+    aspect-ratio: 1.2 / 1; border-radius: 4px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; font-size: 8px; cursor: pointer;
+    transition: all .3s; color: #fff; font-weight: 700; position: relative; min-width: 0;
+  }
+  .el-cell:hover { transform: scale(1.4); z-index: 5; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+  .el-cell.selected { transform: scale(1.5); z-index: 6; box-shadow: 0 0 0 4px var(--blue); }
+  .el-cell.empty { background: transparent; cursor: default; }
+  .el-cell.empty:hover { transform: none; box-shadow: none; }
+  .el-cell .el-num { font-size: 6px; opacity: .8; line-height: 1; }
+  .el-cell .el-sym { font-size: 13px; line-height: 1.1; }
+  .el-cell .el-name { font-size: 6px; opacity: .9; line-height: 1; }
+  
+  /* Period labels on the left */
+  .period-labels { display: flex; flex-direction: column; gap: 2px; justify-content: space-around; }
+  .period-label { 
+    font-size: 10px; color: var(--slate); font-weight: 600; text-align: right; 
+    padding-right: 6px; white-space: nowrap;
+  }
+  .periodic-wrapper { display: flex; align-items: stretch; margin-bottom: 10px; }
+
+  /* === STEP-BY-STEP STORY === */
+  .story-step { display: none; animation: slideIn .5s ease; }
+  .story-step.active { display: block; }
+
+  /* === TOAST === */
+  .toast {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 2000;
+    padding: 12px 24px; border-radius: 24px; font-weight: 700; font-size: 14px;
+    animation: toastIn .4s ease, toastOut .4s ease 2s forwards; pointer-events: none;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+  .toast.success { background: var(--green); color: #fff; }
+  .toast.error { background: var(--red); color: #fff; }
+  .toast.info { background: var(--blue); color: #fff; }
+
+  /* === THERMOMETER === */
+  .thermo-wrapper { display: flex; gap: 6px; cursor: pointer; user-select: none; }
+  .thermo-scale { display: flex; flex-direction: column; justify-content: space-between; height: 150px; font-size: 8px; color: rgba(255,255,255,.45); text-align: right; padding: 0 0; }
+  .thermo-column { display: flex; flex-direction: column; align-items: center; }
+  .thermo-tube { width: 22px; height: 140px; border-radius: 11px 11px 0 0; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.2); border-bottom: none; position: relative; overflow: hidden; }
+  .thermo-fill { position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to top, #3b82f6, #06b6d4, #f59e0b, #ef4444); transition: height .3s ease; }
+  .thermo-bulb { width: 32px; height: 32px; border-radius: 50%; background: #3b82f6; border: 2px solid rgba(255,255,255,.2); box-shadow: 0 0 10px rgba(59,130,246,.5); transition: all .3s; }
+  .thermo-val { color: rgba(255,255,255,.7); font-size: 11px; font-weight: 600; margin-top: 4px; text-align: center; min-width: 32px; }
+
+  /* === RESPONSIVE === */
+  @media(max-width:600px) {
+    .main-container { padding: 12px; }
+    .hook-banner { padding: 24px 18px; }
+    .hook-question { font-size: 20px; }
+    .drop-area { width: 150px; min-height: 150px; }
+    .periodic-grid { max-width: 100%; gap: 1px; }
+    .el-cell .el-sym { font-size: 9px; }
+    .el-cell .el-num { font-size: 5px; }
+    .el-cell .el-name { font-size: 5px; }
+    .el-cell:hover { transform: scale(1.8); }
+  }
+
+  /* === INFO BOX === */
+  .info-box {
+    padding: 14px 18px; border-radius: 12px; margin: 10px 0; font-size: 14px;
+    border-left: 4px solid;
+  }
+  .info-blue { background: var(--blue-l); border-color: var(--blue); }
+  .info-amber { background: var(--amber-l); border-color: var(--amber); }
+  .info-green { background: var(--green-l); border-color: var(--green); }
+  .info-red { background: var(--red-l); border-color: var(--red); }
+  .info-purple { background: var(--purple-l); border-color: var(--purple); }
+
+  /* comparison table */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  .cmp-table th { background: var(--blue); color: #fff; padding: 10px 12px; text-align: left; }
+  .cmp-table th:first-child { border-radius: 8px 0 0 0; }
+  .cmp-table th:last-child { border-radius: 0 8px 0 0; }
+  .cmp-table td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+  .cmp-table tr:nth-child(even) td { background: #f8fafc; }
+  .cmp-table tr:hover td { background: var(--blue-l); }
+
+  /* narator text */
+  .narrator {
+    font-style: italic; color: var(--slate); font-size: 15px; text-align: center; margin: 16px 0;
+    padding: 12px; border-radius: 10px; background: var(--slate-l);
+  }
+</style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">⚗️ 物质构成的奥秘</div>
+  <div class="navbar-brand">🔬 物质构成的奥秘</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
+    <li><a href="02-空气.html">← 上一章</a></li>
+    <li><a href="04-化学式与化合价.html">下一章 →</a></li>
   </ul>
 </nav>
 
@@ -67,24 +342,1631 @@
     <span>物质构成的奥秘</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>物质构成的奥秘</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <h1 style="font-size: 28px; margin-bottom: 8px;">🔬 物质构成的奥秘</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 16px;">从分子、原子到元素——在动手实验中看清物质的微观世界</p>
+
+  <!-- 学习进度与星星 -->
+  <div class="u3-studybar">
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-step done" data-step="1"></div>
+      <div class="progress-step current" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+      <div class="progress-step" data-step="4"></div>
+      <div class="progress-step" data-step="5"></div>
+    </div>
+    <span class="topbar-chapter" id="chapterLabel">第1章 / 5</span>
+    <span class="star-badge">⭐ <span id="starCount">0</span></span>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- MAIN -->
+  <div class="main-container" id="mainContainer">
+    <!-- Content loaded dynamically -->
   </div>
 </div>
 
-<script src="../../assets/js/main.js"></script>
+<script>
+// ========== STATE ==========
+const state = {
+  chapter: 1,
+  stars: 0,
+  chaptersCompleted: {},
+  moleculeBuilt: false,
+  atomBuilt: false,
+  quizPassed: {}
+};
+
+// ========== CHAPTER DATA ==========
+const chapters = {
+  1: {
+    title: '从生活出发——物质由什么构成？',
+    subtitle: '你每天都在接触，但你真的"看见"过它们吗？',
+    emoji: '👀',
+    hook: '你有没有想过……',
+    hookQ: '湿衣服为什么会变干？糖放进水里为什么会消失？',
+    hookSub: '这些日常现象的背后，隐藏着物质构成的秘密。',
+    color1: '#667eea', color2: '#764ba2',
+    content: 'ch1'
+  },
+  2: {
+    title: '认识分子——物质世界的最小"积木"',
+    subtitle: '如果你能把物质一直分下去，分到最小会是什么？',
+    emoji: '🧪',
+    hook: '糖去哪儿了？',
+    hookQ: '糖溶解在水里，你看不见了——但它真的消失了吗？',
+    hookSub: '没有！它只是分散成了肉眼看不见的微小粒子——分子。',
+    color1: '#06b6d4', color2: '#3b82f6',
+    content: 'ch2'
+  },
+  3: {
+    title: '分子之下——原子的发现',
+    subtitle: '分子还能再分吗？如果能，分出来的是什么？',
+    emoji: '⚛️',
+    hook: '把水分子再"拆开"……',
+    hookQ: '分子是"最小"粒子吗？它还能不能再分？',
+    hookSub: '可以再分！分出来的就是——原子。但原子在化学变化中就真的不能再分了。',
+    color1: '#8b5cf6', color2: '#ec4899',
+    content: 'ch3'
+  },
+  4: {
+    title: '原子内部——一个微型的"太阳系"',
+    subtitle: '原子不是实心球！它里面藏着更精细的结构。',
+    emoji: '🧬',
+    hook: '原子是实心小球吗？',
+    hookQ: '如果你能钻进原子内部，你会看到什么？',
+    hookSub: '你会看到中心的原子核，以及绕核飞转的电子——像一个小太阳系！',
+    color1: '#f59e0b', color2: '#ef4444',
+    content: 'ch4'
+  },
+  5: {
+    title: '元素——原子的"身份证"',
+    subtitle: '世界上有多少种原子？它们怎么分类？',
+    emoji: '📋',
+    hook: '所有原子都一样吗？',
+    hookQ: '碳原子和氧原子有什么不同？是什么决定了"你是谁"？',
+    hookSub: '答案是：质子数。质子数相同的原子，属于同一种元素。',
+    color1: '#10b981', color2: '#059669',
+    content: 'ch5'
+  }
+};
+
+const totalStars = 15;
+
+// ========== RENDER CHAPTER ==========
+function renderChapter(n) {
+  const ch = chapters[n];
+  const container = document.getElementById('mainContainer');
+  
+  let html = `
+  <div class="chapter-panel active" id="chapterPanel${n}">
+    <div class="hook-banner" style="background:linear-gradient(135deg,${ch.color1},${ch.color2})">
+      <span class="hook-emoji">${ch.emoji}</span>
+      <div class="hook-question">${ch.title}</div>
+      <div class="hook-sub">${ch.subtitle}</div>
+    </div>
+    <div class="card">
+      <h3>${ch.hook}</h3>
+      <p><strong>${ch.hookQ}</strong></p>
+      <p style="color:var(--slate)">${ch.hookSub}</p>
+    </div>
+  `;
+
+  // Chapter-specific content
+  if (n === 1) html += renderChapter1();
+  else if (n === 2) html += renderChapter2();
+  else if (n === 3) html += renderChapter3();
+  else if (n === 4) html += renderChapter4();
+  else if (n === 5) html += renderChapter5();
+
+  // Navigation
+  html += `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+      ${n > 1 ? `<button class="btn btn-secondary" onclick="goChapter(${n-1})">← 上一章</button>` : '<div></div>'}
+      <span style="font-size:13px;color:var(--slate)">第 ${n} 章 / 5</span>
+      ${n < 5 
+        ? `<button class="btn btn-primary" onclick="goChapter(${n+1})" id="nextBtn${n}">下一章 →</button>` 
+        : `<button class="btn btn-success" onclick="showSummary()">🎉 完成学习</button>`
+      }
+    </div>
+  </div>`;
+
+  container.innerHTML = html;
+  document.getElementById('chapterLabel').textContent = `第${n}章 / 5`;
+  
+  // Update progress
+  updateProgress(n);
+  
+  // Init chapter-specific interactions
+  setTimeout(() => {
+    if (n === 1) initChapter1();
+    else if (n === 2) initChapter2();
+    else if (n === 3) initChapter3();
+    else if (n === 4) initChapter4();
+    else if (n === 5) initChapter5();
+  }, 100);
+}
+
+function updateProgress(n) {
+  document.querySelectorAll('.progress-step').forEach((el, i) => {
+    el.classList.remove('done', 'current');
+    if (i + 1 < n) el.classList.add('done');
+    else if (i + 1 === n) el.classList.add('current');
+  });
+}
+
+function goChapter(n) {
+  state.chapter = n;
+  renderChapter(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== STAR SYSTEM ==========
+function addStars(n, reason) {
+  state.stars = Math.min(state.stars + n, totalStars);
+  document.getElementById('starCount').textContent = state.stars;
+  showToast(`⭐ +${n} 颗星：${reason}`, 'success');
+}
+
+function showToast(msg, type) {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+// ========== CHAPTER 1 ==========
+function renderChapter1() {
+  return `
+    <div class="card">
+      <h3>🔬 动手实验：糖去哪了？</h3>
+      <p>点击杯子，把方糖放进水里，看看会发生什么：</p>
+      <div class="lab-container">
+        <div class="lab-title">🧊 溶解实验</div>
+        <div class="lab-stage">
+          <canvas id="lab1Canvas" width="500" height="200"></canvas>
+        </div>
+        <div class="lab-controls">
+          <button class="lab-btn active" onclick="lab1Start()" id="lab1StartBtn">🔄 重新开始</button>
+          <button class="lab-btn" onclick="lab1DropSugar()" id="lab1SugarBtn">🍬 放入方糖</button>
+        </div>
+        <div class="lab-feedback" id="lab1Feedback">点击"放入方糖"开始实验 👆</div>
+      </div>
+    </div>
+
+    <div class="card" id="ch1Reveal" style="display:none">
+      <h3>💡 你发现了什么？</h3>
+      <div class="reveal-text">
+        <div class="reveal-step" id="ch1s1">1️⃣ 方糖放入水中，慢慢"消失"了——实际上它 <span class="highlight">分散</span> 到了整个水中。</div>
+        <div class="reveal-step" id="ch1s2">2️⃣ 方糖是由无数个非常非常小的粒子——<span class="highlight">蔗糖分子</span>（C₁₂H₂₂O₁₁）构成的。</div>
+        <div class="reveal-step" id="ch1s3">3️⃣ 当方糖溶解时，蔗糖分子分散到水分子之间，所以糖"不见了"，但水变甜了！</div>
+        <div class="reveal-step" id="ch1s4">4️⃣ <strong>结论：物质是由微小的粒子构成的。</strong>这些粒子在不断地运动。</div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" onclick="revealCh1()" id="ch1RevealBtn">点击揭示答案</button>
+      </div>
+    </div>
+
+    <div class="checkpoint" id="ch1Checkpoint" style="display:none">
+      <h4>📝 第一关：检验你的理解</h4>
+      <p style="font-size:14px;margin-bottom:12px">糖溶解在水里，糖分子去哪里了？</p>
+      <div>
+        <button class="cq-option" onclick="checkCh1(this, 0)">A. 消失了，不存在了</button>
+        <button class="cq-option" onclick="checkCh1(this, 1)">B. 变成了水分子</button>
+        <button class="cq-option" onclick="checkCh1(this, 2)" id="ch1Correct">C. 分散到了水分子之间</button>
+        <button class="cq-option" onclick="checkCh1(this, 3)">D. 沉在了杯底</button>
+      </div>
+      <div class="cq-feedback" id="ch1Feedback"></div>
+    </div>
+  `;
+}
+
+// CHAPTER 1 LAB
+let lab1State = { phase: 'idle', sugarX: 250, sugarY: 50, dissolved: false, timer: 0, particles: [] };
+
+function initChapter1() {
+  lab1State = { phase: 'idle', sugarX: 250, sugarY: 50, dissolved: false, timer: 0, particles: [] };
+  drawLab1();
+}
+
+function lab1Start() {
+  lab1State = { phase: 'idle', sugarX: 250, sugarY: 50, dissolved: false, timer: 0, particles: [] };
+  document.getElementById('lab1Feedback').textContent = '点击"放入方糖"开始实验 👆';
+  document.getElementById('lab1SugarBtn').disabled = false;
+  document.getElementById('ch1Reveal').style.display = 'none';
+  document.getElementById('ch1Checkpoint').style.display = 'none';
+  drawLab1();
+}
+
+function lab1DropSugar() {
+  if (lab1State.phase !== 'idle') return;
+  lab1State.phase = 'falling';
+  lab1State.sugarY = 50;
+  document.getElementById('lab1SugarBtn').disabled = true;
+  document.getElementById('lab1Feedback').textContent = '方糖正在落入水中……';
+  
+  const fallInterval = setInterval(() => {
+    lab1State.sugarY += 3;
+    if (lab1State.sugarY >= 120) {
+      lab1State.sugarY = 120;
+      lab1State.phase = 'dissolving';
+      lab1State.timer = 0;
+      clearInterval(fallInterval);
+      document.getElementById('lab1Feedback').textContent = '方糖正在溶解……糖分子正在扩散 🔍';
+      initLab1Particles();
+      lab1DissolveAnim();
+    }
+  }, 20);
+}
+
+function initLab1Particles() {
+  lab1State.particles = [];
+  for (let i = 0; i < 60; i++) {
+    lab1State.particles.push({
+      x: 250 + (Math.random() - 0.5) * 40,
+      y: 120 + (Math.random() - 0.5) * 20,
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: (Math.random() - 0.5) * 1.2,
+      alpha: 1,
+      size: 2 + Math.random() * 3
+    });
+  }
+}
+
+function lab1DissolveAnim() {
+  if (lab1State.phase !== 'dissolving') return;
+  lab1State.timer++;
+  // Glass interior boundaries (particles must stay inside the glass)
+  const gx = 160, gy = 60, gw = 180, gh = 130;
+  const minX = gx + 10, maxX = gx + gw - 10, minY = gy + 10, maxY = gy + gh - 8;
+  lab1State.particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    // Bounce off glass walls
+    if (p.x < minX) { p.x = minX; p.vx = Math.abs(p.vx); }
+    if (p.x > maxX) { p.x = maxX; p.vx = -Math.abs(p.vx); }
+    if (p.y < minY) { p.y = minY; p.vy = Math.abs(p.vy); }
+    if (p.y > maxY) { p.y = maxY; p.vy = -Math.abs(p.vy); }
+    p.alpha = Math.max(0.2, p.alpha - 0.001);
+  });
+  
+  if (lab1State.timer > 200) {
+    lab1State.dissolved = true;
+    lab1State.phase = 'done';
+    document.getElementById('lab1Feedback').textContent = '✅ 方糖完全溶解！糖分子均匀分散在水中。水变甜了，说明糖分子还在。';
+    document.getElementById('ch1Reveal').style.display = 'block';
+  }
+  
+  drawLab1();
+  if (lab1State.phase === 'dissolving') requestAnimationFrame(lab1DissolveAnim);
+  else drawLab1();
+}
+
+function drawLab1() {
+  const canvas = document.getElementById('lab1Canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 500, 200);
+  
+  // Water glass
+  const gx = 160, gy = 60, gw = 180, gh = 130;
+  ctx.fillStyle = 'rgba(59,130,246,0.15)';
+  ctx.beginPath(); ctx.roundRect(gx, gy, gw, gh, 12); ctx.fill();
+  ctx.strokeStyle = 'rgba(148,163,184,0.5)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect(gx, gy, gw, gh, 12); ctx.stroke();
+  
+  // Water surface wave
+  ctx.strokeStyle = 'rgba(59,130,246,0.4)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let x = gx; x <= gx + gw; x += 2) {
+    const y = gy + 8 + Math.sin(x * 0.1 + Date.now() * 0.004) * 3;
+    if (x === gx) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  
+  // Sugar cube
+  if (lab1State.phase !== 'done') {
+    const alpha = lab1State.phase === 'dissolving' ? Math.max(0.15, 1 - lab1State.timer / 250) : 1;
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.strokeStyle = `rgba(148,163,184,${alpha})`;
+    ctx.lineWidth = 2;
+    const sx = lab1State.sugarX - 20, sy = lab1State.sugarY - 20;
+    ctx.beginPath(); ctx.roundRect(sx, sy, 40, 40, 6); ctx.fill(); ctx.stroke();
+    
+    // Sugar label
+    ctx.fillStyle = `rgba(100,116,139,${alpha})`;
+    ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('方糖', lab1State.sugarX, lab1State.sugarY + 5);
+  }
+  
+  // Dissolved particles
+  if (lab1State.phase === 'dissolving' || lab1State.phase === 'done') {
+    lab1State.particles.forEach(p => {
+      ctx.fillStyle = `rgba(148,163,184,${Math.max(0.15, p.alpha)})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+  
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('水', gx + gw/2, gy + gh/2);
+  
+  // After dissolved
+  if (lab1State.phase === 'done') {
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '13px sans-serif';
+    ctx.fillText('糖分子均匀分散在水中', gx + gw/2, gy + gh/2);
+  }
+  
+  // Arrow pointing to glass
+  if (lab1State.phase === 'idle') {
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '13px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('← 方糖', 280, 55);
+    ctx.fillText('↓ 点击放入', 320, 70);
+  }
+}
+
+function revealCh1() {
+  const steps = ['ch1s1','ch1s2','ch1s3','ch1s4'];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, i * 600);
+  });
+  document.getElementById('ch1RevealBtn').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('ch1Checkpoint').style.display = 'block';
+  }, 2800);
+}
+
+function checkCh1(btn, idx) {
+  const correct = idx === 2;
+  const feedback = document.getElementById('ch1Feedback');
+  
+  document.querySelectorAll('#ch1Checkpoint .cq-option').forEach(b => b.classList.remove('chosen','correct','wrong'));
+  btn.classList.add('chosen');
+  
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'cq-feedback show correct';
+    feedback.textContent = '✅ 答对了！糖溶解是物理变化，糖分子只是分散到水分子之间，并没有消失。';
+    if (!state.quizPassed[1]) { state.quizPassed[1] = true; addStars(3, '通过第1关测验'); }
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('ch1Correct').classList.add('correct');
+    feedback.className = 'cq-feedback show wrong';
+    feedback.textContent = '❌ 再想想：糖没有消失（水变甜了），也没有变成水。糖分子只是分散到了水分子之间。';
+  }
+}
+
+// ========== CHAPTER 2 ==========
+function renderChapter2() {
+  return `
+    <div class="card">
+      <h3>🧪 分子就是物质最小的"积木"</h3>
+      <p>每种物质都由特定种类的分子构成。<span class="highlight">分子是保持物质化学性质的最小粒子。</span></p>
+      <div class="info-box info-blue" style="margin-top:12px">
+        <strong>💡 关键理解：</strong>"保持化学性质"的意思是——一个水分子仍然具有水的所有化学特性。但如果你把水分子再拆分，拆分后的东西就不再是水了。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎮 动手搭建：拼出属于你的分子！</h3>
+      <p>拖动下方的原子到搭建区，拼出一个<strong>水分子（H₂O）</strong>：2个氢原子 + 1个氧原子。</p>
+      <div class="lab-container" id="lab2Container">
+        <div class="lab-title">🧱 分子搭建工坊</div>
+        <div class="drag-zone">
+          <div class="atom-source" id="atomSource2">
+            <div class="draggable-atom" style="background:#3b82f6" draggable="true" data-atom="H" id="dragH1">H</div>
+            <div class="draggable-atom" style="background:#3b82f6" draggable="true" data-atom="H" id="dragH2">H</div>
+            <div class="draggable-atom" style="background:#ef4444" draggable="true" data-atom="O" id="dragO">O</div>
+          </div>
+          <div class="drop-area" id="dropArea2">
+            <span class="drop-hint">拖到此处搭建</span>
+          </div>
+        </div>
+        <div class="lab-feedback" id="lab2Feedback"></div>
+        <button class="lab-btn" onclick="resetLab2()" style="margin-top:8px">🔄 重新搭建</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔍 分子的三大性质</h3>
+      <div class="lab-container" style="background:linear-gradient(135deg,#0f172a,#1e293b)">
+        <div class="lab-title">🌡️ 温度如何影响分子运动？</div>
+        <div class="lab-stage" style="gap:24px;flex-wrap:wrap">
+          <canvas id="lab2bCanvas" width="360" height="180"></canvas>
+          <div class="thermo-wrapper" id="thermoWrapper">
+            <div class="thermo-scale">
+              <span>🔥 极热</span>
+              <span>很热</span>
+              <span>热</span>
+              <span>温暖</span>
+              <span>常温</span>
+              <span>偏冷</span>
+              <span>寒冷</span>
+              <span>❄️ 极冷</span>
+            </div>
+            <div class="thermo-column">
+              <div class="thermo-tube" id="thermoTube">
+                <div class="thermo-fill" id="thermoFill"></div>
+              </div>
+              <div class="thermo-bulb" id="thermoBulb"></div>
+              <div class="thermo-val" id="thermoVal">5</div>
+            </div>
+          </div>
+        </div>
+        <div class="lab-feedback" id="lab2bFeedback">当前温度：常温 | 点击温度计调节温度 ↑</div>
+      </div>
+      <div class="reveal-text" style="margin-top:12px">
+        <p class="reveal-step" id="ch2s1">✅ <strong>分子很小</strong>——质量和体积都很小</p>
+        <p class="reveal-step" id="ch2s2">✅ <strong>分子在运动</strong>——温度越高，运动越快（上面你可以亲自感受！）</p>
+        <p class="reveal-step" id="ch2s3">✅ <strong>分子有间隔</strong>——气体分子间隔 &gt; 液体 &gt; 固体</p>
+      </div>
+      <button class="btn btn-primary" onclick="revealCh2()" id="ch2RevealBtn" style="margin-top:8px">揭示分子性质</button>
+    </div>
+
+    <div class="checkpoint" id="ch2Checkpoint" style="display:none">
+      <h4>📝 第二关：分子小测验</h4>
+      <p style="font-size:14px;margin-bottom:12px">下列说法正确的是？</p>
+      <div>
+        <button class="cq-option" onclick="checkCh2(this, 0)">A. 分子是静止不动的</button>
+        <button class="cq-option" onclick="checkCh2(this, 1)" id="ch2Correct">B. 温度越高，分子运动越快</button>
+        <button class="cq-option" onclick="checkCh2(this, 2)">C. 所有物质的分子大小相同</button>
+        <button class="cq-option" onclick="checkCh2(this, 3)">D. 水分子可以随意拆分成更小的粒子而不改变性质</button>
+      </div>
+      <div class="cq-feedback" id="ch2Feedback"></div>
+    </div>
+  `;
+}
+
+let lab2State = { placed: [], moleculeOK: false };
+
+function initChapter2() {
+  lab2State = { placed: [], moleculeOK: false };
+  resetLab2();
+  initLab2b();
+  document.getElementById('ch2Checkpoint').style.display = 'none';
+}
+
+function resetLab2() {
+  lab2State = { placed: [], moleculeOK: false };
+  const drop = document.getElementById('dropArea2');
+  if (drop) {
+    drop.innerHTML = '<span class="drop-hint">拖到此处搭建</span>';
+    drop.classList.remove('highlight','valid');
+    drop.style.flexDirection = 'row';
+  }
+  ['dragH1','dragH2','dragO'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = ''; el.classList.remove('dragging'); }
+  });
+  document.getElementById('lab2Feedback').textContent = '';
+  setupDragListeners();
+}
+
+function setupDragListeners() {
+  ['dragH1','dragH2','dragO'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('dragstart', handleDragStart);
+    el.addEventListener('dragend', handleDragEnd);
+  });
+  
+  const drop = document.getElementById('dropArea2');
+  if (drop) {
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('highlight'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('highlight'));
+    drop.addEventListener('drop', handleDrop);
+  }
+}
+
+function handleDragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.id);
+  e.target.classList.add('dragging');
+}
+
+function handleDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.getElementById('dropArea2').classList.remove('highlight');
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  const drop = document.getElementById('dropArea2');
+  drop.classList.remove('highlight');
+  
+  const dragId = e.dataTransfer.getData('text/plain');
+  const dragEl = document.getElementById(dragId);
+  if (!dragEl || dragEl.style.display === 'none') return;
+  
+  const atom = dragEl.dataset.atom;
+  lab2State.placed.push(atom);
+  
+  // Hide source
+  dragEl.style.display = 'none';
+  
+  // Show in drop area
+  const placed = document.createElement('div');
+  placed.className = 'placed-atom';
+  placed.style.background = atom === 'H' ? '#3b82f6' : '#ef4444';
+  placed.textContent = atom;
+  placed.onclick = function() {
+    lab2State.placed = lab2State.placed.filter((_,i) => i !== lab2State.placed.indexOf(atom));
+    this.remove();
+    dragEl.style.display = '';
+    checkMolecule();
+  };
+  drop.querySelector('.drop-hint')?.remove();
+  drop.appendChild(placed);
+  
+  checkMolecule();
+}
+
+function checkMolecule() {
+  const fb = document.getElementById('lab2Feedback');
+  const drop = document.getElementById('dropArea2');
+  const hCount = lab2State.placed.filter(a => a === 'H').length;
+  const oCount = lab2State.placed.filter(a => a === 'O').length;
+  
+  drop.classList.remove('valid');
+  
+  if (hCount === 2 && oCount === 1) {
+    fb.innerHTML = '✅ 完美！你成功搭建了水分子 H₂O！<br>注意：两个氢原子并不是对称地排在氧原子两侧，而是形成约 <strong>104.5°</strong> 的夹角——这就是水分子的真实结构！';
+    drop.classList.add('valid');
+    // Replace drop area content with proper molecular structure
+    drop.style.flexDirection = 'column';
+    drop.innerHTML = '<canvas id="molCanvas" width="180" height="160" style="border-radius:12px"></canvas>';
+    drawWaterMolecule();
+    if (!state.quizPassed['molbuild']) {
+      state.quizPassed['molbuild'] = true;
+      addStars(2, '成功搭建水分子');
+    }
+  } else if (hCount + oCount === 3) {
+    fb.textContent = '⚠️ 不对哦。水分子需要：2个H + 1个O。当前：' + hCount + '个H，' + oCount + '个O';
+  } else if (hCount + oCount > 3) {
+    fb.textContent = '⚠️ 太多了！水分子只需要3个原子。';
+  } else {
+    fb.textContent = '继续添加原子吧！需要2个H + 1个O';
+  }
+}
+
+function drawWaterMolecule() {
+  const canvas = document.getElementById('molCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 90, cy = 60; // O atom position (top center)
+  const bondLen = 55; // bond length
+  const angle = 104.5 * Math.PI / 180; // H-O-H bond angle
+  const halfAngle = angle / 2;
+  
+  // Calculate H positions: symmetric around vertical axis, below O
+  const h1x = cx - Math.sin(halfAngle) * bondLen;
+  const h1y = cy + Math.cos(halfAngle) * bondLen;
+  const h2x = cx + Math.sin(halfAngle) * bondLen;
+  const h2y = cy + Math.cos(halfAngle) * bondLen;
+  
+  // Draw bonds (O-H)
+  ctx.strokeStyle = 'rgba(148,163,184,0.6)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(h1x, h1y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(h2x, h2y); ctx.stroke();
+  
+  // Draw bond angle arc and label
+  ctx.strokeStyle = 'rgba(96,165,250,0.5)'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  const arcR = 28;
+  ctx.beginPath();
+  ctx.arc(cx, cy, arcR, Math.PI/2 - halfAngle, Math.PI/2 + halfAngle);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(96,165,250,0.8)'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('104.5°', cx, cy + arcR + 12);
+  
+  // Draw O atom (larger, red)
+  ctx.fillStyle = 'rgba(239,68,68,0.2)';
+  ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('O', cx, cy + 5);
+  
+  // Draw H atoms (smaller, blue)
+  [[h1x,h1y],[h2x,h2y]].forEach(([hx,hy]) => {
+    ctx.fillStyle = 'rgba(59,130,246,0.2)';
+    ctx.beginPath(); ctx.arc(hx, hy, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#3b82f6';
+    ctx.beginPath(); ctx.arc(hx, hy, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('H', hx, hy + 4);
+  });
+  
+  // Label
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '11px sans-serif';
+  ctx.fillText('水分子 H₂O', cx, 150);
+}
+
+// Chapter 2b: Temperature and molecule motion
+let lab2bParticles = [];
+let lab2bAnimId;
+
+function initLab2b() {
+  lab2bParticles = [];
+  for (let i = 0; i < 20; i++) {
+    lab2bParticles.push({
+      x: Math.random() * 340 + 10, y: Math.random() * 160 + 10,
+      vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
+      color: ['#3b82f6','#ef4444','#f59e0b','#10b981','#8b5cf6'][Math.floor(Math.random()*5)],
+      size: 6 + Math.random() * 8
+    });
+  }
+  if (lab2bAnimId) cancelAnimationFrame(lab2bAnimId);
+  // Set up thermometer click handler
+  const tube = document.getElementById('thermoTube');
+  if (tube && !tube._thermoInit) {
+    tube._thermoInit = true;
+    tube.addEventListener('click', handleThermoClick);
+    tube.addEventListener('mousemove', handleThermoMove);
+    tube.addEventListener('touchstart', handleThermoTouch, { passive: false });
+    tube.addEventListener('touchmove', handleThermoTouch, { passive: false });
+  }
+  updateTemp(5);
+  animateLab2b();
+}
+
+let thermoDragging = false;
+function handleThermoMove(e) {
+  if (e.buttons !== 1) return;
+  handleThermoClick(e);
+}
+
+function handleThermoTouch(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  if (!touch) return;
+  const tube = document.getElementById('thermoTube');
+  if (!tube) return;
+  const rect = tube.getBoundingClientRect();
+  const clickY = touch.clientY - rect.top;
+  const ratio = 1 - (clickY / rect.height);
+  const val = Math.round(Math.max(1, Math.min(8, ratio * 8 + 0.5)));
+  updateTemp(val);
+}
+
+function handleThermoClick(e) {
+  const tube = document.getElementById('thermoTube');
+  if (!tube) return;
+  const rect = tube.getBoundingClientRect();
+  const clickY = e.clientY - rect.top;
+  // clickY=0 is top (hot), clickY=rect.height is bottom (cold)
+  const ratio = 1 - (clickY / rect.height);
+  const val = Math.round(Math.max(1, Math.min(8, ratio * 8 + 0.5)));
+  updateTemp(val);
+}
+
+function updateTemp(val) {
+  if (val === undefined) val = 5;
+  const speed = val * 0.5;
+  lab2bParticles.forEach(p => {
+    const angle = Math.atan2(p.vy, p.vx);
+    const newMag = Math.max(0.2, speed * (0.5 + Math.random()));
+    p.vx = Math.cos(angle) * newMag;
+    p.vy = Math.sin(angle) * newMag;
+  });
+  
+  // Update thermometer visual
+  const fill = document.getElementById('thermoFill');
+  const bulb = document.getElementById('thermoBulb');
+  const valEl = document.getElementById('thermoVal');
+  const fillPct = (val / 8) * 100;
+  if (fill) fill.style.height = fillPct + '%';
+  if (valEl) valEl.textContent = val;
+  
+  // Bulb color: blue -> cyan -> amber -> red
+  const bulbColors = ['#3b82f6','#3b82f6','#06b6d4','#06b6d4','#06b6d4','#f59e0b','#f59e0b','#ef4444'];
+  const bulbColor = bulbColors[val - 1] || '#3b82f6';
+  if (bulb) {
+    bulb.style.background = bulbColor;
+    bulb.style.boxShadow = `0 0 12px ${bulbColor}`;
+  }
+  
+  const temps = ['极冷❄️','冰冷','寒冷','偏冷','常温','温暖','热','极热🔥'];
+  const fb = document.getElementById('lab2bFeedback');
+  fb.textContent = `当前温度：${temps[val-1]} | 分子运动速度：${'●'.repeat(val)}${'○'.repeat(8-val)}`;
+  
+  if (val <= 2) fb.textContent += ' | 分子几乎不动 ❄️';
+  else if (val >= 7) fb.textContent += ' | 分子疯狂运动！🔥';
+}
+
+function animateLab2b() {
+  const canvas = document.getElementById('lab2bCanvas');
+  if (!canvas) { lab2bAnimId = requestAnimationFrame(animateLab2b); return; }
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 360, 180);
+  
+  lab2bParticles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 10 || p.x > 350) p.vx *= -1;
+    if (p.y < 10 || p.y > 170) p.vy *= -1;
+    
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    
+    // Speed trail
+    const speed = Math.sqrt(p.vx**2 + p.vy**2);
+    if (speed > 2) {
+      ctx.fillStyle = p.color.replace(')', ',0.2)').replace('rgb','rgba');
+      ctx.beginPath(); ctx.arc(p.x - p.vx * 2, p.y - p.vy * 2, p.size * 0.7, 0, Math.PI * 2); ctx.fill();
+    }
+  });
+  
+  lab2bAnimId = requestAnimationFrame(animateLab2b);
+}
+
+function revealCh2() {
+  ['ch2s1','ch2s2','ch2s3'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, i * 500);
+  });
+  document.getElementById('ch2RevealBtn').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('ch2Checkpoint').style.display = 'block';
+  }, 2000);
+}
+
+function checkCh2(btn, idx) {
+  const correct = idx === 1;
+  const feedback = document.getElementById('ch2Feedback');
+  document.querySelectorAll('#ch2Checkpoint .cq-option').forEach(b => b.classList.remove('chosen','correct','wrong'));
+  btn.classList.add('chosen');
+  
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'cq-feedback show correct';
+    feedback.textContent = '✅ 正确！温度升高 → 分子运动加快 → 扩散更快（如热水中的墨汁扩散更快）。';
+    if (!state.quizPassed[2]) { state.quizPassed[2] = true; addStars(3, '通过第2关测验'); }
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('ch2Correct').classList.add('correct');
+    feedback.className = 'cq-feedback show wrong';
+    feedback.textContent = idx === 3 ? '❌ 拆分水分子得到H和O原子，它们不再是水了！' : '❌ 回想上面的温度实验：温度越高，分子运动越快。';
+  }
+}
+
+// ========== CHAPTER 3 ==========
+function renderChapter3() {
+  return `
+    <div class="card">
+      <h3>⚡ 关键实验：水的电解</h3>
+      <p>如果给水通电，水分子会被"拆开"吗？答案是——会！</p>
+      <div class="lab-container" style="background:linear-gradient(135deg,#0f172a,#1e293b)">
+        <div class="lab-title">🔌 电解水实验</div>
+        <div class="lab-stage" id="ch3LabStage">
+          <canvas id="ch3Canvas" width="500" height="180"></canvas>
+        </div>
+        <div class="lab-controls">
+          <button class="lab-btn" onclick="ch3Electrolyze()" id="ch3StartBtn">⚡ 通电分解</button>
+          <button class="lab-btn" onclick="ch3Reset()">🔄 重置</button>
+        </div>
+        <div class="lab-feedback" id="ch3Feedback">水分子静静地待着——点击"通电分解"看看会发生什么？</div>
+      </div>
+    </div>
+
+    <div class="card" id="ch3RevealCard" style="display:none">
+      <h3>💡 你观察到了什么？</h3>
+      <div class="reveal-text">
+        <p class="reveal-step" id="ch3s1">1️⃣ 通电后，水分子（H₂O）<span class="highlight">分解</span>成了氢原子（H）和氧原子（O）。</p>
+        <p class="reveal-step" id="ch3s2">2️⃣ 拆开后，每2个氢原子组合成1个<span class="highlight">氢分子</span>（H₂），共得到2个H₂；2个氧原子组合成1个<span class="highlight">氧分子</span>（O₂）。</p>
+        <p class="reveal-step" id="ch3s3">3️⃣ <strong>核心发现：</strong>原子在化学变化中<span class="highlight">不可再分</span>，只是重新组合。</p>
+        <p class="reveal-step" id="ch3s4">4️⃣ <strong>原子</strong> = 化学变化中的<span class="highlight">最小粒子</span>。</p>
+      </div>
+      <button class="btn btn-primary" onclick="revealCh3Steps()" id="ch3RevealBtn">逐步揭示</button>
+    </div>
+
+    <div class="checkpoint" id="ch3Checkpoint" style="display:none">
+      <h4>📝 第三关：分子 vs 原子</h4>
+      <p style="font-size:14px;margin-bottom:12px">关于分子和原子，下列说法<strong>错误</strong>的是？</p>
+      <div>
+        <button class="cq-option" onclick="checkCh3(this, 0)">A. 分子在化学变化中可以分为原子</button>
+        <button class="cq-option" onclick="checkCh3(this, 1)">B. 原子在化学变化中不可再分</button>
+        <button class="cq-option" onclick="checkCh3(this, 2)" id="ch3Correct">C. 分子比原子大（一定是这样）</button>
+        <button class="cq-option" onclick="checkCh3(this, 3)">D. 原子可以重新组合成新分子</button>
+      </div>
+      <div class="cq-feedback" id="ch3QuizFeedback"></div>
+    </div>
+  `;
+}
+
+let ch3State = { phase: 'idle', molecules: [], atoms: [], products: [], timer: 0 };
+
+function initChapter3() {
+  ch3State = { phase: 'idle', molecules: [], atoms: [], products: [], timer: 0 };
+  document.getElementById('ch3RevealCard').style.display = 'none';
+  document.getElementById('ch3Checkpoint').style.display = 'none';
+  document.getElementById('ch3StartBtn').disabled = false;
+  // Create 2 water molecules (2H₂O → 2H₂ + O₂)
+  for (let i = 0; i < 2; i++) {
+    ch3State.molecules.push({
+      x: 140 + i * 220, y: 90, type: 'H2O',
+      atoms: [
+        { type: 'H', color: '#3b82f6', dx: -22, dy: 8 },
+        { type: 'O', color: '#ef4444', dx: 0, dy: -8 },
+        { type: 'H', color: '#3b82f6', dx: 22, dy: 8 }
+      ]
+    });
+  }
+  drawCh3();
+}
+
+function ch3Reset() {
+  initChapter3();
+  document.getElementById('ch3Feedback').textContent = '水分子静静地待着——点击"通电分解"看看会发生什么？';
+}
+
+function ch3Electrolyze() {
+  if (ch3State.phase !== 'idle') return;
+  ch3State.phase = 'splitting';
+  ch3State.timer = 0;
+  document.getElementById('ch3StartBtn').disabled = true;
+  document.getElementById('ch3Feedback').textContent = '⚡ 通电中……水分子正在分解！';
+  
+  const interval = setInterval(() => {
+    ch3State.timer++;
+    if (ch3State.timer >= 80) {
+      clearInterval(interval);
+      ch3State.phase = 'atoms';
+      document.getElementById('ch3Feedback').textContent = '水分子已分解为氢原子(H)和氧原子(O)！';
+      ch3State.atoms = [];
+      ch3State.molecules.forEach(m => {
+        m.atoms.forEach(a => ch3State.atoms.push({ ...a, x: m.x + a.dx, y: m.y + a.dy, vx: 0, vy: 0 }));
+      });
+      ch3State.molecules = [];
+      
+      setTimeout(() => {
+        ch3State.phase = 'combining';
+        document.getElementById('ch3Feedback').textContent = '原子正在重新组合……';
+        combineAtoms();
+      }, 1500);
+    }
+    drawCh3();
+  }, 30);
+}
+
+function combineAtoms() {
+  // Sort: H's go together, O's go together
+  const hAtoms = ch3State.atoms.filter(a => a.type === 'H');
+  const oAtoms = ch3State.atoms.filter(a => a.type === 'O');
+  ch3State.products = [];
+  
+  // 2H → H₂ (positioned on top row)
+  const hCount = Math.floor(hAtoms.length / 2);
+  const hSpacing = 160;
+  const hStartX = (500 - hCount * hSpacing) / 2 + hSpacing / 2;
+  for (let i = 0; i < hCount; i++) {
+    ch3State.products.push({
+      x: hStartX + i * hSpacing, y: 55, type: 'H₂', color: '#3b82f6',
+      atoms: [hAtoms[i*2], hAtoms[i*2+1]]
+    });
+  }
+  
+  // 2O → O₂ (positioned on bottom row, centered)
+  const oCount = Math.floor(oAtoms.length / 2);
+  for (let i = 0; i < oCount; i++) {
+    ch3State.products.push({
+      x: 250, y: 135, type: 'O₂', color: '#ef4444',
+      atoms: [oAtoms[i*2], oAtoms[i*2+1]]
+    });
+  }
+  
+  ch3State.phase = 'done';
+  document.getElementById('ch3Feedback').innerHTML = 
+    '✅ 完成！化学方程式：<strong>2H₂O → 2H₂ + O₂</strong><br>' +
+    '氢原子→H₂（氢气），氧原子→O₂（氧气）。原子种类和数量不变，只是重新组合！';
+  document.getElementById('ch3RevealCard').style.display = 'block';
+  drawCh3();
+}
+
+function drawCh3() {
+  const canvas = document.getElementById('ch3Canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 500, 180);
+  
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  
+  if (ch3State.phase === 'idle' || ch3State.phase === 'splitting') {
+    ctx.fillText('水分子 H₂O (通电前)', 250, 20);
+    ch3State.molecules.forEach(m => {
+      // Bonds
+      m.atoms.forEach((a, ai) => {
+        if (ai > 0) {
+          ctx.strokeStyle = 'rgba(148,163,184,0.6)'; ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(m.x + a.dx, m.y + a.dy);
+          ctx.lineTo(m.x + m.atoms[0].dx, m.y + m.atoms[0].dy);
+          ctx.stroke();
+        }
+      });
+      // Atoms
+      m.atoms.forEach(a => {
+        ctx.fillStyle = a.color;
+        if (ch3State.phase === 'splitting') {
+          const jitter = (Math.sin(ch3State.timer * 0.5 + a.dx) * 4);
+          ctx.beginPath();
+          ctx.arc(m.x + a.dx + jitter, m.y + a.dy + jitter * 0.7, a.type === 'O' ? 14 : 10, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(m.x + a.dx, m.y + a.dy, a.type === 'O' ? 14 : 10, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+        ctx.fillText(a.type, m.x + a.dx, m.y + a.dy + 4);
+      });
+    });
+    
+    if (ch3State.phase === 'splitting') {
+      // Lightning bolt effect
+      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3;
+      ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.moveTo(200, 170); ctx.lineTo(220, 120);
+      ctx.lineTo(230, 130); ctx.lineTo(250, 100); ctx.lineTo(260, 110);
+      ctx.lineTo(280, 85); ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    
+  } else if (ch3State.phase === 'atoms') {
+    ctx.fillText('拆开的原子：H (蓝) 和 O (红)', 250, 20);
+    // Show scattered atoms
+    ch3State.atoms.forEach((a, i) => {
+      const scatteredX = a.x + (Math.sin(i * 2.7) * 40);
+      const scatteredY = a.y + (Math.cos(i * 2.1) * 30);
+      ctx.fillStyle = a.color;
+      ctx.beginPath(); ctx.arc(scatteredX, scatteredY, a.type === 'O' ? 14 : 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+      ctx.fillText(a.type, scatteredX, scatteredY + 4);
+    });
+    
+  } else if (ch3State.phase === 'combining' || ch3State.phase === 'done') {
+    ctx.fillText('重新组合后的产物', 250, 20);
+    // Show chemical equation
+    ctx.fillStyle = 'rgba(251,191,36,0.8)'; ctx.font = 'bold 13px sans-serif';
+    ctx.fillText('2H₂O → 2H₂ + O₂', 250, 170);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px sans-serif';
+    
+    ch3State.products.forEach(p => {
+      ctx.strokeStyle = 'rgba(148,163,184,0.5)'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(p.x - 15, p.y); ctx.lineTo(p.x + 15, p.y);
+      ctx.stroke();
+      
+      if (p.type === 'O₂') {
+        ctx.beginPath();
+        ctx.moveTo(p.x - 15, p.y - 3); ctx.lineTo(p.x + 15, p.y - 3);
+        ctx.stroke();
+      }
+      
+      p.atoms.forEach((a, ai) => {
+        const ax = p.x + (ai === 0 ? -15 : 15);
+        ctx.fillStyle = a.color;
+        ctx.beginPath(); ctx.arc(ax, p.y, p.type === 'O₂' ? 14 : 10, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+        ctx.fillText(a.type, ax, p.y + 4);
+      });
+      
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(p.type, p.x, p.y + 30);
+    });
+  }
+}
+
+function revealCh3Steps() {
+  ['ch3s1','ch3s2','ch3s3','ch3s4'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, i * 500);
+  });
+  document.getElementById('ch3RevealBtn').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('ch3Checkpoint').style.display = 'block';
+  }, 2500);
+}
+
+function checkCh3(btn, idx) {
+  const correct = idx === 2;
+  const feedback = document.getElementById('ch3QuizFeedback');
+  document.querySelectorAll('#ch3Checkpoint .cq-option').forEach(b => b.classList.remove('chosen','correct','wrong'));
+  btn.classList.add('chosen');
+  
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'cq-feedback show correct';
+    feedback.textContent = '✅ 正确！"分子一定比原子大"是错误的。例如汞原子(Hg)就比氢分子(H₂)大得多。不能简单比较分子和原子的大小。';
+    if (!state.quizPassed[3]) { state.quizPassed[3] = true; addStars(3, '通过第3关测验'); }
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('ch3Correct').classList.add('correct');
+    feedback.className = 'cq-feedback show wrong';
+    feedback.textContent = '❌ ABD都是正确的。C是错的：原子不一定比分子小（例如汞原子>氢分子）。';
+  }
+}
+
+// ========== CHAPTER 4 ==========
+function renderChapter4() {
+  return `
+    <div class="card">
+      <h3>🧬 原子的内部结构</h3>
+      <p>原子由 <span class="highlight">原子核</span>（中心）+ <span class="highlight">核外电子</span>（绕核运动）组成。</p>
+      <p>原子核又由 <span style="color:var(--red);font-weight:700">质子</span> 和 <span style="color:var(--slate);font-weight:700">中子</span> 组成。</p>
+    </div>
+
+    <div class="card">
+      <h3>🎮 原子搭建器：亲自动手构建一个原子！</h3>
+      <p>调整下方的质子、中子和电子数量，试着构建一个<strong>碳原子（C）</strong>——它有 <strong>6个质子、6个中子、6个电子</strong>。</p>
+      <div class="lab-container" style="background:linear-gradient(135deg,#0f172a,#1e293b)">
+        <div class="lab-title">⚛️ 原子搭建器</div>
+        <div class="atom-builder">
+          <div class="builder-display" id="builderDisplay">
+            <canvas id="builderCanvas" width="260" height="260"></canvas>
+          </div>
+          <div class="builder-result" id="builderResult"></div>
+          <div class="builder-controls">
+            <div class="builder-group">
+              <label style="color:#ef4444">🔴 质子</label>
+              <div class="counter">
+                <button class="btn-minus" onclick="adjustParticle('proton',-1)">−</button>
+                <span class="counter-value" id="protonCount">0</span>
+                <button class="btn-plus" onclick="adjustParticle('proton',1)">+</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <label style="color:#94a3b8">⚪ 中子</label>
+              <div class="counter">
+                <button class="btn-minus" onclick="adjustParticle('neutron',-1)">−</button>
+                <span class="counter-value" id="neutronCount">0</span>
+                <button class="btn-plus" onclick="adjustParticle('neutron',1)">+</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <label style="color:#60a5fa">🔵 电子</label>
+              <div class="counter">
+                <button class="btn-minus" onclick="adjustParticle('electron',-1)">−</button>
+                <span class="counter-value" id="electronCount">0</span>
+                <button class="btn-plus" onclick="adjustParticle('electron',1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lab-feedback" id="ch4Feedback">尝试构建一个碳原子：6质子 + 6中子 + 6电子</div>
+      </div>
+    </div>
+
+    <div class="card" id="ch4InfoCard" style="display:none">
+      <h3>📊 三种粒子对比</h3>
+      <table class="cmp-table">
+        <tr><th></th><th>质子</th><th>中子</th><th>电子</th></tr>
+        <tr><td>位置</td><td>原子核内</td><td>原子核内</td><td>原子核外</td></tr>
+        <tr><td>电性</td><td>+1（正电）</td><td>0（不带电）</td><td>-1（负电）</td></tr>
+        <tr><td>质量</td><td>≈ 1</td><td>≈ 1</td><td>≈ 1/1836（极小）</td></tr>
+      </table>
+      <div class="info-box info-amber" style="margin-top:12px">
+        <strong>⚠️ 关键等式：</strong><br>
+        ① <strong>核电荷数 = 质子数 = 核外电子数</strong>（原子不显电性）<br>
+        ② <strong>相对原子质量 ≈ 质子数 + 中子数</strong>（电子质量忽略不计）<br>
+        ③ 原子的质量主要集中在 <strong>原子核</strong> 上
+      </div>
+    </div>
+
+    <div class="checkpoint" id="ch4Checkpoint" style="display:none">
+      <h4>📝 第四关：原子结构</h4>
+      <p style="font-size:14px;margin-bottom:12px">对于钠原子（质子数11，中子数12），下列说法正确的是？</p>
+      <div>
+        <button class="cq-option" onclick="checkCh4(this, 0)">A. 核外电子数是12</button>
+        <button class="cq-option" onclick="checkCh4(this, 1)" id="ch4Correct">B. 核电荷数是11</button>
+        <button class="cq-option" onclick="checkCh4(this, 2)">C. 相对原子质量是11</button>
+        <button class="cq-option" onclick="checkCh4(this, 3)">D. 原子核内有11个中子</button>
+      </div>
+      <div class="cq-feedback" id="ch4Feedback"></div>
+    </div>
+  `;
+}
+
+let builderState = { proton: 0, neutron: 0, electron: 0 };
+
+function initChapter4() {
+  builderState = { proton: 0, neutron: 0, electron: 0 };
+  document.getElementById('ch4InfoCard').style.display = 'none';
+  document.getElementById('ch4Checkpoint').style.display = 'none';
+  updateBuilder();
+}
+
+function adjustParticle(particle, delta) {
+  const key = particle;
+  builderState[key] = Math.max(0, Math.min(20, builderState[key] + delta));
+  
+  // Auto-balance: if adjusting proton, suggest matching electron for neutral atom
+  updateBuilder();
+}
+
+function updateBuilder() {
+  document.getElementById('protonCount').textContent = builderState.proton;
+  document.getElementById('neutronCount').textContent = builderState.neutron;
+  document.getElementById('electronCount').textContent = builderState.electron;
+  
+  drawBuilder();
+  checkBuilder();
+}
+
+function drawBuilder() {
+  const canvas = document.getElementById('builderCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 130, cy = 130;
+  ctx.clearRect(0, 0, 260, 260);
+  
+  // Shell labels and data
+  const shellNames = ['K层', 'L层', 'M层'];
+  const shellRadii = [55, 87, 119];
+  const shellLimits = [2, 8, 8];
+  const shellColors = ['rgba(59,130,246,0.35)', 'rgba(139,92,246,0.35)', 'rgba(236,72,153,0.35)'];
+  const shellColorsSolid = ['#3b82f6', '#8b5cf6', '#ec4899'];
+  
+  // Calculate electron distribution
+  const eCount = builderState.electron;
+  const shells = [];
+  let remaining = eCount;
+  for (let s = 0; s < 3 && remaining > 0; s++) {
+    const n = Math.min(remaining, shellLimits[s]);
+    shells.push(n);
+    remaining -= n;
+  }
+  
+  // Draw orbit rings
+  for (let si = 0; si < 3; si++) {
+    const r = shellRadii[si];
+    const isActive = si < shells.length;
+    
+    // Orbit circle
+    ctx.strokeStyle = isActive ? shellColors[si] : 'rgba(100,116,139,0.12)';
+    ctx.lineWidth = isActive ? 2 : 1;
+    ctx.setLineDash(isActive ? [] : [3, 6]);
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Shell label at right side of orbit
+    if (isActive) {
+      const labelX = cx + r + 12, labelY = cy;
+      ctx.fillStyle = shellColorsSolid[si];
+      ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(`${shellNames[si]}`, labelX, labelY - 4);
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText(`${shells[si]}e⁻`, labelX, labelY + 12);
+    } else if (si === shells.length && si === 0) {
+      // Show empty shell hint for first unused shell
+      const labelX = cx + r + 12, labelY = cy;
+      ctx.fillStyle = 'rgba(148,163,184,0.4)';
+      ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(`${shellNames[si]} (未填)`, labelX, labelY + 4);
+    }
+  }
+  
+  // Nucleus
+  const nucSize = 20 + Math.max(0, Math.min(8, (builderState.proton + builderState.neutron - 4) * 2));
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, nucSize + 4);
+  grad.addColorStop(0, '#f59e0b'); grad.addColorStop(1, 'rgba(245,158,11,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(cx, cy, nucSize + 4, 0, Math.PI * 2); ctx.fill();
+  
+  ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(cx, cy, nucSize, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`P:${builderState.proton} N:${builderState.neutron}`, cx, cy + 4);
+  
+  // Draw electrons on each shell
+  const time = Date.now() * 0.001;
+  shells.forEach((n, si) => {
+    const r = shellRadii[si];
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2 + time * (1.8 - si * 0.4);
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      
+      // Electron glow
+      ctx.fillStyle = shellColorsSolid[si].replace(')', ',0.25)').replace('rgb','rgba');
+      ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2); ctx.fill();
+      
+      // Electron
+      ctx.fillStyle = shellColorsSolid[si];
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+      
+      // e⁻ label
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('e⁻', x, y + 3);
+    }
+  });
+  
+  // Continue animation
+  if (builderState.electron > 0) {
+    requestAnimationFrame(() => { if (document.getElementById('builderCanvas')) drawBuilder(); });
+  }
+}
+
+function checkBuilder() {
+  const p = builderState.proton, n = builderState.neutron, e = builderState.electron;
+  const fb = document.getElementById('ch4Feedback');
+  const result = document.getElementById('builderResult');
+  
+  result.textContent = '';
+  result.style.background = '';
+  
+  if (p === 0 && n === 0 && e === 0) {
+    fb.textContent = '尝试构建一个碳原子：6质子 + 6中子 + 6电子';
+    return;
+  }
+  
+  // Element detection
+  const elements = {
+    1: '氢(H)', 2: '氦(He)', 3: '锂(Li)', 4: '铍(Be)', 5: '硼(B)',
+    6: '碳(C)', 7: '氮(N)', 8: '氧(O)', 9: '氟(F)', 10: '氖(Ne)',
+    11: '钠(Na)', 12: '镁(Mg)', 13: '铝(Al)', 14: '硅(Si)', 15: '磷(P)',
+    16: '硫(S)', 17: '氯(Cl)', 18: '氩(Ar)', 19: '钾(K)', 20: '钙(Ca)'
+  };
+  
+  const elName = elements[p] || `未知元素(质子数${p})`;
+  const mass = p + n;
+  
+  let status = '';
+  if (e === p) {
+    result.style.background = '#d1fae5'; result.style.color = '#065f46';
+    status = '✅ 中性原子';
+    fb.textContent = `你构建了 ${elName}！相对原子质量 ≈ ${mass}。${p === 6 ? '这就是碳原子！完美！' : ''}`;
+    if (!state.quizPassed['atombuild']) {
+      state.quizPassed['atombuild'] = true;
+      addStars(2, '成功构建原子');
+    }
+    document.getElementById('ch4InfoCard').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('ch4Checkpoint').style.display = 'block';
+    }, 1500);
+  } else if (e > p) {
+    result.style.background = '#fee2e2'; result.style.color = '#991b1b';
+    status = `⚠️ 阴离子（带${p - e}个负电荷）`;
+    fb.textContent = `电子数(${e}) > 质子数(${p})，这是带负电的阴离子。中性原子应电子数=质子数。`;
+  } else {
+    result.style.background = '#fef3c7'; result.style.color = '#92400e';
+    status = `⚠️ 阳离子（带${p - e}个正电荷）`;
+    fb.textContent = `质子数(${p}) > 电子数(${e})，这是带正电的阳离子。中性原子应电子数=质子数。`;
+  }
+  
+  result.textContent = `当前构建：${elName} | 质量数≈${mass} | ${status}`;
+  
+  // Auto start electron animation
+  if (e > 0) drawBuilder();
+}
+
+function checkCh4(btn, idx) {
+  const correct = idx === 1;
+  const feedback = document.getElementById('ch4Feedback');
+  document.querySelectorAll('#ch4Checkpoint .cq-option').forEach(b => b.classList.remove('chosen','correct','wrong'));
+  btn.classList.add('chosen');
+  
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'cq-feedback show correct';
+    feedback.textContent = '✅ 正确！核电荷数 = 质子数 = 11。电子数 = 质子数 = 11（中性原子）。相对原子质量 ≈ 11+12 = 23。';
+    if (!state.quizPassed[4]) { state.quizPassed[4] = true; addStars(3, '通过第4关测验'); }
+  } else {
+    btn.classList.add('wrong'); document.getElementById('ch4Correct').classList.add('correct');
+    feedback.className = 'cq-feedback show wrong';
+    feedback.textContent = '❌ 核电荷数=质子数=11(A错B对)。相对原子质量≈11+12=23(C错)。中子数=12不是11(D错)。';
+  }
+}
+
+// ========== CHAPTER 5 ==========
+function renderChapter5() {
+  const elements = [
+    {num:1,sym:'H',name:'氢',cat:'nonmetal',info:'最轻的元素，宇宙中最丰富'},
+    {num:2,sym:'He',name:'氦',cat:'noble',info:'稀有气体，气球填充'},
+    {num:3,sym:'Li',name:'锂',cat:'alkali',info:'最轻的金属，电池材料'},
+    {num:4,sym:'Be',name:'铍',cat:'alkaline',info:'轻金属，合金材料'},
+    {num:5,sym:'B',name:'硼',cat:'metalloid',info:'用于玻璃和半导体'},
+    {num:6,sym:'C',name:'碳',cat:'nonmetal',info:'生命的基础元素'},
+    {num:7,sym:'N',name:'氮',cat:'nonmetal',info:'空气中占比78%'},
+    {num:8,sym:'O',name:'氧',cat:'nonmetal',info:'地壳中最多，呼吸必需'},
+    {num:9,sym:'F',name:'氟',cat:'halogen',info:'最活泼的非金属'},
+    {num:10,sym:'Ne',name:'氖',cat:'noble',info:'霓虹灯发光气体'},
+    {num:11,sym:'Na',name:'钠',cat:'alkali',info:'食盐的组成元素'},
+    {num:12,sym:'Mg',name:'镁',cat:'alkaline',info:'轻质合金，烟花'},
+    {num:13,sym:'Al',name:'铝',cat:'metal',info:'地壳中最多的金属'},
+    {num:14,sym:'Si',name:'硅',cat:'metalloid',info:'芯片的核心材料'},
+    {num:15,sym:'P',name:'磷',cat:'nonmetal',info:'火柴、化肥'},
+    {num:16,sym:'S',name:'硫',cat:'nonmetal',info:'火药、硫酸原料'},
+    {num:17,sym:'Cl',name:'氯',cat:'halogen',info:'消毒、制塑料'},
+    {num:18,sym:'Ar',name:'氩',cat:'noble',info:'保护气、灯泡填充'},
+    {num:19,sym:'K',name:'钾',cat:'alkali',info:'化肥重要元素'},
+    {num:20,sym:'Ca',name:'钙',cat:'alkaline',info:'骨骼、建筑'}
+  ];
+  
+  const catColors = {
+    nonmetal:'#06b6d4', noble:'#8b5cf6', alkali:'#ef4444', alkaline:'#f97316',
+    metalloid:'#84cc16', halogen:'#3b82f6', metal:'#64748b'
+  };
+  
+  let tableHTML = elements.map(el => {
+    return `<div class="el-cell" style="background:${catColors[el.cat]}" 
+      onclick="showElementInfo(${el.num},'${el.sym}','${el.name}','${el.info}','${el.cat}')"
+      title="${el.name}">
+      <span class="el-num">${el.num}</span>
+      <span class="el-sym">${el.sym}</span>
+      <span class="el-name">${el.name}</span>
+    </div>`;
+  }).join('');
+
+  // Standard 18-column layout for first 20 elements
+  // Period 1: col1=H(0), col18=He(1)
+  // Period 2: col1=Li(2), col2=Be(3), col13=B(4), col14=C(5), col15=N(6), col16=O(7), col17=F(8), col18=Ne(9)
+  // Period 3: col1=Na(10), col2=Mg(11), col13=Al(12), col14=Si(13), col15=P(14), col16=S(15), col17=Cl(16), col18=Ar(17)
+  // Period 4: col1=K(18), col2=Ca(19)
+  const periodicLayout = [
+    // Period 1
+    {idx:0, col:1}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, {idx:1, col:18},
+    // Period 2
+    {idx:2, col:1}, {idx:3, col:2}, null, null, null, null, null, null, null, null, null, null, {idx:4, col:13}, {idx:5, col:14}, {idx:6, col:15}, {idx:7, col:16}, {idx:8, col:17}, {idx:9, col:18},
+    // Period 3
+    {idx:10, col:1}, {idx:11, col:2}, null, null, null, null, null, null, null, null, null, null, {idx:12, col:13}, {idx:13, col:14}, {idx:14, col:15}, {idx:15, col:16}, {idx:16, col:17}, {idx:17, col:18},
+    // Period 4
+    {idx:18, col:1}, {idx:19, col:2}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
+  ];
+  
+  let gridHTML = '';
+  periodicLayout.forEach(cell => {
+    if (cell && cell.idx !== undefined) {
+      const el = elements[cell.idx];
+      gridHTML += `<div class="el-cell" style="background:${catColors[el.cat]}" 
+        onclick="showElementInfo(${el.num},'${el.sym}','${el.name}','${el.info}','${el.cat}')"
+        title="${el.name}（${el.sym}）——第${cell.col}列">
+        <span class="el-num">${el.num}</span>
+        <span class="el-sym">${el.sym}</span>
+        <span class="el-name">${el.name}</span>
+      </div>`;
+    } else {
+      gridHTML += '<div class="el-cell empty"></div>';
+    }
+  });
+
+  return `
+    <div class="card">
+      <h3>📌 什么是元素？</h3>
+      <p>元素 = <span class="highlight">质子数相同</span>的一类原子的总称。</p>
+      <p>比如：所有质子数为6的原子，都叫<span style="color:#64748b;font-weight:700">碳元素</span>。</p>
+      <div class="info-box info-purple">
+        <strong>🎯 核心：</strong>质子数（核电荷数）决定元素种类。<br>
+        不管中子数是否相同，只要质子数一样，就是同一种元素！
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 元素周期表（前20号）——点击探索</h3>
+      <p>每种颜色代表不同类型的元素。点击任意元素查看详细信息：</p>
+      <div class="lab-container">
+        <div class="lab-title">🗂️ 元素周期表（标准18列格式）</div>
+        <div style="overflow-x:auto;padding-bottom:4px">
+        <div style="display:flex;align-items:stretch;margin-bottom:4px;min-width:600px">
+          <!-- Period labels -->
+          <div style="display:flex;flex-direction:column;justify-content:space-around;padding-right:6px;min-width:52px">
+            <div style="font-size:9px;color:rgba(255,255,255,.4);text-align:right;padding:2px 0">第1周期</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.4);text-align:right;padding:2px 0">第2周期</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.4);text-align:right;padding:2px 0">第3周期</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.4);text-align:right;padding:2px 0">第4周期</div>
+          </div>
+          <div class="periodic-grid" id="periodicGrid" style="flex:1">${gridHTML}</div>
+        </div>
+        <!-- Column number hints -->
+        <div style="display:flex;justify-content:space-between;padding:0 0 0 55px;margin-top:2px">
+          <span style="font-size:7px;color:rgba(255,255,255,.25)">1</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.25)">2</span>
+          <span style="font-size:7px;color:rgba(255,255,255,0)">-</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.15)">13</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.15)">14</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.15)">15</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.15)">16</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.15)">17</span>
+          <span style="font-size:7px;color:rgba(255,255,255,.25)">18</span>
+        </div>
+        </div>
+        <div id="elementInfoBox" style="margin-top:16px;color:#fff;font-size:14px;min-height:40px;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎮 元素分类挑战</h3>
+      <p>将地壳中含量最多的元素按从高到低排列：</p>
+      <div class="info-box info-green" id="elementSortResult" style="display:none"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0" id="sortArea">
+        <button class="lab-btn" style="background:rgba(239,68,68,.15);color:var(--text);border-color:#ef4444" 
+          onclick="sortElement('O')" id="sortO">O 氧</button>
+        <button class="lab-btn" style="background:rgba(249,115,22,.15);color:var(--text);border-color:#f97316" 
+          onclick="sortElement('Si')" id="sortSi">Si 硅</button>
+        <button class="lab-btn" style="background:rgba(245,158,11,.15);color:var(--text);border-color:#f59e0b" 
+          onclick="sortElement('Al')" id="sortAl">Al 铝</button>
+        <button class="lab-btn" style="background:rgba(132,204,22,.15);color:var(--text);border-color:#84cc16" 
+          onclick="sortElement('Fe')" id="sortFe">Fe 铁</button>
+        <button class="lab-btn" style="background:rgba(6,182,212,.15);color:var(--text);border-color:#06b6d4" 
+          onclick="sortElement('Ca')" id="sortCa">Ca 钙</button>
+      </div>
+      <p id="sortFeedback" style="text-align:center;font-size:14px;">点击按钮，按含量从高到低排列 ⬆️</p>
+    </div>
+
+    <div class="checkpoint" id="ch5Checkpoint" style="margin-top:18px">
+      <h4>📝 第五关：元素概念</h4>
+      <p style="font-size:14px;margin-bottom:12px">下列有关元素的说法，<strong>正确</strong>的是？</p>
+      <div>
+        <button class="cq-option" onclick="checkCh5(this, 0)">A. 同种元素的原子，中子数必须相同</button>
+        <button class="cq-option" onclick="checkCh5(this, 1)">B. 元素只讲种类，不讲个数</button>
+        <button class="cq-option" onclick="checkCh5(this, 2)" id="ch5Correct">C. B正确，且质子数决定元素种类</button>
+        <button class="cq-option" onclick="checkCh5(this, 3)">D. 以上都不对</button>
+      </div>
+      <div class="cq-feedback" id="ch5Feedback"></div>
+    </div>
+  `;
+}
+
+let sortOrder = [];
+const correctSort = ['O','Si','Al','Fe','Ca'];
+
+function initChapter5() {
+  sortOrder = [];
+  document.getElementById('elementSortResult').style.display = 'none';
+  document.getElementById('sortFeedback').textContent = '点击按钮，按含量从高到低排列 ⬆️';
+  document.querySelectorAll('#sortArea button').forEach(b => b.classList.remove('active'));
+}
+
+function sortElement(el) {
+  if (sortOrder.includes(el)) return;
+  sortOrder.push(el);
+  document.getElementById('sort' + el).classList.add('active');
+  
+  document.getElementById('sortFeedback').textContent = `已选择 ${sortOrder.length}/5：${sortOrder.join(' → ')}`;
+  
+  if (sortOrder.length === 5) {
+    const correct = JSON.stringify(sortOrder) === JSON.stringify(correctSort);
+    const result = document.getElementById('elementSortResult');
+    result.style.display = 'block';
+    
+    if (correct) {
+      result.className = 'info-box info-green';
+      result.innerHTML = '✅ 正确！地壳含量：<strong>O(氧) > Si(硅) > Al(铝) > Fe(铁) > Ca(钙)</strong><br>记忆口诀：<strong>养闺女贴钙</strong>';
+      if (!state.quizPassed['elemsort']) {
+        state.quizPassed['elemsort'] = true;
+        addStars(2, '正确排序地壳元素');
+      }
+    } else {
+      result.className = 'info-box info-red';
+      result.innerHTML = `❌ 不太对哦。正确答案是：<strong>O > Si > Al > Fe > Ca</strong><br>你的顺序：${sortOrder.join(' > ')}<br>记忆口诀：<strong>养闺女贴钙</strong>`;
+    }
+  }
+}
+
+function showElementInfo(num, sym, name, info, cat) {
+  const box = document.getElementById('elementInfoBox');
+  const catNames = {
+    nonmetal:'非金属', noble:'稀有气体', alkali:'碱金属', alkaline:'碱土金属',
+    metalloid:'类金属', halogen:'卤素', metal:'金属'
+  };
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:50px;height:50px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:700;background:var(--teal);font-size:20px;">${sym}</div>
+      <div>
+        <strong>${name}（${sym}）</strong> | 原子序数：${num} | 类别：${catNames[cat]}<br>
+        <span style="opacity:.7">${info}</span><br>
+        <span style="font-size:12px;opacity:.6">质子数=${num} | 核外电子数=${num}（中性原子）</span>
+      </div>
+    </div>
+  `;
+}
+
+function checkCh5(btn, idx) {
+  const correct = idx === 2;
+  const feedback = document.getElementById('ch5Feedback');
+  document.querySelectorAll('#ch5Checkpoint .cq-option').forEach(b => b.classList.remove('chosen','correct','wrong'));
+  btn.classList.add('chosen');
+  
+  if (correct) {
+    btn.classList.add('correct');
+    feedback.className = 'cq-feedback show correct';
+    feedback.textContent = '✅ 正确！元素由质子数决定，不讲个数（如"水含氢元素"不能写成"水含2个氢元素"）。同种元素的原子中子数可以不同（同位素），例如碳-12和碳-14都是碳元素。';
+    if (!state.quizPassed[5]) { state.quizPassed[5] = true; addStars(3, '通过第5关测验'); }
+  } else {
+    btn.classList.add('wrong'); document.getElementById('ch5Correct').classList.add('correct');
+    feedback.className = 'cq-feedback show wrong';
+    feedback.textContent = '❌ B和C都是对的但C更全面。A错：同种元素中子数可不同（如同位素）。';
+  }
+}
+
+// ========== SUMMARY ==========
+function showSummary() {
+  const container = document.getElementById('mainContainer');
+  const earned = state.stars;
+  const total = totalStars;
+  const pct = Math.round(earned / total * 100);
+  
+  let message = '';
+  if (pct >= 80) message = '🏆 太棒了！你已经完全掌握了物质构成的奥秘！';
+  else if (pct >= 50) message = '👍 不错！再复习一遍会更扎实。';
+  else message = '📚 继续加油！可以回到之前的章节再巩固一下。';
+  
+  container.innerHTML = `
+    <div class="chapter-panel active">
+      <div class="hook-banner" style="background:linear-gradient(135deg,#10b981,#059669)">
+        <span class="hook-emoji">🎉</span>
+        <div class="hook-question">学习完成！</div>
+        <div class="hook-sub">${message}</div>
+        <div style="margin-top:12px;font-size:30px;font-weight:800">⭐ ${earned} / ${total}</div>
+      </div>
+      
+      <div class="card">
+        <h3>🧠 知识全景图</h3>
+        <div class="flow-row" style="flex-direction:column;gap:6px">
+          <div class="flow-node" style="background:var(--purple);min-width:180px">物质</div>
+          <span class="flow-arrow">⬇</span>
+          <div style="display:flex;gap:24px">
+            <div class="flow-node" style="background:var(--teal)">分子</div>
+            <div class="flow-node" style="background:var(--blue)">原子（也直接构成物质）</div>
+          </div>
+          <span class="flow-arrow">⬇ 分子由原子构成</span>
+          <div class="flow-node" style="background:var(--blue)">原子</div>
+          <span class="flow-arrow">⬇ 原子的构成</span>
+          <div style="display:flex;gap:16px">
+            <div class="flow-node" style="background:var(--amber)">原子核</div>
+            <div class="flow-node" style="background:#60a5fa">核外电子</div>
+          </div>
+          <span class="flow-arrow">⬇</span>
+          <div style="display:flex;gap:12px">
+            <div class="flow-node" style="background:var(--red)">质子</div>
+            <div class="flow-node" style="background:var(--slate)">中子</div>
+          </div>
+          <span class="flow-arrow">⬇ 质子数决定</span>
+          <div class="flow-node" style="background:var(--green);min-width:160px">元素种类</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📋 核心概念速查</h3>
+        <table class="cmp-table">
+          <tr><th>概念</th><th>定义</th><th>关键点</th></tr>
+          <tr><td>分子</td><td>保持物质化学性质的最小粒子</td><td>化学变化中可再分</td></tr>
+          <tr><td>原子</td><td>化学变化中的最小粒子</td><td>化学变化中不可再分</td></tr>
+          <tr><td>元素</td><td>质子数相同的一类原子总称</td><td>只讲种类，不讲个数</td></tr>
+          <tr><td>质子数</td><td>原子核内带正电的粒子数</td><td>=核电荷数=电子数（中性原子）</td></tr>
+          <tr><td>相对原子质量</td><td>≈ 质子数 + 中子数</td><td>质量集中在原子核</td></tr>
+        </table>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="goChapter(1)">🔄 重新学习</button>
+        <button class="btn btn-secondary" onclick="goChapter(4)">🧬 再玩原子搭建器</button>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('chapterLabel').textContent = '完成';
+  document.querySelectorAll('.progress-step').forEach(el => el.classList.add('done'));
+}
+
+// ========== INIT ==========
+function init() {
+  renderChapter(1);
+  
+  // Start animation loops where needed
+  setInterval(() => {
+    if (document.getElementById('builderCanvas') && state.chapter === 4 && builderState.electron > 0) {
+      drawBuilder();
+    }
+  }, 50);
+}
+
+init();
+</script>
 </body>
 </html>

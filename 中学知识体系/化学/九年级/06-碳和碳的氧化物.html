@@ -6,50 +6,245 @@
   <title>碳和碳的氧化物 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 知识卡片 */
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--chemistry); }
+    .know-card .kc-def { font-size: 14px; color: var(--text-main); line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); }
+    .know-card .kc-examples strong { color: var(--text-main); }
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #fff7f5, #fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 18px; margin: 14px auto; max-width: 520px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .formula-box .label { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400; }
+
+    /* 属性清单 */
+    .property-list {
+      list-style: none; padding: 0; margin: 12px 0;
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
     }
+    .property-list li {
+      padding: 12px 18px; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .property-list li:last-child { border-bottom: none; }
+    .property-list li .pl-icon { flex-shrink: 0; font-size: 16px; }
+    .property-list li strong { color: var(--chemistry); }
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex; align-items: center; gap: 14px;
+      max-width: 560px; margin: 14px auto;
+    }
+    .slider-row input[type="range"] { flex: 1; }
+    .value-display {
+      min-width: 92px; padding: 6px 10px; text-align: center;
+      background: var(--chemistry); color: white; font-weight: 700;
+      border-radius: var(--radius-sm); font-size: 16px;
+    }
+
+    /* 信息读数区 */
+    .info-readout {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow); padding: 14px 18px; margin: 12px auto;
+      max-width: 600px; text-align: left; font-size: 14px; line-height: 1.9;
+      border-left: 4px solid var(--chemistry);
+    }
+    .info-readout .ir-title { font-weight: 700; color: var(--chemistry); margin-bottom: 6px; font-size: 15px; }
+
+    /* 模式切换 */
+    .mode-toggle {
+      display: inline-flex; background: var(--bg-soft);
+      border-radius: 22px; padding: 4px; gap: 4px; margin-bottom: 14px;
+    }
+    .mode-toggle .mt-btn {
+      padding: 7px 18px; border-radius: 18px; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      background: transparent; color: var(--text-secondary); transition: all 0.2s;
+    }
+    .mode-toggle .mt-btn.active { background: var(--chemistry); color: white; }
+
+    /* 碳单质结构对比 */
+    .allotrope-stage {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 18px; margin-top: 6px;
+    }
+    .allotrope-svg-box {
+      background: linear-gradient(160deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius-sm); padding: 8px; margin-bottom: 10px;
+    }
+    .allotrope-info .ai-name { font-size: 18px; font-weight: 700; color: var(--chemistry); }
+    .allotrope-info .ai-struct { font-size: 13px; color: var(--info); font-weight: 600; margin: 2px 0 8px; }
+    .allotrope-info .ai-props { font-size: 14px; line-height: 1.9; }
+    .allotrope-info .ai-props strong { color: var(--text-main); }
+
+    /* 实验舞台 */
+    .lab-stage {
+      background: linear-gradient(180deg, #fdf6ee, #f7ead7);
+      border-radius: var(--radius); padding: 12px; margin: 8px 0;
+    }
+    .lab-status {
+      display: inline-block; margin: 8px auto 4px; padding: 6px 16px;
+      background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+      font-size: 14px; font-weight: 600; color: var(--chemistry); min-height: 20px;
+    }
+    .lab-controls { margin-top: 12px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .step-btn {
+      padding: 9px 16px; border: 2px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 14px;
+      font-weight: 600; font-family: inherit; transition: all 0.2s;
+    }
+    .step-btn:hover:not(:disabled) { border-color: var(--chemistry); transform: translateY(-2px); }
+    .step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .step-btn.done { background: var(--success); color: white; border-color: var(--success); }
+    .step-btn.current { border-color: var(--chemistry); background: rgba(231,76,60,0.08); }
+
+    /* 翻转对比卡 */
+    .flip-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px; margin: 14px 0;
+    }
+    .flip-card {
+      perspective: 800px; height: 150px; cursor: pointer;
+    }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform 0.5s; transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute; inset: 0; backface-visibility: hidden;
+      border-radius: var(--radius-sm); padding: 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: var(--shadow); text-align: center;
+    }
+    .flip-front { background: var(--bg-card); color: var(--chemistry); font-size: 17px; font-weight: 700; }
+    .flip-front .ff-hint { font-size: 12px; color: var(--text-light); font-weight: 400; margin-top: 6px; }
+    .flip-back {
+      background: linear-gradient(135deg, #374151, #1f2937); color: white;
+      transform: rotateY(180deg); font-size: 12.5px; line-height: 1.7;
+      justify-content: flex-start; align-items: flex-start; text-align: left; padding: 12px;
+    }
+    .flip-back .co-line { color: #93c5fd; }
+    .flip-back .co2-line { color: #fca5a5; }
+    .flip-back strong { color: white; }
+
+    /* 温室效应 */
+    .gh-panel {
+      display: flex; gap: 18px; align-items: center; justify-content: center;
+      flex-wrap: wrap; margin: 10px 0;
+    }
+    .gh-earth-box { flex-shrink: 0; }
+    .gh-read {
+      max-width: 320px; text-align: left; font-size: 14px; line-height: 1.9;
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      box-shadow: var(--shadow); padding: 14px 18px;
+    }
+    .gh-read .gh-temp { font-size: 26px; font-weight: 800; color: var(--chemistry); font-family: 'Cambria', serif; }
+    .gh-read .gh-note { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+    /* 学科交叉链接 */
+    .cross-row {
+      display: flex; justify-content: space-between; align-items: stretch;
+      gap: 12px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .cross-link {
+      flex: 1; min-width: 180px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--text-main); transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--border);
+    }
+    .cross-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cross-link.cross-chem { border-left-color: var(--chemistry); }
+    .cross-link .arrow { font-size: 20px; color: var(--text-secondary); }
+    .cross-link .cl-label { font-size: 12px; color: var(--text-secondary); }
+    .cross-link .cl-title { font-size: 14px; font-weight: 600; }
+
+    /* 小结 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
+
+    @keyframes bubbleRise {
+      0% { transform: translateY(0); opacity: 0; }
+      15% { opacity: 0.9; }
+      100% { transform: translateY(-46px); opacity: 0; }
+    }
+    .bubble-anim { animation: bubbleRise 1.6s infinite ease-in; }
+
+    @keyframes flameFlicker {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(1.12); }
+    }
+    .flame-anim { animation: flameFlicker 0.5s infinite ease-in-out; transform-origin: bottom center; transform-box: fill-box; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">⚗️ 碳和碳的氧化物</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">⚫ 碳和碳的氧化物</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
@@ -60,31 +255,736 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>碳和碳的氧化物</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>碳和碳的氧化物</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">⚫ 第六单元：碳和碳的氧化物</div>
+    <p style="color: var(--text-secondary); font-size: 15px;">
+      同一种元素——碳，竟能构成自然界<strong style="color:var(--chemistry);">最硬的金刚石</strong>和
+      <strong style="color:var(--info);">最软的石墨</strong>之一；碳的两种氧化物 CO 和 CO₂ 性质更是天差地别。
+      本单元核心思想：<strong>结构决定性质，性质决定用途</strong>。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ========== 知识点 1：碳的单质 ========== -->
+  <h2 class="section-header"><span class="num">1</span>碳的单质</h2>
+
+  <div class="knowledge-grid">
+    <div class="know-card">
+      <div class="kc-title">💎 金刚石</div>
+      <div class="kc-def">无色透明、正八面体形状的固体，是<strong>天然存在的最硬的物质</strong>。</div>
+      <div class="kc-examples">
+        <strong>结构：</strong>每个碳原子与 4 个碳原子相连，构成空间网状结构。<br>
+        <strong>用途：</strong>裁玻璃、切割大理石、钻探机钻头、装饰品（钻石）。
+      </div>
+    </div>
+    <div class="know-card" style="border-left-color:#374151;">
+      <div class="kc-title" style="color:#374151;">✏️ 石墨</div>
+      <div class="kc-def">深灰色、有金属光泽、不透明的细鳞片状固体，<strong>质软、有滑腻感、能导电</strong>。</div>
+      <div class="kc-examples">
+        <strong>结构：</strong>层状结构，层与层之间作用力弱，易滑动。<br>
+        <strong>用途：</strong>铅笔芯、电极、润滑剂。
+      </div>
+    </div>
+    <div class="know-card" style="border-left-color:var(--info);">
+      <div class="kc-title" style="color:var(--info);">⚽ C₆₀（足球烯）</div>
+      <div class="kc-def">由 60 个碳原子构成的分子，形似足球，结构稳定。</div>
+      <div class="kc-examples">
+        <strong>应用前景：</strong>超导、催化、材料、医学等领域。<br>
+        <strong>注意：</strong>C₆₀ 是由分子构成的碳单质。
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 为什么性质差别这么大？</div>
+    金刚石、石墨、C₆₀ 都是由<strong>碳元素</strong>组成的单质，化学性质相似，但物理性质差异很大，
+    原因是：<strong>碳原子的排列方式不同</strong>。这就是"结构决定性质"的最好例证。<br>
+    此外，木炭和活性炭具有<strong>疏松多孔的结构</strong>，有吸附性，可用来吸附色素、异味和毒气（防毒面具）。
+    吸附属于<em>物理变化</em>。
+  </div>
+
+  <!-- ========== 交互 1：碳单质结构对比 ========== -->
+  <h2 class="section-header"><span class="num">观</span>交互一：碳单质微观结构对比</h2>
+  <div class="demo-container">
+    <h3>切换三种碳单质，观察碳原子排列方式的差异</h3>
+    <div class="demo-desc">结构不同 → 性质不同 → 用途不同。</div>
+
+    <div class="mode-toggle" id="allotropeToggle">
+      <button class="mt-btn active" data-key="diamond">💎 金刚石</button>
+      <button class="mt-btn" data-key="graphite">✏️ 石墨</button>
+      <button class="mt-btn" data-key="c60">⚽ C₆₀</button>
+    </div>
+
+    <div class="allotrope-stage">
+      <div class="allotrope-svg-box" id="allotropeSvg"></div>
+      <div class="allotrope-info info-readout" style="max-width:none; margin:0;" id="allotropeInfo"></div>
+    </div>
+  </div>
+
+  <!-- ========== 知识点 2：碳的化学性质 ========== -->
+  <h2 class="section-header"><span class="num">2</span>碳的化学性质</h2>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">🛡️</span><span><strong>常温下化学性质稳定：</strong>古代字画（用墨书写，墨的主要成分是碳）历经千年不褪色，就是利用了碳在常温下的稳定性。</span></li>
+    <li><span class="pl-icon">🔥</span><span><strong>可燃性（点燃）：</strong>氧气充足时充分燃烧生成 CO₂；氧气不充足时生成有毒的 CO。</span></li>
+    <li><span class="pl-icon">🧲</span><span><strong>还原性（高温）：</strong>碳能夺取某些氧化物中的氧，把金属还原出来，可用于冶金工业。</span></li>
+  </ul>
+
+  <div class="formula-box">
+    C + O₂ —点燃→ CO₂
+    <span class="label">氧气充足，充分燃烧（发出白光，放热）</span>
+  </div>
+  <div class="formula-box">
+    2C + O₂ —点燃→ 2CO
+    <span class="label">氧气不足，不充分燃烧，生成有毒的一氧化碳</span>
+  </div>
+  <div class="formula-box">
+    C + 2CuO —高温→ 2Cu + CO₂↑
+    <span class="label">碳的还原性：黑色粉末变红，生成的气体使石灰水变浑浊</span>
+  </div>
+
+  <div class="warning-box">
+    ⚠️ <strong>还原反应与还原剂：</strong>含氧化合物里的氧被夺去的反应叫还原反应。上述反应中，CuO 失去氧被<strong>还原</strong>成 Cu；
+    碳夺取了氧，具有还原性，是<strong>还原剂</strong>（还原剂被氧化）。
+  </div>
+
+  <!-- ========== 交互 2：碳还原氧化铜 ========== -->
+  <h2 class="section-header"><span class="num">验</span>交互二：碳还原氧化铜实验模拟</h2>
+  <div class="demo-container">
+    <h3>C + 2CuO —高温→ 2Cu + CO₂↑</h3>
+    <div class="demo-desc">点击"加热"观察：黑色粉末逐渐变红，澄清石灰水变浑浊。注意实验结束时"先撤导管、后熄灯"！</div>
+
+    <div class="lab-stage">
+      <svg viewBox="0 0 560 300">
+        <!-- 铁架台 -->
+        <rect x="30" y="30" width="8" height="240" fill="#6b7280"/>
+        <rect x="16" y="268" width="90" height="8" rx="3" fill="#4b5563"/>
+        <rect x="34" y="90" width="60" height="6" fill="#6b7280"/>
+        <!-- 大试管（略向下倾斜） -->
+        <g transform="rotate(-8 200 120)">
+          <path d="M 110 100 L 290 100 Q 306 100 306 116 Q 306 132 290 132 L 110 132 Z"
+                fill="rgba(219,234,254,0.35)" stroke="#64748b" stroke-width="2.5"/>
+          <!-- 黑色粉末 -->
+          <path id="cuoPowder" d="M 120 118 L 280 118 Q 296 118 296 126 L 296 132 L 120 132 Z"
+                fill="#111827"/>
+          <!-- 试管口橡胶塞 -->
+          <rect x="104" y="98" width="12" height="36" rx="3" fill="#9a3412"/>
+        </g>
+        <!-- 导管 -->
+        <path d="M 110 116 L 90 116 L 90 160 L 420 160 L 420 200" fill="none" stroke="#64748b" stroke-width="4"/>
+        <!-- 酒精灯 -->
+        <g id="cuoLamp">
+          <path d="M 160 268 L 175 236 L 225 236 L 240 268 Z" fill="#93c5fd" opacity="0.7" stroke="#3b82f6" stroke-width="2"/>
+          <rect x="196" y="222" width="8" height="16" fill="#92400e"/>
+          <!-- 火焰 -->
+          <g id="cuoFlame" style="opacity:0;" class="flame-anim">
+            <ellipse cx="200" cy="200" rx="14" ry="26" fill="#fb923c" opacity="0.9"/>
+            <ellipse cx="200" cy="208" rx="8" ry="16" fill="#fef08a" opacity="0.95"/>
+          </g>
+        </g>
+        <!-- 小试管：石灰水 -->
+        <path d="M 400 190 L 400 262 Q 400 274 420 274 Q 440 274 440 262 L 440 190"
+              fill="rgba(219,234,254,0.35)" stroke="#64748b" stroke-width="2.5"/>
+        <rect id="cuoLime" x="402" y="230" width="36" height="42" fill="#f8fafc" opacity="0.85"/>
+        <text x="420" y="292" text-anchor="middle" font-size="12" fill="#64748b">澄清石灰水</text>
+        <!-- 气泡 -->
+        <g id="cuoBubbles" style="opacity:0;">
+          <circle cx="420" cy="246" r="3" fill="#fff" stroke="#94a3b8" class="bubble-anim"/>
+          <circle cx="427" cy="250" r="2.4" fill="#fff" stroke="#94a3b8" class="bubble-anim" style="animation-delay:0.5s;"/>
+          <circle cx="414" cy="252" r="2" fill="#fff" stroke="#94a3b8" class="bubble-anim" style="animation-delay:1s;"/>
+        </g>
+        <!-- 标签 -->
+        <text x="200" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">C + CuO（黑色粉末）</text>
+        <text x="200" y="292" text-anchor="middle" font-size="12" fill="#64748b">酒精灯（高温）</text>
+      </svg>
+    </div>
+
+    <div class="lab-status" id="cuoStatus">反应前：黑色混合物粉末</div>
+
+    <div class="lab-controls">
+      <button class="step-btn current" id="cuoHeat">🔥 加热</button>
+      <button class="step-btn" id="cuoStop" disabled>🧪 结束实验（先撤导管再熄灯）</button>
+      <button class="step-btn" id="cuoReset">重置</button>
+    </div>
+
+    <div class="tip-box" style="text-align:left;">
+      <div class="tip-title">🔍 实验要点</div>
+      <strong>现象：</strong>黑色粉末逐渐变成<strong>红色</strong>（生成铜），导管口有气泡，澄清石灰水<strong>变浑浊</strong>（生成 CO₂）。<br>
+      <strong>操作：</strong>实验结束时，必须<strong>先把导管移出石灰水，再熄灭酒精灯</strong>，防止石灰水倒吸入热的试管使试管炸裂。<br>
+      <strong>结论：</strong>碳具有还原性，能把氧化铜中的铜还原出来（碳是还原剂）。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 3：二氧化碳 ========== -->
+  <h2 class="section-header"><span class="num">3</span>二氧化碳（CO₂）</h2>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">🎈</span><span><strong>物理性质：</strong>无色无味气体，<em>密度比空气大</em>，<em>能溶于水</em>。固体二氧化碳叫"干冰"，升华时吸热，可作制冷剂、用于人工降雨。</span></li>
+    <li><span class="pl-icon">🕯️</span><span><strong>不燃烧、也不支持燃烧：</strong>向放有阶梯蜡烛的烧杯中倾倒 CO₂，下层的蜡烛先熄灭、上层的后熄灭——同时说明 CO₂ 不支持燃烧且密度比空气大。因此 CO₂ 可用来<em>灭火</em>。</span></li>
+    <li><span class="pl-icon">💧</span><span><strong>与水反应：</strong>CO₂ + H₂O = H₂CO₃，生成的碳酸能使紫色石蕊试液变红；碳酸不稳定：H₂CO₃ = H₂O + CO₂↑。</span></li>
+    <li><span class="pl-icon">🥛</span><span><strong>与石灰水反应（检验 CO₂）：</strong>CO₂ + Ca(OH)₂ = CaCO₃↓ + H₂O，澄清石灰水变浑浊——这是检验 CO₂ 的专用方法。</span></li>
+    <li><span class="pl-icon">🌱</span><span><strong>用途：</strong>灭火、人工降雨（干冰）、光合作用的气体肥料、制汽水等。</span></li>
+  </ul>
+
+  <div class="formula-box">
+    CO₂ + H₂O = H₂CO₃
+    <span class="label">碳酸使紫色石蕊变红；受热分解 H₂CO₃ = H₂O + CO₂↑</span>
+  </div>
+  <div class="formula-box">
+    CO₂ + Ca(OH)₂ = CaCO₃↓ + H₂O
+    <span class="label">检验 CO₂：澄清石灰水变浑浊</span>
+  </div>
+
+  <h3 style="color:var(--chemistry); margin:20px 0 6px; font-size:16px;">🧪 CO₂ 的实验室制法</h3>
+  <ul class="property-list">
+    <li><span class="pl-icon">💊</span><span><strong>药品：</strong>石灰石（或大理石，主要成分 CaCO₃）与<em>稀盐酸</em>。不用稀硫酸（生成微溶的 CaSO₄ 覆盖表面阻止反应），不用浓盐酸（挥发出 HCl 使气体不纯）。</span></li>
+    <li><span class="pl-icon">⚗️</span><span><strong>装置：</strong>固液常温型发生装置（与制 H₂ 相同），长颈漏斗下端要<em>伸入液面以下</em>（液封），防止气体从漏斗逸出。</span></li>
+    <li><span class="pl-icon">🫙</span><span><strong>收集：</strong><em>向上排空气法</em>（CO₂ 密度比空气大且能溶于水，不用排水法）。验满：将<em>燃着的木条放在集气瓶口</em>，木条熄灭则已满。</span></li>
+  </ul>
+
+  <div class="formula-box">
+    CaCO₃ + 2HCl = CaCl₂ + H₂O + CO₂↑
+    <span class="label">实验室制取二氧化碳的反应原理</span>
+  </div>
+
+  <!-- ========== 交互 3：实验室制取 CO₂ ========== -->
+  <h2 class="section-header"><span class="num">制</span>交互三：实验室制取并检验 CO₂</h2>
+  <div class="demo-container">
+    <h3>按正确顺序完成五个步骤</h3>
+    <div class="demo-desc">①检查气密性 → ②装入石灰石 → ③加入稀盐酸 → ④向上排空气法收集 → ⑤通入石灰水检验</div>
+
+    <div class="lab-stage">
+      <svg viewBox="0 0 560 320">
+        <!-- 锥形瓶 -->
+        <path d="M 70 120 L 110 120 L 150 250 Q 154 266 138 266 L 42 266 Q 26 266 30 250 Z"
+              fill="rgba(219,234,254,0.4)" stroke="#64748b" stroke-width="2.5"/>
+        <!-- 液体 -->
+        <path id="co2Liquid" d="M 46 220 L 134 220 L 150 250 Q 154 266 138 266 L 42 266 Q 26 266 30 250 Z"
+              fill="#bfdbfe" opacity="0"/>
+        <!-- 石灰石 -->
+        <g id="co2Stones" style="opacity:0;">
+          <ellipse cx="70" cy="254" rx="12" ry="7" fill="#d6d3d1" stroke="#a8a29e"/>
+          <ellipse cx="95" cy="258" rx="10" ry="6" fill="#e7e5e4" stroke="#a8a29e"/>
+          <ellipse cx="115" cy="253" rx="9" ry="6" fill="#d6d3d1" stroke="#a8a29e"/>
+        </g>
+        <!-- 气泡 -->
+        <g id="co2Bubbles" style="opacity:0;">
+          <circle cx="75" cy="240" r="3" fill="#fff" stroke="#93c5fd" class="bubble-anim"/>
+          <circle cx="95" cy="244" r="2.5" fill="#fff" stroke="#93c5fd" class="bubble-anim" style="animation-delay:0.4s;"/>
+          <circle cx="112" cy="238" r="2" fill="#fff" stroke="#93c5fd" class="bubble-anim" style="animation-delay:0.9s;"/>
+        </g>
+        <!-- 双孔塞 -->
+        <rect x="64" y="112" width="52" height="14" rx="4" fill="#9a3412"/>
+        <!-- 长颈漏斗 -->
+        <g id="co2Funnel">
+          <path d="M 78 60 L 100 60 L 94 84 L 94 200 L 84 200 L 84 84 Z"
+                fill="rgba(255,255,255,0.5)" stroke="#64748b" stroke-width="2"/>
+          <rect id="co2Acid" x="86" y="120" width="6" height="76" fill="#93c5fd" opacity="0"/>
+        </g>
+        <!-- 导管到集气瓶 -->
+        <path d="M 110 118 L 132 118 L 132 90 L 300 90 L 300 220" fill="none" stroke="#64748b" stroke-width="4"/>
+        <!-- 集气瓶（向上排空气） -->
+        <path d="M 270 130 L 270 260 Q 270 272 285 272 L 315 272 Q 330 272 330 260 L 330 130"
+              fill="rgba(219,234,254,0.35)" stroke="#64748b" stroke-width="2.5"/>
+        <rect id="co2Gas" x="273" y="262" width="54" height="0" fill="#a5b4fc" opacity="0.55"/>
+        <text x="300" y="292" text-anchor="middle" font-size="12" fill="#64748b">集气瓶（向上排空气法）</text>
+        <!-- 导管到石灰水 -->
+        <path id="co2Tube2" d="M 330 140 L 360 140 L 360 110 L 460 110 L 460 216" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 4" opacity="0.35"/>
+        <!-- 石灰水烧杯 -->
+        <path d="M 425 190 L 425 258 Q 425 268 437 268 L 483 268 Q 495 268 495 258 L 495 190"
+              fill="rgba(219,234,254,0.35)" stroke="#64748b" stroke-width="2.5"/>
+        <rect id="co2Lime" x="428" y="226" width="64" height="40" fill="#f8fafc" opacity="0.9"/>
+        <text x="460" y="288" text-anchor="middle" font-size="12" fill="#64748b">澄清石灰水</text>
+        <text x="90" y="310" text-anchor="middle" font-size="12" fill="#64748b">锥形瓶：石灰石 + 稀盐酸</text>
+      </svg>
+    </div>
+
+    <div class="lab-status" id="co2Status">第 1 步：先检查装置的气密性</div>
+
+    <div class="lab-controls">
+      <button class="step-btn current" id="co2Step1">① 检查气密性</button>
+      <button class="step-btn" id="co2Step2" disabled>② 装入石灰石</button>
+      <button class="step-btn" id="co2Step3" disabled>③ 加入稀盐酸</button>
+      <button class="step-btn" id="co2Step4" disabled>④ 收集 CO₂</button>
+      <button class="step-btn" id="co2Step5" disabled>⑤ 石灰水检验</button>
+      <button class="step-btn" id="co2Reset">重置</button>
+    </div>
+
+    <div class="tip-box" style="text-align:left;">
+      <div class="tip-title">🔍 操作逻辑</div>
+      任何气体制取实验都要<strong>先检查气密性再加药品</strong>；加药品时<strong>先固后液</strong>（先石灰石、后稀盐酸）。<br>
+      CO₂ 密度比空气大，用<strong>向上排空气法</strong>收集，导管要伸到集气瓶底部。<br>
+      把气体通入澄清石灰水，石灰水<strong>变浑浊</strong>，证明生成的是 CO₂。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 4：一氧化碳 ========== -->
+  <h2 class="section-header"><span class="num">4</span>一氧化碳（CO）</h2>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">🎈</span><span><strong>物理性质：</strong>无色无味气体，密度比空气略小，<em>难溶于水</em>。</span></li>
+    <li><span class="pl-icon">🔥</span><span><strong>可燃性：</strong>2CO + O₂ —点燃→ 2CO₂，燃烧时发出<em>蓝色火焰</em>（煤气、水煤气燃烧）。点燃前必须<em>验纯</em>！</span></li>
+    <li><span class="pl-icon">🧲</span><span><strong>还原性：</strong>CO + CuO —加热→ Cu + CO₂，工业上用于冶炼金属（如炼铁：3CO + Fe₂O₃ —高温→ 2Fe + 3CO₂）。</span></li>
+    <li><span class="pl-icon">☠️</span><span><strong>剧毒：</strong>CO 极易与血液中的<em>血红蛋白</em>结合（结合能力约为 O₂ 的 200~300 倍），使人缺氧中毒——这就是"煤气中毒"。</span></li>
+  </ul>
+
+  <div class="formula-box">
+    2CO + O₂ —点燃→ 2CO₂
+    <span class="label">CO 的可燃性：蓝色火焰，放热，可作气体燃料</span>
+  </div>
+  <div class="formula-box">
+    CO + CuO —加热→ Cu + CO₂
+    <span class="label">CO 的还原性：黑色 CuO 变红；尾气 CO 要处理（点燃或收集），防止污染空气</span>
+  </div>
+
+  <div class="warning-box">
+    ⚠️ <strong>预防煤气中毒：</strong>冬天用煤炉取暖时一定要<strong>保持室内通风、装好烟囱</strong>；燃气热水器不能安装在浴室内。
+    CO 无色无味，中毒时难以察觉，发现中毒要立即开窗通风、把病人移到空气新鲜处并就医。
+  </div>
+
+  <!-- ========== 交互 4：CO vs CO₂ 翻转对比卡 ========== -->
+  <h2 class="section-header"><span class="num">比</span>交互四：CO vs CO₂ 性质对比卡</h2>
+  <div class="demo-container">
+    <h3>点击卡片翻面，对比两种气体的性质差异</h3>
+    <div class="demo-desc">同为碳的氧化物，因为分子构成不同（CO 与 CO₂），性质截然不同。</div>
+    <div class="flip-grid" id="flipGrid"></div>
+  </div>
+
+  <!-- ========== 知识点 5：温室效应与低碳生活 ========== -->
+  <h2 class="section-header"><span class="num">5</span>温室效应与低碳生活</h2>
+
+  <ul class="property-list">
+    <li><span class="pl-icon">🌍</span><span><strong>温室效应：</strong>大气中的 CO₂ 像温室的玻璃一样，让太阳光通过却阻止热量散失。<em>适量的温室效应</em>使地球适合生命生存；但 CO₂ 过多会导致全球变暖。</span></li>
+    <li><span class="pl-icon">📈</span><span><strong>CO₂ 增多原因：</strong>化石燃料的大量燃烧 + 森林砍伐（光合作用减少）。</span></li>
+    <li><span class="pl-icon">🌊</span><span><strong>危害：</strong>冰川融化、海平面上升、土地沙漠化、极端天气增多。</span></li>
+    <li><span class="pl-icon">🌱</span><span><strong>低碳生活：</strong>随手关灯、绿色出行、植树造林、开发新能源——减少 CO₂ 排放，增强 CO₂ 吸收。</span></li>
+  </ul>
+
+  <!-- ========== 交互 5：温室效应滑块 ========== -->
+  <h2 class="section-header"><span class="num">温</span>交互五：CO₂ 浓度与全球变暖</h2>
+  <div class="demo-container">
+    <h3>拖动滑块，看大气 CO₂ 浓度如何影响地球</h3>
+    <div class="demo-desc">工业革命前约 280 ppm，如今已超过 420 ppm。浓度越高，地球"发烧"越厉害。</div>
+
+    <div class="slider-row">
+      <span style="font-size:13px; color:var(--text-secondary); white-space:nowrap;">CO₂ 浓度</span>
+      <input type="range" id="ghSlider" min="280" max="600" step="10" value="420">
+      <div class="value-display" id="ghPpm">420 ppm</div>
+    </div>
+
+    <div class="gh-panel">
+      <div class="gh-earth-box">
+        <svg viewBox="0 0 200 200" width="200" height="200">
+          <circle id="ghEarth" cx="100" cy="100" r="70" fill="#5db8a8"/>
+          <path d="M 60 80 Q 80 60 105 75 Q 125 88 118 105 Q 100 118 80 108 Q 60 100 60 80 Z" fill="#7dd3a8" opacity="0.8"/>
+          <path d="M 110 120 Q 135 112 142 132 Q 148 152 125 158 Q 105 155 102 138 Q 100 126 110 120 Z" fill="#7dd3a8" opacity="0.8"/>
+          <!-- 热量波纹 -->
+          <g id="ghWaves" stroke="#f97316" fill="none" stroke-width="3" opacity="0.6">
+            <path id="ghWave1" d="M 100 8 Q 110 18 100 28" opacity="0"/>
+            <path id="ghWave2" d="M 100 8 Q 110 18 100 28 M 70 12 Q 80 22 70 32 M 130 12 Q 140 22 130 32" opacity="0"/>
+            <path id="ghWave3" d="M 100 6 Q 112 18 100 30 M 62 10 Q 74 22 62 34 M 138 10 Q 150 22 138 34 M 86 4 Q 96 14 86 24 M 114 4 Q 124 14 114 24" opacity="0"/>
+          </g>
+          <text x="100" y="192" text-anchor="middle" font-size="12" fill="#64748b">地球</text>
+        </svg>
+      </div>
+      <div class="gh-read">
+        <div>预计全球平均气温上升</div>
+        <div class="gh-temp" id="ghTemp">+1.5°C</div>
+        <div class="gh-note" id="ghNote">已超过警戒线：冰川加速融化，极端天气频发，必须立即减排！</div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="text-align:left;">
+      <div class="tip-title">🌱 低碳行动清单</div>
+      随手关灯节约用电 · 多乘公共交通少开车 · 双面使用纸张 · 植树造林 · 少用一次性用品 · 支持太阳能、风能等新能源。
+    </div>
+  </div>
+
+  <!-- ========== 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 必记要点</div>
+    <div class="sb-item">碳的单质：金刚石（最硬）、石墨（软、导电）、C₆₀；物理性质差异大是因为<strong>碳原子排列方式不同</strong>。木炭、活性炭有吸附性（物理变化）。</div>
+    <div class="sb-item">碳的化学性质：常温<em>稳定</em>；可燃性：C+O₂—点燃→CO₂（充分）、2C+O₂—点燃→2CO（不充分）；还原性：C+2CuO—高温→2Cu+CO₂↑。</div>
+    <div class="sb-item">CO₂：<em>不燃烧不支持燃烧、密度比空气大、能溶于水、与水生成碳酸、使石灰水变浑浊</em>；实验室制法：CaCO₃+2HCl=CaCl₂+H₂O+CO₂↑，向上排空气法收集，燃着的木条放瓶口验满。</div>
+    <div class="sb-item">CO：可燃（2CO+O₂—点燃→2CO₂，蓝色火焰）、还原（CO+CuO—加热→Cu+CO₂）、<strong>剧毒</strong>（与血红蛋白结合）；注意通风防煤气中毒。</div>
+    <div class="sb-item">CO₂ 过多加剧温室效应 → 全球变暖；倡导<strong>低碳生活</strong>：减排 + 植树造林。</div>
+  </div>
+
+  <!-- ========== 交叉参考 ========== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 交叉参考</div>
+    本单元的多个反应（碳燃烧、CO 燃烧、制取 CO₂）都需要正确书写和配平化学方程式，可回顾
+    <a href="05-化学方程式.html" style="color:var(--chemistry); font-weight:600;">05-化学方程式</a>。
+    碳和 CO 的燃烧放热、化石燃料的使用与温室效应，直接衔接下一单元
+    <a href="07-燃料及其利用.html" style="color:var(--chemistry); font-weight:600;">07-燃料及其利用</a>。
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 金刚石和石墨都是由碳元素组成的单质，但物理性质差异很大，其原因是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 组成它们的元素种类不同</div>
+    <div class="quiz-option" data-idx="1">B. 碳原子的排列方式不同</div>
+    <div class="quiz-option" data-idx="2">C. 碳原子的大小不同</div>
+    <div class="quiz-option" data-idx="3">D. 碳原子的质子数不同</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 实验室制取二氧化碳，最适合选用的药品是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 碳酸钠粉末和浓盐酸</div>
+    <div class="quiz-option" data-idx="1">B. 石灰石（或大理石）和稀盐酸</div>
+    <div class="quiz-option" data-idx="2">C. 石灰石和稀硫酸</div>
+    <div class="quiz-option" data-idx="3">D. 木炭在氧气中燃烧</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 下列关于一氧化碳（CO）的说法中，错误的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. CO 具有可燃性，可作气体燃料</div>
+    <div class="quiz-option" data-idx="1">B. CO 具有还原性，可用于冶炼金属</div>
+    <div class="quiz-option" data-idx="2">C. CO 无毒，泄漏时无需担心</div>
+    <div class="quiz-option" data-idx="3">CO 极易与血红蛋白结合，使人中毒</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>章节衔接</h2>
+  <div class="cross-row">
+    <a class="cross-link cross-chem" href="05-化学方程式.html">
+      <span class="arrow">←</span>
+      <div>
+        <div class="cl-label">化学 · 九年级（上一课）</div>
+        <div class="cl-title">05-化学方程式</div>
+      </div>
+    </a>
+    <a class="cross-link cross-chem" href="07-燃料及其利用.html">
+      <div style="text-align:right;">
+        <div class="cl-label">化学 · 九年级（下一课）</div>
+        <div class="cl-title">07-燃料及其利用</div>
+      </div>
+      <span style="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="05-化学方程式.html" class="btn btn-outline">← 上一章：05-化学方程式</a>
+    <a href="07-燃料及其利用.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：07-燃料及其利用 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：碳单质结构对比 ===================== */
+(function() {
+  const data = {
+    diamond: {
+      svg: `<svg viewBox="0 0 360 220">
+        <g stroke="#94a3b8" stroke-width="2.5">
+          <line x1="180" y1="110" x2="120" y2="60"/><line x1="180" y1="110" x2="240" y2="60"/>
+          <line x1="180" y1="110" x2="110" y2="160"/><line x1="180" y1="110" x2="250" y2="160"/>
+          <line x1="120" y1="60" x2="60" y2="30"/><line x1="120" y1="60" x2="60" y2="95"/>
+          <line x1="240" y1="60" x2="300" y2="30"/><line x1="240" y1="60" x2="300" y2="95"/>
+          <line x1="110" y1="160" x2="55" y2="140"/><line x1="110" y1="160" x2="80" y2="200"/>
+          <line x1="250" y1="160" x2="305" y2="140"/><line x1="250" y1="160" x2="285" y2="200"/>
+        </g>
+        <g fill="#1f2937">
+          <circle cx="180" cy="110" r="13"/><circle cx="120" cy="60" r="11"/><circle cx="240" cy="60" r="11"/>
+          <circle cx="110" cy="160" r="11"/><circle cx="250" cy="160" r="11"/>
+          <circle cx="60" cy="30" r="8"/><circle cx="60" cy="95" r="8"/><circle cx="300" cy="30" r="8"/><circle cx="300" cy="95" r="8"/>
+          <circle cx="55" cy="140" r="8"/><circle cx="80" cy="200" r="8"/><circle cx="305" cy="140" r="8"/><circle cx="285" cy="200" r="8"/>
+        </g>
+        <text x="180" y="215" text-anchor="middle" font-size="12" fill="#64748b">每个碳原子与周围 4 个碳原子相连 → 正四面体空间网状结构</text>
+      </svg>`,
+      name: '💎 金刚石',
+      struct: '正四面体空间网状结构（立体骨架）',
+      props: '<strong>硬度：</strong>天然存在的最硬物质，熔点很高，不导电。<br><strong>用途：</strong>玻璃刀、钻探机钻头、钻石饰品。<br><strong>联系：</strong>坚固的立体网状结构 → 极硬。'
+    },
+    graphite: {
+      svg: `<svg viewBox="0 0 360 220">
+        <g>
+          <g stroke="#94a3b8" stroke-width="2">
+            <line x1="40" y1="50" x2="320" y2="50"/><line x1="40" y1="115" x2="320" y2="115"/><line x1="40" y1="180" x2="320" y2="180"/>
+          </g>
+          <g stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 5">
+            <line x1="180" y1="50" x2="180" y2="115"/><line x1="180" y1="115" x2="180" y2="180"/>
+            <line x1="90" y1="50" x2="90" y2="115"/><line x1="270" y1="115" x2="270" y2="180"/>
+          </g>
+          <g fill="#1f2937">
+            <circle cx="40" cy="50" r="8"/><circle cx="95" cy="50" r="8"/><circle cx="150" cy="50" r="8"/><circle cx="205" cy="50" r="8"/><circle cx="260" cy="50" r="8"/><circle cx="320" cy="50" r="8"/>
+            <circle cx="40" cy="115" r="8"/><circle cx="95" cy="115" r="8"/><circle cx="150" cy="115" r="8"/><circle cx="205" cy="115" r="8"/><circle cx="260" cy="115" r="8"/><circle cx="320" cy="115" r="8"/>
+            <circle cx="40" cy="180" r="8"/><circle cx="95" cy="180" r="8"/><circle cx="150" cy="180" r="8"/><circle cx="205" cy="180" r="8"/><circle cx="260" cy="180" r="8"/><circle cx="320" cy="180" r="8"/>
+          </g>
+          <text x="180" y="215" text-anchor="middle" font-size="12" fill="#64748b">层状结构：层内结合牢固，层间作用力弱（虚线）易滑动</text>
+        </g>
+      </svg>`,
+      name: '✏️ 石墨',
+      struct: '平面层状结构（层与层之间易滑动）',
+      props: '<strong>性质：</strong>质软、有滑腻感、能导电（层内有自由移动的电子）。<br><strong>用途：</strong>铅笔芯、电极、高温润滑剂。<br><strong>联系：</strong>层间易滑动 → 软而滑腻；有自由电子 → 导电。'
+    },
+    c60: {
+      svg: `<svg viewBox="0 0 360 220">
+        <circle cx="180" cy="105" r="72" fill="none" stroke="#475569" stroke-width="2.5"/>
+        <g stroke="#94a3b8" stroke-width="1.5" fill="none">
+          <path d="M 180 33 L 242 78 L 218 148 L 142 148 L 118 78 Z"/>
+          <path d="M 180 33 L 180 105 M 242 78 L 180 105 M 218 148 L 180 105 M 142 148 L 180 105 M 118 78 L 180 105"/>
+          <circle cx="180" cy="105" r="40"/>
+        </g>
+        <g fill="#1f2937">
+          <circle cx="180" cy="33" r="7"/><circle cx="242" cy="78" r="7"/><circle cx="218" cy="148" r="7"/>
+          <circle cx="142" cy="148" r="7"/><circle cx="118" cy="78" r="7"/>
+          <circle cx="180" cy="105" r="8"/>
+          <circle cx="252" cy="105" r="5"/><circle cx="108" cy="105" r="5"/><circle cx="180" cy="177" r="5"/><circle cx="180" cy="65" r="5"/>
+        </g>
+        <text x="180" y="215" text-anchor="middle" font-size="12" fill="#64748b">60 个碳原子构成一个足球状分子（12 个五边形 + 20 个六边形）</text>
+      </svg>`,
+      name: '⚽ C₆₀（足球烯）',
+      struct: '由 60 个碳原子构成的足球状分子',
+      props: '<strong>构成：</strong>由 C₆₀ 分子构成（不是由原子直接构成）。<br><strong>性质：</strong>结构稳定，有特殊的物理化学性质。<br><strong>前景：</strong>超导体、催化剂、材料科学、医学诊疗。'
+    }
+  };
+
+  const svgBox = document.getElementById('allotropeSvg');
+  const infoBox = document.getElementById('allotropeInfo');
+  const toggle = document.getElementById('allotropeToggle');
+
+  function show(key) {
+    const d = data[key];
+    svgBox.innerHTML = d.svg;
+    infoBox.innerHTML = '<div class="ir-title">' + d.name + '</div>' +
+      '<div class="ai-struct" style="color:var(--info); font-weight:600; margin-bottom:6px;">微观结构：' + d.struct + '</div>' +
+      '<div class="ai-props">' + d.props + '</div>';
+  }
+
+  toggle.querySelectorAll('.mt-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      toggle.querySelectorAll('.mt-btn').forEach(function(x) { x.classList.remove('active'); });
+      btn.classList.add('active');
+      show(btn.dataset.key);
+    });
+  });
+
+  show('diamond');
+})();
+
+/* ===================== 交互 2：碳还原氧化铜 ===================== */
+(function() {
+  const powder = document.getElementById('cuoPowder');
+  const flame = document.getElementById('cuoFlame');
+  const lime = document.getElementById('cuoLime');
+  const bubbles = document.getElementById('cuoBubbles');
+  const status = document.getElementById('cuoStatus');
+  const btnHeat = document.getElementById('cuoHeat');
+  const btnStop = document.getElementById('cuoStop');
+  const btnReset = document.getElementById('cuoReset');
+  let heating = false;
+
+  btnHeat.addEventListener('click', function() {
+    if (heating) return;
+    heating = true;
+    flame.style.opacity = '1';
+    status.textContent = '加热中：黑色粉末开始变化…';
+    btnHeat.disabled = true;
+    setTimeout(function() {
+      powder.style.transition = 'fill 2s';
+      powder.setAttribute('fill', '#b91c1c');
+      bubbles.style.opacity = '1';
+      status.textContent = '现象：黑色粉末变红，石灰水中出现气泡';
+    }, 1200);
+    setTimeout(function() {
+      lime.style.transition = 'fill 1.5s';
+      lime.setAttribute('fill', '#e2e8f0');
+      lime.setAttribute('opacity', '1');
+      status.textContent = '石灰水变浑浊 → 生成了 CO₂ ！';
+      btnStop.disabled = false;
+      btnStop.classList.add('current');
+    }, 2800);
+  });
+
+  btnStop.addEventListener('click', function() {
+    if (!heating) return;
+    flame.style.opacity = '0';
+    bubbles.style.opacity = '0';
+    status.textContent = '结束：已先撤导管、再熄灯，防止石灰水倒吸炸裂试管 ✓';
+    btnStop.disabled = true;
+  });
+
+  btnReset.addEventListener('click', function() {
+    heating = false;
+    flame.style.opacity = '0';
+    bubbles.style.opacity = '0';
+    powder.style.transition = 'none';
+    powder.setAttribute('fill', '#111827');
+    lime.style.transition = 'none';
+    lime.setAttribute('fill', '#f8fafc');
+    lime.setAttribute('opacity', '0.85');
+    status.textContent = '反应前：黑色混合物粉末';
+    btnHeat.disabled = false;
+    btnStop.disabled = true;
+    btnStop.classList.remove('current');
+  });
+})();
+
+/* ===================== 交互 3：实验室制取 CO₂ ===================== */
+(function() {
+  const steps = [
+    { btn: 'co2Step1', msg: '✓ 气密性良好：导管口有气泡冒出，松开手后导管内形成一段水柱' },
+    { btn: 'co2Step2', msg: '✓ 石灰石（CaCO₃）已装入锥形瓶（先加固体）', show: ['co2Stones'] },
+    { btn: 'co2Step3', msg: '✓ 沿长颈漏斗加入稀盐酸（液封漏斗下端），反应开始：CaCO₃+2HCl=CaCl₂+H₂O+CO₂↑', show: ['co2Liquid', 'co2Acid', 'co2Bubbles'] },
+    { btn: 'co2Step4', msg: '✓ 正在用向上排空气法收集 CO₂（验满：燃着的木条放瓶口熄灭）', gas: true },
+    { btn: 'co2Step5', msg: '✓ 石灰水变浑浊！证明收集到的气体是 CO₂', lime: true }
+  ];
+  const status = document.getElementById('co2Status');
+  const gas = document.getElementById('co2Gas');
+  const lime = document.getElementById('co2Lime');
+  const tube2 = document.getElementById('co2Tube2');
+  let idx = 0;
+
+  function markDone(n) {
+    const b = document.getElementById(steps[n].btn);
+    b.classList.remove('current');
+    b.classList.add('done');
+    b.disabled = true;
+  }
+  function enableNext(n) {
+    if (n >= steps.length) {
+      status.textContent = '🎉 实验完成：制取并检验了二氧化碳！';
+      return;
+    }
+    const b = document.getElementById(steps[n].btn);
+    b.disabled = false;
+    b.classList.add('current');
+  }
+
+  steps.forEach(function(s, n) {
+    document.getElementById(s.btn).addEventListener('click', function() {
+      if (n !== idx) return;
+      if (s.show) s.show.forEach(function(id) { document.getElementById(id).style.opacity = '1'; });
+      if (s.gas) {
+        let h = 0;
+        const timer = setInterval(function() {
+          h += 3;
+          gas.setAttribute('y', 262 - h);
+          gas.setAttribute('height', h);
+          if (h >= 128) clearInterval(timer);
+        }, 50);
+      }
+      if (s.lime) {
+        tube2.setAttribute('opacity', '1');
+        lime.style.transition = 'fill 1.5s';
+        lime.setAttribute('fill', '#cbd5e1');
+      }
+      status.textContent = s.msg;
+      markDone(n);
+      idx++;
+      enableNext(idx);
+    });
+  });
+
+  document.getElementById('co2Reset').addEventListener('click', function() {
+    idx = 0;
+    ['co2Stones', 'co2Liquid', 'co2Acid', 'co2Bubbles'].forEach(function(id) {
+      document.getElementById(id).style.opacity = '0';
+    });
+    gas.setAttribute('y', 262);
+    gas.setAttribute('height', 0);
+    lime.style.transition = 'none';
+    lime.setAttribute('fill', '#f8fafc');
+    tube2.setAttribute('opacity', '0.35');
+    steps.forEach(function(s, n) {
+      const b = document.getElementById(s.btn);
+      b.classList.remove('done', 'current');
+      b.disabled = n !== 0;
+    });
+    document.getElementById('co2Step1').classList.add('current');
+    status.textContent = '第 1 步：先检查装置的气密性';
+  });
+})();
+
+/* ===================== 交互 4：CO vs CO₂ 翻转对比卡 ===================== */
+(function() {
+  const cards = [
+    { title: '🔥 可燃性', co: 'CO：能燃烧，蓝色火焰，2CO+O₂—点燃→2CO₂', co2: 'CO₂：不燃烧，也不支持燃烧（可灭火）' },
+    { title: '🧲 还原性', co: 'CO：有还原性，CO+CuO—加热→Cu+CO₂，用于冶金', co2: 'CO₂：无还原性' },
+    { title: '☠️ 毒性', co: 'CO：剧毒，易与血红蛋白结合，致煤气中毒', co2: 'CO₂：无毒，但浓度过高会使人窒息' },
+    { title: '💧 与水反应', co: 'CO：不与水反应', co2: 'CO₂：CO₂+H₂O=H₂CO₃，碳酸使石蕊变红' },
+    { title: '🥛 与石灰水', co: 'CO：不反应，无明显现象', co2: 'CO₂：CO₂+Ca(OH)₂=CaCO₃↓+H₂O，石灰水变浑浊（检验 CO₂）' },
+    { title: '⚖️ 密度与溶解', co: 'CO：密度比空气略小，难溶于水（可排水法收集）', co2: 'CO₂：密度比空气大，能溶于水（向上排空气法收集）' },
+    { title: '🛠️ 主要用途', co: 'CO：气体燃料、冶炼金属的还原剂', co2: 'CO₂：灭火、人工降雨（干冰）、气体肥料、制汽水' }
+  ];
+  const grid = document.getElementById('flipGrid');
+  cards.forEach(function(c) {
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.innerHTML =
+      '<div class="flip-inner">' +
+        '<div class="flip-face flip-front">' + c.title + '<div class="ff-hint">点击翻面看对比</div></div>' +
+        '<div class="flip-face flip-back"><div class="co-line">' + c.co + '</div><div class="co2-line" style="margin-top:6px;">' + c.co2 + '</div></div>' +
+      '</div>';
+    card.addEventListener('click', function() { card.classList.toggle('flipped'); });
+    grid.appendChild(card);
+  });
+})();
+
+/* ===================== 交互 5：温室效应滑块 ===================== */
+(function() {
+  const slider = document.getElementById('ghSlider');
+  const ppmEl = document.getElementById('ghPpm');
+  const tempEl = document.getElementById('ghTemp');
+  const noteEl = document.getElementById('ghNote');
+  const earth = document.getElementById('ghEarth');
+  const waves = [
+    document.getElementById('ghWave1'),
+    document.getElementById('ghWave2'),
+    document.getElementById('ghWave3')
+  ];
+
+  function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+  function update() {
+    const ppm = parseInt(slider.value);
+    ppmEl.textContent = ppm + ' ppm';
+    const t = (ppm - 280) / (600 - 280);
+    const temp = (t * 3.5).toFixed(1);
+    tempEl.textContent = '+' + temp + '°C';
+    earth.setAttribute('fill', 'rgb(' + lerp(93, 224, t) + ',' + lerp(184, 122, t) + ',' + lerp(168, 80, t) + ')');
+    waves.forEach(function(w, i) { w.setAttribute('opacity', ppm >= 350 + i * 80 ? '0.8' : '0'); });
+    let note;
+    if (ppm < 320) note = '接近工业革命前水平：温室效应适度，地球温度宜人。';
+    else if (ppm < 420) note = '浓度偏高：气候开始变暖，应控制碳排放。';
+    else if (ppm < 500) note = '已超过警戒线：冰川加速融化，极端天气频发，必须立即减排！';
+    else note = '危险水平：海平面显著上升、生态失衡。低碳生活、刻不容缓！';
+    noteEl.textContent = note;
+  }
+  slider.addEventListener('input', update);
+  update();
+})();
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('q1', {
+  correct: 1,
+  explain: '金刚石和石墨的组成元素相同（都是碳），但碳原子的排列方式不同：金刚石是空间网状结构，石墨是层状结构，所以物理性质差异很大。',
+  hint: '同种元素组成的单质物理性质不同，原因在于原子排列方式（结构）不同，而非元素、原子大小或质子数。'
+});
+initQuiz('q2', {
+  correct: 1,
+  explain: '实验室用石灰石（或大理石）与稀盐酸反应：CaCO₃+2HCl=CaCl₂+H₂O+CO₂↑。浓盐酸易挥发使气体不纯；稀硫酸生成微溶的 CaSO₄ 覆盖石灰石表面阻止反应；木炭燃烧得到的气体不纯且不易收集。',
+  hint: 'A 中浓盐酸挥发 HCl 使 CO₂ 不纯；C 中生成的 CaSO₄ 微溶会覆盖表面；D 收集不到纯净 CO₂。'
+});
+initQuiz('q3', {
+  correct: 2,
+  explain: 'CO 有剧毒！它极易与血红蛋白结合（结合能力约为 O₂ 的 200~300 倍），使人体缺氧中毒。使用煤气一定要注意通风。',
+  hint: 'CO 是有毒气体，煤气中毒的元凶就是它。D 选项的描述正是其毒性原理。'
+});
+</script>
+
 </body>
 </html>

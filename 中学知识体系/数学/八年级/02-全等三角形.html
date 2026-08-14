@@ -6,43 +6,292 @@
   <title>全等三角形 · 八年级数学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 数学紫主题覆盖 ===== */
+    .navbar {
+      background: linear-gradient(135deg, #7D3C98, #9B59B6);
+      box-shadow: 0 2px 12px rgba(155,89,182,0.35);
+    }
+    .navbar-links a { color: rgba(255,255,255,0.85); }
+    .navbar-links a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .math-accent { color: var(--math); }
+
+    .page-header {
+      background: linear-gradient(135deg, #7D3C98 0%, #9B59B6 60%, #BB8FCE 100%);
+      color: #fff;
+      border-radius: 0 0 24px 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .page-header h1 { font-size: 30px; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 16px; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--math);
+      border-bottom: 2px solid rgba(155,89,182,0.2);
+      padding-bottom: 8px;
+    }
+    .section-title .step-badge {
+      background: var(--math);
+      color: #fff;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== 公式框 ===== */
+    .formula-box {
+      background: linear-gradient(135deg, rgba(155,89,182,0.1), rgba(155,89,182,0.03));
+      border: 2px solid rgba(155,89,182,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
       text-align: center;
-      padding: 80px 20px;
+      margin: 16px 0;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .formula-box .formula {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: "Georgia", "Times New Roman", serif;
+      letter-spacing: 1px;
+      line-height: 1.6;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #9B59B6;
-    }
-    .placeholder p {
-      font-size: 16px;
+    .formula-box .formula-note {
+      margin-top: 8px;
       color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+      font-size: 14px;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+
+    /* ===== 滑块控件 ===== */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
     }
-    .related-card {
+    .slider-row label {
+      font-weight: 600;
+      min-width: 90px;
+      color: var(--math);
+      font-size: 15px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--math);
+    }
+    .slider-row input[type="range"]::-webkit-slider-thumb { background: var(--math); }
+    .slider-row .value-badge {
+      min-width: 56px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--math);
+      background: rgba(155,89,182,0.12);
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-family: Georgia, serif;
+    }
+
+    /* ===== SVG 容器 ===== */
+    .svg-wrap {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 16px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { max-width: 100%; height: auto; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0 4px;
+      font-size: 14px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+    /* ===== 标签页 ===== */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 16px;
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 9px 18px;
+      border: 2px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      background: var(--bg-soft);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.2s;
+      font-family: inherit;
+      margin-bottom: -2px;
+    }
+    .tab-btn:hover { color: var(--math); border-color: rgba(155,89,182,0.4); }
+    .tab-btn.active {
+      background: var(--math);
+      border-color: var(--math);
+      color: #fff;
+    }
+    .tab-btn.danger-tab { color: var(--danger); }
+    .tab-btn.danger-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ===== 验证行 ===== */
+    .verify-line {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 14px;
+      font-family: Georgia, serif;
+    }
+    .verify-line.ok { background: rgba(39,174,96,0.14); color: var(--success); }
+    .verify-line.bad { background: rgba(231,76,60,0.14); color: var(--danger); }
+    .verify-line.warn { background: rgba(243,156,18,0.14); color: var(--warning); }
+
+    /* ===== 判定方法卡片 ===== */
+    .judge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .judge-card {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.25s;
+    }
+    .judge-card:hover {
+      border-color: var(--math);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px rgba(155,89,182,0.18);
+    }
+    .judge-card .abbr {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--math);
+      font-family: Georgia, serif;
+      margin-bottom: 4px;
+    }
+    .judge-card .full { font-size: 13px; color: var(--text-main); font-weight: 600; margin-bottom: 4px; }
+    .judge-card .desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+    .judge-card.danger .abbr { color: var(--danger); }
+    .judge-card.danger { background: rgba(231,76,60,0.08); }
+
+    /* ===== 拼三角形游戏 ===== */
+    .cond-pool {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .cond-card {
+      padding: 12px 10px;
+      border: 2px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .cond-card:hover { border-color: var(--math); }
+    .cond-card.selected {
+      border-color: var(--math);
+      background: rgba(155,89,182,0.15);
+      color: var(--math);
+      transform: translateY(-2px);
+      box-shadow: 0 3px 12px rgba(155,89,182,0.2);
+    }
+    .cond-card .type-tag {
       display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-top: 4px;
+      font-family: -apple-system, sans-serif;
+      font-weight: 500;
+    }
+    .cond-card .type-tag.side { background: rgba(231,76,60,0.15); color: #C0392B; }
+    .cond-card .type-tag.angle { background: rgba(52,152,219,0.15); color: #2874A6; }
+    .cond-card .type-tag.right { background: rgba(39,174,96,0.15); color: #1E8449; }
+
+    .game-result {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      line-height: 1.8;
+      display: none;
+    }
+    .game-result.ok { background: rgba(39,174,96,0.12); border-left: 4px solid var(--success); }
+    .game-result.bad { background: rgba(231,76,60,0.12); border-left: 4px solid var(--danger); }
+
+    .selected-counter {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin: 8px 0;
+    }
+    .selected-counter .num { color: var(--math); font-size: 18px; font-family: Georgia, serif; }
+
+    /* ===== 重合动画 ===== */
+    .tri-def-group {
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== 对应表 ===== */
+    .correspond-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+      max-width: 400px;
+    }
+    .corr-cell {
+      padding: 8px 12px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      text-align: center;
+      font-family: Georgia, serif;
+      font-weight: 600;
     }
-    .related-card:hover {
-      background: #9B59B620;
-      transform: translateY(-2px);
+
+    .cross-ref-list { list-style: none; padding: 0; }
+    .cross-ref-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cross-ref-list li:last-child { border-bottom: none; }
+
+    .step-nav .btn-disabled {
+      opacity: 0.4;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -53,10 +302,19 @@
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">八年级数学目录</a></li>
+    <li><a href="../../物理/八年级/index.html">⚡ 物理</a></li>
+    <li><a href="../../化学/八年级/index.html">🧪 化学</a></li>
   </ul>
 </nav>
 
+<div class="page-header">
+  <h1>📐 全等三角形</h1>
+  <p>形状与大小完全相同的两个三角形——探索 SSS、SAS、ASA、AAS、HL 五大判定方法</p>
+</div>
+
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -67,24 +325,1192 @@
     <span>全等三角形</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">📐</div>
-    <h2>全等三角形</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级数学目录</a>
+  <!-- ===== 1. 全等形定义 ===== -->
+  <h2 class="section-title"><span class="step-badge">1</span> 全等形的定义</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>能够<strong>完全重合</strong>的两个图形叫做<strong>全等形</strong>。</p>
+    <div class="tip-box">
+      <div class="tip-title">📌 怎样理解"完全重合"</div>
+      "完全重合"意味着两个图形的<strong>形状和大小都相同</strong>。把其中一个图形剪下来放到另一个图形上，如果每条边、每个角都能一一对应上，没有任何偏差，它们就是全等形。全等形关注的是<strong>形状和大小</strong>，与<strong>位置和方向</strong>无关。
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 2. 全等三角形及其性质 ===== -->
+  <h2 class="section-title"><span class="step-badge">2</span> 全等三角形及其性质</h2>
+  <div class="card">
+    <p><strong class="math-accent">定义：</strong>能够<strong>完全重合</strong>的两个三角形，叫做<strong>全等三角形</strong>。</p>
+    <p style="margin-top: 10px;">记作：<strong class="math-accent">△ABC ≅ △DEF</strong>（"≅"读作"全等于"）。书写时要求<strong>对应顶点的字母按相同顺序排列</strong>——A 与 D 对应、B 与 E 对应、C 与 F 对应。</p>
+
+    <div class="formula-box">
+      <div class="formula">△ABC ≅ △DEF</div>
+      <div class="formula-note">A↔D, B↔E, C↔F（对应顶点字母顺序一致）</div>
+    </div>
+
+    <h3 style="margin: 18px 0 8px; color: var(--math);">对应要素</h3>
+    <ul style="margin-left: 24px; line-height: 2;">
+      <li><strong>对应顶点</strong>：A↔D，B↔E，C↔F（重合时叠在一起的顶点）</li>
+      <li><strong>对应边</strong>：AB↔DE，AC↔DF，BC↔EF（重合时叠在一起的边）</li>
+      <li><strong>对应角</strong>：∠A↔∠D，∠B↔∠E，∠C↔∠F（重合时叠在一起的角）</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 全等三角形的性质</div>
+      <strong>对应边相等，对应角相等</strong>。若 △ABC ≅ △DEF，则：<br>
+      AB = DE，AC = DF，BC = EF；∠A = ∠D，∠B = ∠E，∠C = ∠F。<br>
+      <em>注意：</em>对应边是对应角所对的边，对应角是对应边所夹的角；<strong>不是对应位置的边角不能写成相等</strong>。
+    </div>
+
+    <div class="svg-wrap" id="cong-def-svg-wrap"></div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(231,76,60,0.5);border-color:#E74C3C;"></span>A ↔ D (红)</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(52,152,219,0.5);border-color:#3498DB;"></span>B ↔ E (蓝)</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:rgba(39,174,96,0.5);border-color:#27AE60;"></span>C ↔ F (绿)</div>
+    </div>
   </div>
+
+  <!-- ===== 3. 交互1：重合动画 ===== -->
+  <h2 class="section-title"><span class="step-badge">3</span> 交互·全等重合动画</h2>
+  <div class="card">
+    <p>下方画了两个形状大小完全相同的三角形 △ABC 和 △DEF，它们处于不同位置。点击"<strong>完全重合</strong>"按钮，观察 △DEF 通过<strong>平移与旋转</strong>运动到 △ABC 上，最终完全重合的过程。对应顶点用相同颜色标注：<strong style="color:#E74C3C;">A↔D 红</strong>、<strong style="color:#3498DB;">B↔E 蓝</strong>、<strong style="color:#27AE60;">C↔F 绿</strong>。</p>
+
+    <div style="text-align: center; margin: 16px 0;">
+      <button class="btn btn-primary" id="btn-congruence" style="background: var(--math);">🔗 完全重合</button>
+      <button class="btn btn-outline" id="btn-congruence-reset" style="margin-left: 8px; border-color: var(--math); color: var(--math);">↺ 分离</button>
+    </div>
+
+    <div class="svg-wrap" id="congruence-svg-wrap"></div>
+
+    <div class="tip-box" id="cong-feedback" style="display: none;">
+      <div class="tip-title">✓ 完全重合！</div>
+      △ABC ≅ △DEF。<strong>对应边相等</strong>：AB=DE，BC=EF，AC=DF；<strong>对应角相等</strong>：∠A=∠D，∠B=∠E，∠C=∠F。
+    </div>
+  </div>
+
+  <!-- ===== 4. 判定方法概览 ===== -->
+  <h2 class="section-title"><span class="step-badge">4</span> 三角形全等的判定方法</h2>
+  <div class="card">
+    <p>判定两个三角形全等，不需要把所有边和角都量一遍——只需满足以下<strong>5 种条件之一</strong>，就能保证两个三角形全等：</p>
+
+    <div class="judge-grid">
+      <div class="judge-card">
+        <div class="abbr">SSS</div>
+        <div class="full">边边边</div>
+        <div class="desc">三边对应相等<br>→ 全等</div>
+      </div>
+      <div class="judge-card">
+        <div class="abbr">SAS</div>
+        <div class="full">边角边</div>
+        <div class="desc">两边及其夹角<br>对应相等 → 全等</div>
+      </div>
+      <div class="judge-card">
+        <div class="abbr">ASA</div>
+        <div class="full">角边角</div>
+        <div class="desc">两角及其夹边<br>对应相等 → 全等</div>
+      </div>
+      <div class="judge-card">
+        <div class="abbr">AAS</div>
+        <div class="full">角角边</div>
+        <div class="desc">两角及一角对边<br>对应相等 → 全等</div>
+      </div>
+      <div class="judge-card">
+        <div class="abbr">HL</div>
+        <div class="full">斜边直角边</div>
+        <div class="desc">直角三角形斜边<br>和一直角边相等 → 全等</div>
+      </div>
+      <div class="judge-card danger">
+        <div class="abbr">SSA ✗</div>
+        <div class="full">边边角</div>
+        <div class="desc">两边及一边对角<br><strong>不能</strong>判定全等</div>
+      </div>
+      <div class="judge-card danger">
+        <div class="abbr">AAA ✗</div>
+        <div class="full">角角角</div>
+        <div class="desc">三个角对应相等<br><strong>不能</strong>判定全等（只能相似）</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="tip-title" style="color: var(--warning);">⚠ 易错点</div>
+      <strong>SSA</strong>（边边角）和 <strong>AAA</strong>（角角角）<strong>不能</strong>作为判定全等的方法！这是本章最常考的易错点。下面探索器中的反例标签页会展示为什么不能。
+    </div>
+  </div>
+
+  <!-- ===== 5. 交互2：判定方法探索器 ===== -->
+  <h2 class="section-title"><span class="step-badge">5</span> 交互·判定方法探索器</h2>
+  <div class="card">
+    <p>切换不同标签页，了解每种判定方法的条件与原理。可拖动滑块调节已知条件数值，观察两个三角形是否依然全等。红蓝标签为不能判定的反例。</p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="sss">SSS</button>
+      <button class="tab-btn" data-tab="sas">SAS</button>
+      <button class="tab-btn" data-tab="asa">ASA</button>
+      <button class="tab-btn" data-tab="aas">AAS</button>
+      <button class="tab-btn" data-tab="hl">HL</button>
+      <button class="tab-btn danger-tab" data-tab="ssa">SSA ✗</button>
+      <button class="tab-btn danger-tab" data-tab="aaa">AAA ✗</button>
+    </div>
+
+    <!-- SSS -->
+    <div id="tab-sss" class="tab-panel active">
+      <p><strong class="math-accent">SSS（边边边）：</strong>三个边对应相等的两个三角形全等。</p>
+      <div class="slider-row">
+        <label>边 a (BC)</label>
+        <input type="range" id="sss-a" min="3" max="9" value="5" step="0.5">
+        <span class="value-badge" id="sss-a-val">5.0</span>
+      </div>
+      <div class="slider-row">
+        <label>边 b (AC)</label>
+        <input type="range" id="sss-b" min="3" max="9" value="6" step="0.5">
+        <span class="value-badge" id="sss-b-val">6.0</span>
+      </div>
+      <div class="slider-row">
+        <label>边 c (AB)</label>
+        <input type="range" id="sss-c" min="3" max="9" value="7" step="0.5">
+        <span class="value-badge" id="sss-c-val">7.0</span>
+      </div>
+      <div class="svg-wrap" id="sss-svg-wrap"></div>
+      <div class="verify-line ok" id="sss-verify">✓ BC = EF，AC = DF，AB = DE → △ABC ≅ △DEF (SSS)</div>
+    </div>
+
+    <!-- SAS -->
+    <div id="tab-sas" class="tab-panel">
+      <p><strong class="math-accent">SAS（边角边）：</strong>两边及其<strong>夹角</strong>对应相等的两个三角形全等。注意必须是<strong>夹角</strong>，不是任意一个角。</p>
+      <div class="slider-row">
+        <label>边 b (AC)</label>
+        <input type="range" id="sas-b" min="3" max="9" value="6" step="0.5">
+        <span class="value-badge" id="sas-b-val">6.0</span>
+      </div>
+      <div class="slider-row">
+        <label>边 c (AB)</label>
+        <input type="range" id="sas-c" min="3" max="9" value="7" step="0.5">
+        <span class="value-badge" id="sas-c-val">7.0</span>
+      </div>
+      <div class="slider-row">
+        <label>夹角 ∠A</label>
+        <input type="range" id="sas-A" min="20" max="150" value="60" step="5">
+        <span class="value-badge" id="sas-A-val">60°</span>
+      </div>
+      <div class="svg-wrap" id="sas-svg-wrap"></div>
+      <div class="verify-line ok" id="sas-verify">✓ AC = DF，AB = DE，∠A = ∠D（夹角）→ △ABC ≅ △DEF (SAS)</div>
+    </div>
+
+    <!-- ASA -->
+    <div id="tab-asa" class="tab-panel">
+      <p><strong class="math-accent">ASA（角边角）：</strong>两角及其<strong>夹边</strong>对应相等的两个三角形全等。夹边是两个角顶点之间的那条边。</p>
+      <div class="slider-row">
+        <label>角 ∠B</label>
+        <input type="range" id="asa-B" min="20" max="140" value="50" step="5">
+        <span class="value-badge" id="asa-B-val">50°</span>
+      </div>
+      <div class="slider-row">
+        <label>角 ∠C</label>
+        <input type="range" id="asa-C" min="20" max="140" value="70" step="5">
+        <span class="value-badge" id="asa-C-val">70°</span>
+      </div>
+      <div class="slider-row">
+        <label>夹边 a (BC)</label>
+        <input type="range" id="asa-a" min="3" max="9" value="6" step="0.5">
+        <span class="value-badge" id="asa-a-val">6.0</span>
+      </div>
+      <div class="svg-wrap" id="asa-svg-wrap"></div>
+      <div class="verify-line ok" id="asa-verify">✓ ∠B = ∠E，∠C = ∠F，BC = EF（夹边）→ △ABC ≅ △DEF (ASA)</div>
+    </div>
+
+    <!-- AAS -->
+    <div id="tab-aas" class="tab-panel">
+      <p><strong class="math-accent">AAS（角角边）：</strong>两角及其中一角的<strong>对边</strong>对应相等的两个三角形全等。由两角可定第三个角，AAS 可转化为 ASA。</p>
+      <div class="slider-row">
+        <label>角 ∠A</label>
+        <input type="range" id="aas-A" min="20" max="140" value="60" step="5">
+        <span class="value-badge" id="aas-A-val">60°</span>
+      </div>
+      <div class="slider-row">
+        <label>角 ∠B</label>
+        <input type="range" id="aas-B" min="20" max="140" value="50" step="5">
+        <span class="value-badge" id="aas-B-val">50°</span>
+      </div>
+      <div class="slider-row">
+        <label>对边 a (BC)</label>
+        <input type="range" id="aas-a" min="3" max="9" value="6" step="0.5">
+        <span class="value-badge" id="aas-a-val">6.0</span>
+      </div>
+      <div class="svg-wrap" id="aas-svg-wrap"></div>
+      <div class="verify-line ok" id="aas-verify">✓ ∠A = ∠D，∠B = ∠E，BC = EF（∠A 的对边）→ △ABC ≅ △DEF (AAS)</div>
+    </div>
+
+    <!-- HL -->
+    <div id="tab-hl" class="tab-panel">
+      <p><strong class="math-accent">HL（斜边直角边）：</strong>在两个<strong>直角三角形</strong>中，斜边和一条直角边对应相等 → 两个直角三角形全等。HL 仅适用于直角三角形。</p>
+      <div class="slider-row">
+        <label>斜边 c</label>
+        <input type="range" id="hl-c" min="5" max="13" value="10" step="0.5">
+        <span class="value-badge" id="hl-c-val">10.0</span>
+      </div>
+      <div class="slider-row">
+        <label>直角边 a</label>
+        <input type="range" id="hl-a" min="3" max="9" value="6" step="0.5">
+        <span class="value-badge" id="hl-a-val">6.0</span>
+      </div>
+      <div class="svg-wrap" id="hl-svg-wrap"></div>
+      <div class="verify-line ok" id="hl-verify">✓ 斜边 = 斜边，直角边 = 直角边 → △ABC ≅ △DEF (HL)</div>
+    </div>
+
+    <!-- SSA 反例 -->
+    <div id="tab-ssa" class="tab-panel">
+      <p><strong style="color: var(--danger);">SSA（边边角）不能判定全等！</strong>下面是经典反例：给定 <strong>∠A = 30°</strong>、<strong>邻边 AC = 8</strong>、<strong>对边 BC = 5</strong>（∠A 的对边），可以画出<strong>两个不同的三角形</strong>，它们满足相同的 SSA 条件，却形状不同。</p>
+      <div class="svg-wrap" id="ssa-svg-wrap"></div>
+      <div class="verify-line bad" id="ssa-verify">✗ 同样满足 SSA 条件，却得到两个不同三角形 → SSA 不能判定全等</div>
+      <div class="warning-box">
+        <div class="tip-title" style="color: var(--warning);">📐 为什么会有两个解</div>
+        以 A 为圆心作 ∠A = 30°，沿角的一边截 AC = 8 得 C 点。再以 C 为圆心、半径 5 画弧，与角的另一边的延长线<strong>有两个交点 B₁ 和 B₂</strong>。两点都满足 BC = 5，但对应不同的边 AB，因此产生两个不同的三角形。<br>
+        <strong>关键</strong>：当对边小于邻边且大于邻边×sin(角)时，会出现两解；只有当角是直角时，SSA 才退化为 HL（可判定）。
+      </div>
+    </div>
+
+    <!-- AAA 反例 -->
+    <div id="tab-aaa" class="tab-panel">
+      <p><strong style="color: var(--danger);">AAA（角角角）不能判定全等！</strong>三个角对应相等只能保证<strong>相似</strong>（形状相同），不能保证大小相同。下面是反例：两个<strong>等边三角形</strong>，三个角都是 60°，但边长不同，因此大小不同，<strong>不全等</strong>。</p>
+      <div class="svg-wrap" id="aaa-svg-wrap"></div>
+      <div class="verify-line bad" id="aaa-verify">✗ 三个角都等于 60°，但边长不等 → AAA 只能相似不能全等</div>
+      <div class="tip-box">
+        <div class="tip-title">📐 放大缩小不改变角度</div>
+        任何三角形的三个内角和都是 180°，对三角形做<strong>放大或缩小</strong>（相似变换）时，角度保持不变，但边长按比例改变。因此<strong>仅靠角度无法确定大小</strong>，也就无法判定全等。所以 AAA 只能用来判定<strong>相似</strong>，不能判定全等。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. 交互3：拼三角形游戏 ===== -->
+  <h2 class="section-title"><span class="step-badge">6</span> 交互·拼三角形游戏</h2>
+  <div class="card">
+    <p>下面是 8 个条件卡片，描述了三角形 △ABC 的若干边角信息（a=BC, b=AC, c=AB）。请<strong>选择 3 个条件</strong>，系统将判断：用这 3 个条件去画两个三角形时，能否判定它们全等？属于哪种判定方法？</p>
+
+    <div class="selected-counter">已选条件：<span class="num" id="sel-count">0</span> / 3</div>
+
+    <div class="cond-pool" id="cond-pool"></div>
+
+    <div style="text-align: center; margin: 16px 0;">
+      <button class="btn btn-primary" id="btn-judge" style="background: var(--math);">🔍 判定</button>
+      <button class="btn btn-outline" id="btn-judge-reset" style="margin-left: 8px; border-color: var(--math); color: var(--math);">↺ 清空</button>
+    </div>
+
+    <div class="game-result" id="game-result"></div>
+    <div class="svg-wrap" id="game-svg-wrap" style="display: none;"></div>
+  </div>
+
+  <!-- ===== 7. 交互4：HL 直角三角形专题 ===== -->
+  <h2 class="section-title"><span class="step-badge">7</span> 交互·HL 直角三角形专题</h2>
+  <div class="card">
+    <p>HL 定理是<strong>直角三角形专属</strong>的全等判定方法：当两个直角三角形的<strong>斜边和一条直角边</strong>对应相等时，它们全等。调节下方斜边和直角边长度，观察两个直角三角形始终保持全等。</p>
+
+    <div class="slider-row">
+      <label>斜边 c</label>
+      <input type="range" id="hl2-c" min="5" max="13" value="10" step="0.5">
+      <span class="value-badge" id="hl2-c-val">10.0</span>
+    </div>
+    <div class="slider-row">
+      <label>直角边 a</label>
+      <input type="range" id="hl2-a" min="3" max="9" value="6" step="0.5">
+      <span class="value-badge" id="hl2-a-val">6.0</span>
+    </div>
+
+    <div class="svg-wrap" id="hl2-svg-wrap"></div>
+
+    <div class="data-panel" id="hl2-data"></div>
+
+    <div class="verify-line ok" id="hl2-verify">✓ 斜边对应相等，一直角边对应相等 → Rt△ABC ≅ Rt△DEF (HL)</div>
+
+    <div class="tip-box">
+      <div class="tip-title">📐 HL 与 SSA 的关系</div>
+      HL 看起来像是 SSA（两边和一角），但因为<strong>那个角是直角</strong>（90°），情况变得特殊：直角是最大的角，没有歧义，所以 SSA 的两解问题消失了，可以唯一确定一个直角三角形。这正说明 HL 是直角三角形中"SSA 的特殊可用情形"。
+    </div>
+  </div>
+
+  <!-- ===== 8. 练习题 ===== -->
+  <h2 class="section-title"><span class="step-badge">8</span> 练习题</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 下列条件中，能判定 △ABC ≅ △DEF 的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. AB = DE，BC = EF，∠A = ∠D</div>
+    <div class="quiz-option" data-idx="1">B. AB = DE，∠B = ∠E，∠C = ∠F</div>
+    <div class="quiz-option" data-idx="2">C. ∠A = ∠D，∠B = ∠E，∠C = ∠F</div>
+    <div class="quiz-option" data-idx="3">D. AB = DE，BC = EF，AC = DF</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 已知 △ABC ≅ △DEF（A↔D，B↔E，C↔F），若 ∠A = 70°，∠B = 50°，则 ∠F = （&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 50°</div>
+    <div class="quiz-option" data-idx="1">B. 60°</div>
+    <div class="quiz-option" data-idx="2">C. 70°</div>
+    <div class="quiz-option" data-idx="3">D. 80°</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 下列条件不能判定两个三角形全等的是（&nbsp;）</div>
+    <div class="quiz-option" data-idx="0">A. 三边对应相等</div>
+    <div class="quiz-option" data-idx="1">B. 两边及其中一边的对角对应相等</div>
+    <div class="quiz-option" data-idx="2">C. 两角及其夹边对应相等</div>
+    <div class="quiz-option" data-idx="3">D. 两角及其中一角的对边对应相等</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ===== 9. 学科交叉参考 ===== -->
+  <h2 class="section-title"><span class="step-badge">9</span> 学科交叉参考</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 全等三角形在其它章节与学科中的联系</div>
+    <ul class="cross-ref-list">
+      <li>
+        📐 <a href="01-三角形.html"><strong>数学·三角形</strong></a>——
+        本章是全等三角形的基础。三角形的高、中线、角平分线、内角和定理、外角性质等，都为全等三角形的证明提供了必要的工具。理解三角形要素的对应关系，是学习全等的关键准备。
+        <span class="tag tag-math">几何推理</span>
+      </li>
+      <li>
+        📐 <a href="03-轴对称.html"><strong>数学·轴对称</strong></a>——
+        全等三角形是研究轴对称的得力工具：作一个点关于直线的对称点，本质就是构造一对<strong>全等</strong>的直角三角形（由垂直平分线产生）。轴对称的性质证明大量依赖全等三角形（如 SAS、HL）。
+        <span class="tag tag-math">对称与全等</span>
+      </li>
+      <li>
+        ⚡ <a href="../../物理/八年级/07-力.html"><strong>物理·力</strong></a>——
+        在力的合成与分解中，常用<strong>力的三角形</strong>表示矢量关系。当两个力三角形对应边长相等时（即力的模长对应相等），它们的全等保证了合力的<strong>唯一性</strong>——这正是全等三角形在物理矢量分析中的应用。
+        <span class="tag tag-cross">矢量全等</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="01-三角形.html" class="btn btn-outline" style="border-color: var(--math); color: var(--math);">← 上一章：三角形</a>
+    <a href="index.html" class="btn btn-outline">返回目录</a>
+    <a href="03-轴对称.html" class="btn btn-primary" style="background: var(--math);">下一章：轴对称 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ============================================================
+ *  工具函数（与 01-三角形.html 一致）
+ * ============================================================ */
+const D2R = Math.PI / 180;
+const R2D = 180 / Math.PI;
+
+function ptsStr(arr) { return arr.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' '); }
+
+// 扇形路径：圆心 (cx,cy)，半径 r，从 startAngle 度扫过 sweep 度（y-up 约定，SVG y 向下用 -sin）
+function sectorPath(cx, cy, r, startAngle, sweep) {
+  r = Math.max(1, r);
+  const N = 28;
+  let d = 'M ' + cx.toFixed(1) + ' ' + cy.toFixed(1);
+  for (let k = 0; k <= N; k++) {
+    const ang = (startAngle + sweep * k / N) * D2R;
+    const x = cx + r * Math.cos(ang);
+    const y = cy - r * Math.sin(ang);
+    d += ' L ' + x.toFixed(1) + ' ' + y.toFixed(1);
+  }
+  d += ' Z';
+  return d;
+}
+
+// 从点 from 指向点 to 的方向角（度，0~360，y-up 约定）
+function angleOf(from, to) {
+  let a = Math.atan2(from[1] - to[1], to[0] - from[0]) * R2D;
+  return (a + 360) % 360;
+}
+
+// 顶点 V 处，从射线 V→S1 到射线 V→S2 的内角（度，取小于 180 的那个）
+function angleBetweenAt(V, S1, S2) {
+  let a1 = angleOf(V, S1);
+  let a2 = angleOf(V, S2);
+  let d = (a2 - a1 + 360) % 360;
+  if (d > 180) d = 360 - d;
+  return d;
+}
+
+// 在顶点 V 处画内角弧的起点角和扫角（保证弧在三角形内部）
+function wedgeAt(V, S1, S2) {
+  const st1 = angleOf(V, S1);
+  const st2 = angleOf(V, S2);
+  let d = (st2 - st1 + 360) % 360;
+  if (d > 180) {
+    d = (st1 - st2 + 360) % 360;
+    return { start: st2, sweep: d };
+  }
+  return { start: st1, sweep: d };
+}
+
+// 给定三边 a,b,c（c=AB 为底），A 在原点，B 在 (c,0)
+// 返回 SVG 坐标 [C(顶), A(左下), B(右下)]
+function triangleFromSides(a, b, c, scale, ox, oy) {
+  const Ax = ox, Ay = oy;
+  const Bx = ox + c * scale, By = oy;
+  const Cx = (b * b + c * c - a * a) / (2 * c);
+  const Cy = Math.sqrt(Math.max(0, b * b - Cx * Cx));
+  const C = [Ax + Cx * scale, Ay - Cy * scale];
+  return [C, [Ax, Ay], [Bx, By]];
+}
+
+// 给定三个角（度，和为 180）和底边长度 d、左端点 Q=(qx,qy)，底边水平向右
+// 角 P=αP, 角 Q=αQ, 角 R=αR。返回 [P(顶), Q(左下), R(右下)]
+function triangleFromAngles(αP, αQ, αR, d, qx, qy) {
+  const t = d * Math.sin(αR * D2R) / Math.sin(αP * D2R);
+  const px = qx + t * Math.cos(αQ * D2R);
+  const py = qy - t * Math.sin(αQ * D2R);
+  return [[px, py], [qx, qy], [qx + d, qy]];
+}
+
+// SAS: 两边 b=AC, c=AB 和夹角 ∠A。返回 [C(顶), A(左下), B(右下)]
+function triangleSAS(b, c, angleA, scale, ox, oy) {
+  const A = [ox, oy];
+  const B = [ox + c * scale, oy];
+  const C = [ox + b * Math.cos(angleA * D2R) * scale, oy - b * Math.sin(angleA * D2R) * scale];
+  return [C, A, B];
+}
+
+/* ============================================================
+ *  2. 全等定义示意图（△ABC ≅ △DEF）
+ * ============================================================ */
+function drawCongruenceDef() {
+  // 左 △ABC，右 △DEF（相同形状，不同位置）
+  const Ab = [50, 200], Bb = [180, 200], Cb = [115, 80];
+  const Ad = [240, 200], Bd = [370, 200], Cd = [305, 80];
+  const colors = { A: '#E74C3C', B: '#3498DB', C: '#27AE60' };
+
+  const svg =
+    '<svg viewBox="0 0 420 250" xmlns="http://www.w3.org/2000/svg" style="max-width:440px;">' +
+      // △ABC
+      '<polygon points="' + ptsStr([Ab, Bb, Cb]) + '" fill="rgba(155,89,182,0.12)" stroke="#9B59B6" stroke-width="2.5"/>' +
+      // △DEF
+      '<polygon points="' + ptsStr([Ad, Bd, Cd]) + '" fill="rgba(155,89,182,0.08)" stroke="#7D3C98" stroke-width="2.5" stroke-dasharray="5,3"/>' +
+      // △ABC 顶点
+      '<circle cx="' + Ab[0] + '" cy="' + Ab[1] + '" r="5" fill="' + colors.A + '"/>' +
+      '<circle cx="' + Bb[0] + '" cy="' + Bb[1] + '" r="5" fill="' + colors.B + '"/>' +
+      '<circle cx="' + Cb[0] + '" cy="' + Cb[1] + '" r="5" fill="' + colors.C + '"/>' +
+      '<text x="' + (Ab[0]-14) + '" y="' + (Ab[1]+18) + '" fill="' + colors.A + '" font-size="16" font-weight="700" font-family="Georgia,serif">A</text>' +
+      '<text x="' + (Bb[0]+4) + '" y="' + (Bb[1]+18) + '" fill="' + colors.B + '" font-size="16" font-weight="700" font-family="Georgia,serif">B</text>' +
+      '<text x="' + (Cb[0]-6) + '" y="' + (Cb[1]-10) + '" fill="' + colors.C + '" font-size="16" font-weight="700" font-family="Georgia,serif">C</text>' +
+      // △DEF 顶点
+      '<circle cx="' + Ad[0] + '" cy="' + Ad[1] + '" r="5" fill="' + colors.A + '"/>' +
+      '<circle cx="' + Bd[0] + '" cy="' + Bd[1] + '" r="5" fill="' + colors.B + '"/>' +
+      '<circle cx="' + Cd[0] + '" cy="' + Cd[1] + '" r="5" fill="' + colors.C + '"/>' +
+      '<text x="' + (Ad[0]-14) + '" y="' + (Ad[1]+18) + '" fill="' + colors.A + '" font-size="16" font-weight="700" font-family="Georgia,serif">D</text>' +
+      '<text x="' + (Bd[0]+4) + '" y="' + (Bd[1]+18) + '" fill="' + colors.B + '" font-size="16" font-weight="700" font-family="Georgia,serif">E</text>' +
+      '<text x="' + (Cd[0]-6) + '" y="' + (Cd[1]-10) + '" fill="' + colors.C + '" font-size="16" font-weight="700" font-family="Georgia,serif">F</text>' +
+      // 全等符号
+      '<text x="210" y="135" text-anchor="middle" fill="#7D3C98" font-size="22" font-weight="700" font-family="Georgia,serif">≅</text>' +
+    '</svg>';
+  document.getElementById('cong-def-svg-wrap').innerHTML = svg;
+}
+
+/* ============================================================
+ *  3. 全等重合动画
+ * ============================================================ */
+// △ABC 的形状（也即 △DEF 的形状，两者完全相同）
+const CONG_TRI = { A: [70, 230], B: [230, 230], C: [150, 100] };
+let congMoved = true;
+
+function drawCongruence() {
+  const A = CONG_TRI.A, B = CONG_TRI.B, C = CONG_TRI.C;
+  const colors = { A: '#E74C3C', B: '#3498DB', C: '#27AE60' };
+
+  // 三角形重心（用于 transform-origin）
+  const gx = (A[0] + B[0] + C[0]) / 3;
+  const gy = (A[1] + B[1] + C[1]) / 3;
+
+  // 初始 △DEF 偏移到右边并旋转
+  const initTransform = 'translate(250px, 20px) rotate(28deg)';
+  const finalTransform = 'translate(0px, 0px) rotate(0deg)';
+
+  const svg =
+    '<svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+      // △ABC（固定）
+      '<g>' +
+        '<polygon points="' + ptsStr([A, B, C]) + '" fill="rgba(155,89,182,0.15)" stroke="#9B59B6" stroke-width="3"/>' +
+        '<circle cx="' + A[0] + '" cy="' + A[1] + '" r="6" fill="' + colors.A + '"/>' +
+        '<circle cx="' + B[0] + '" cy="' + B[1] + '" r="6" fill="' + colors.B + '"/>' +
+        '<circle cx="' + C[0] + '" cy="' + C[1] + '" r="6" fill="' + colors.C + '"/>' +
+        '<text x="' + (A[0]-16) + '" y="' + (A[1]+18) + '" fill="' + colors.A + '" font-size="18" font-weight="700" font-family="Georgia,serif">A</text>' +
+        '<text x="' + (B[0]+8) + '" y="' + (B[1]+18) + '" fill="' + colors.B + '" font-size="18" font-weight="700" font-family="Georgia,serif">B</text>' +
+        '<text x="' + (C[0]-6) + '" y="' + (C[1]-12) + '" fill="' + colors.C + '" font-size="18" font-weight="700" font-family="Georgia,serif">C</text>' +
+      '</g>' +
+      // △DEF（可移动）—— 形状与 △ABC 相同
+      '<g class="tri-def-group" id="tri-def-group" style="transform-origin: ' + gx + 'px ' + gy + 'px; transform: ' + initTransform + ';">' +
+        '<polygon points="' + ptsStr([A, B, C]) + '" fill="rgba(52,152,219,0.18)" stroke="#3498DB" stroke-width="3"/>' +
+        '<circle cx="' + A[0] + '" cy="' + A[1] + '" r="6" fill="' + colors.A + '"/>' +
+        '<circle cx="' + B[0] + '" cy="' + B[1] + '" r="6" fill="' + colors.B + '"/>' +
+        '<circle cx="' + C[0] + '" cy="' + C[1] + '" r="6" fill="' + colors.C + '"/>' +
+        '<text x="' + (A[0]-16) + '" y="' + (A[1]+18) + '" fill="' + colors.A + '" font-size="18" font-weight="700" font-family="Georgia,serif">D</text>' +
+        '<text x="' + (B[0]+8) + '" y="' + (B[1]+18) + '" fill="' + colors.B + '" font-size="18" font-weight="700" font-family="Georgia,serif">E</text>' +
+        '<text x="' + (C[0]-6) + '" y="' + (C[1]-12) + '" fill="' + colors.C + '" font-size="18" font-weight="700" font-family="Georgia,serif">F</text>' +
+      '</g>' +
+    '</svg>';
+  document.getElementById('congruence-svg-wrap').innerHTML = svg;
+  congMoved = true;
+  document.getElementById('cong-feedback').style.display = 'none';
+}
+
+document.getElementById('btn-congruence').addEventListener('click', function() {
+  const g = document.getElementById('tri-def-group');
+  if (g) {
+    g.style.transform = 'translate(0px, 0px) rotate(0deg)';
+    congMoved = false;
+    setTimeout(() => {
+      document.getElementById('cong-feedback').style.display = 'block';
+    }, 600);
+  }
+});
+
+document.getElementById('btn-congruence-reset').addEventListener('click', function() {
+  const g = document.getElementById('tri-def-group');
+  if (g) {
+    g.style.transform = 'translate(250px, 20px) rotate(28deg)';
+    congMoved = true;
+    document.getElementById('cong-feedback').style.display = 'none';
+  }
+});
+
+/* ============================================================
+ *  5. 判定方法探索器
+ * ============================================================ */
+
+// ----- SSS -----
+function drawSSS() {
+  const a = parseFloat(document.getElementById('sss-a').value);
+  const b = parseFloat(document.getElementById('sss-b').value);
+  const c = parseFloat(document.getElementById('sss-c').value);
+  document.getElementById('sss-a-val').textContent = a.toFixed(1);
+  document.getElementById('sss-b-val').textContent = b.toFixed(1);
+  document.getElementById('sss-c-val').textContent = c.toFixed(1);
+
+  const scale = 18;
+  // △ABC 在左
+  const [C1, A1, B1] = triangleFromSides(a, b, c, scale, 40, 200);
+  // △DEF 在右（相同边长，对应位置 D=A, E=B, F=C）
+  const [F2, D2, E2] = triangleFromSides(a, b, c, scale, 270, 200);
+
+  const svg = drawTwoTriangles(
+    [C1, A1, B1], [F2, D2, E2], 'ABC', 'DEF',
+    { knownSides: ['a', 'b', 'c'], a: a, b: b, c: c }
+  );
+  document.getElementById('sss-svg-wrap').innerHTML = svg;
+}
+
+// 通用：画两个三角形并标注
+// tri1 = [顶C, 左下A, 右下B], tri2 = [顶F, 左下D, 右下E]
+// opts: { knownSides: ['a','b','c'], knownAngles: ['A','B','C'], values... }
+function drawTwoTriangles(tri1, tri2, name1, name2, opts) {
+  opts = opts || {};
+  const C = tri1[0], A = tri1[1], B = tri1[2];
+  const F = tri2[0], D = tri2[1], E = tri2[2];
+  const colors = { A: '#E74C3C', B: '#3498DB', C: '#27AE60' };
+
+  // 是否高亮某条边
+  function sideColor(sideKey) {
+    if (opts.knownSides && opts.knownSides.includes(sideKey)) {
+      return { stroke: '#E74C3C', width: 4, opacity: 1 };
+    }
+    return { stroke: '#9B59B6', width: 2.5, opacity: 0.7 };
+  }
+  function angleColor(angleKey) {
+    if (opts.knownAngles && opts.knownAngles.includes(angleKey)) {
+      return { fill: 'rgba(231,76,60,0.35)', stroke: '#E74C3C', width: 2, r: 28 };
+    }
+    return { fill: 'rgba(155,89,182,0.2)', stroke: '#9B59B6', width: 1.5, r: 22 };
+  }
+
+  // 绘制单个三角形
+  function drawTri(verts, labels, origin) {
+    const [top, left, right] = verts; // [C/F, A/D, B/E]
+    let s = '';
+    // 三角形填充
+    s += '<polygon points="' + ptsStr(verts) + '" fill="rgba(155,89,182,0.08)" stroke="#9B59B6" stroke-width="2"/>';
+    // 三条边（按需高亮）
+    // 边 c = AB（左-右，顶点 A,B 之间），颜色用 c 对应
+    const sc = sideColor('c');
+    s += '<line x1="' + left[0] + '" y1="' + left[1] + '" x2="' + right[0] + '" y2="' + right[1] + '" stroke="' + sc.stroke + '" stroke-width="' + sc.width + '" opacity="' + sc.opacity + '"/>';
+    // 边 b = AC（左-顶），颜色用 b
+    const sb = sideColor('b');
+    s += '<line x1="' + left[0] + '" y1="' + left[1] + '" x2="' + top[0] + '" y2="' + top[1] + '" stroke="' + sb.stroke + '" stroke-width="' + sb.width + '" opacity="' + sb.opacity + '"/>';
+    // 边 a = BC（右-顶），颜色用 a
+    const sa = sideColor('a');
+    s += '<line x1="' + right[0] + '" y1="' + right[1] + '" x2="' + top[0] + '" y2="' + top[1] + '" stroke="' + sa.stroke + '" stroke-width="' + sa.width + '" opacity="' + sa.opacity + '"/>';
+
+    // 角弧
+    const aw = wedgeAt(left, right, top); // ∠A（左下）
+    const ac = angleColor('A');
+    s += '<path d="' + sectorPath(left[0], left[1], ac.r, aw.start, aw.sweep) + '" fill="' + ac.fill + '" stroke="' + ac.stroke + '" stroke-width="' + ac.width + '"/>';
+    const bw = wedgeAt(right, top, left); // ∠B（右下）
+    const bc = angleColor('B');
+    s += '<path d="' + sectorPath(right[0], right[1], bc.r, bw.start, bw.sweep) + '" fill="' + bc.fill + '" stroke="' + bc.stroke + '" stroke-width="' + bc.width + '"/>';
+    const cw = wedgeAt(top, left, right); // ∠C（顶）
+    const cc = angleColor('C');
+    s += '<path d="' + sectorPath(top[0], top[1], cc.r, cw.start, cw.sweep) + '" fill="' + cc.fill + '" stroke="' + cc.stroke + '" stroke-width="' + cc.width + '"/>';
+
+    // 顶点
+    s += '<circle cx="' + left[0] + '" cy="' + left[1] + '" r="5" fill="' + colors.A + '"/>';
+    s += '<circle cx="' + right[0] + '" cy="' + right[1] + '" r="5" fill="' + colors.B + '"/>';
+    s += '<circle cx="' + top[0] + '" cy="' + top[1] + '" r="5" fill="' + colors.C + '"/>';
+    // 顶点字母
+    s += '<text x="' + (left[0]-16) + '" y="' + (left[1]+18) + '" fill="' + colors.A + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[0] + '</text>';
+    s += '<text x="' + (right[0]+8) + '" y="' + (right[1]+18) + '" fill="' + colors.B + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[1] + '</text>';
+    s += '<text x="' + (top[0]-6) + '" y="' + (top[1]-10) + '" fill="' + colors.C + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[2] + '</text>';
+
+    // 边标注
+    if (opts.showSideLabels) {
+      const mAB = [(left[0]+right[0])/2, (left[1]+right[1])/2 + 20];
+      const mAC = [(left[0]+top[0])/2 - 16, (left[1]+top[1])/2];
+      const mBC = [(right[0]+top[0])/2 + 12, (right[1]+top[1])/2 - 4];
+      s += '<text x="' + mAB[0] + '" y="' + mAB[1] + '" text-anchor="middle" fill="#27AE60" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.cLabel || 'c') + '</text>';
+      s += '<text x="' + mAC[0] + '" y="' + mAC[1] + '" text-anchor="middle" fill="#3498DB" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.bLabel || 'b') + '</text>';
+      s += '<text x="' + mBC[0] + '" y="' + mBC[1] + '" text-anchor="middle" fill="#E74C3C" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.aLabel || 'a') + '</text>';
+    }
+    return s;
+  }
+
+  const svg =
+    '<svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+    drawTri(tri1, ['A','B','C'], 'left') +
+    drawTri(tri2, ['D','E','F'], 'right') +
+    '<text x="225" y="145" text-anchor="middle" fill="#7D3C98" font-size="20" font-weight="700" font-family="Georgia,serif">≅</text>' +
+    '</svg>';
+  return svg;
+}
+
+// ----- SAS -----
+function drawSAS() {
+  const b = parseFloat(document.getElementById('sas-b').value);
+  const c = parseFloat(document.getElementById('sas-c').value);
+  const A = parseFloat(document.getElementById('sas-A').value);
+  document.getElementById('sas-b-val').textContent = b.toFixed(1);
+  document.getElementById('sas-c-val').textContent = c.toFixed(1);
+  document.getElementById('sas-A-val').textContent = A + '°';
+
+  const scale = 18;
+  // △ABC: A 左下，B 右下，C 顶
+  const [C1, A1, B1] = triangleSAS(b, c, A, scale, 40, 220);
+  // △DEF: D 左下，E 右下，F 顶（相同参数）
+  const [F2, D2, E2] = triangleSAS(b, c, A, scale, 280, 220);
+
+  const svg = drawTwoTriangles(
+    [C1, A1, B1], [F2, D2, E2], 'ABC', 'DEF',
+    { knownSides: ['b', 'c'], knownAngles: ['A'], showSideLabels: true,
+      bLabel: 'b=' + b.toFixed(1), cLabel: 'c=' + c.toFixed(1), aLabel: 'a' }
+  );
+  document.getElementById('sas-svg-wrap').innerHTML = svg;
+}
+
+// ----- ASA -----
+function drawASA() {
+  const B = parseFloat(document.getElementById('asa-B').value);
+  const C = parseFloat(document.getElementById('asa-C').value);
+  const a = parseFloat(document.getElementById('asa-a').value);
+  document.getElementById('asa-B-val').textContent = B + '°';
+  document.getElementById('asa-C-val').textContent = C + '°';
+  document.getElementById('asa-a-val').textContent = a.toFixed(1);
+
+  const A = 180 - B - C;
+  const scale = 18;
+  // ASA: 给 ∠B, ∠C 和夹边 a=BC
+  // triangleFromAngles(顶A角, 左下B角, 右下C角, 底边a, qx, qy) → [A顶, B左下, C右下]
+  const [At1, Bt1, Ct1] = triangleFromAngles(A, B, C, a * scale, 40, 220);
+  // 转为 [顶, 左下, 右下] = [A, B, C]
+  const [At2, Bt2, Ct2] = triangleFromAngles(A, B, C, a * scale, 290, 220);
+
+  const svg = drawTwoTriangles(
+    [At1, Bt1, Ct1], [At2, Bt2, Ct2], 'ABC', 'DEF',
+    { knownSides: ['a'], knownAngles: ['B', 'C'], showSideLabels: true,
+      aLabel: 'a=' + a.toFixed(1), bLabel: 'b', cLabel: 'c' }
+  );
+  document.getElementById('asa-svg-wrap').innerHTML = svg;
+}
+
+// ----- AAS -----
+function drawAAS() {
+  const A = parseFloat(document.getElementById('aas-A').value);
+  const B = parseFloat(document.getElementById('aas-B').value);
+  const a = parseFloat(document.getElementById('aas-a').value);
+  document.getElementById('aas-A-val').textContent = A + '°';
+  document.getElementById('aas-B-val').textContent = B + '°';
+  document.getElementById('aas-a-val').textContent = a.toFixed(1);
+
+  const C = 180 - A - B;
+  const scale = 18;
+  // AAS: 给 ∠A, ∠B 和 ∠A 的对边 a=BC
+  // 让 P=A(顶), Q=B(左下), R=C(右下)，底边 QR=BC=a
+  // triangleFromAngles(顶角A, 左下角B, 右下角C, 底边a, qx, qy)
+  const [At1, Bt1, Ct1] = triangleFromAngles(A, B, C, a * scale, 40, 220);
+  const [At2, Bt2, Ct2] = triangleFromAngles(A, B, C, a * scale, 290, 220);
+
+  const svg = drawTwoTriangles(
+    [At1, Bt1, Ct1], [At2, Bt2, Ct2], 'ABC', 'DEF',
+    { knownSides: ['a'], knownAngles: ['A', 'B'], showSideLabels: true,
+      aLabel: 'a=' + a.toFixed(1), bLabel: 'b', cLabel: 'c' }
+  );
+  document.getElementById('aas-svg-wrap').innerHTML = svg;
+}
+
+// ----- HL -----
+function drawHL() {
+  const c = parseFloat(document.getElementById('hl-c').value);  // 斜边
+  const a = parseFloat(document.getElementById('hl-a').value);  // 直角边
+  document.getElementById('hl-c-val').textContent = c.toFixed(1);
+  document.getElementById('hl-a-val').textContent = a.toFixed(1);
+
+  const scale = 18;
+  // 直角三角形：A 左下（直角），B 右下，C 顶
+  // 斜边 c = AB，直角边 a = BC，另一直角边 b = AC
+  // 用直角边 a 和斜边 c 构造：A 在原点，B 在 (c, 0)（斜边沿 x 轴），C 在 (0, b)... 
+  // 实际上让直角在 C 更直观：C 是直角顶点
+  // 重新：让直角在 A，斜边 BC=c，直角边 AB 和 AC
+  // 但用户给的 a 是"直角边"，c 是"斜边"
+  // 让斜边 = BC = c，直角边 = AB = a，另一直角边 = AC = sqrt(c²-a²)
+  // 直角在 A
+  const b = Math.sqrt(Math.max(0, c * c - a * a));
+  // 直角在 A，斜边 BC=c，直角边 AB=a，另一直角边 AC=b
+  // triangleFromSides 第 1 参数=BC=斜边=c, 第 2 参数=AC=b, 第 3 参数=AB=直角边=a
+  const [Cv1, Av1, Bv1] = triangleFromSides(c, b, a, scale, 40, 220);
+  const [Fv2, Dv2, Ev2] = triangleFromSides(c, b, a, scale, 290, 220);
+
+  const svg =
+    '<svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+    // △ABC —— 'a' 边=BC=斜边, 'b' 边=AC=另一直角边, 'c' 边=AB=直角边
+    drawTwoTrianglesBody([Cv1, Av1, Bv1], [Fv2, Dv2, Ev2],
+      { knownSides: ['a', 'c'], knownAngles: [], showSideLabels: true,
+        aLabel: '斜边=' + c.toFixed(1), bLabel: '另一直角边=' + b.toFixed(1), cLabel: '直角边=' + a.toFixed(1) }) +
+    '</svg>';
+  document.getElementById('hl-svg-wrap').innerHTML = svg;
+}
+
+// HL 专用的三角形绘制（含直角符号）
+function drawTwoTrianglesBody(tri1, tri2, opts) {
+  opts = opts || {};
+  function drawTri(verts, labels) {
+    const [top, left, right] = verts; // [C/F, A/D, B/E]
+    let s = '';
+    s += '<polygon points="' + ptsStr(verts) + '" fill="rgba(155,89,182,0.08)" stroke="#9B59B6" stroke-width="2"/>';
+    function sc(k) { return opts.knownSides && opts.knownSides.includes(k) ? { stroke: '#E74C3C', w: 4, o: 1 } : { stroke: '#9B59B6', w: 2.5, o: 0.7 }; }
+    const s1 = sc('c'); s += '<line x1="' + left[0] + '" y1="' + left[1] + '" x2="' + right[0] + '" y2="' + right[1] + '" stroke="' + s1.stroke + '" stroke-width="' + s1.w + '" opacity="' + s1.o + '"/>';
+    const s2 = sc('b'); s += '<line x1="' + left[0] + '" y1="' + left[1] + '" x2="' + top[0] + '" y2="' + top[1] + '" stroke="' + s2.stroke + '" stroke-width="' + s2.w + '" opacity="' + s2.o + '"/>';
+    const s3 = sc('a'); s += '<line x1="' + right[0] + '" y1="' + right[1] + '" x2="' + top[0] + '" y2="' + top[1] + '" stroke="' + s3.stroke + '" stroke-width="' + s3.w + '" opacity="' + s3.o + '"/>';
+    // 直角符号（在 left 顶点 A）
+    const sz = 10;
+    const p1 = [left[0] + sz, left[1]];
+    const p2 = [left[0] + sz, left[1] - sz];
+    const p3 = [left[0], left[1] - sz];
+    s += '<polyline points="' + ptsStr([p1, p2, p3]) + '" fill="none" stroke="#E67E22" stroke-width="2"/>';
+    // 顶点
+    const colors = { A: '#E74C3C', B: '#3498DB', C: '#27AE60' };
+    s += '<circle cx="' + left[0] + '" cy="' + left[1] + '" r="5" fill="' + colors.A + '"/>';
+    s += '<circle cx="' + right[0] + '" cy="' + right[1] + '" r="5" fill="' + colors.B + '"/>';
+    s += '<circle cx="' + top[0] + '" cy="' + top[1] + '" r="5" fill="' + colors.C + '"/>';
+    s += '<text x="' + (left[0]-16) + '" y="' + (left[1]+18) + '" fill="' + colors.A + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[0] + '</text>';
+    s += '<text x="' + (right[0]+8) + '" y="' + (right[1]+18) + '" fill="' + colors.B + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[1] + '</text>';
+    s += '<text x="' + (top[0]-6) + '" y="' + (top[1]-10) + '" fill="' + colors.C + '" font-size="15" font-weight="700" font-family="Georgia,serif">' + labels[2] + '</text>';
+    // 边标注
+    if (opts.showSideLabels) {
+      const mAB = [(left[0]+right[0])/2, (left[1]+right[1])/2 + 20];
+      const mAC = [(left[0]+top[0])/2 - 18, (left[1]+top[1])/2];
+      const mBC = [(right[0]+top[0])/2 + 14, (right[1]+top[1])/2 - 4];
+      s += '<text x="' + mAB[0] + '" y="' + mAB[1] + '" text-anchor="middle" fill="#27AE60" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.cLabel || 'c') + '</text>';
+      s += '<text x="' + mAC[0] + '" y="' + mAC[1] + '" text-anchor="middle" fill="#3498DB" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.bLabel || 'b') + '</text>';
+      s += '<text x="' + mBC[0] + '" y="' + mBC[1] + '" text-anchor="middle" fill="#E74C3C" font-size="13" font-weight="700" font-family="Georgia,serif">' + (opts.aLabel || 'a') + '</text>';
+    }
+    return s;
+  }
+  return drawTri(tri1, ['A','B','C']) + drawTri(tri2, ['D','E','F']) +
+    '<text x="225" y="145" text-anchor="middle" fill="#7D3C98" font-size="20" font-weight="700" font-family="Georgia,serif">≅</text>';
+}
+
+// ----- SSA 反例 -----
+function drawSSA() {
+  // 经典反例：∠A = 30°，邻边 b = AC = 8，对边 a = BC = 5
+  // 两个解：c1 = 4√3 + 3 ≈ 9.928，c2 = 4√3 - 3 ≈ 3.928
+  const angleA = 30, b = 8, a = 5;
+  const c1 = 4 * Math.sqrt(3) + 3;  // ≈ 9.928
+  const c2 = 4 * Math.sqrt(3) - 3;  // ≈ 3.928
+  const scale = 18;
+  // A 在原点，B 在 (c, 0)，C 在 (b·cos(A), -b·sin(A))（SVG y 向下）
+  const Ax = 60, Ay = 230;
+  const Cx = Ax + b * Math.cos(angleA * D2R) * scale;
+  const Cy = Ay - b * Math.sin(angleA * D2R) * scale;
+  const C = [Cx, Cy];
+  const A = [Ax, Ay];
+  const B1 = [Ax + c1 * scale, Ay]; // 解1
+  const B2 = [Ax + c2 * scale, Ay]; // 解2
+
+  // 共用 ∠A 弧
+  const aAng = 30;
+
+  const svg =
+    '<svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+      // 角 ∠A 的两条射线
+      '<line x1="' + Ax + '" y1="' + Ay + '" x2="' + (Ax + 10 * scale) + '" y2="' + Ay + '" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="4,3"/>' +
+      '<line x1="' + Ax + '" y1="' + Ay + '" x2="' + (Ax + 9 * Math.cos(angleA * D2R) * scale) + '" y2="' + (Ay - 9 * Math.sin(angleA * D2R) * scale) + '" stroke="#BDC3C7" stroke-width="1" stroke-dasharray="4,3"/>' +
+      // 三角形1（蓝色）：A, B1, C
+      '<polygon points="' + ptsStr([A, B1, C]) + '" fill="rgba(52,152,219,0.15)" stroke="#3498DB" stroke-width="3"/>' +
+      // 三角形2（红色）：A, B2, C
+      '<polygon points="' + ptsStr([A, B2, C]) + '" fill="rgba(231,76,60,0.12)" stroke="#E74C3C" stroke-width="3" stroke-dasharray="5,3"/>' +
+      // ∠A 弧
+      '<path d="' + sectorPath(Ax, Ay, 36, 0, angleA) + '" fill="rgba(243,156,18,0.3)" stroke="#F39C12" stroke-width="2"/>' +
+      '<text x="' + (Ax + 50) + '" y="' + (Ay - 14) + '" fill="#B9770E" font-size="14" font-weight="700">∠A=30°</text>' +
+      // AC 边标注（共用）
+      '<text x="' + ((Ax + Cx) / 2 - 24) + '" y="' + ((Ay + Cy) / 2) + '" fill="#27AE60" font-size="14" font-weight="700" font-family="Georgia,serif">AC=b=8</text>' +
+      // BC 边标注（两个）
+      '<text x="' + ((B1[0] + Cx) / 2 + 10) + '" y="' + ((B1[1] + Cy) / 2 - 8) + '" fill="#3498DB" font-size="13" font-weight="700" font-family="Georgia,serif">BC=5</text>' +
+      '<text x="' + ((B2[0] + Cx) / 2 - 50) + '" y="' + ((B2[1] + Cy) / 2 + 14) + '" fill="#E74C3C" font-size="13" font-weight="700" font-family="Georgia,serif">BC=5</text>' +
+      // AB 边标注
+      '<text x="' + ((Ax + B1[0]) / 2) + '" y="' + (Ay + 22) + '" text-anchor="middle" fill="#3498DB" font-size="13" font-weight="700" font-family="Georgia,serif">AB₁≈9.93</text>' +
+      '<text x="' + ((Ax + B2[0]) / 2) + '" y="' + (Ay + 38) + '" text-anchor="middle" fill="#E74C3C" font-size="13" font-weight="700" font-family="Georgia,serif">AB₂≈3.93</text>' +
+      // 顶点
+      '<circle cx="' + Ax + '" cy="' + Ay + '" r="5" fill="#7D3C98"/>' +
+      '<circle cx="' + Cx + '" cy="' + Cy + '" r="5" fill="#7D3C98"/>' +
+      '<circle cx="' + B1[0] + '" cy="' + B1[1] + '" r="5" fill="#3498DB"/>' +
+      '<circle cx="' + B2[0] + '" cy="' + B2[1] + '" r="5" fill="#E74C3C"/>' +
+      '<text x="' + (Ax - 16) + '" y="' + (Ay + 18) + '" fill="#7D3C98" font-size="15" font-weight="700" font-family="Georgia,serif">A</text>' +
+      '<text x="' + (Cx + 6) + '" y="' + (Cy - 8) + '" fill="#7D3C98" font-size="15" font-weight="700" font-family="Georgia,serif">C</text>' +
+      '<text x="' + (B1[0] + 6) + '" y="' + (B1[1] + 18) + '" fill="#3498DB" font-size="15" font-weight="700" font-family="Georgia,serif">B₁</text>' +
+      '<text x="' + (B2[0] - 6) + '" y="' + (B2[1] + 18) + '" fill="#E74C3C" font-size="15" font-weight="700" font-family="Georgia,serif">B₂</text>' +
+      // 说明
+      '<text x="280" y="30" text-anchor="middle" fill="#C0392B" font-size="14" font-weight="700">两个三角形满足相同的 SSA 条件，但形状不同</text>' +
+      '<text x="280" y="50" text-anchor="middle" fill="#7F8C8D" font-size="12">∠A=30°, AC=8, BC=5 → 两个解 AB₁≈9.93, AB₂≈3.93</text>' +
+    '</svg>';
+  document.getElementById('ssa-svg-wrap').innerHTML = svg;
+}
+
+// ----- AAA 反例 -----
+function drawAAA() {
+  // 两个等边三角形，大小不同
+  const scale1 = 16, scale2 = 30;
+  const a1 = 3, a2 = 6;
+  // 等边三角形：三个角都是 60°
+  // 用 triangleFromSides(a, a, a, scale, ox, oy)
+  const [C1, A1, B1] = triangleFromSides(a1, a1, a1, scale1, 50, 220);
+  const [C2, A2, B2] = triangleFromSides(a2, a2, a2, scale2, 250, 250);
+
+  function drawEqui(tri, color, labels, sideLabel) {
+    const [top, left, right] = tri;
+    let s = '';
+    s += '<polygon points="' + ptsStr(tri) + '" fill="' + color + '22" stroke="' + color + '" stroke-width="2.5"/>';
+    // 角弧
+    const aw = wedgeAt(left, right, top);
+    s += '<path d="' + sectorPath(left[0], left[1], 20, aw.start, aw.sweep) + '" fill="' + color + '33" stroke="' + color + '" stroke-width="1.5"/>';
+    const bw = wedgeAt(right, top, left);
+    s += '<path d="' + sectorPath(right[0], right[1], 20, bw.start, bw.sweep) + '" fill="' + color + '33" stroke="' + color + '" stroke-width="1.5"/>';
+    const cw = wedgeAt(top, left, right);
+    s += '<path d="' + sectorPath(top[0], top[1], 20, cw.start, cw.sweep) + '" fill="' + color + '33" stroke="' + color + '" stroke-width="1.5"/>';
+    // 顶点
+    s += '<circle cx="' + left[0] + '" cy="' + left[1] + '" r="4" fill="' + color + '"/>';
+    s += '<circle cx="' + right[0] + '" cy="' + right[1] + '" r="4" fill="' + color + '"/>';
+    s += '<circle cx="' + top[0] + '" cy="' + top[1] + '" r="4" fill="' + color + '"/>';
+    s += '<text x="' + (left[0]-14) + '" y="' + (left[1]+16) + '" fill="' + color + '" font-size="14" font-weight="700" font-family="Georgia,serif">' + labels[0] + '</text>';
+    s += '<text x="' + (right[0]+6) + '" y="' + (right[1]+16) + '" fill="' + color + '" font-size="14" font-weight="700" font-family="Georgia,serif">' + labels[1] + '</text>';
+    s += '<text x="' + (top[0]-6) + '" y="' + (top[1]-10) + '" fill="' + color + '" font-size="14" font-weight="700" font-family="Georgia,serif">' + labels[2] + '</text>';
+    // 边标注
+    const mAB = [(left[0]+right[0])/2, (left[1]+right[1])/2 + 20];
+    s += '<text x="' + mAB[0] + '" y="' + mAB[1] + '" text-anchor="middle" fill="' + color + '" font-size="13" font-weight="700" font-family="Georgia,serif">' + sideLabel + '</text>';
+    // 角度标注
+    s += '<text x="' + (left[0]+18) + '" y="' + (left[1]-8) + '" fill="' + color + '" font-size="12" font-weight="600">60°</text>';
+    s += '<text x="' + (right[0]-44) + '" y="' + (right[1]-8) + '" fill="' + color + '" font-size="12" font-weight="600">60°</text>';
+    s += '<text x="' + (top[0]+10) + '" y="' + (top[1]+6) + '" fill="' + color + '" font-size="12" font-weight="600">60°</text>';
+    return s;
+  }
+
+  const svg =
+    '<svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+      drawEqui([C1, A1, B1], '#3498DB', ['A','B','C'], '边=3') +
+      drawEqui([C2, A2, B2], '#E74C3C', ['D','E','F'], '边=6') +
+      '<text x="225" y="155" text-anchor="middle" fill="#7D3C98" font-size="18" font-weight="700" font-family="Georgia,serif">相似≠全等</text>' +
+      '<text x="280" y="28" text-anchor="middle" fill="#C0392B" font-size="14" font-weight="700">两个等边三角形：三角都等于 60°，但边长不同</text>' +
+    '</svg>';
+  document.getElementById('aaa-svg-wrap').innerHTML = svg;
+}
+
+// 标签页切换
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    const target = this.dataset.tab;
+    document.getElementById('tab-' + target).classList.add('active');
+    // 触发对应绘制
+    if (target === 'sss') drawSSS();
+    else if (target === 'sas') drawSAS();
+    else if (target === 'asa') drawASA();
+    else if (target === 'aas') drawAAS();
+    else if (target === 'hl') drawHL();
+    else if (target === 'ssa') drawSSA();
+    else if (target === 'aaa') drawAAA();
+  });
+});
+
+// 绑定滑块
+function bindSliderRedraw(sliderId, drawFn) {
+  const sl = document.getElementById(sliderId);
+  if (!sl) return;
+  sl.addEventListener('input', drawFn);
+}
+
+bindSliderRedraw('sss-a', drawSSS);
+bindSliderRedraw('sss-b', drawSSS);
+bindSliderRedraw('sss-c', drawSSS);
+bindSliderRedraw('sas-b', drawSAS);
+bindSliderRedraw('sas-c', drawSAS);
+bindSliderRedraw('sas-A', drawSAS);
+bindSliderRedraw('asa-B', drawASA);
+bindSliderRedraw('asa-C', drawASA);
+bindSliderRedraw('asa-a', drawASA);
+bindSliderRedraw('aas-A', drawAAS);
+bindSliderRedraw('aas-B', drawAAS);
+bindSliderRedraw('aas-a', drawAAS);
+bindSliderRedraw('hl-c', drawHL);
+bindSliderRedraw('hl-a', drawHL);
+
+/* ============================================================
+ *  6. 拼三角形游戏
+ * ============================================================ */
+const CONDITIONS = [
+  { key: 'a',   label: '边 a = BC = 5',  type: 'side',  vertex: 'A' }, // a 是 ∠A 的对边
+  { key: 'b',   label: '边 b = AC = 7',  type: 'side',  vertex: 'B' },
+  { key: 'c',   label: '边 c = AB = 6',  type: 'side',  vertex: 'C' },
+  { key: 'A',   label: '∠A = 50°',       type: 'angle', vertex: 'A' },
+  { key: 'B',   label: '∠B = 60°',       type: 'angle', vertex: 'B' },
+  { key: 'C',   label: '∠C = 70°',       type: 'angle', vertex: 'C' },
+  { key: 'hyp', label: '斜边 = 10',      type: 'right' },
+  { key: 'leg', label: '直角边 = 6',     type: 'right' }
+];
+
+let selectedConds = [];
+
+function renderCondPool() {
+  const pool = document.getElementById('cond-pool');
+  pool.innerHTML = CONDITIONS.map(c => {
+    const tagClass = c.type === 'side' ? 'side' : (c.type === 'angle' ? 'angle' : 'right');
+    const tagText = c.type === 'side' ? '边' : (c.type === 'angle' ? '角' : '直角');
+    return '<div class="cond-card" data-key="' + c.key + '">' +
+      c.label +
+      '<div class="type-tag ' + tagClass + '">' + tagText + '</div>' +
+    '</div>';
+  }).join('');
+  // 绑定点击
+  document.querySelectorAll('.cond-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const key = this.dataset.key;
+      const idx = selectedConds.indexOf(key);
+      if (idx >= 0) {
+        selectedConds.splice(idx, 1);
+        this.classList.remove('selected');
+      } else {
+        if (selectedConds.length >= 3) return;
+        selectedConds.push(key);
+        this.classList.add('selected');
+      }
+      document.getElementById('sel-count').textContent = selectedConds.length;
+      // 隐藏上次结果
+      document.getElementById('game-result').style.display = 'none';
+      document.getElementById('game-svg-wrap').style.display = 'none';
+    });
+  });
+}
+
+// 判断逻辑
+function judgeConditions(selected) {
+  const set = new Set(selected);
+  const sides = selected.filter(k => ['a','b','c'].includes(k));
+  const angles = selected.filter(k => ['A','B','C'].includes(k));
+
+  // HL: 斜边 + 直角边 + 直角条件
+  if (set.has('hyp') && set.has('leg')) {
+    if (set.has('C')) {
+      return { method: 'HL', congruent: true, note: '选了"斜边"、"直角边"和"∠C=70°"——但 HL 需要直角！请把 ∠C 改为 90° 才能套用 HL。此处仅说明：若 ∠C=90° 则 HL 成立。' };
+    } else {
+      return { method: null, congruent: false, note: '选了"斜边"和"直角边"，但缺少<strong>直角条件</strong>。HL 定理仅在直角三角形中适用——必须知道有一个角是 90°。' };
+    }
+  }
+  // 混合 right 与 side/angle 但不完整
+  if (set.has('hyp') || set.has('leg')) {
+    return { method: null, congruent: false, note: '条件含"斜边/直角边"但未同时具备，无法判定全等。HL 需要斜边、一直角边和直角条件三者俱全。' };
+  }
+
+  // SSS
+  if (sides.length === 3) {
+    return { method: 'SSS', congruent: true, note: '三边对应相等 (a, b, c) → <strong>SSS</strong>，可以判定 △ABC ≅ △DEF。' };
+  }
+  // AAA
+  if (angles.length === 3) {
+    return { method: 'AAA', congruent: false, note: '三个角对应相等 (∠A, ∠B, ∠C) → <strong>AAA</strong>，<strong>不能</strong>判定全等。三角相等只能保证相似，大小可能不同。<a href="javascript:;" onclick="document.querySelectorAll(\'.tab-btn\')[5].click();">查看反例 →</a>' };
+  }
+  // 2边1角
+  if (sides.length === 2 && angles.length === 1) {
+    const ang = angles[0];
+    const ss = sides.slice().sort();
+    let includedAngle = null;
+    if (ss[0] === 'a' && ss[1] === 'b') includedAngle = 'C'; // a(BC) 与 b(AC) 的公共顶点是 C
+    else if (ss[0] === 'a' && ss[1] === 'c') includedAngle = 'B'; // a(BC) 与 c(AB) 的公共顶点是 B
+    else if (ss[0] === 'b' && ss[1] === 'c') includedAngle = 'A'; // b(AC) 与 c(AB) 的公共顶点是 A
+
+    if (ang === includedAngle) {
+      return { method: 'SAS', congruent: true, note: '两边 (' + ss.join(', ') + ') 及其<strong>夹角</strong> ∠' + ang + ' → <strong>SAS</strong>，可以判定全等。' };
+    } else {
+      return { method: 'SSA', congruent: false, note: '两边 (' + ss.join(', ') + ') 及其<strong>非夹角</strong> ∠' + ang + '（∠' + ang + ' 是边 ' + (ang === 'A' ? 'a' : ang === 'B' ? 'b' : 'c') + ' 的对角）→ <strong>SSA</strong>，<strong>不能</strong>判定全等。<a href="javascript:;" onclick="document.querySelectorAll(\'.tab-btn\')[5].click();">查看反例 →</a>' };
+    }
+  }
+  // 1边2角
+  if (sides.length === 1 && angles.length === 2) {
+    const side = sides[0];
+    const angSorted = angles.slice().sort();
+    let includedSide = null;
+    if (angSorted[0] === 'A' && angSorted[1] === 'B') includedSide = 'c'; // ∠A 和 ∠B 的公共边是 c(AB)
+    else if (angSorted[0] === 'A' && angSorted[1] === 'C') includedSide = 'b'; // ∠A 和 ∠C 的公共边是 b(AC)
+    else if (angSorted[0] === 'B' && angSorted[1] === 'C') includedSide = 'a'; // ∠B 和 ∠C 的公共边是 a(BC)
+
+    if (side === includedSide) {
+      return { method: 'ASA', congruent: true, note: '两角 (∠' + angSorted.join(', ∠') + ') 及其<strong>夹边</strong> ' + side + ' → <strong>ASA</strong>，可以判定全等。' };
+    } else {
+      return { method: 'AAS', congruent: true, note: '两角 (∠' + angSorted.join(', ∠') + ') 及其中一角的<strong>对边</strong> ' + side + ' → <strong>AAS</strong>，可以判定全等（由两角可求第三角，转化为 ASA）。' };
+    }
+  }
+  return { method: null, congruent: false, note: '该条件组合不属于任何判定方法，无法判定全等。' };
+}
+
+document.getElementById('btn-judge').addEventListener('click', function() {
+  if (selectedConds.length !== 3) {
+    const r = document.getElementById('game-result');
+    r.className = 'game-result bad';
+    r.innerHTML = '请恰好选择 <strong>3 个</strong>条件（当前已选 ' + selectedConds.length + ' 个）。';
+    r.style.display = 'block';
+    return;
+  }
+  const result = judgeConditions(selectedConds.slice());
+  const r = document.getElementById('game-result');
+  r.className = 'game-result ' + (result.congruent ? 'ok' : 'bad');
+  let html = '<div style="font-size:17px; font-weight:700; margin-bottom:6px;">';
+  if (result.congruent) {
+    html += '✓ 可以判定全等';
+  } else {
+    html += '✗ 不能判定全等';
+  }
+  if (result.method) html += ' — <span style="color:' + (result.congruent ? 'var(--success)' : 'var(--danger)') + '; font-family:Georgia,serif;">' + result.method + '</span>';
+  html += '</div>';
+  html += '<div>' + result.note + '</div>';
+  r.innerHTML = html;
+  r.style.display = 'block';
+
+  // 显示对应的示意图
+  const wrap = document.getElementById('game-svg-wrap');
+  wrap.style.display = 'block';
+  if (result.method === 'SSA') {
+    drawSSA();
+    wrap.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:600; padding:10px;">SSA 反例示意图：</p>' + document.getElementById('ssa-svg-wrap').innerHTML;
+  } else if (result.method === 'AAA') {
+    drawAAA();
+    wrap.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:600; padding:10px;">AAA 反例示意图：</p>' + document.getElementById('aaa-svg-wrap').innerHTML;
+  } else {
+    wrap.innerHTML = '<p style="text-align:center; color:var(--success); font-weight:600; padding:20px;">' + result.method + ' 判定方法可以保证两个三角形全等 ✓</p>';
+  }
+});
+
+document.getElementById('btn-judge-reset').addEventListener('click', function() {
+  selectedConds = [];
+  document.querySelectorAll('.cond-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('sel-count').textContent = '0';
+  document.getElementById('game-result').style.display = 'none';
+  document.getElementById('game-svg-wrap').style.display = 'none';
+});
+
+/* ============================================================
+ *  7. HL 直角三角形专题
+ * ============================================================ */
+function drawHL2() {
+  const c = parseFloat(document.getElementById('hl2-c').value);  // 斜边
+  let a = parseFloat(document.getElementById('hl2-a').value);    // 直角边
+  document.getElementById('hl2-c-val').textContent = c.toFixed(1);
+  document.getElementById('hl2-a-val').textContent = a.toFixed(1);
+
+  // 验证 a < c
+  const verify = document.getElementById('hl2-verify');
+  if (a >= c) {
+    verify.className = 'verify-line bad';
+    verify.innerHTML = '✗ 直角边 (' + a.toFixed(1) + ') 必须小于斜边 (' + c.toFixed(1) + ')！请调小直角边。';
+    document.getElementById('hl2-svg-wrap').innerHTML =
+      '<svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" style="max-width:400px;">' +
+        '<text x="200" y="50" text-anchor="middle" fill="#E74C3C" font-size="16" font-weight="700">⚠ 直角边必须小于斜边</text>' +
+      '</svg>';
+    document.getElementById('hl2-data').innerHTML = '';
+    return;
+  }
+
+  const b = Math.sqrt(c * c - a * a);  // 另一直角边
+  const scale = 18;
+  // 直角在 A，斜边 BC=c，直角边 AB=a，另一直角边 AC=b
+  // triangleFromSides(a, b, c, scale, ox, oy) → [C(顶), A(左下), B(右下)]
+  // 这里 a=BC, b=AC, c=AB —— 但我要的是斜边=BC=c，直角边=AB=a
+  // 所以传：a_param=BC=c(斜边), b_param=AC=b, c_param=AB=a(直角边)
+  // 返回 [C顶, A左下, B右下]，直角在 A
+  const [Cv1, Av1, Bv1] = triangleFromSides(c, b, a, scale, 50, 220);
+  const [Fv2, Dv2, Ev2] = triangleFromSides(c, b, a, scale, 300, 220);
+
+  const svg =
+    '<svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;">' +
+    drawTwoTrianglesBody(
+      [Cv1, Av1, Bv1], [Fv2, Dv2, Ev2],
+      { knownSides: ['a', 'c'], showSideLabels: true,
+        // 'a' 边=BC=斜边=c, 'b' 边=AC=另一直角边=b, 'c' 边=AB=直角边=a
+        aLabel: '斜边=' + c.toFixed(1),
+        bLabel: '另一直角边=' + b.toFixed(1),
+        cLabel: '直角边=' + a.toFixed(1) }
+    ) +
+    '</svg>';
+  document.getElementById('hl2-svg-wrap').innerHTML = svg;
+
+  // 数据面板
+  document.getElementById('hl2-data').innerHTML =
+    '<div class="data-cell" style="border-color:rgba(231,76,60,0.3);"><div class="label">斜边</div><div class="num" style="color:#E74C3C;">' + c.toFixed(1) + '</div></div>' +
+    '<div class="data-cell" style="border-color:rgba(39,174,96,0.3);"><div class="label">直角边 a</div><div class="num" style="color:#27AE60;">' + a.toFixed(1) + '</div></div>' +
+    '<div class="data-cell" style="border-color:rgba(52,152,219,0.3);"><div class="label">另一直角边</div><div class="num" style="color:#3498DB;">' + b.toFixed(1) + '</div></div>' +
+    '<div class="data-cell" style="border-color:rgba(155,89,182,0.3);"><div class="label">勾股验证</div><div class="num" style="color:var(--math);">' + a.toFixed(1) + '²+' + b.toFixed(1) + '²=' + c.toFixed(1) + '²</div></div>';
+
+  verify.className = 'verify-line ok';
+  verify.innerHTML = '✓ 斜边 = ' + c.toFixed(1) + '，直角边 = ' + a.toFixed(1) + ' → Rt△ABC ≅ Rt△DEF (HL)';
+}
+
+bindSliderRedraw('hl2-c', drawHL2);
+bindSliderRedraw('hl2-a', drawHL2);
+
+/* ============================================================
+ *  练习题
+ * ============================================================ */
+initQuiz('quiz1', {
+  correct: 3,
+  explain: 'A 选项：AB=DE、BC=EF、∠A=∠D，其中 ∠A 不是 AB 和 BC 的夹角（夹角应是 ∠B），属于 SSA，不能判定全等；B 选项：AB=DE、∠B=∠E、∠C=∠F，缺一条边，无法判定；C 选项：三角对应相等是 AAA，只能相似不能全等；D 选项：三边对应相等，属于 SSS，可以判定全等。故选 D。',
+  hint: '逐项检查是否属于 SSS/SAS/ASA/AAS/HL 五种判定方法之一。SSA 和 AAA 不能判定全等。'
+});
+initQuiz('quiz2', {
+  correct: 1,
+  explain: '由 △ABC ≅ △DEF 且对应关系 A↔D、B↔E、C↔F，得 ∠C = ∠F。又 ∠A+∠B+∠C=180°，所以 ∠C = 180°−70°−50° = 60°，故 ∠F = 60°。选 B。',
+  hint: '先由全等得 ∠C = ∠F；再用三角形内角和 180° 求 ∠C。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: 'A 是 SSS，可以；B 是 SSA（两边及其中一边的对角），不能判定全等，是经典反例；C 是 ASA，可以；D 是 AAS，可以。故选 B。',
+  hint: 'SSA 和 AAA 不能判定全等，其余 SSS/SAS/ASA/AAS/HL 都可以。'
+});
+
+/* ============================================================
+ *  初始化
+ * ============================================================ */
+drawCongruenceDef();
+drawCongruence();
+drawSSS();
+drawSAS();
+drawASA();
+drawAAS();
+drawHL();
+drawSSA();
+drawAAA();
+renderCondPool();
+drawHL2();
+</script>
 </body>
 </html>

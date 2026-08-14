@@ -6,50 +6,224 @@
   <title>金属和金属材料 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px; flex-shrink: 0;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 知识卡片 */
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card.blue { border-left-color: var(--info); }
+    .know-card.green { border-left-color: var(--success); }
+    .know-card.orange { border-left-color: var(--warning); }
+    .know-card.purple { border-left-color: #8e44ad; }
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title {
+      font-size: 17px; font-weight: 700; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px; color: var(--chemistry);
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .know-card.blue .kc-title { color: var(--info); }
+    .know-card.green .kc-title { color: var(--success); }
+    .know-card.orange .kc-title { color: var(--warning); }
+    .know-card.purple .kc-title { color: #8e44ad; }
+    .know-card .kc-def { font-size: 14px; color: var(--text-main); line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+    .know-card .kc-examples strong { color: var(--text-main); }
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #f2f6fb, #e2ebf7);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #4A90D930;
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: #2f5f8f; margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 18px; margin: 14px auto; max-width: 560px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
+      line-height: 1.8;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .formula-box .label { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400; }
+
+    /* 滑块行 / 数值显示 */
+    .slider-row {
+      display: flex; align-items: center; gap: 14px;
+      max-width: 560px; margin: 14px auto; padding: 0 8px;
     }
+    .slider-row label { font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+    .slider-row input[type="range"] { flex: 1; }
+    .value-display {
+      min-width: 70px; text-align: center; font-size: 15px; font-weight: 700;
+      color: var(--chemistry); background: var(--bg-card);
+      border: 1.5px solid var(--chemistry); border-radius: var(--radius-sm);
+      padding: 4px 8px;
+    }
+
+    /* 信息读数面板 */
+    .info-readout {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      padding: 12px 16px; margin: 12px auto; max-width: 560px;
+      font-size: 14px; line-height: 1.8; text-align: left;
+    }
+    .info-readout strong { color: var(--chemistry); }
+
+    /* 模式切换 */
+    .mode-toggle {
+      display: inline-flex; gap: 0; border-radius: var(--radius-sm);
+      overflow: hidden; border: 2px solid #2f5f8f; margin: 6px 0 12px;
+    }
+    .mode-toggle button {
+      padding: 8px 18px; border: none; background: var(--bg-card);
+      color: #2f5f8f; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+    }
+    .mode-toggle button.active { background: #2f5f8f; color: white; }
+
+    /* 属性清单 */
+    .property-list {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 16px 20px; margin: 14px 0;
+    }
+    .property-list .pl-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px dashed var(--border);
+      font-size: 14px; line-height: 1.7;
+    }
+    .property-list .pl-item:last-child { border-bottom: none; }
+    .property-list .pl-item .pl-key {
+      font-weight: 700; color: #2f5f8f; white-space: nowrap;
+      min-width: 130px;
+    }
+
+    /* 活动性顺序带 */
+    .activity-strip {
+      display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+      margin: 14px 0; padding: 14px 10px;
+      background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .activity-strip .metal-tag {
+      padding: 6px 10px; border-radius: var(--radius-sm);
+      font-size: 15px; font-weight: 700; font-family: 'Cambria', serif;
+      background: rgba(39,174,96,0.12); color: var(--success);
+      border: 1.5px solid rgba(39,174,96,0.4);
+    }
+    .activity-strip .metal-tag.weak {
+      background: rgba(231,76,60,0.08); color: var(--chemistry);
+      border-color: rgba(231,76,60,0.35);
+    }
+    .activity-strip .h-tag {
+      padding: 6px 10px; border-radius: var(--radius-sm);
+      font-size: 15px; font-weight: 700; font-family: 'Cambria', serif;
+      background: rgba(243,156,18,0.15); color: var(--warning);
+      border: 1.5px dashed var(--warning);
+    }
+    .activity-arrow {
+      text-align: center; font-size: 13px; color: var(--text-secondary); font-weight: 600;
+      margin: 4px 0 0;
+    }
+
+    /* 金属选择按钮 */
+    .metal-picker { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .metal-btn {
+      padding: 9px 20px; border: 2px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 15px;
+      font-weight: 700; transition: all 0.2s; font-family: inherit;
+    }
+    .metal-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .metal-btn.active { background: #2f5f8f; color: white; border-color: #2f5f8f; }
+
+    /* 实验结果记录表 */
+    .lab-log {
+      width: 100%; max-width: 560px; margin: 12px auto 0;
+      border-collapse: collapse; font-size: 13px; background: var(--bg-card);
+      border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow);
+    }
+    .lab-log th, .lab-log td {
+      padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--border);
+    }
+    .lab-log th { background: #2f5f8f; color: white; font-weight: 600; }
+
+    /* 置换反应舞台 */
+    .disp-stage {
+      position: relative; width: 100%; max-width: 460px;
+      margin: 0 auto; border-radius: var(--radius); overflow: hidden;
+      background: linear-gradient(180deg, #f4f9ff 0%, #e3eefb 100%);
+      border: 1px solid #b7d3e8;
+    }
+
+    /* 生锈试管台 */
+    .rust-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      max-width: 640px; margin: 0 auto;
+    }
+    @media (max-width: 640px) { .rust-row { grid-template-columns: 1fr; } }
+    .rust-tube {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 12px 8px; text-align: center;
+      border: 2px solid var(--border); transition: border-color 0.4s;
+    }
+    .rust-tube.rusted { border-color: var(--warning); background: rgba(243,156,18,0.06); }
+    .rust-tube .rt-title { font-size: 14px; font-weight: 700; color: #2f5f8f; margin-bottom: 4px; }
+    .rust-tube .rt-cond { font-size: 12px; color: var(--text-secondary); min-height: 34px; line-height: 1.5; }
+    .rust-tube .rt-result { font-size: 13px; font-weight: 700; margin-top: 6px; min-height: 20px; color: var(--text-secondary); }
+    .rust-tube .rt-result.yes { color: var(--danger); }
+    .rust-tube .rt-result.no { color: var(--success); }
+
+    /* 小结提示 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">⚗️ 金属和金属材料</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">⚙️ 金属和金属材料</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
@@ -60,31 +234,700 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>金属和金属材料</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>金属和金属材料</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">⚙️ 第八单元：金属和金属材料</div>
+    <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.8;">
+      从青铜器到钢铁巨轮，金属材料贯穿了整个人类文明史。本单元我们要认识金属的
+      <strong style="color:#2f5f8f;">物理性质与合金</strong>，探究金属的
+      <strong style="color:var(--chemistry);">化学性质与活动性顺序</strong>，并了解
+      <strong style="color:var(--success);">金属的冶炼与防护</strong>。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
+  <!-- ========== 知识点 1：金属的物理性质 ========== -->
+  <h2 class="section-header"><span class="num">1</span>金属的物理性质</h2>
+  <div class="knowledge-grid">
+    <div class="know-card blue">
+      <div class="kc-title">✨ 金属的共性</div>
+      <div class="kc-def">
+        大多数金属都具有：<strong>金属光泽</strong>、良好的<strong>导电性</strong>、
+        <strong>导热性</strong>和<strong>延展性</strong>（可拉成丝、压成薄片），常温下为固体。
+      </div>
+      <div class="kc-examples"><strong>密度、硬度、熔点差异较大：</strong>锂密度最小，钨熔点最高。</div>
+    </div>
+    <div class="know-card orange">
+      <div class="kc-title">🌡️ 金属的特性</div>
+      <div class="kc-def">
+        <strong>汞（Hg）</strong>常温下是<strong>液体</strong>；<strong>铜（Cu）</strong>呈<strong>紫红色</strong>、
+        <strong>金（Au）</strong>呈黄色，其余金属大多为银白色；铁能被磁铁吸引。
+      </div>
+      <div class="kc-examples"><strong>记一记：</strong>熔点最高的金属是钨（灯丝），熔点最低的是汞。</div>
+    </div>
+    <div class="know-card green">
+      <div class="kc-title">🔧 性质决定用途</div>
+      <div class="kc-def">
+        铜、铝导电性好 → 制电线电缆；钨熔点高 → 制灯丝；
+        铁导热性好 → 制炊具；金延展性好且有光泽 → 制首饰。
+      </div>
+      <div class="kc-examples"><strong>注意：</strong>用途还要考虑价格、资源、美观、环保等因素（如银导电性最好但不用来制电线）。</div>
+    </div>
+  </div>
+
+  <!-- ========== 知识点 2：合金 ========== -->
+  <h2 class="section-header"><span class="num">2</span>合金</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    在金属中加热熔合某些<strong>金属或非金属</strong>，制得的具有<strong>金属特征</strong>的物质叫做合金。
+    合金属于<strong>混合物</strong>。日常使用的金属材料大多数是合金，而不是纯金属。
+  </p>
+  <div class="knowledge-grid">
+    <div class="know-card purple">
+      <div class="kc-title">⚖️ 合金的优点</div>
+      <div class="kc-def">
+        与组成它的纯金属相比：合金的<strong>硬度更大</strong>、<strong>熔点更低</strong>、抗腐蚀性往往更好。
+      </div>
+      <div class="kc-examples"><strong>举例：</strong>焊锡（锡铅合金）熔点比锡、铅都低，便于焊接；黄铜比纯铜硬。</div>
+    </div>
+    <div class="know-card">
+      <div class="kc-title">🏗️ 铁的两种合金</div>
+      <div class="kc-def">
+        <strong>生铁：</strong>含碳量 2% ~ 4.3%，硬而脆，可铸不可锻；<br>
+        <strong>钢：</strong>含碳量 0.03% ~ 2%，坚硬有韧性，可铸可锻。
+      </div>
+      <div class="kc-examples"><strong>本质区别：</strong>含碳量不同。不锈钢是含铬、镍的钢，抗腐蚀。</div>
+    </div>
+    <div class="know-card green">
+      <div class="kc-title">✈️ 其他重要合金</div>
+      <div class="kc-def">
+        <strong>铝合金：</strong>密度小、强度高，用于飞机、门窗；<br>
+        <strong>钛合金：</strong>与人体"相容性"好，用于人造骨；熔点高、密度小，用于航天。
+      </div>
+      <div class="kc-examples"><strong>21 世纪的重要金属材料：</strong>钛和钛合金。</div>
+    </div>
+  </div>
+
+  <!-- ========== 交互 1：含碳量与铁合金 ========== -->
+  <h2 class="section-header"><span class="num">调</span>交互一：含碳量决定铁合金的种类</h2>
+  <div class="demo-container">
+    <h3>拖动滑块调节含碳量，看看得到的是什么材料</h3>
+    <div class="demo-desc">铁合金的性能随含碳量变化：含碳量越高越硬，但也越脆。</div>
+    <div class="slider-row">
+      <label for="carbonSlider">含碳量</label>
+      <input type="range" id="carbonSlider" min="0" max="5" value="1" step="0.1">
+      <span class="value-display" id="carbonValue">1.0%</span>
+    </div>
+    <div class="info-readout" id="carbonInfo">
+      <strong>钢（含碳 0.03% ~ 2%）</strong><br>
+      坚硬而有韧性，有良好的延展性，可铸可锻。用途：建筑钢筋、机器零件、刀具、铁轨。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 3：金属的化学性质 ========== -->
+  <h2 class="section-header"><span class="num">3</span>金属的化学性质</h2>
+  <div class="property-list">
+    <div class="pl-item">
+      <span class="pl-key">① 与氧气反应</span>
+      <span>
+        <strong>镁、铝</strong>在常温下就能与氧气反应（铝表面生成<strong>致密的氧化铝薄膜</strong>，阻止铝进一步氧化，所以铝抗腐蚀）；
+        <strong>铁、铜</strong>在常温、干燥空气中较难反应，点燃或加热时可反应；
+        <strong>金</strong>即使在高温时也不与氧气反应——"真金不怕火炼"。
+      </span>
+    </div>
+    <div class="pl-item">
+      <span class="pl-key">② 与酸反应</span>
+      <span>
+        活泼金属 + 稀盐酸（或稀硫酸）→ 盐 + <strong>氢气↑</strong>。
+        镁反应剧烈，锌较快，铁缓慢（溶液变浅绿色），铜不反应。
+      </span>
+    </div>
+    <div class="pl-item">
+      <span class="pl-key">③ 与盐溶液反应</span>
+      <span>
+        活动性<strong>强</strong>的金属能把活动性<strong>弱</strong>的金属从它的<strong>盐溶液</strong>中置换出来。
+        如铁钉放入硫酸铜溶液：铁表面析出红色铜，溶液由蓝色变浅绿色（古代"湿法炼铜"）。
+      </span>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    4Al + 3O₂ ═ 2Al₂O₃&nbsp;&nbsp;｜&nbsp;&nbsp;3Fe + 2O₂ <span style="color:var(--warning);">—点燃→</span> Fe₃O₄
+    <span class="label">铝常温形成致密氧化膜 ｜ 铁丝在氧气中剧烈燃烧、火星四射、生成黑色固体</span>
+  </div>
+  <div class="formula-box">
+    Zn + H₂SO₄ ═ ZnSO₄ + H₂↑&nbsp;&nbsp;｜&nbsp;&nbsp;Fe + 2HCl ═ FeCl₂ + H₂↑
+    <span class="label">实验室用锌粒和稀硫酸制取氢气 ｜ 铁与酸反应生成 +2 价亚铁盐（浅绿色溶液）</span>
+  </div>
+  <div class="formula-box">
+    Fe + CuSO₄ ═ FeSO₄ + Cu
+    <span class="label">湿法炼铜：铁表面析出红色固体，蓝色溶液逐渐变为浅绿色（置换反应）</span>
+  </div>
+
+  <!-- ========== 交互 2：金属与酸反应实验台 ========== -->
+  <h2 class="section-header"><span class="num">验</span>交互二：金属与稀盐酸反应实验台</h2>
+  <div class="demo-container">
+    <h3>把金属放入稀盐酸，观察气泡产生的剧烈程度</h3>
+    <div class="demo-desc">依次选择金属，点击"加入稀盐酸"，对比现象，给金属活动性排序。</div>
+
+    <div class="metal-picker" id="metalPicker">
+      <button class="metal-btn active" data-metal="Mg">镁 Mg</button>
+      <button class="metal-btn" data-metal="Zn">锌 Zn</button>
+      <button class="metal-btn" data-metal="Fe">铁 Fe</button>
+      <button class="metal-btn" data-metal="Cu">铜 Cu</button>
+    </div>
+
+    <svg viewBox="0 0 300 260" style="max-width:300px;">
+      <!-- 试管 -->
+      <path d="M 115 30 L 115 220 Q 115 238 150 238 Q 185 238 185 220 L 185 30"
+            fill="rgba(255,255,255,0.5)" stroke="#7fa8c9" stroke-width="3"/>
+      <!-- 酸液 -->
+      <path d="M 118 120 L 118 218 Q 118 235 150 235 Q 182 235 182 218 L 182 120 Z"
+            fill="#cfe8fb" opacity="0.75" id="acidLiquid"/>
+      <!-- 金属块 -->
+      <g id="metalPiece">
+        <ellipse cx="150" cy="222" rx="22" ry="10" fill="#9aa5b1" id="metalColor"/>
+      </g>
+      <!-- 气泡组（JS 控制显隐与密度） -->
+      <g id="bubblesV" style="opacity:0;">
+        <circle cx="140" cy="200" r="5" fill="#ffffff" opacity="0.9"/>
+        <circle cx="160" cy="180" r="4" fill="#ffffff" opacity="0.9"/>
+        <circle cx="148" cy="160" r="4.5" fill="#ffffff" opacity="0.9"/>
+        <circle cx="138" cy="140" r="3.5" fill="#ffffff" opacity="0.85"/>
+        <circle cx="162" cy="132" r="3" fill="#ffffff" opacity="0.85"/>
+      </g>
+      <g id="bubblesM" style="opacity:0;">
+        <circle cx="145" cy="195" r="4" fill="#ffffff" opacity="0.85"/>
+        <circle cx="158" cy="168" r="3" fill="#ffffff" opacity="0.85"/>
+        <circle cx="142" cy="145" r="2.5" fill="#ffffff" opacity="0.8"/>
+      </g>
+      <g id="bubblesS" style="opacity:0;">
+        <circle cx="150" cy="190" r="3" fill="#ffffff" opacity="0.8"/>
+        <circle cx="155" cy="160" r="2" fill="#ffffff" opacity="0.75"/>
+      </g>
+      <text x="150" y="20" text-anchor="middle" fill="#2f5f8f" font-size="13" font-weight="700" id="tubeTitle">镁 + 稀盐酸</text>
+    </svg>
+
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:6px;">
+      <button class="btn btn-primary" id="btnPourAcid" style="background:#2f5f8f;">🧪 加入稀盐酸</button>
+      <button class="btn btn-outline" id="btnAcidReset">重置记录</button>
+    </div>
+
+    <div class="info-readout" id="acidInfo">
+      <strong>实验说明：</strong>选择一种金属，点击"加入稀盐酸"，观察气泡（氢气）产生的剧烈程度。
+      反应越剧烈，说明金属越活泼。
+    </div>
+
+    <table class="lab-log" id="acidLog">
+      <thead>
+        <tr><th>金属</th><th>现象（气泡）</th><th>剧烈程度</th><th>活动性排序</th></tr>
+      </thead>
+      <tbody>
+        <tr data-m="Mg"><td><strong>Mg</strong></td><td class="log-phen">—</td><td class="log-level">—</td><td class="log-rank">—</td></tr>
+        <tr data-m="Zn"><td><strong>Zn</strong></td><td class="log-phen">—</td><td class="log-level">—</td><td class="log-rank">—</td></tr>
+        <tr data-m="Fe"><td><strong>Fe</strong></td><td class="log-phen">—</td><td class="log-level">—</td><td class="log-rank">—</td></tr>
+        <tr data-m="Cu"><td><strong>Cu</strong></td><td class="log-phen">—</td><td class="log-level">—</td><td class="log-rank">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== 知识点 4：金属活动性顺序 ========== -->
+  <h2 class="section-header"><span class="num">4</span>金属活动性顺序</h2>
+  <div class="activity-strip" id="activityStrip"></div>
+  <div class="activity-arrow">◀—————— 金属活动性由强逐渐减弱 ——————▶</div>
+
+  <div class="property-list" style="margin-top:14px;">
+    <div class="pl-item">
+      <span class="pl-key">规律一</span>
+      <span>在金属活动性顺序里，金属的<strong>位置越靠前，活动性就越强</strong>，越容易失去电子被氧化。</span>
+    </div>
+    <div class="pl-item">
+      <span class="pl-key">规律二</span>
+      <span>位于<strong>氢（H）前面</strong>的金属能置换出稀盐酸、稀硫酸中的氢（生成氢气）；位于氢后面的金属不能。
+        <em style="color:var(--chemistry); font-style:normal;">（K、Ca、Na 太活泼，会直接与酸中的水剧烈反应，不用来制氢气）</em></span>
+    </div>
+    <div class="pl-item">
+      <span class="pl-key">规律三</span>
+      <span>位于<strong>前面</strong>的金属能把位于<strong>后面</strong>的金属从它们化合物的<strong>溶液</strong>里置换出来（盐必须可溶；K、Ca、Na 除外）。</span>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 巧记口诀</div>
+    钾钙钠镁铝（K Ca Na Mg Al），锌铁锡铅氢（Zn Fe Sn Pb H），铜汞银铂金（Cu Hg Ag Pt Au）。
+    谐音："<strong>嫁给那美女，身体细纤轻，统共一百斤</strong>"。
+  </div>
+
+  <!-- ========== 交互 3：置换反应模拟 ========== -->
+  <h2 class="section-header"><span class="num">换</span>交互三：置换反应模拟（前换后）</h2>
+  <div class="demo-container">
+    <h3>选择一种组合，观察能否发生置换反应</h3>
+    <div class="demo-desc">根据金属活动性顺序判断：排在前面的金属能否把后面的金属从其盐溶液中置换出来？</div>
+
+    <div class="mode-toggle" id="dispMode">
+      <button data-exp="fe-cu" class="active">铁钉 + 硫酸铜溶液</button>
+      <button data-exp="cu-fe">铜片 + 硫酸亚铁溶液</button>
+    </div>
+
+    <div class="disp-stage">
+      <svg viewBox="0 0 460 300">
+        <!-- 烧杯 -->
+        <path d="M 150 60 L 150 250 Q 150 262 162 262 L 298 262 Q 310 262 310 250 L 310 60"
+              fill="rgba(255,255,255,0.4)" stroke="#7fa8c9" stroke-width="3"/>
+        <!-- 溶液 -->
+        <path id="dispLiquid" d="M 153 130 L 153 248 Q 153 259 163 259 L 297 259 Q 307 259 307 248 L 307 130 Z"
+              fill="#3b82f6" opacity="0.45"/>
+        <!-- 金属条 -->
+        <g id="dispMetal">
+          <rect x="205" y="40" width="26" height="200" rx="4" fill="#8a919c" id="dispMetalBody"/>
+          <rect x="205" y="130" width="26" height="110" rx="4" fill="#c0392b" id="dispCoating" style="opacity:0; transition: opacity 1.2s;"/>
+        </g>
+        <text x="230" y="290" text-anchor="middle" fill="#2f5f8f" font-size="13" font-weight="700" id="dispCaption">铁钉 + 硫酸铜溶液（蓝色）</text>
+      </svg>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+      <button class="btn btn-primary" id="btnDispStart" style="background:#2f5f8f;">▶ 开始反应（静置一段时间）</button>
+      <button class="btn btn-outline" id="btnDispReset">重置</button>
+    </div>
+
+    <div class="info-readout" id="dispInfo">
+      <strong>预测：</strong>铁的活动性比铜强（Fe 在 Cu 前面），铁能把铜从硫酸铜溶液中置换出来。
+      点击"开始反应"观察现象。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 5：金属的冶炼 ========== -->
+  <h2 class="section-header"><span class="num">5</span>金属的冶炼——以炼铁为例</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    地壳中的金属大多以<strong>化合物</strong>（矿石）的形式存在。工业上在高炉中炼铁：
+    原料是<strong>铁矿石（如赤铁矿 Fe₂O₃）、焦炭、石灰石和空气</strong>。
+    焦炭燃烧生成 CO₂，CO₂ 再与碳反应生成 CO，<strong>CO 还原氧化铁</strong>得到铁；石灰石用来造渣除去杂质。
+  </p>
+  <div class="formula-box">
+    3CO + Fe₂O₃ <span style="color:var(--warning);">—高温→</span> 2Fe + 3CO₂
+    <span class="label">高炉炼铁的核心反应：CO 是还原剂，夺走 Fe₂O₃ 中的氧（还原反应）</span>
+  </div>
+  <div class="tip-box">
+    <div class="tip-title">💡 注意区分</div>
+    高炉炼铁得到的是<strong>生铁</strong>（含碳量高），还要进一步炼成钢；
+    该反应中 CO 得氧被氧化（还原剂），Fe₂O₃ 失氧被还原（氧化剂）。实验室用 CO 还原 Fe₂O₃ 时，
+    要先通 CO 排尽空气再加热，尾气中的 CO 有毒，必须点燃处理。
+  </div>
+
+  <!-- ========== 知识点 6：金属锈蚀与防护 ========== -->
+  <h2 class="section-header"><span class="num">6</span>金属的锈蚀与防护</h2>
+  <div class="knowledge-grid">
+    <div class="know-card orange">
+      <div class="kc-title">🌧️ 铁生锈的条件</div>
+      <div class="kc-def">铁与空气中的<strong>氧气</strong>、<strong>水</strong>同时接触，发生缓慢氧化而锈蚀。铁锈（主要成分是 Fe₂O₃·xH₂O）很疏松，不能阻止里层的铁继续生锈。</div>
+      <div class="kc-examples"><strong>对比：</strong>铝的氧化膜致密，能保护内部的铝，所以铝制品抗腐蚀。</div>
+    </div>
+    <div class="know-card green">
+      <div class="kc-title">🛡️ 防锈措施</div>
+      <div class="kc-def">
+        思路：<strong>隔绝空气或水</strong>。<br>
+        ① 保持铁制品表面洁净干燥；② 表面覆盖保护层：刷漆、涂油、镀其他金属（镀锌、镀铬）、烤蓝；③ 制成合金（不锈钢）。
+      </div>
+      <div class="kc-examples"><strong>实例：</strong>自行车车架刷漆、链条涂油、水龙头镀铬。</div>
+    </div>
+    <div class="know-card blue">
+      <div class="kc-title">♻️ 保护金属资源</div>
+      <div class="kc-def">
+        ① 防止金属锈蚀；② 回收利用废旧金属；③ 有计划、合理地开采矿物；④ 寻找金属的代用品。
+      </div>
+      <div class="kc-examples"><strong>意义：</strong>节约金属资源，减少环境污染。</div>
+    </div>
+  </div>
+
+  <!-- ========== 交互 4：铁生锈条件探究 ========== -->
+  <h2 class="section-header"><span class="num">探</span>交互四：铁生锈条件的探究</h2>
+  <div class="demo-container">
+    <h3>三支试管中的铁钉，一周后谁会生锈？</h3>
+    <div class="demo-desc">三支试管分别控制"氧气"和"水"两个变量。点击"快进一周"，观察并对比结果。</div>
+
+    <div class="rust-row">
+      <!-- 试管1：干燥空气 -->
+      <div class="rust-tube" id="tube1">
+        <div class="rt-title">试管 ①</div>
+        <div class="rt-cond">干燥空气<br>（有氧气、无水，放干燥剂）</div>
+        <svg viewBox="0 0 100 180">
+          <path d="M 30 15 L 30 150 Q 30 164 50 164 Q 70 164 70 150 L 70 15" fill="rgba(255,255,255,0.6)" stroke="#7fa8c9" stroke-width="2.5"/>
+          <rect x="44" y="60" width="12" height="96" rx="3" fill="#8a919c" class="rust-nail"/>
+          <circle cx="50" cy="30" r="3" fill="#fde68a"/><circle cx="40" cy="24" r="2" fill="#fde68a"/><circle cx="60" cy="24" r="2" fill="#fde68a"/>
+        </svg>
+        <div class="rt-result" id="rt1">等待观察…</div>
+      </div>
+      <!-- 试管2：蒸馏水隔绝空气 -->
+      <div class="rust-tube" id="tube2">
+        <div class="rt-title">试管 ②</div>
+        <div class="rt-cond">煮沸冷却的蒸馏水<br>（有水、无氧气，水面封植物油）</div>
+        <svg viewBox="0 0 100 180">
+          <path d="M 30 15 L 30 150 Q 30 164 50 164 Q 70 164 70 150 L 70 15" fill="rgba(255,255,255,0.6)" stroke="#7fa8c9" stroke-width="2.5"/>
+          <path d="M 32 50 L 32 149 Q 32 162 50 162 Q 68 162 68 149 L 68 50 Z" fill="#9ec9ea" opacity="0.6"/>
+          <path d="M 32 44 L 32 50 L 68 50 L 68 44 Z" fill="#f5d76e" opacity="0.9"/>
+          <rect x="44" y="60" width="12" height="96" rx="3" fill="#8a919c" class="rust-nail"/>
+        </svg>
+        <div class="rt-result" id="rt2">等待观察…</div>
+      </div>
+      <!-- 试管3：空气+水 -->
+      <div class="rust-tube" id="tube3">
+        <div class="rt-title">试管 ③</div>
+        <div class="rt-cond">铁钉一半浸入蒸馏水<br>（既有氧气又有水）</div>
+        <svg viewBox="0 0 100 180">
+          <path d="M 30 15 L 30 150 Q 30 164 50 164 Q 70 164 70 150 L 70 15" fill="rgba(255,255,255,0.6)" stroke="#7fa8c9" stroke-width="2.5"/>
+          <path d="M 32 90 L 32 149 Q 32 162 50 162 Q 68 162 68 149 L 68 90 Z" fill="#9ec9ea" opacity="0.6"/>
+          <rect x="44" y="40" width="12" height="116" rx="3" fill="#8a919c" class="rust-nail"/>
+          <rect x="44" y="86" width="12" height="10" fill="#c0392b" opacity="0" class="rust-patch" style="transition: opacity 1.5s;"/>
+        </svg>
+        <div class="rt-result" id="rt3">等待观察…</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+      <button class="btn btn-primary" id="btnRustGo" style="background:#2f5f8f;">⏩ 快进一周</button>
+      <button class="btn btn-outline" id="btnRustReset">重置实验</button>
+    </div>
+
+    <div class="info-readout" id="rustInfo">
+      <strong>实验分析：</strong>① 与 ③ 对比，变量是"水"；② 与 ③ 对比，变量是"氧气"。
+      只有 ③ 同时接触氧气和水。点击"快进一周"查看结果。
+    </div>
+  </div>
+
+  <!-- ========== 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 必记要点</div>
+    <div class="sb-item">金属共性：<strong>金属光泽、导电、导热、延展性</strong>；特性：汞常温液态、铜紫红色、钨熔点最高。<em>性质决定用途</em>。</div>
+    <div class="sb-item">合金是<em>混合物</em>，硬度比成分金属<strong>大</strong>、熔点比成分金属<strong>低</strong>；生铁含碳 2%~4.3%，钢含碳 0.03%~2%。</div>
+    <div class="sb-item">金属活动性顺序：<strong>K Ca Na Mg Al Zn Fe Sn Pb (H) Cu Hg Ag Pt Au</strong>；H 前金属置换酸中氢，前面金属置换后面金属（盐溶液中）。</div>
+    <div class="sb-item">炼铁核心反应：<strong>3CO + Fe₂O₃ —高温→ 2Fe + 3CO₂</strong>；Fe 与酸、盐反应一律生成 <em>+2 价亚铁盐</em>（浅绿色）。</div>
+    <div class="sb-item">铁生锈条件：<strong>与氧气和水同时接触</strong>；防锈思路是隔绝空气或水（刷漆、涂油、镀层、制合金）。</div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 下列金属中，不能与稀盐酸反应放出氢气的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 镁</div>
+    <div class="quiz-option" data-idx="1">B. 锌</div>
+    <div class="quiz-option" data-idx="2">C. 铁</div>
+    <div class="quiz-option" data-idx="3">D. 铜</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 把铁钉放入硫酸铜溶液中，一段时间后观察到的现象是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 铁钉表面有红色物质析出，溶液由蓝色逐渐变为浅绿色</div>
+    <div class="quiz-option" data-idx="1">B. 铁钉表面有银白色物质析出，溶液颜色不变</div>
+    <div class="quiz-option" data-idx="2">C. 铁钉表面有气泡产生，溶液变为黄色</div>
+    <div class="quiz-option" data-idx="3">D. 无明显现象</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 下列做法中，不能有效防止铁制品锈蚀的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 在铁制栏杆表面刷漆</div>
+    <div class="quiz-option" data-idx="1">B. 自行车链条涂油</div>
+    <div class="quiz-option" data-idx="2">C. 菜刀用完后用水长时间浸泡</div>
+    <div class="quiz-option" data-idx="3">D. 把铁制成不锈钢</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>学科交叉</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 金属活动性顺序 ↔ 数学 · 大小比较</div>
+    <p style="font-size:14px; line-height:1.8; margin:0;">
+      金属活动性顺序本质上就是一个"<strong>不等式链</strong>"：
+      K &gt; Ca &gt; Na &gt; Mg &gt; Al &gt; Zn &gt; Fe &gt; Sn &gt; Pb &gt; (H) &gt; Cu &gt; Hg &gt; Ag &gt; Pt &gt; Au。
+      数学中的"<strong>传递性</strong>"在这里完全适用：若 Fe &gt; Cu、Cu &gt; Ag，则 Fe &gt; Ag，
+      所以铁既能置换出铜，也能置换出银。判断"能否反应"就是比较两种金属在活动性顺序中的<strong>先后（大小）</strong>——
+      前换后，正如"大的能覆盖小的"。
     </p>
+    <div style="margin-top:10px;">
+      <a href="../../物理/九年级/14-电压电阻.html" style="color:var(--physics); font-weight:600; font-size:14px;">→ 延伸：金属导电性与电阻 —— 物理 · 14-电压电阻</a>
+    </div>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="07-燃料及其利用.html" class="btn btn-outline">← 上一章：07-燃料及其利用</a>
+    <a href="09-溶液.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：09-溶液 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：含碳量与铁合金 ===================== */
+(function () {
+  const slider = document.getElementById('carbonSlider');
+  const valueEl = document.getElementById('carbonValue');
+  const info = document.getElementById('carbonInfo');
+
+  function render(v) {
+    valueEl.textContent = v.toFixed(1) + '%';
+    if (v < 0.03) {
+      info.innerHTML = '<strong>工业纯铁（含碳 &lt; 0.03%）</strong><br>' +
+        '质软、延展性好，强度低，较少直接作结构材料，多用于电磁铁芯等。';
+    } else if (v <= 2) {
+      info.innerHTML = '<strong>钢（含碳 0.03% ~ 2%）</strong><br>' +
+        '坚硬而有韧性，有良好的延展性，可铸可锻。含碳量越高硬度越大、韧性略降。用途：建筑钢筋、机器零件、刀具、铁轨。';
+    } else if (v <= 4.3) {
+      info.innerHTML = '<strong>生铁（含碳 2% ~ 4.3%）</strong><br>' +
+        '硬度大，但<strong style="color:var(--danger);">脆、韧性差</strong>，可铸不可锻。用途：铸造机床底座、铁锅、暖气片等。';
+    } else {
+      info.innerHTML = '<strong style="color:var(--danger);">含碳量过高</strong><br>' +
+        '超过 4.3% 的铁碳合金过于脆硬，没有实用价值。工业生铁含碳量一般不超过 4.3%。';
+    }
+  }
+
+  slider.addEventListener('input', function () { render(parseFloat(this.value)); });
+  render(parseFloat(slider.value));
+})();
+
+/* ===================== 金属活动性顺序带 ===================== */
+(function () {
+  const strip = document.getElementById('activityStrip');
+  const strong = ['K', 'Ca', 'Na', 'Mg', 'Al', 'Zn', 'Fe', 'Sn', 'Pb'];
+  const weak = ['Cu', 'Hg', 'Ag', 'Pt', 'Au'];
+  strong.forEach(function (m) {
+    const t = document.createElement('span');
+    t.className = 'metal-tag';
+    t.textContent = m;
+    strip.appendChild(t);
+  });
+  const h = document.createElement('span');
+  h.className = 'h-tag';
+  h.textContent = '(H)';
+  strip.appendChild(h);
+  weak.forEach(function (m) {
+    const t = document.createElement('span');
+    t.className = 'metal-tag weak';
+    t.textContent = m;
+    strip.appendChild(t);
+  });
+})();
+
+/* ===================== 交互 2：金属与酸反应实验台 ===================== */
+(function () {
+  const data = {
+    Mg: { name: '镁', color: '#c8cfd8', level: 3, phen: '剧烈反应，产生大量气泡', levelText: '非常剧烈', rank: 1,
+      info: '<strong>镁 + 稀盐酸：</strong>Mg + 2HCl ═ MgCl₂ + H₂↑。反应<strong>非常剧烈</strong>，迅速产生大量气泡，试管发热。' },
+    Zn: { name: '锌', color: '#9aa5b1', level: 2, phen: '反应较快，气泡较多', levelText: '较快', rank: 2,
+      info: '<strong>锌 + 稀盐酸：</strong>Zn + 2HCl ═ ZnCl₂ + H₂↑。反应<strong>较快</strong>，持续产生气泡（实验室制氢气常用锌和稀硫酸）。' },
+    Fe: { name: '铁', color: '#7d8791', level: 1, phen: '反应缓慢，少量气泡，溶液变浅绿色', levelText: '缓慢', rank: 3,
+      info: '<strong>铁 + 稀盐酸：</strong>Fe + 2HCl ═ FeCl₂ + H₂↑。反应<strong>缓慢</strong>，有少量气泡，溶液逐渐变为<strong style="color:var(--success);">浅绿色</strong>（生成 +2 价亚铁盐 FeCl₂）。' },
+    Cu: { name: '铜', color: '#c98850', level: 0, phen: '无气泡产生', levelText: '不反应', rank: 4,
+      info: '<strong>铜 + 稀盐酸：</strong>铜位于氢（H）后面，活动性比氢弱，<strong>不能</strong>置换出酸中的氢，无明显现象。' }
+  };
+  let current = 'Mg';
+  const tested = {};
+
+  const picker = document.getElementById('metalPicker');
+  const metalColor = document.getElementById('metalColor');
+  const tubeTitle = document.getElementById('tubeTitle');
+  const bubbles = { 3: document.getElementById('bubblesV'), 2: document.getElementById('bubblesM'), 1: document.getElementById('bubblesS') };
+  const acidInfo = document.getElementById('acidInfo');
+  const acidLiquid = document.getElementById('acidLiquid');
+  const btnPour = document.getElementById('btnPourAcid');
+  const btnReset = document.getElementById('btnAcidReset');
+
+  function showBubbles(level) {
+    [3, 2, 1].forEach(function (k) { bubbles[k].style.opacity = (k === level) ? '1' : '0'; });
+  }
+  function selectMetal(m) {
+    current = m;
+    picker.querySelectorAll('.metal-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.metal === m);
+    });
+    metalColor.setAttribute('fill', data[m].color);
+    tubeTitle.textContent = data[m].name + ' + 稀盐酸';
+    showBubbles(0);
+    acidLiquid.setAttribute('fill', '#cfe8fb');
+    acidInfo.innerHTML = tested[m]
+      ? data[m].info
+      : '<strong>' + data[m].name + '（' + m + '）</strong>已放入试管，点击"加入稀盐酸"观察现象。';
+  }
+
+  picker.querySelectorAll('.metal-btn').forEach(function (b) {
+    b.addEventListener('click', function () { selectMetal(b.dataset.metal); });
+  });
+
+  btnPour.addEventListener('click', function () {
+    const d = data[current];
+    showBubbles(d.level);
+    if (current === 'Fe') acidLiquid.setAttribute('fill', '#b8e0c8');
+    acidInfo.innerHTML = d.info;
+    tested[current] = true;
+    // 更新记录表
+    const row = document.querySelector('#acidLog tr[data-m="' + current + '"]');
+    if (row) {
+      row.querySelector('.log-phen').textContent = d.phen;
+      row.querySelector('.log-level').textContent = d.levelText;
+      row.querySelector('.log-rank').textContent = '第 ' + d.rank + ' 位';
+    }
+    // 全部测完给结论
+    if (Object.keys(tested).length === 4) {
+      acidInfo.innerHTML += '<br><strong style="color:var(--chemistry);">结论：活动性 Mg &gt; Zn &gt; Fe &gt; Cu，且 Mg、Zn、Fe 在氢前，Cu 在氢后。</strong>';
+    }
+  });
+
+  btnReset.addEventListener('click', function () {
+    Object.keys(tested).forEach(function (k) { delete tested[k]; });
+    document.querySelectorAll('#acidLog tbody tr').forEach(function (row) {
+      row.querySelector('.log-phen').textContent = '—';
+      row.querySelector('.log-level').textContent = '—';
+      row.querySelector('.log-rank').textContent = '—';
+    });
+    selectMetal(current);
+  });
+
+  selectMetal('Mg');
+})();
+
+/* ===================== 交互 3：置换反应模拟 ===================== */
+(function () {
+  const exps = {
+    'fe-cu': {
+      metal: '铁钉', solution: '硫酸铜溶液（蓝色）', canReact: true,
+      metalColor: '#8a919c', liquidBefore: '#3b82f6', liquidAfter: '#7fbf7f',
+      caption: '铁钉 + 硫酸铜溶液（蓝色）',
+      predict: '<strong>预测：</strong>铁的活动性比铜强（Fe 在 Cu 前面），铁能把铜从硫酸铜溶液中置换出来。点击"开始反应"观察现象。',
+      result: '<strong>现象：</strong>铁钉表面覆盖一层<strong style="color:#c0392b;">红色物质（铜）</strong>，蓝色溶液逐渐变为<strong style="color:var(--success);">浅绿色</strong>。<br>' +
+        '<strong>方程式：</strong>Fe + CuSO₄ ═ FeSO₄ + Cu（置换反应，古代"湿法炼铜"原理）。'
+    },
+    'cu-fe': {
+      metal: '铜片', solution: '硫酸亚铁溶液（浅绿色）', canReact: false,
+      metalColor: '#c98850', liquidBefore: '#7fbf7f', liquidAfter: '#7fbf7f',
+      caption: '铜片 + 硫酸亚铁溶液（浅绿色）',
+      predict: '<strong>预测：</strong>铜的活动性比铁弱（Cu 在 Fe 后面），铜<strong>不能</strong>把铁从硫酸亚铁溶液中置换出来。点击"开始反应"验证。',
+      result: '<strong>现象：</strong>铜片表面<strong>无变化</strong>，溶液颜色不变。<br>' +
+        '<strong>结论：</strong>后面的金属不能置换前面的金属——活动性 Fe &gt; Cu，所以该反应不能发生。'
+    }
+  };
+  let cur = 'fe-cu';
+  let reacted = false;
+
+  const modeBtns = document.querySelectorAll('#dispMode button');
+  const liquid = document.getElementById('dispLiquid');
+  const metalBody = document.getElementById('dispMetalBody');
+  const coating = document.getElementById('dispCoating');
+  const caption = document.getElementById('dispCaption');
+  const info = document.getElementById('dispInfo');
+  const btnStart = document.getElementById('btnDispStart');
+  const btnReset = document.getElementById('btnDispReset');
+
+  function setup() {
+    const e = exps[cur];
+    reacted = false;
+    liquid.setAttribute('fill', e.liquidBefore);
+    metalBody.setAttribute('fill', e.metalColor);
+    coating.style.opacity = '0';
+    caption.textContent = e.caption;
+    info.innerHTML = e.predict;
+    btnStart.disabled = false;
+    btnStart.textContent = '▶ 开始反应（静置一段时间）';
+  }
+
+  modeBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      cur = b.dataset.exp;
+      modeBtns.forEach(function (x) { x.classList.toggle('active', x === b); });
+      setup();
+    });
+  });
+
+  btnStart.addEventListener('click', function () {
+    if (reacted) return;
+    reacted = true;
+    const e = exps[cur];
+    if (e.canReact) {
+      coating.style.opacity = '1';
+      setTimeout(function () { liquid.setAttribute('fill', e.liquidAfter); }, 700);
+      setTimeout(function () { info.innerHTML = e.result; }, 1300);
+    } else {
+      info.innerHTML = '⏳ 静置中……（观察 3 秒）';
+      setTimeout(function () { info.innerHTML = e.result; }, 3000);
+    }
+    btnStart.disabled = true;
+    btnStart.textContent = '✓ 已观察';
+  });
+
+  btnReset.addEventListener('click', setup);
+  setup();
+})();
+
+/* ===================== 交互 4：铁生锈条件探究 ===================== */
+(function () {
+  const btnGo = document.getElementById('btnRustGo');
+  const btnReset = document.getElementById('btnRustReset');
+  const tube3 = document.getElementById('tube3');
+  const patch = document.querySelector('#tube3 .rust-patch');
+  const rt1 = document.getElementById('rt1');
+  const rt2 = document.getElementById('rt2');
+  const rt3 = document.getElementById('rt3');
+  const info = document.getElementById('rustInfo');
+  let done = false;
+
+  btnGo.addEventListener('click', function () {
+    if (done) return;
+    done = true;
+    // 试管③生锈（水面处最明显）
+    patch.style.opacity = '0.9';
+    tube3.classList.add('rusted');
+    rt1.textContent = '✓ 不生锈（缺水）';
+    rt1.className = 'rt-result no';
+    rt2.textContent = '✓ 不生锈（缺氧气）';
+    rt2.className = 'rt-result no';
+    rt3.textContent = '✗ 生锈！水面处最严重';
+    rt3.className = 'rt-result yes';
+    btnGo.disabled = true;
+    btnGo.textContent = '✓ 观察完毕';
+    setTimeout(function () {
+      info.innerHTML = '<strong>实验结论：</strong>只有试管 ③ 的铁钉生锈，且在<strong>水面交界处</strong>锈蚀最严重（此处氧气和水都最充足）。' +
+        '说明铁生锈必须<strong style="color:var(--chemistry);">同时</strong>与氧气和水接触，二者缺一不可。' +
+        '<br><strong>防锈思路：</strong>破坏条件——隔绝空气（刷漆、涂油、镀层）或保持干燥。';
+    }, 1600);
+  });
+
+  btnReset.addEventListener('click', function () {
+    done = false;
+    patch.style.opacity = '0';
+    tube3.classList.remove('rusted');
+    [rt1, rt2, rt3].forEach(function (el) {
+      el.textContent = '等待观察…';
+      el.className = 'rt-result';
+    });
+    btnGo.disabled = false;
+    btnGo.textContent = '⏩ 快进一周';
+    info.innerHTML = '<strong>实验分析：</strong>① 与 ③ 对比，变量是"水"；② 与 ③ 对比，变量是"氧气"。只有 ③ 同时接触氧气和水。点击"快进一周"查看结果。';
+  });
+})();
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('q1', {
+  correct: 3,
+  explain: '铜位于金属活动性顺序中氢（H）的后面，活动性比氢弱，不能与稀盐酸（非氧化性酸）反应放出氢气。镁、锌、铁都在氢前，都能与稀盐酸反应生成氢气。',
+  hint: '回忆金属活动性顺序：K Ca Na Mg Al Zn Fe Sn Pb (H) Cu Hg Ag Pt Au，只有排在氢前面的金属才能置换出酸中的氢。'
+});
+initQuiz('q2', {
+  correct: 0,
+  explain: 'Fe + CuSO₄ ═ FeSO₄ + Cu。铁的活动性比铜强，能把铜置换出来：铁钉表面析出红色的铜；生成的 FeSO₄（硫酸亚铁）溶液呈浅绿色，所以蓝色溶液逐渐变浅绿色。该反应用于古代"湿法炼铜"。',
+  hint: '铁在置换反应中生成 +2 价亚铁盐（Fe²⁺，浅绿色）；铜是红色固体。'
+});
+initQuiz('q3', {
+  correct: 2,
+  explain: '菜刀长时间用水浸泡，使铁同时与水和氧气接触，最容易生锈。正确做法是用后洗净擦干。刷漆（隔绝空气）、涂油（隔绝水和空气）、制成不锈钢（改变内部结构）都是有效的防锈措施。',
+  hint: '铁生锈的条件是与氧气、水同时接触。防锈就是破坏这个条件——想想哪个选项反而"创造"了生锈条件。'
+});
+</script>
+
 </body>
 </html>

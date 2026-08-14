@@ -6,50 +6,252 @@
   <title>燃料及其利用 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--chemistry);
+      margin: 32px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px; flex-shrink: 0;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 知识卡片 */
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card.blue { border-left-color: var(--info); }
+    .know-card.green { border-left-color: var(--success); }
+    .know-card.orange { border-left-color: var(--warning); }
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title {
+      font-size: 17px; font-weight: 700; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px; color: var(--chemistry);
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .know-card.blue .kc-title { color: var(--info); }
+    .know-card.green .kc-title { color: var(--success); }
+    .know-card.orange .kc-title { color: var(--warning); }
+    .know-card .kc-def { font-size: 14px; color: var(--text-main); line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+    .know-card .kc-examples strong { color: var(--text-main); }
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #fff7f5, #fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 18px; margin: 14px auto; max-width: 560px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px; color: var(--chemistry); text-align: center; font-weight: 600;
+      line-height: 1.8;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .formula-box .label { font-family: -apple-system, "PingFang SC", sans-serif; font-size: 13px; color: var(--text-secondary); display: block; margin-top: 4px; font-weight: 400; }
+
+    /* 滑块行 / 数值显示 */
+    .slider-row {
+      display: flex; align-items: center; gap: 14px;
+      max-width: 520px; margin: 14px auto; padding: 0 8px;
     }
+    .slider-row label { font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+    .slider-row input[type="range"] { flex: 1; }
+    .value-display {
+      min-width: 64px; text-align: center; font-size: 15px; font-weight: 700;
+      color: var(--chemistry); background: var(--bg-card);
+      border: 1.5px solid var(--chemistry); border-radius: var(--radius-sm);
+      padding: 4px 8px;
+    }
+
+    /* 信息读数面板 */
+    .info-readout {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      padding: 12px 16px; margin: 12px auto; max-width: 560px;
+      font-size: 14px; line-height: 1.8; text-align: left;
+    }
+    .info-readout strong { color: var(--chemistry); }
+
+    /* 模式切换 */
+    .mode-toggle {
+      display: inline-flex; gap: 0; border-radius: var(--radius-sm);
+      overflow: hidden; border: 2px solid var(--chemistry); margin: 6px 0 12px;
+    }
+    .mode-toggle button {
+      padding: 8px 20px; border: none; background: var(--bg-card);
+      color: var(--chemistry); font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+    }
+    .mode-toggle button.active { background: var(--chemistry); color: white; }
+
+    /* 属性清单 */
+    .property-list {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 16px 20px; margin: 14px 0;
+    }
+    .property-list .pl-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px dashed var(--border);
+      font-size: 14px; line-height: 1.7;
+    }
+    .property-list .pl-item:last-child { border-bottom: none; }
+    .property-list .pl-item .pl-key {
+      font-weight: 700; color: var(--chemistry); white-space: nowrap;
+      min-width: 110px;
+    }
+
+    /* 燃烧实验舞台 */
+    .burn-stage {
+      position: relative; width: 100%; max-width: 560px;
+      margin: 0 auto; border-radius: var(--radius); overflow: hidden;
+      background: linear-gradient(180deg, #eef6fb 0%, #dbeaf5 100%);
+      border: 1px solid #b7d3e8;
+    }
+    .burn-status {
+      position: absolute; top: 10px; left: 12px; right: 12px;
+      display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+      pointer-events: none;
+    }
+    .burn-chip {
+      font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px;
+      background: rgba(255,255,255,0.85); color: var(--text-secondary);
+      border: 1px solid var(--border); transition: all 0.4s;
+    }
+    .burn-chip.on { background: rgba(231,76,60,0.12); color: var(--chemistry); border-color: var(--chemistry); }
+
+    /* 条件分析表 */
+    .cond-table {
+      width: 100%; max-width: 560px; margin: 14px auto 0;
+      border-collapse: collapse; font-size: 13px; background: var(--bg-card);
+      border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow);
+    }
+    .cond-table th, .cond-table td {
+      padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--border);
+    }
+    .cond-table th { background: var(--chemistry); color: white; font-weight: 600; }
+    .cond-table td.yes { color: var(--success); font-weight: 700; }
+    .cond-table td.no { color: var(--danger); font-weight: 700; }
+    .cond-table tr.highlight td { background: rgba(243,156,18,0.12); }
+
+    /* 灭火场景 */
+    .scene-item {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 16px 18px; margin-bottom: 12px; text-align: left;
+      border: 2px solid var(--border); transition: border-color 0.3s, background 0.3s;
+    }
+    .scene-item.done-correct { border-color: var(--success); background: rgba(39,174,96,0.05); }
+    .scene-item.done-wrong { border-color: var(--warning); background: rgba(243,156,18,0.05); }
+    .scene-item .sc-text {
+      font-size: 15px; font-weight: 600; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .scene-item .sc-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 13px; flex-shrink: 0;
+    }
+    .scene-item .sc-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    .sc-btn {
+      padding: 8px 16px; border: 2px solid var(--border); background: var(--bg-soft);
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 14px;
+      font-weight: 600; transition: all 0.2s; font-family: inherit;
+    }
+    .sc-btn:hover { background: #DCEAF5; border-color: var(--primary); }
+    .sc-btn.right { background: var(--success); color: white; border-color: var(--success); }
+    .sc-btn.bad { background: var(--danger); color: white; border-color: var(--danger); }
+    .sc-feedback {
+      margin-top: 10px; font-size: 14px; padding: 8px 12px;
+      border-radius: var(--radius-sm); display: none; line-height: 1.7;
+    }
+    .sc-feedback.show { display: block; }
+    .sc-feedback.ok { background: rgba(39,174,96,0.1); color: var(--success); }
+    .sc-feedback.no { background: rgba(231,76,60,0.1); color: var(--danger); }
+
+    /* 燃烧充分性演示 */
+    .flame-stage {
+      position: relative; width: 100%; max-width: 420px; height: 210px;
+      margin: 0 auto; border-radius: var(--radius); overflow: hidden;
+      background: linear-gradient(180deg, #1a1f2e 0%, #2c3e50 100%);
+    }
+    .flame-flame { position: absolute; left: 50%; bottom: 56px; transform: translateX(-50%); transition: opacity 0.4s; }
+
+    /* 热值条形图 */
+    .bar-chart { max-width: 600px; margin: 10px auto; text-align: left; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; }
+    .bar-row .b-name { width: 92px; font-size: 13px; font-weight: 700; color: var(--text-main); text-align: right; flex-shrink: 0; }
+    .bar-row .b-track { flex: 1; background: var(--bg-soft); border-radius: 6px; height: 26px; overflow: hidden; }
+    .bar-row .b-fill {
+      height: 100%; border-radius: 6px; width: 0;
+      background: linear-gradient(90deg, #F5A623, var(--chemistry));
+      transition: width 0.8s ease;
+      display: flex; align-items: center; justify-content: flex-end;
+      color: white; font-size: 11px; font-weight: 700; padding-right: 6px;
+      white-space: nowrap;
+    }
+    .bar-row.selected .b-fill { background: linear-gradient(90deg, #2980b9, var(--info)); }
+    .bar-row:hover .b-name { color: var(--chemistry); }
+
+    /* 安全图标格 */
+    .safety-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px; margin: 14px 0;
+    }
+    .safety-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 14px 10px; text-align: center;
+    }
+    .safety-card .sf-icon { font-size: 34px; margin-bottom: 6px; }
+    .safety-card .sf-name { font-size: 14px; font-weight: 700; color: var(--chemistry); margin-bottom: 4px; }
+    .safety-card .sf-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* 小结提示 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">⚗️ 燃料及其利用</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">🔥 燃料及其利用</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
@@ -60,31 +262,689 @@
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
-    <a href="index.html">化学</a>
+    <a href="../八年级/index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>燃料及其利用</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>燃料及其利用</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">🔥 第七单元：燃料及其利用</div>
+    <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.8;">
+      火的使用是人类文明的里程碑。燃烧为我们提供热量和动力，但失控的燃烧就是火灾。
+      本单元我们要弄清三个问题：<strong style="color:var(--chemistry);">燃烧需要什么条件</strong>？怎样
+      <strong style="color:var(--info);">让燃烧更充分、更清洁</strong>？以及如何
+      <strong style="color:var(--success);">科学地灭火与防范火灾</strong>。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
+  <!-- ========== 知识点 1：燃烧的条件 ========== -->
+  <h2 class="section-header"><span class="num">1</span>燃烧的条件</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    燃烧是<strong>可燃物</strong>与<strong>氧气</strong>发生的一种<strong>发光、放热</strong>的剧烈的<strong>氧化反应</strong>。
+    燃烧必须同时具备三个条件，缺一不可：
+  </p>
+  <div class="knowledge-grid">
+    <div class="know-card">
+      <div class="kc-title">① 可燃物</div>
+      <div class="kc-def">必须有能够燃烧的物质，如木材、煤、天然气、酒精等。</div>
+      <div class="kc-examples"><strong>想一想：</strong>石头、水不能燃烧，因为它们不是可燃物。</div>
+    </div>
+    <div class="know-card blue">
+      <div class="kc-title">② 与氧气（或空气）接触</div>
+      <div class="kc-def">可燃物必须与氧气接触。氧气不足或隔绝氧气，燃烧就会减弱甚至停止。</div>
+      <div class="kc-examples"><strong>想一想：</strong>酒精灯用灯帽一盖就灭，就是隔绝了空气。</div>
+    </div>
+    <div class="know-card orange">
+      <div class="kc-title">③ 温度达到着火点</div>
+      <div class="kc-def">可燃物燃烧所需的<strong>最低温度</strong>叫做着火点。</div>
+      <div class="kc-examples">
+        <strong>常见着火点：</strong>白磷约 40℃，红磷约 240℃，木材约 250~330℃。<br>
+        <strong>注意：</strong>着火点是物质本身的<strong>固有属性</strong>，一般不能改变！
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 易错警示：着火点不能被"降低"</div>
+    灭火时说"把温度降到着火点<strong>以下</strong>"是<strong>正确</strong>的；
+    但说"降低可燃物的着火点"是<strong>错误</strong>的——着火点是物质固有的性质，
+    水灭火是<strong>水蒸发吸热，使温度降到着火点以下</strong>，而不是改变了着火点。
+  </div>
+
+  <!-- ========== 交互 1：燃烧条件探究实验 ========== -->
+  <h2 class="section-header"><span class="num">实</span>交互一：燃烧条件的探究（控制变量实验）</h2>
+  <div class="demo-container">
+    <h3>铜片上的白磷 / 红磷 + 热水中的白磷</h3>
+    <div class="demo-desc">
+      烧杯中是 80℃ 的热水，铜片上分别放白磷和红磷，水底也有一小块白磷。
+      观察现象后，点击"向水中通入氧气"，看看会发生什么！（白磷着火点 40℃，红磷着火点 240℃）
+    </div>
+
+    <div class="burn-stage">
+      <div class="burn-status">
+        <span class="burn-chip on" id="chipWp">铜片白磷：🔥 燃烧</span>
+        <span class="burn-chip" id="chipRp">铜片红磷：不燃烧</span>
+        <span class="burn-chip" id="chipUw">水中白磷：不燃烧</span>
+      </div>
+      <svg viewBox="0 0 560 300">
+        <!-- 烧杯 -->
+        <path d="M 110 70 L 110 260 Q 110 272 122 272 L 438 272 Q 450 272 450 260 L 450 70"
+              fill="rgba(255,255,255,0.35)" stroke="#7fa8c9" stroke-width="3"/>
+        <!-- 热水 -->
+        <path d="M 113 130 L 113 258 Q 113 269 123 269 L 437 269 Q 447 269 447 258 L 447 130 Z"
+              fill="#9ec9ea" opacity="0.55"/>
+        <text x="150" y="165" fill="#4a90d9" font-size="13" font-weight="700">80℃ 热水</text>
+        <!-- 水中白磷 -->
+        <g id="uwP">
+          <ellipse cx="330" cy="252" rx="14" ry="9" fill="#f8f4e3" stroke="#d8cfa8" stroke-width="1.5"/>
+          <text x="330" y="290" text-anchor="middle" fill="#8a7a3a" font-size="12" font-weight="700">水中白磷</text>
+        </g>
+        <!-- 水中白磷火焰（通氧气后显示） -->
+        <g id="uwFlame" style="opacity:0; transition: opacity 0.5s;">
+          <ellipse cx="330" cy="230" rx="18" ry="26" fill="#fef08a" opacity="0.9"/>
+          <ellipse cx="330" cy="238" rx="10" ry="16" fill="#fb923c" opacity="0.9"/>
+          <circle cx="318" cy="216" r="3" fill="#ffffff" opacity="0.8"/>
+          <circle cx="342" cy="208" r="2.5" fill="#ffffff" opacity="0.8"/>
+          <circle cx="330" cy="196" r="2" fill="#ffffff" opacity="0.7"/>
+        </g>
+        <!-- 铜片 -->
+        <rect x="150" y="88" width="260" height="10" rx="3" fill="#c98850"/>
+        <rect x="150" y="88" width="260" height="4" rx="2" fill="#e0a875"/>
+        <text x="410" y="96" fill="#8a5a2a" font-size="12" font-weight="700">铜片</text>
+        <!-- 铜片上的白磷 -->
+        <ellipse cx="200" cy="82" rx="13" ry="8" fill="#f8f4e3" stroke="#d8cfa8" stroke-width="1.5"/>
+        <text x="200" y="115" text-anchor="middle" fill="#8a7a3a" font-size="12" font-weight="700">白磷</text>
+        <!-- 白磷火焰（默认燃烧） -->
+        <g id="wpFlame">
+          <ellipse cx="200" cy="48" rx="20" ry="32" fill="#fef08a" opacity="0.9"/>
+          <ellipse cx="200" cy="58" rx="12" ry="20" fill="#fb923c" opacity="0.9"/>
+          <ellipse cx="200" cy="68" rx="6" ry="10" fill="#fde047" opacity="0.9"/>
+        </g>
+        <!-- 铜片上的红磷 -->
+        <ellipse cx="310" cy="82" rx="13" ry="8" fill="#b03a2e" stroke="#7b241c" stroke-width="1.5"/>
+        <text x="310" y="115" text-anchor="middle" fill="#7b241c" font-size="12" font-weight="700">红磷</text>
+        <!-- 温度标注 -->
+        <text x="30" y="250" fill="#64748b" font-size="12">水温 80℃ 通过铜片传热：铜片温度也约为 80℃</text>
+      </svg>
+    </div>
+
+    <div class="mg-controls" style="margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-danger" id="btnO2">💨 向水中通入氧气</button>
+      <button class="btn btn-outline" id="btnBurnReset">重置实验</button>
+    </div>
+
+    <table class="cond-table">
+      <thead>
+        <tr><th>对比对象</th><th>是可燃物</th><th>接触氧气</th><th>温度达着火点</th><th>是否燃烧</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>铜片上的白磷</strong></td>
+          <td class="yes">✓</td><td class="yes">✓</td>
+          <td class="yes">✓（80℃ &gt; 40℃）</td>
+          <td class="yes">🔥 燃烧</td>
+        </tr>
+        <tr>
+          <td><strong>铜片上的红磷</strong></td>
+          <td class="yes">✓</td><td class="yes">✓</td>
+          <td class="no">✗（80℃ &lt; 240℃）</td>
+          <td class="no">不燃烧</td>
+        </tr>
+        <tr id="uwRow">
+          <td><strong>热水中的白磷</strong></td>
+          <td class="yes">✓</td>
+          <td class="no" id="uwO2cell">✗（被水隔绝）</td>
+          <td class="yes">✓（80℃ &gt; 40℃）</td>
+          <td class="no" id="uwRescell">不燃烧</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip-box" style="text-align:left; max-width:560px; margin:14px auto 0;">
+      <div class="tip-title">🔍 实验结论（控制变量法）</div>
+      <strong>白磷 vs 红磷（同在铜片上）：</strong>都有氧气，白磷燃烧而红磷不燃烧 → 说明燃烧需要<em>温度达到着火点</em>。<br>
+      <strong>铜片白磷 vs 水中白磷：</strong>温度都达到着火点，水中白磷不燃烧 → 说明燃烧需要<em>与氧气接触</em>。<br>
+      <strong>通入氧气后水中白磷燃烧：</strong>再次证明"氧气"这个条件缺一不可。三个条件<strong>同时</strong>具备，燃烧才能发生。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 2：灭火的原理 ========== -->
+  <h2 class="section-header"><span class="num">2</span>灭火的原理和方法</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    燃烧需要三个条件<strong>同时</strong>具备，反过来，只要<strong>破坏其中任意一个</strong>条件，就能达到灭火的目的：
+  </p>
+  <div class="knowledge-grid">
+    <div class="know-card green">
+      <div class="kc-title">🧹 清除可燃物</div>
+      <div class="kc-def">清除可燃物，或使可燃物与火源隔离。</div>
+      <div class="kc-examples"><strong>实例：</strong>森林火灾时开辟隔离带；关闭燃气阀门灭火。</div>
+    </div>
+    <div class="know-card blue">
+      <div class="kc-title">🛡️ 隔绝氧气（空气）</div>
+      <div class="kc-def">使燃烧物与空气（氧气）隔绝。</div>
+      <div class="kc-examples"><strong>实例：</strong>油锅着火盖上锅盖；酒精灯用灯帽盖灭；用二氧化碳灭火器灭火。</div>
+    </div>
+    <div class="know-card orange">
+      <div class="kc-title">❄️ 降温至着火点以下</div>
+      <div class="kc-def">使可燃物的温度降到着火点以下（注意：不是降低着火点！）。</div>
+      <div class="kc-examples"><strong>实例：</strong>用水灭火——水蒸发吸热，使温度降到着火点以下。</div>
+    </div>
+  </div>
+
+  <!-- ========== 交互 2：灭火方法选择器 ========== -->
+  <h2 class="section-header"><span class="num">选</span>交互二：灭火方法选择器</h2>
+  <div class="demo-container">
+    <h3>遇到以下火情，你会怎么办？</h3>
+    <div class="demo-desc">选择正确的灭火方法，并思考它破坏了燃烧的哪个条件。</div>
+    <div id="sceneList"></div>
+    <div style="margin-top:10px; font-size:14px; color:var(--text-secondary);">
+      已完成：<span id="sceneProgress" style="font-weight:700; color:var(--chemistry);">0 / 4</span>
+    </div>
+  </div>
+
+  <!-- ========== 知识点 3：充分燃烧 ========== -->
+  <h2 class="section-header"><span class="num">3</span>充分燃烧与不充分燃烧</h2>
+  <div class="knowledge-grid">
+    <div class="know-card green">
+      <div class="kc-title">✅ 使燃料充分燃烧的条件</div>
+      <div class="kc-def">
+        ① 燃烧时要有<strong>足够多的空气（氧气）</strong>；<br>
+        ② 燃料与空气要有<strong>足够大的接触面</strong>。
+      </div>
+      <div class="kc-examples">
+        <strong>实例：</strong>把煤做成蜂窝煤、锅炉烧煤时鼓入空气、把木柴架空烧得更旺。
+      </div>
+    </div>
+    <div class="know-card">
+      <div class="kc-title">⚠️ 不充分燃烧的危害</div>
+      <div class="kc-def">
+        氧气不足时，含碳燃料不充分燃烧会生成<strong>一氧化碳（CO）</strong>和炭黑。
+      </div>
+      <div class="kc-examples">
+        <strong>危害：</strong>① 浪费燃料、热效率低；② CO 有<strong>剧毒</strong>（与血红蛋白结合，使人缺氧中毒——"煤气中毒"）；③ 产生黑烟污染空气。
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 交互 3：氧气供给与燃烧充分性 ========== -->
+  <h2 class="section-header"><span class="num">调</span>交互三：氧气供给量对燃烧的影响</h2>
+  <div class="demo-container">
+    <h3>调节氧气供给量，观察火焰与产物</h3>
+    <div class="demo-desc">以天然气（甲烷）燃烧为例，拖动滑块改变供氧量，观察火焰颜色和燃烧产物的变化。</div>
+
+    <div class="mode-toggle" id="flameMode">
+      <button data-mode="full" class="active">🔵 充分燃烧</button>
+      <button data-mode="lack">🟡 不充分燃烧</button>
+    </div>
+
+    <div class="flame-stage">
+      <svg viewBox="0 0 420 210" style="position:absolute; inset:0; width:100%; height:100%;">
+        <!-- 灶台 -->
+        <rect x="120" y="160" width="180" height="14" rx="4" fill="#374151"/>
+        <circle cx="210" cy="167" r="5" fill="#111827"/>
+        <!-- 锅 -->
+        <path d="M 150 90 L 150 130 Q 150 140 160 140 L 260 140 Q 270 140 270 130 L 270 90" fill="#6b7280"/>
+        <ellipse cx="210" cy="90" rx="60" ry="8" fill="#9ca3af"/>
+        <!-- 火焰组 -->
+        <g id="flameFull">
+          <ellipse cx="210" cy="140" rx="42" ry="34" fill="#60a5fa" opacity="0.85"/>
+          <ellipse cx="210" cy="146" rx="26" ry="22" fill="#3b82f6" opacity="0.9"/>
+          <ellipse cx="210" cy="152" rx="13" ry="12" fill="#93c5fd" opacity="0.95"/>
+        </g>
+        <g id="flameLack" style="opacity:0;">
+          <ellipse cx="210" cy="136" rx="44" ry="40" fill="#fbbf24" opacity="0.85"/>
+          <ellipse cx="210" cy="146" rx="28" ry="26" fill="#f59e0b" opacity="0.9"/>
+          <ellipse cx="210" cy="152" rx="14" ry="14" fill="#fde68a" opacity="0.95"/>
+          <!-- 黑烟 -->
+          <circle cx="196" cy="70" r="9" fill="#1f2937" opacity="0.5"/>
+          <circle cx="214" cy="52" r="11" fill="#1f2937" opacity="0.4"/>
+          <circle cx="228" cy="32" r="13" fill="#1f2937" opacity="0.3"/>
+        </g>
+        <text id="flameLabel" x="210" y="196" text-anchor="middle" fill="#e5e7eb" font-size="12" font-weight="700">蓝色火焰 · 燃烧充分</text>
+      </svg>
+    </div>
+
+    <div class="slider-row">
+      <label for="o2Slider">氧气供给量</label>
+      <input type="range" id="o2Slider" min="10" max="100" value="100" step="5">
+      <span class="value-display" id="o2Value">100%</span>
+    </div>
+
+    <div class="info-readout" id="o2Readout">
+      <strong>当前状态：充分燃烧</strong><br>
+      火焰呈<strong style="color:var(--info);">蓝色</strong>，放热多、热效率高；<br>
+      产物：CH₄ + 2O₂ <span style="color:var(--warning);">—点燃→</span> CO₂ + 2H₂O（二氧化碳和水）。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 4：化石燃料 ========== -->
+  <h2 class="section-header"><span class="num">4</span>化石燃料</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    煤、石油、天然气是当今世界上最重要的三大化石燃料，它们是由古代生物的遗骸经过漫长复杂的变化而形成的，
+    属于<strong style="color:var(--chemistry);">不可再生能源</strong>，用一点就少一点。
+  </p>
+  <div class="property-list">
+    <div class="pl-item"><span class="pl-key">🖤 煤</span><span>被称为"<strong>工业的粮食</strong>"，主要含碳元素，燃烧发电、供热。煤燃烧会产生 SO₂、氮氧化物和粉尘，污染较重。</span></div>
+    <div class="pl-item"><span class="pl-key">🛢️ 石油</span><span>被称为"<strong>工业的血液</strong>"，主要含碳、氢元素。利用各成分<strong>沸点不同</strong>分馏出汽油、柴油、煤油等（物理变化）。</span></div>
+    <div class="pl-item"><span class="pl-key">💨 天然气</span><span>主要成分是<strong>甲烷（CH₄）</strong>，无色无味气体，难溶于水，是较清洁的化石燃料。</span></div>
+  </div>
+
+  <div class="formula-box">
+    CH₄ + 2O₂ <span style="color:var(--warning);">—点燃→</span> CO₂ + 2H₂O
+    <span class="label">甲烷在空气中燃烧：发出蓝色火焰，放出大量的热（点燃前必须验纯！）</span>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 合理利用与开发</div>
+    化石燃料储量有限且不可再生，一方面要<strong>节约能源、使燃料充分燃烧</strong>提高利用率；
+    另一方面要积极开发新能源。海底蕴藏着大量的"<strong>可燃冰</strong>"（甲烷水合物），是未来潜在的能源。
+  </div>
+
+  <!-- ========== 交互 4：燃料热值对比 ========== -->
+  <h2 class="section-header"><span class="num">比</span>交互四：常见燃料热值大比拼</h2>
+  <div class="demo-container">
+    <h3>点击条形，查看每种燃料的特点</h3>
+    <div class="demo-desc">
+      热值：1 kg 某种燃料<strong>完全燃烧</strong>放出的热量（单位 J/kg；气体燃料常用 J/m³）。
+      热值越大，相同质量的燃料完全燃烧放热越多。
+    </div>
+    <div class="bar-chart" id="fuelChart"></div>
+    <div class="info-readout" id="fuelInfo">
+      <strong>👆 点击上面的条形查看燃料详情</strong><br>
+      提示：注意比较氢气与传统化石燃料的差距——这解释了为什么氢能被称为"最理想的燃料"。
+    </div>
+  </div>
+
+  <!-- ========== 知识点 5：燃料与环境、新能源 ========== -->
+  <h2 class="section-header"><span class="num">5</span>燃料利用与环境 · 新能源</h2>
+  <div class="knowledge-grid">
+    <div class="know-card">
+      <div class="kc-title">🌧️ 酸雨</div>
+      <div class="kc-def">煤燃烧产生的 <strong>SO₂、NO₂</strong> 等气体溶于雨水形成酸雨（pH &lt; 5.6）。</div>
+      <div class="kc-examples"><strong>危害：</strong>腐蚀建筑物和雕像、酸化土壤湖泊、危害森林。<strong>防治：</strong>燃煤脱硫、使用清洁能源。</div>
+    </div>
+    <div class="know-card orange">
+      <div class="kc-title">🌡️ 温室效应</div>
+      <div class="kc-def">燃料燃烧产生大量 <strong>CO₂</strong>，加剧温室效应，导致全球气候变暖。</div>
+      <div class="kc-examples"><strong>应对：</strong>减少化石燃料使用，植树造林，发展低碳能源（"碳达峰、碳中和"）。</div>
+    </div>
+    <div class="know-card blue">
+      <div class="kc-title">🚗 汽车尾气</div>
+      <div class="kc-def">含 CO、未燃烧的碳氢化合物、氮氧化物、含铅化合物和烟尘。</div>
+      <div class="kc-examples"><strong>治理：</strong>改进发动机燃烧方式、使用催化净化装置、使用乙醇汽油、推广新能源汽车。</div>
+    </div>
+  </div>
+
+  <div class="knowledge-grid">
+    <div class="know-card green">
+      <div class="kc-title">💧 氢能源（最理想的燃料）</div>
+      <div class="kc-def">
+        <strong>优点：</strong>① 本身无毒，热值高（约为汽油的 3 倍）；② 燃烧产物是水，<strong>无污染</strong>；③ 原料（水）来源广泛。
+      </div>
+      <div class="kc-examples">
+        <strong>尚未大规模使用的原因：</strong>① 制取成本高（电解水耗电多）；② 氢气易燃，<strong>贮存和运输困难</strong>。
+      </div>
+    </div>
+    <div class="know-card green">
+      <div class="kc-title">🌽 乙醇（酒精）</div>
+      <div class="kc-def">俗称酒精，化学式 C₂H₅OH，属于<strong>可再生能源</strong>。汽油中加入适量乙醇制成<strong>乙醇汽油</strong>，可节省石油资源、减少尾气污染。</div>
+      <div class="kc-examples">
+        C₂H₅OH + 3O₂ <span style="color:var(--warning);">—点燃→</span> 2CO₂ + 3H₂O
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    2H₂ + O₂ <span style="color:var(--warning);">—点燃→</span> 2H₂O
+    <span class="label">氢气燃烧：产物只有水，是最清洁的燃料（点燃前同样必须验纯）</span>
+  </div>
+
+  <!-- ========== 知识点 6：易燃易爆安全常识 ========== -->
+  <h2 class="section-header"><span class="num">6</span>易燃物和易爆物的安全知识</h2>
+  <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+    可燃物在<strong>有限的空间</strong>内急剧地燃烧，短时间内聚积大量的热，使气体体积迅速膨胀，就会引起<strong>爆炸</strong>。
+    可燃性气体或粉尘（如面粉、煤粉）与空气混合达到一定比例（<strong>爆炸极限</strong>）时，遇到明火就会爆炸。
+    因此加油站、面粉厂、煤矿矿井等场所必须<strong>严禁烟火</strong>、注意通风。
+  </p>
+  <div class="safety-grid">
+    <div class="safety-card">
+      <div class="sf-icon">🚭</div>
+      <div class="sf-name">禁止烟火</div>
+      <div class="sf-desc">加油站、油库、面粉厂等场所严禁烟火，防止引爆可燃性气体或粉尘。</div>
+    </div>
+    <div class="safety-card">
+      <div class="sf-icon">🧯</div>
+      <div class="sf-name">配备灭火器</div>
+      <div class="sf-desc">了解干粉灭火器（一般火灾、电器火灾）、二氧化碳灭火器（图书档案）的适用范围。</div>
+    </div>
+    <div class="safety-card">
+      <div class="sf-icon">🪟</div>
+      <div class="sf-name">注意通风</div>
+      <div class="sf-desc">燃气泄漏时立即关闭阀门、开窗通风，切勿开灯或点火（电火花会引爆混合气体）。</div>
+    </div>
+    <div class="safety-card">
+      <div class="sf-icon">🏃</div>
+      <div class="sf-name">火灾自救</div>
+      <div class="sf-desc">用湿毛巾捂住口鼻、弯腰低姿沿安全通道撤离；火势大时拨打 119，切勿乘坐电梯。</div>
+    </div>
+  </div>
+
+  <!-- ========== 知识小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>知识小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📌 必记要点</div>
+    <div class="sb-item">燃烧三要素（缺一不可）：<strong>可燃物、与氧气接触、温度达到着火点</strong>。着火点是物质的<em>固有属性</em>，不能被降低。</div>
+    <div class="sb-item">灭火原理（破坏任一条件）：<strong>清除可燃物、隔绝氧气、降温至着火点以下</strong>。注意表述是"降到着火点以下"，不是"降低着火点"。</div>
+    <div class="sb-item">充分燃烧需要<em>充足的氧气</em>和<em>足够大的接触面</em>；不充分燃烧产生<strong>剧毒的 CO</strong>，浪费燃料又污染空气。</div>
+    <div class="sb-item">三大化石燃料：煤（工业的粮食）、石油（工业的血液）、天然气（主要成分 CH₄），均为<strong>不可再生</strong>能源。</div>
+    <div class="sb-item">环境问题：SO₂、NO₂ → <strong>酸雨</strong>；CO₂ → <strong>温室效应</strong>。新能源中氢能最理想（产物是水、热值高），但<em>制取成本高、储运困难</em>。</div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 用灯帽盖灭燃着的酒精灯，其灭火原理是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 降低酒精的着火点</div>
+    <div class="quiz-option" data-idx="1">B. 隔绝空气（氧气）</div>
+    <div class="quiz-option" data-idx="2">C. 清除可燃物</div>
+    <div class="quiz-option" data-idx="3">D. 降低温度至着火点以下</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 在"燃烧条件"实验中，铜片上的白磷燃烧而红磷不燃烧，这一对比说明（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 红磷不是可燃物</div>
+    <div class="quiz-option" data-idx="1">B. 白磷不需要与氧气接触就能燃烧</div>
+    <div class="quiz-option" data-idx="2">C. 燃烧需要温度达到可燃物的着火点</div>
+    <div class="quiz-option" data-idx="3">D. 铜片能支持燃烧</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 天然气的主要成分甲烷完全燃烧的化学方程式，书写正确的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. CH₄ + O₂ —点燃→ CO₂ + H₂O</div>
+    <div class="quiz-option" data-idx="1">B. CH₄ + 2O₂ —点燃→ CO₂ + 2H₂O</div>
+    <div class="quiz-option" data-idx="2">C. CH₄ + 2O₂ —点燃→ CO₂↑ + 2H₂O</div>
+    <div class="quiz-option" data-idx="3">D. 2CH₄ + 2O₂ —点燃→ 2CO₂ + 4H₂O</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>学科交叉</h2>
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 燃烧放热 ↔ 物理 · 内能与热值</div>
+    <p style="font-size:14px; line-height:1.8; margin:0;">
+      化学视角研究燃烧"生成什么"，物理视角研究燃烧"放多少热"。物理中用<strong>热值 q</strong> 描述燃料的放热本领，
+      完全燃烧放热 <strong>Q<sub>放</sub> = mq</strong>；放出的热量被水吸收，可用 Q<sub>吸</sub> = cmΔt 计算。
+      一节内容，两个学科：化学方程式告诉你产物与配平，物理公式告诉你能量转化与效率。
+      另外，比较各燃料热值大小时，用到的正是数学中的<strong>科学记数法与大小比较</strong>（1.4×10⁸ &gt; 4.6×10⁷）。
     </p>
+    <div style="margin-top:10px;">
+      <a href="../../物理/九年级/17-内能.html" style="color:var(--physics); font-weight:600; font-size:14px;">→ 前往物理 · 17-内能（热值与热量的计算）</a>
+    </div>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="06-碳和碳的氧化物.html" class="btn btn-outline">← 上一章：06-碳和碳的氧化物</a>
+    <a href="08-金属和金属材料.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：08-金属和金属材料 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互 1：燃烧条件探究 ===================== */
+(function () {
+  const btnO2 = document.getElementById('btnO2');
+  const btnReset = document.getElementById('btnBurnReset');
+  const uwFlame = document.getElementById('uwFlame');
+  const chipUw = document.getElementById('chipUw');
+  const uwRow = document.getElementById('uwRow');
+  const uwO2cell = document.getElementById('uwO2cell');
+  const uwRescell = document.getElementById('uwRescell');
+  let o2On = false;
+
+  btnO2.addEventListener('click', function () {
+    if (o2On) return;
+    o2On = true;
+    // 水中白磷开始燃烧
+    uwFlame.style.opacity = '1';
+    chipUw.textContent = '水中白磷：🔥 燃烧';
+    chipUw.classList.add('on');
+    uwRow.classList.add('highlight');
+    uwO2cell.textContent = '✓（已通入氧气）';
+    uwO2cell.className = 'yes';
+    uwRescell.textContent = '🔥 燃烧';
+    uwRescell.className = 'yes';
+    btnO2.textContent = '✓ 已通入氧气，水中白磷燃烧了！';
+    btnO2.disabled = true;
+  });
+
+  btnReset.addEventListener('click', function () {
+    o2On = false;
+    uwFlame.style.opacity = '0';
+    chipUw.textContent = '水中白磷：不燃烧';
+    chipUw.classList.remove('on');
+    uwRow.classList.remove('highlight');
+    uwO2cell.textContent = '✗（被水隔绝）';
+    uwO2cell.className = 'no';
+    uwRescell.textContent = '不燃烧';
+    uwRescell.className = 'no';
+    btnO2.textContent = '💨 向水中通入氧气';
+    btnO2.disabled = false;
+  });
+})();
+
+/* ===================== 交互 2：灭火方法选择器 ===================== */
+(function () {
+  const sceneData = [
+    {
+      text: '🍳 炒菜时油锅突然起火',
+      options: [
+        { label: '💧 立即浇一大瓢水', ok: false, why: '油的密度比水小，会浮在水面上继续燃烧，且热水飞溅会使火势蔓延，非常危险！' },
+        { label: '🍳 迅速盖上锅盖', ok: true, why: '盖上锅盖使油与空气（氧气）隔绝——灭火原理：隔绝氧气。盖上锅盖后不要再揭开，等温度降下来。' },
+        { label: '🏃 端起油锅往外跑', ok: false, why: '端锅跑动会加快空气流动，使燃烧更旺，还极易烫伤。' }
+      ]
+    },
+    {
+      text: '📺 家中电视机（通电电器）起火',
+      options: [
+        { label: '💧 直接用水扑灭', ok: false, why: '水能导电，电器着火时直接浇水会造成触电事故！' },
+        { label: '🔌 先切断电源，再用干粉灭火器灭火', ok: true, why: '先断电防止触电，再用干粉灭火器（覆盖可燃物、隔绝空气）灭火——灭火原理：隔绝氧气。' },
+        { label: '👄 用嘴用力吹灭', ok: false, why: '电器起火温度高，用嘴吹不仅无济于事，还会使人吸入有毒烟气。' }
+      ]
+    },
+    {
+      text: '🌲 森林发生大火，火势即将蔓延到村庄',
+      options: [
+        { label: '🪓 在火场前方开辟隔离带', ok: true, why: '砍掉树木、清除杂草形成隔离带，使火失去可燃物而熄灭——灭火原理：清除可燃物（隔离可燃物）。' },
+        { label: '🌬️ 等待大风吹灭', ok: false, why: '风会带来更多氧气，反而助长火势蔓延，十分危险。' },
+        { label: '🔥 放任其烧完为止', ok: false, why: '森林火灾会造成巨大损失，必须主动扑救和隔离，不能放任。' }
+      ]
+    },
+    {
+      text: '🧪 实验时酒精洒到桌面上燃烧起来',
+      options: [
+        { label: '💦 用嘴吹灭', ok: false, why: '酒精燃烧面积大，用嘴吹会使酒精飞溅、火势扩大。' },
+        { label: '🧽 用湿抹布盖灭', ok: true, why: '湿抹布既能隔绝空气，水分蒸发又吸热降温——同时破坏了"氧气"和"温度"两个条件，双保险！' },
+        { label: '📖 用书本拍打', ok: false, why: '书本是可燃物，拍打还会扇风助燃，可能引火烧身。' }
+      ]
+    }
+  ];
+
+  const list = document.getElementById('sceneList');
+  const progressEl = document.getElementById('sceneProgress');
+  let done = 0;
+
+  sceneData.forEach(function (item, i) {
+    const div = document.createElement('div');
+    div.className = 'scene-item';
+    const optsHtml = item.options.map(function (o, j) {
+      return '<button class="sc-btn" data-ok="' + o.ok + '" data-j="' + j + '">' + o.label + '</button>';
+    }).join('');
+    div.innerHTML =
+      '<div class="sc-text"><span class="sc-num">' + (i + 1) + '</span>' + item.text + '</div>' +
+      '<div class="sc-options">' + optsHtml + '</div>' +
+      '<div class="sc-feedback"></div>';
+    list.appendChild(div);
+
+    const fb = div.querySelector('.sc-feedback');
+    let finished = false;
+    div.querySelectorAll('.sc-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (finished) return;
+        const j = parseInt(this.dataset.j);
+        const opt = item.options[j];
+        if (opt.ok) {
+          finished = true;
+          this.classList.add('right');
+          div.classList.add('done-correct');
+          fb.className = 'sc-feedback ok show';
+          fb.innerHTML = '<strong>✓ 正确！</strong>' + opt.why;
+          done++;
+          progressEl.textContent = done + ' / 4';
+        } else {
+          this.classList.add('bad');
+          div.classList.add('done-wrong');
+          fb.className = 'sc-feedback no show';
+          fb.innerHTML = '<strong>✗ 危险！</strong>' + opt.why + '<br>请重新选择正确的灭火方法。';
+          this.disabled = true;
+        }
+      });
+    });
+  });
+})();
+
+/* ===================== 交互 3：氧气供给与充分燃烧 ===================== */
+(function () {
+  const slider = document.getElementById('o2Slider');
+  const valueEl = document.getElementById('o2Value');
+  const flameFull = document.getElementById('flameFull');
+  const flameLack = document.getElementById('flameLack');
+  const flameLabel = document.getElementById('flameLabel');
+  const readout = document.getElementById('o2Readout');
+  const modeBtns = document.querySelectorAll('#flameMode button');
+
+  function render(pct) {
+    valueEl.textContent = pct + '%';
+    const full = pct >= 60;
+    flameFull.style.opacity = full ? '1' : '0';
+    flameLack.style.opacity = full ? '0' : '1';
+    modeBtns.forEach(function (b) {
+      b.classList.toggle('active', (b.dataset.mode === 'full') === full);
+    });
+    if (full) {
+      flameLabel.textContent = '蓝色火焰 · 燃烧充分';
+      flameLabel.setAttribute('fill', '#93c5fd');
+      readout.innerHTML =
+        '<strong>当前状态：充分燃烧（氧气充足）</strong><br>' +
+        '火焰呈<strong style="color:var(--info);">蓝色</strong>，放热多、热效率高；<br>' +
+        '产物：CH₄ + 2O₂ <span style="color:var(--warning);">—点燃→</span> CO₂ + 2H₂O（二氧化碳和水，无毒）。';
+    } else if (pct >= 30) {
+      flameLabel.textContent = '黄色火焰 · 燃烧不充分';
+      flameLabel.setAttribute('fill', '#fbbf24');
+      readout.innerHTML =
+        '<strong style="color:var(--warning);">当前状态：氧气不足，燃烧不充分</strong><br>' +
+        '火焰发<strong style="color:var(--warning);">黄</strong>，放热少、浪费燃料；<br>' +
+        '开始生成<strong style="color:var(--danger);">一氧化碳（CO，剧毒）</strong>和少量炭黑。';
+    } else {
+      flameLabel.textContent = '黄色火焰 + 黑烟 · 严重不充分';
+      flameLabel.setAttribute('fill', '#f59e0b');
+      readout.innerHTML =
+        '<strong style="color:var(--danger);">当前状态：严重缺氧，燃烧很不充分</strong><br>' +
+        '黄色火焰伴随<strong>黑烟</strong>（炭黑颗粒），锅底会被熏黑；<br>' +
+        '产生大量<strong style="color:var(--danger);">CO</strong>，在密闭房间里极易造成煤气中毒！';
+    }
+  }
+
+  slider.addEventListener('input', function () { render(parseInt(this.value)); });
+
+  modeBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      const full = b.dataset.mode === 'full';
+      slider.value = full ? 100 : 20;
+      render(parseInt(slider.value));
+    });
+  });
+
+  render(100);
+})();
+
+/* ===================== 交互 4：燃料热值对比 ===================== */
+(function () {
+  // 热值单位 ×10⁷ J/kg（天然气为 ×10⁷ J/m³），数据为教材常见参考值
+  const fuels = [
+    {
+      name: '氢气', q: 14.3, unit: '×10⁷ J/kg',
+      desc: '热值最高的常见燃料，约为汽油的 3 倍；燃烧产物只有水，无污染，是最理想的燃料。但制取成本高、储存运输困难，尚未大规模使用。'
+    },
+    {
+      name: '天然气', q: 7.5, unit: '×10⁷ J/m³',
+      desc: '主要成分是甲烷（CH₄），较清洁的化石燃料，注意气体燃料热值按体积（J/m³）计算。'
+    },
+    {
+      name: '汽油', q: 4.6, unit: '×10⁷ J/kg',
+      desc: '石油分馏产品，汽车常用燃料。燃烧产生 CO₂ 和尾气污染物，是城市空气污染的重要来源之一。'
+    },
+    {
+      name: '无烟煤', q: 3.4, unit: '×10⁷ J/kg',
+      desc: '煤是"工业的粮食"，但燃烧会产生 SO₂、氮氧化物（形成酸雨）和粉尘，污染较重。'
+    },
+    {
+      name: '干木柴', q: 1.2, unit: '×10⁷ J/kg',
+      desc: '传统燃料，热值低、燃烧不充分时黑烟多。现在农村地区正逐步用沼气、天然气替代。'
+    }
+  ];
+  const maxQ = 15;
+
+  const chart = document.getElementById('fuelChart');
+  const info = document.getElementById('fuelInfo');
+
+  fuels.forEach(function (f) {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML =
+      '<span class="b-name">' + f.name + '</span>' +
+      '<div class="b-track"><div class="b-fill" data-q="' + f.q + '">' + f.q + '</div></div>';
+    chart.appendChild(row);
+    row.addEventListener('click', function () {
+      chart.querySelectorAll('.bar-row').forEach(function (r) { r.classList.remove('selected'); });
+      row.classList.add('selected');
+      info.innerHTML =
+        '<strong>' + f.name + '</strong> ｜ 热值约 <strong>' + f.q + ' ' + f.unit + '</strong><br>' + f.desc;
+    });
+  });
+
+  // 入场动画
+  requestAnimationFrame(function () {
+    setTimeout(function () {
+      chart.querySelectorAll('.b-fill').forEach(function (fill) {
+        fill.style.width = Math.min(100, (parseFloat(fill.dataset.q) / maxQ) * 100) + '%';
+      });
+    }, 100);
+  });
+})();
+
+/* ===================== 练习题初始化 ===================== */
+initQuiz('q1', {
+  correct: 1,
+  explain: '灯帽盖灭酒精灯，是使酒精与空气（氧气）隔绝。注意 A 错误：着火点是物质的固有属性，不能降低；本题中灯帽并没有清除酒精，也没有明显降温。',
+  hint: '想一想灭火的三个原理分别对应什么操作。灯帽的作用是"盖住"——它挡住了什么？'
+});
+initQuiz('q2', {
+  correct: 2,
+  explain: '铜片上的白磷和红磷都与氧气接触、温度相同（约80℃），白磷着火点（40℃）已达到而红磷着火点（240℃）未达到，所以白磷燃烧、红磷不燃烧，说明燃烧需要温度达到着火点。红磷也是可燃物，只是温度不够。',
+  hint: '对比实验要找"唯一不同的变量"：白磷和红磷都在铜片上接触空气，唯一不同的是着火点。'
+});
+initQuiz('q3', {
+  correct: 1,
+  explain: '甲烷完全燃烧：CH₄ + 2O₂ —点燃→ CO₂ + 2H₂O。A 未配平；C 多标了"↑"（反应物有气体 O₂，生成气体不再标"↑"）；D 虽然配平但不是最简整数比，化学方程式系数应化为最简。',
+  hint: '先配平：1 个 C → 1 个 CO₂，4 个 H → 2 个 H₂O，右边共 4 个 O → 2 个 O₂。再检查箭头和"↑"的使用规范。'
+});
+</script>
+
 </body>
 </html>

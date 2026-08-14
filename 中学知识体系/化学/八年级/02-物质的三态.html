@@ -6,57 +6,365 @@
   <title>物质的三态变化 · 八年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 章节主题色：化学红，分子模拟器用蓝色（水分子） ===== */
+    :root {
+      --chem: #E74C3C;
+      --chem-dark: #C0392B;
+      --chem-light: #FF7B6B;
+      --phys: #3498DB;
+      --phys-light: #5DADE2;
+      --water: #3498DB;
+      --water-light: #5DADE2;
+      --ice: #AED6F1;
+      --vapor: #BDC3C7;
+      --warm: #F39C12;
+      --warm-light: #F5B041;
     }
-    .placeholder .emoji {
-      font-size: 72px;
+
+    /* ===== 页面标题区 ===== */
+    .page-hero {
+      background: linear-gradient(135deg, #E74C3C, #C0392B);
+      color: white;
+      border-radius: var(--radius);
+      padding: 32px 28px;
       margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      box-shadow: 0 4px 20px rgba(231,76,60,0.3);
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+    .page-hero h1 { font-size: 26px; margin-bottom: 8px; }
+    .page-hero p { opacity: 0.92; font-size: 15px; }
+
+    /* ===== 三态对比卡片 ===== */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .state-card {
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 18px 16px;
+      border-top: 4px solid;
+      transition: transform 0.2s;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .state-card:hover { transform: translateY(-3px); }
+    .state-card.solid { background: rgba(174,214,241,0.18); border-color: #5DADE2; }
+    .state-card.liquid { background: rgba(52,152,219,0.10); border-color: var(--water); }
+    .state-card.gas { background: rgba(189,196,199,0.18); border-color: #95A5A6; }
+    .state-card h4 {
+      font-size: 17px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .state-card.solid h4 { color: #2E86C1; }
+    .state-card.liquid h4 { color: var(--water); }
+    .state-card.gas h4 { color: #7F8C8D; }
+    .state-card ul { list-style: none; font-size: 13px; color: var(--text-main); }
+    .state-card ul li { padding: 3px 0; padding-left: 16px; position: relative; }
+    .state-card ul li::before {
+      content: '•'; position: absolute; left: 4px; font-weight: bold;
+    }
+    .state-card.solid ul li::before { color: #5DADE2; }
+    .state-card.liquid ul li::before { color: var(--water); }
+    .state-card.gas ul li::before { color: #95A5A6; }
+
+    /* ===== 模块标题 ===== */
+    .module-title {
+      font-size: 20px; font-weight: 700;
+      margin: 28px 0 12px;
+      padding-left: 12px;
+      border-left: 5px solid var(--chem);
+      color: var(--text-main);
+    }
+    .module-title .emoji { margin-right: 6px; }
+    .module-title .sub {
+      font-size: 13px; font-weight: 400; color: var(--text-secondary); margin-left: 8px;
+    }
+
+    /* ===== 通用交互舞台 ===== */
+    .sim-stage {
+      background: linear-gradient(135deg, #f8fbff, #eef5fc);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid rgba(52,152,219,0.2);
+    }
+    .sim-stage.chem-stage {
+      background: linear-gradient(135deg, #fff5f4, #ffeae8);
+      border-color: rgba(231,76,60,0.2);
+    }
+
+    /* ===== 控件 ===== */
+    .ctrl-row {
+      display: flex; flex-wrap: wrap;
+      align-items: center; gap: 14px;
+      margin: 14px 0;
+      padding: 12px 16px;
+      background: white;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+    .ctrl-row .label {
+      font-size: 14px; font-weight: 600; color: var(--text-main);
+      min-width: 70px;
+    }
+    .state-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .state-btn {
+      padding: 8px 18px;
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+    .state-btn:hover { border-color: var(--water); }
+    .state-btn.active { background: var(--water); color: white; border-color: var(--water); }
+    .state-btn.active.solid-btn { background: #5DADE2; border-color: #5DADE2; }
+    .state-btn.active.gas-btn { background: #95A5A6; border-color: #95A5A6; }
+
+    .slider-wrap { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 10px; }
+    .slider-wrap input[type="range"] { flex: 1; }
+    .slider-val {
+      min-width: 70px; text-align: center;
+      font-weight: 700; color: var(--water);
+      background: rgba(52,152,219,0.1);
+      padding: 4px 10px; border-radius: 12px;
+      font-size: 14px;
+    }
+
+    /* ===== 容器（分子模拟器） ===== */
+    .mol-container {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin: 12px 0;
+      display: flex;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    .mol-info-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .info-chip {
+      background: white;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: 13px;
+    }
+    .info-chip .chip-label {
+      font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 3px;
+    }
+    .info-chip .chip-val {
+      font-weight: 700; font-size: 14px;
+    }
+    .info-chip .chip-val.solid-c { color: #2E86C1; }
+    .info-chip .chip-val.liquid-c { color: var(--water); }
+    .info-chip .chip-val.gas-c { color: #7F8C8D; }
+
+    /* ===== 三态变化演示 ===== */
+    .phase-display {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+    .phase-svg-wrap {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    .phase-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .phase-state-label {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 700;
+      font-size: 17px;
+      color: white;
+      transition: background 0.3s;
+    }
+    .phase-state-label.solid { background: #5DADE2; }
+    .phase-state-label.liquid { background: var(--water); }
+    .phase-state-label.gas { background: #95A5A6; }
+    .phase-state-label.mixed { background: linear-gradient(90deg, #5DADE2 50%, var(--water) 50%); }
+    .phase-state-label.mixed2 { background: linear-gradient(90deg, var(--water) 50%, #95A5A6 50%); }
+
+    .phase-feature {
+      background: white;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .phase-feature strong { color: var(--chem); }
+
+    /* ===== 物质鉴别游戏 ===== */
+    .quiz-game {
+      background: linear-gradient(135deg, #fff5f4, #ffeae8);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid rgba(231,76,60,0.2);
+    }
+    .quiz-game .qg-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+    }
+    .qg-score {
+      background: white; padding: 8px 18px; border-radius: 20px;
+      font-weight: 700; box-shadow: var(--shadow); font-size: 15px;
+    }
+    .qg-score .num { color: var(--chem); font-size: 18px; }
+    .qg-progress {
+      display: flex; gap: 6px;
+    }
+    .qg-dot {
+      width: 12px; height: 12px; border-radius: 50%; background: #ddd;
+      transition: all 0.3s;
+    }
+    .qg-dot.done { background: var(--success); }
+    .qg-dot.wrong { background: var(--danger); }
+    .qg-dot.current { background: var(--chem); transform: scale(1.3); }
+
+    .substance-card {
+      background: white; border-radius: var(--radius);
+      padding: 22px 20px; margin: 14px auto; max-width: 540px;
+      box-shadow: var(--shadow); transition: all 0.3s; text-align: center;
+    }
+    .substance-card .sub-emoji { font-size: 50px; margin-bottom: 8px; }
+    .substance-card .sub-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .substance-card .sub-cond { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+    .substance-card .sub-hint {
+      font-size: 13px; color: var(--text-secondary);
+      margin-top: 6px; padding: 6px 10px; background: var(--bg-soft);
+      border-radius: var(--radius-sm); display: inline-block;
+    }
+    .substance-card.correct { border: 3px solid var(--success); background: rgba(39,174,96,0.05); }
+    .substance-card.wrong { border: 3px solid var(--danger); background: rgba(231,76,60,0.05); animation: shake 0.4s; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .choice-row {
+      display: flex; gap: 14px; justify-content: center;
+      margin-top: 16px; flex-wrap: wrap;
+    }
+    .choice-row .ch-btn {
+      padding: 13px 30px; border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+      font-family: inherit; color: white; min-width: 130px;
+    }
+    .ch-btn.solid-b { background: #5DADE2; }
+    .ch-btn.liquid-b { background: var(--water); }
+    .ch-btn.gas-b { background: #95A5A6; }
+    .ch-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .ch-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .qg-feedback {
+      margin-top: 14px; padding: 12px 14px;
+      border-radius: var(--radius-sm); font-size: 14px;
+      display: none; text-align: left;
+    }
+    .qg-feedback.show { display: block; animation: fadeIn 0.3s; }
+    .qg-feedback.right { background: rgba(39,174,96,0.12); border-left: 4px solid var(--success); }
+    .qg-feedback.wrong-fb { background: rgba(231,76,60,0.12); border-left: 4px solid var(--danger); }
+
+    .qg-result {
+      display: none; padding: 20px; text-align: center;
+    }
+    .qg-result.show { display: block; }
+    .qg-result .stars { font-size: 36px; margin: 10px 0; }
+
+    /* ===== 水循环动画 ===== */
+    .cycle-stage {
+      background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 50%, #98D8C8 100%);
+      border-radius: var(--radius);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cycle-controls {
+      display: flex; justify-content: center; gap: 8px;
+      margin-top: 12px; flex-wrap: wrap;
+    }
+    .cycle-btn {
+      padding: 8px 16px; border: none;
+      background: white; color: var(--text-main);
+      border-radius: 20px; cursor: pointer;
+      font-size: 13px; font-family: inherit; font-weight: 600;
+      box-shadow: var(--shadow); transition: all 0.2s;
+    }
+    .cycle-btn:hover { transform: translateY(-2px); }
+    .cycle-btn.active { background: var(--chem); color: white; }
+
+    .cycle-legend {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .legend-item {
+      background: white;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      text-align: center;
+    }
+    .legend-item .lg-name {
+      font-weight: 700; color: var(--chem);
+      display: block; margin-bottom: 3px;
+    }
+    .legend-item .lg-arrow {
+      font-weight: 700; color: var(--water); display: block;
+    }
+
+    /* ===== 练习题反馈 ===== */
+    .quiz-feedback {
+      margin-top: 12px; padding: 10px 14px;
+      border-radius: var(--radius-sm); font-size: 14px;
+      display: none;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .states-grid, .phase-display, .mol-info-bar, .cycle-legend {
+        grid-template-columns: 1fr;
+      }
+      .ch-btn { min-width: 100px; padding: 11px 16px; font-size: 14px; }
     }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">🧪 物质的三态变化</div>
+<nav class="navbar" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">
+  <div class="navbar-brand">🧪 物质的三态</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
-    <li><a href="index.html">八年级化学目录</a></li>
+    <li><a href="index.html">八年级化学</a></li>
+    <li><a href="../九年级/index.html">九年级化学 →</a></li>
   </ul>
 </nav>
 
 <div class="container">
+
+  <!-- 面包屑 -->
   <div class="breadcrumb">
     <a href="../../index.html">首页</a>
     <span class="separator">/</span>
@@ -64,27 +372,1281 @@
     <span class="separator">/</span>
     <span>八年级</span>
     <span class="separator">/</span>
-    <span>物质的三态变化</span>
+    <span>物质的三态</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🧪</div>
-    <h2>物质的三态变化</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回八年级化学目录</a>
+  <!-- 页面标题 -->
+  <div class="page-hero">
+    <h1>🧪 物质的三态变化</h1>
+    <p>从分子运动的角度，理解固态、液态、气态的本质——化学视角的微观世界</p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- 知识引入 -->
+  <div class="card">
+    <div class="card-title">🔬 什么是物质的三态？</div>
+    <p>自然界中，物质通常以<strong>三种状态</strong>存在：<strong>固态、液态、气态</strong>。同一种物质在不同温度下可以处于不同状态，例如水在0°C以下结成冰（固态），常温下是水（液态），100°C以上变成水蒸气（气态）。</p>
+    <p style="margin-top:8px;">从化学角度看，物质的状态由<strong>分子的排列方式、间距和运动方式</strong>决定。状态变化（如熔化、汽化）<strong>没有生成新物质</strong>，属于<strong>物理变化</strong>，但它是化学研究中理解物质性质的基础。</p>
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 化学视角 vs 物理视角</div>
+      物理学关注状态变化时的<strong>吸热/放热、温度变化</strong>；化学则从<strong>分子运动</strong>的微观角度揭示三态的本质——分子排列越紧密、运动越慢，物质越接近固态；分子越自由、间距越大，物质越接近气态。两种视角互补，共同构成对物质世界的完整认识。
+    </div>
   </div>
+
+  <!-- 三态对比卡片 -->
+  <div class="card">
+    <div class="card-title">📊 三态特征对比</div>
+    <div class="states-grid">
+      <div class="state-card solid">
+        <h4>🧊 固态</h4>
+        <ul>
+          <li>有一定<strong>形状</strong>和<strong>体积</strong></li>
+          <li>分子排列<strong>紧密有序</strong></li>
+          <li>分子间作用力<strong>强</strong></li>
+          <li>分子在固定位置<strong>振动</strong></li>
+          <li>例：冰、铁块、食盐</li>
+        </ul>
+      </div>
+      <div class="state-card liquid">
+        <h4>💧 液态</h4>
+        <ul>
+          <li>没有固定<strong>形状</strong>，有固定<strong>体积</strong></li>
+          <li>分子间距<strong>较大</strong></li>
+          <li>分子间作用力<strong>较弱</strong></li>
+          <li>分子可在小范围内<strong>滑动</strong></li>
+          <li>能<strong>流动</strong>，例：水、酒精、水银</li>
+        </ul>
+      </div>
+      <div class="state-card gas">
+        <h4>☁️ 气态</h4>
+        <ul>
+          <li>没有固定<strong>形状</strong>和<strong>体积</strong></li>
+          <li>分子间距<strong>很大</strong></li>
+          <li>分子间作用力<strong>极弱</strong></li>
+          <li>分子<strong>自由运动</strong>，充满空间</li>
+          <li>例：氧气、水蒸气、二氧化碳</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 知识点：分子运动与状态变化 -->
+  <div class="card">
+    <div class="card-title">⚛️ 分子运动决定物质状态</div>
+    <p><strong>加热</strong>→ 分子获得能量 → 运动加快 → 间距增大 → 固→液→气</p>
+    <p><strong>冷却</strong>→ 分子失去能量 → 运动减慢 → 间距减小 → 气→液→固</p>
+    <div class="warning-box" style="margin-top:12px;">
+      <strong>⚠️ 关键认识：</strong>状态变化的本质是分子运动剧烈程度的改变，<strong>分子本身没有变成其他分子</strong>，所以没有生成新物质，是物理变化。冰、水、水蒸气的分子都是 H₂O，只是分子运动方式不同。
+    </div>
+  </div>
+
+  <!-- ========== 交互1：分子运动模拟器 ========== -->
+  <h2 class="module-title"><span class="emoji">🔬</span>交互1：分子运动模拟器<span class="sub">— 看见分子的舞蹈</span></h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">选择物质状态，调节温度，观察分子的排列和运动方式如何变化。<strong>蓝色圆圈代表水分子（H₂O）</strong>。</p>
+    <div class="sim-stage">
+      <div class="ctrl-row">
+        <span class="label">物质状态：</span>
+        <div class="state-btns">
+          <button class="state-btn solid-btn active" data-state="solid">🧊 固态</button>
+          <button class="state-btn" data-state="liquid">💧 液态</button>
+          <button class="state-btn gas-btn" data-state="gas">☁️ 气态</button>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <span class="label">温度：</span>
+        <div class="slider-wrap">
+          <input type="range" id="tempSlider1" min="0" max="100" value="20">
+          <span class="slider-val" id="tempVal1">20</span>
+        </div>
+      </div>
+
+      <div class="mol-container">
+        <canvas id="molCanvas" width="600" height="320" style="border-radius: var(--radius-sm); background: #fafdff; border: 2px solid #dceaf5;"></canvas>
+      </div>
+
+      <div class="mol-info-bar">
+        <div class="info-chip">
+          <span class="chip-label">分子排列</span>
+          <span class="chip-val solid-c" id="arrangeInfo">整齐排列在格点</span>
+        </div>
+        <div class="info-chip">
+          <span class="chip-label">运动方式</span>
+          <span class="chip-val solid-c" id="motionInfo">原位微小振动</span>
+        </div>
+        <div class="info-chip">
+          <span class="chip-label">分子间距</span>
+          <span class="chip-val solid-c" id="spacingInfo">很小（紧密接触）</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 观察要点</div>
+      <strong>固态</strong>：分子在固定位置振动，排列整齐；<strong>液态</strong>：分子可以相对滑动，整体流动但保持聚集；<strong>气态</strong>：分子自由飞行，充满整个容器。温度升高，分子运动加剧。
+    </div>
+  </div>
+
+  <!-- ========== 交互2：三态变化演示 ========== -->
+  <h2 class="module-title"><span class="emoji">🌡️</span>交互2：水的三态变化演示<span class="sub">— 拖动温度看变化</span></h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">拖动温度滑块（-50°C ~ 150°C），观察水的状态变化。<strong>水的熔点（凝固点）= 0°C，沸点 = 100°C</strong>。在熔点和沸点附近，会出现两态共存的过渡阶段。</p>
+    <div class="sim-stage">
+      <div class="ctrl-row">
+        <span class="label">温度：</span>
+        <div class="slider-wrap">
+          <input type="range" id="tempSlider2" min="-50" max="150" value="25" step="1">
+          <span class="slider-val" id="tempVal2">25°C</span>
+        </div>
+      </div>
+
+      <div class="phase-display">
+        <div class="phase-svg-wrap">
+          <canvas id="phaseCanvas" width="260" height="320" style="border-radius: var(--radius-sm); background: #fafdff; border: 2px solid #dceaf5;"></canvas>
+        </div>
+        <div class="phase-side">
+          <div class="phase-state-label liquid" id="phaseStateLabel">液态（水）</div>
+          <div class="phase-feature" id="phaseFeature">
+            <strong>分子特征：</strong><br>
+            水分子在较小范围内滑动，能流动但保持一定体积。分子间距比固态略大，分子间仍存在较强作用力。
+          </div>
+          <div class="phase-feature">
+            <strong>熔点：</strong>0°C（冰↔水）<br>
+            <strong>沸点：</strong>100°C（水↔水蒸气）<br>
+            <strong>分子式：</strong>H₂O（三态相同，分子不变）
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 物态变化的本质</div>
+      状态变化时，水分子（H₂O）<strong>本身没有改变</strong>，只是分子运动剧烈程度和间距发生变化，所以是<strong>物理变化</strong>。0°C 时冰和水共存（熔化/凝固），100°C 时水和水蒸气共存（汽化/液化）。
+    </div>
+  </div>
+
+  <!-- ========== 交互3：物质鉴别游戏 ========== -->
+  <h2 class="module-title"><span class="emoji">🎮</span>交互3：物质状态鉴别游戏<span class="sub">— 你能判断对吗？</span></h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">根据物质的<strong>熔点和沸点</strong>，判断它在给定温度下是固态、液态还是气态。共5题，看看你能得几分！</p>
+    <div class="quiz-game" id="quizGameStage">
+      <div class="qg-header">
+        <div class="qg-score">得分：<span class="num" id="qgScore">0</span> / 5</div>
+        <div class="qg-progress" id="qgProgress"></div>
+        <div class="qg-score">第 <span class="num" id="qgQNum">1</span> / 5 题</div>
+      </div>
+
+      <div id="qgPlayArea">
+        <div class="substance-card" id="subCard">
+          <div class="sub-emoji" id="subEmoji">🔩</div>
+          <div class="sub-name" id="subName">铁块</div>
+          <div class="sub-cond" id="subCond">温度：0°C</div>
+          <div class="sub-hint" id="subHint">铁的熔点 1538°C，沸点 2861°C</div>
+        </div>
+        <div class="choice-row">
+          <button class="ch-btn solid-b" data-choice="solid">🧊 固态</button>
+          <button class="ch-btn liquid-b" data-choice="liquid">💧 液态</button>
+          <button class="ch-btn gas-b" data-choice="gas">☁️ 气态</button>
+        </div>
+        <div class="qg-feedback" id="qgFeedback"></div>
+        <div style="text-align:center; margin-top:14px;">
+          <button class="btn btn-outline" id="qgNextBtn" style="display:none;">下一题 →</button>
+        </div>
+      </div>
+
+      <div class="qg-result" id="qgResult">
+        <div style="font-size:22px; font-weight:700;">🎉 挑战完成！</div>
+        <div class="stars" id="qgStars">⭐⭐⭐</div>
+        <div style="font-size:18px; margin:8px 0;">你的得分：<strong id="qgFinalScore" style="color:var(--chem);font-size:24px;">0</strong> / 5</div>
+        <div id="qgComment" style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;"></div>
+        <button class="btn btn-primary" id="qgRestartBtn">🔄 再玩一次</button>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 判断方法</div>
+      当温度 < 熔点：固态；熔点 ≤ 温度 < 沸点：液态；温度 ≥ 沸点：气态。常见数据：水（熔点0°C/沸点100°C）、酒精（熔点-114°C/沸点78°C）、水银（熔点-39°C/沸点357°C）、氧气（熔点-218°C/沸点-183°C）、铁（熔点1538°C/沸点2861°C）。
+    </div>
+  </div>
+
+  <!-- ========== 交互4：水的三态循环 ========== -->
+  <h2 class="module-title"><span class="emoji">🌊</span>交互4：水的三态循环<span class="sub">— 自然界中的物态变化</span></h2>
+  <div class="card">
+    <p style="margin-bottom:12px;">观察自然界中水的循环：太阳照射下海水<strong>蒸发</strong>（液→气），水蒸气在空中<strong>凝结</strong>成云（气→液），云中水滴变大后<strong>降水</strong>落到地面，最终汇流入海。整个过程涉及多个物态变化。</p>
+    <div class="cycle-stage">
+      <canvas id="cycleCanvas" width="700" height="340" style="display:block; width:100%; border-radius: var(--radius-sm); background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 60%, #98D8C8 100%);"></canvas>
+      <div class="cycle-controls">
+        <button class="cycle-btn" id="cyclePause">⏸ 暂停</button>
+        <button class="cycle-btn active" id="cycleNormal">▶ 正常</button>
+        <button class="cycle-btn" id="cycleFast">⏩ 加速</button>
+        <button class="cycle-btn" id="cycleSlow">⏪ 减速</button>
+      </div>
+    </div>
+
+    <div class="cycle-legend">
+      <div class="legend-item">
+        <span class="lg-name">① 蒸发</span>
+        <span class="lg-arrow">液态 → 气态</span>
+        海水吸热，水分子运动加快，挣脱液面束缚成为水蒸气
+      </div>
+      <div class="legend-item">
+        <span class="lg-name">② 凝结</span>
+        <span class="lg-arrow">气态 → 液态</span>
+        水蒸气遇冷，分子运动减慢，聚集成小水滴形成云
+      </div>
+      <div class="legend-item">
+        <span class="lg-name">③ 降水</span>
+        <span class="lg-arrow">液态 → 液态/固态</span>
+        云中水滴变大落下，形成雨（液态）；高空低温时形成雪（固态）
+      </div>
+      <div class="legend-item">
+        <span class="lg-name">④ 汇流</span>
+        <span class="lg-arrow">液态 → 液态</span>
+        雨水汇入河流，最终回到海洋，循环往复
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <div class="tip-title">💡 干冰的特殊之处</div>
+      <strong>干冰</strong>是固态的二氧化碳（CO₂）。在常压下，干冰不经过液态，直接由固态变成气态，这种现象叫<strong>升华</strong>（固态→气态，物理变化）。相反过程叫<strong>凝华</strong>（气态→固态）。
+    </div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="module-title"><span class="emoji">✏️</span>课堂练习</h2>
+
+  <div class="quiz-question" id="quiz1">
+    <div class="question-text">1. 常温常压下，下列物质处于气态的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 水银（熔点-39°C，沸点357°C）</div>
+    <div class="quiz-option" data-idx="1">B. 氧气（熔点-218°C，沸点-183°C）</div>
+    <div class="quiz-option" data-idx="2">C. 铁（熔点1538°C，沸点2861°C）</div>
+    <div class="quiz-option" data-idx="3">D. 酒精（熔点-114°C，沸点78°C）</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz2">
+    <div class="question-text">2. 关于固态物质中分子的运动，下列说法正确的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 分子自由运动，充满整个容器</div>
+    <div class="quiz-option" data-idx="1">B. 分子在较小范围内滑动，能流动</div>
+    <div class="quiz-option" data-idx="2">C. 分子在固定位置振动，排列紧密有序</div>
+    <div class="quiz-option" data-idx="3">D. 分子间没有作用力，间距很大</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-question" id="quiz3">
+    <div class="question-text">3. 水结成冰的过程中，发生的是哪种物态变化？该变化的本质是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 凝固；水分子变成了其他分子（化学变化）</div>
+    <div class="quiz-option" data-idx="1">B. 凝固；水分子本身不变，只是运动减慢、间距减小（物理变化）</div>
+    <div class="quiz-option" data-idx="2">C. 液化；水分子运动加快（物理变化）</div>
+    <div class="quiz-option" data-idx="3">D. 升华；水分子直接变成气体（化学变化）</div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- 学科交叉 -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉</div>
+    <p>· ← <a href="01-化学是什么.html">化学·八年级·化学是什么</a>（上一章：化学研究物质的变化和性质）</p>
+    <p>· → <a href="03-身边的化学物质.html">化学·八年级·身边的化学物质</a>（下一章：继续探索身边的化学物质）</p>
+    <p>· ↔ <a href="../../物理/八年级/03-物态变化.html">物理·八年级·物态变化</a>（物理视角的物态变化：从温度、吸放热角度理解，与本页化学视角的分子运动互补）</p>
+  </div>
+
+  <!-- 章节导航 -->
+  <div class="step-nav">
+    <a href="01-化学是什么.html" class="btn btn-outline">← 上一章：化学是什么</a>
+    <span style="color: var(--text-secondary); font-size: 14px;">📖 第二章 · 物质的三态</span>
+    <a href="03-身边的化学物质.html" class="btn btn-primary">下一章：身边的化学物质 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ========================================================
+ *  交互1：分子运动模拟器
+ * ====================================================== */
+const molCanvas = document.getElementById('molCanvas');
+const molCtx = molCanvas.getContext('2d');
+const MOL_W = molCanvas.width;
+const MOL_H = molCanvas.height;
+const MOL_R = 8; // 分子半径
+
+let molState = 'solid';       // solid | liquid | gas
+let molTemp = 20;             // 0~100
+let molecules = [];
+
+// 初始化分子（按状态生成）
+function initMolecules() {
+  molecules = [];
+  if (molState === 'solid') {
+    // 整齐排列在格点上（7列×4行 = 28个）
+    const cols = 7, rows = 4;
+    const startX = (MOL_W - (cols - 1) * 60) / 2;
+    const startY = (MOL_H - (rows - 1) * 60) / 2;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        molecules.push({
+          baseX: startX + c * 60,
+          baseY: startY + r * 60,
+          x: startX + c * 60,
+          y: startY + r * 60,
+          vx: 0, vy: 0
+        });
+      }
+    }
+  } else if (molState === 'liquid') {
+    // 较紧密分布在中下部（30个）
+    for (let i = 0; i < 32; i++) {
+      const x = 60 + Math.random() * (MOL_W - 120);
+      const y = 80 + Math.random() * (MOL_H - 120);
+      molecules.push({
+        x: x, y: y,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5
+      });
+    }
+  } else {
+    // 气态：少量分子，随机分布（18个）
+    for (let i = 0; i < 18; i++) {
+      molecules.push({
+        x: Math.random() * (MOL_W - 40) + 20,
+        y: Math.random() * (MOL_H - 40) + 20,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3
+      });
+    }
+  }
+}
+
+// 温度因子（0~100 → 0.3~2.5）
+function tempFactor() {
+  return 0.3 + (molTemp / 100) * 2.2;
+}
+
+function updateMolecules() {
+  const tf = tempFactor();
+  if (molState === 'solid') {
+    // 固态：在格点附近振动
+    molecules.forEach(m => {
+      const amp = 2 + tf * 4; // 振幅随温度增大
+      m.x = m.baseX + (Math.random() - 0.5) * amp;
+      m.y = m.baseY + (Math.random() - 0.5) * amp;
+    });
+  } else if (molState === 'liquid') {
+    // 液态：分子可滑动，碰撞，但整体聚集在容器中下部
+    molecules.forEach(m => {
+      m.x += m.vx * tf;
+      m.y += m.vy * tf;
+      // 简单边界（容器内）
+      if (m.x < 20) { m.x = 20; m.vx *= -1; }
+      if (m.x > MOL_W - 20) { m.x = MOL_W - 20; m.vx *= -1; }
+      if (m.y < 50) { m.y = 50; m.vy *= -1; }
+      if (m.y > MOL_H - 20) { m.y = MOL_H - 20; m.vy *= -1; }
+      // 随机扰动
+      m.vx += (Math.random() - 0.5) * 0.3 * tf;
+      m.vy += (Math.random() - 0.5) * 0.3 * tf;
+      // 限速
+      const sp = Math.hypot(m.vx, m.vy);
+      const maxSp = 1.5 + tf;
+      if (sp > maxSp) {
+        m.vx = m.vx / sp * maxSp;
+        m.vy = m.vy / sp * maxSp;
+      }
+    });
+    // 简单的分子间排斥（避免重叠，模拟液体内聚力）
+    for (let i = 0; i < molecules.length; i++) {
+      for (let j = i + 1; j < molecules.length; j++) {
+        const dx = molecules[j].x - molecules[i].x;
+        const dy = molecules[j].y - molecules[i].y;
+        const d = Math.hypot(dx, dy);
+        if (d < 18 && d > 0) {
+          const push = (18 - d) * 0.1;
+          molecules[i].x -= dx / d * push;
+          molecules[i].y -= dy / d * push;
+          molecules[j].x += dx / d * push;
+          molecules[j].y += dy / d * push;
+        }
+      }
+    }
+  } else {
+    // 气态：自由运动，充满容器
+    molecules.forEach(m => {
+      m.x += m.vx * tf;
+      m.y += m.vy * tf;
+      if (m.x < 15) { m.x = 15; m.vx *= -1; }
+      if (m.x > MOL_W - 15) { m.x = MOL_W - 15; m.vx *= -1; }
+      if (m.y < 15) { m.y = 15; m.vy *= -1; }
+      if (m.y > MOL_H - 15) { m.y = MOL_H - 15; m.vy *= -1; }
+      // 随机扰动较大
+      m.vx += (Math.random() - 0.5) * 0.5 * tf;
+      m.vy += (Math.random() - 0.5) * 0.5 * tf;
+      const sp = Math.hypot(m.vx, m.vy);
+      const maxSp = 2.5 + tf * 1.5;
+      if (sp > maxSp) {
+        m.vx = m.vx / sp * maxSp;
+        m.vy = m.vy / sp * maxSp;
+      }
+    });
+  }
+}
+
+function drawMolecules() {
+  molCtx.clearRect(0, 0, MOL_W, MOL_H);
+  // 容器边框
+  molCtx.strokeStyle = '#b0bec5';
+  molCtx.lineWidth = 2;
+  molCtx.strokeRect(8, 8, MOL_W - 16, MOL_H - 16);
+
+  // 分子颜色随状态变化
+  let color = '#3498DB';
+  if (molState === 'solid') color = '#2E86C1';
+  else if (molState === 'gas') color = '#90A4AE';
+
+  molecules.forEach(m => {
+    // 分子主体（带渐变，模拟立体感）
+    const grad = molCtx.createRadialGradient(m.x - 2, m.y - 2, 1, m.x, m.y, MOL_R);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.3, color);
+    grad.addColorStop(1, molState === 'solid' ? '#1A5276' : (molState === 'liquid' ? '#2874A6' : '#78909C'));
+    molCtx.beginPath();
+    molCtx.arc(m.x, m.y, MOL_R, 0, Math.PI * 2);
+    molCtx.fillStyle = grad;
+    molCtx.fill();
+    molCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+    molCtx.lineWidth = 1;
+    molCtx.stroke();
+  });
+
+  // 固态时绘制格点连线（晶格示意）
+  if (molState === 'solid') {
+    molCtx.strokeStyle = 'rgba(46,134,193,0.2)';
+    molCtx.lineWidth = 1;
+    for (let i = 0; i < molecules.length; i++) {
+      for (let j = i + 1; j < molecules.length; j++) {
+        const dx = molecules[j].baseX - molecules[i].baseX;
+        const dy = molecules[j].baseY - molecules[i].baseY;
+        if (Math.abs(dx) <= 61 && Math.abs(dy) <= 61 && Math.hypot(dx, dy) < 85) {
+          molCtx.beginPath();
+          molCtx.moveTo(molecules[i].x, molecules[i].y);
+          molCtx.lineTo(molecules[j].x, molecules[j].y);
+          molCtx.stroke();
+        }
+      }
+    }
+  }
+}
+
+function updateMolInfo() {
+  const arrange = document.getElementById('arrangeInfo');
+  const motion = document.getElementById('motionInfo');
+  const spacing = document.getElementById('spacingInfo');
+  if (molState === 'solid') {
+    arrange.textContent = '整齐排列在格点';
+    motion.textContent = '原位微小振动';
+    spacing.textContent = '很小（紧密接触）';
+    arrange.className = 'chip-val solid-c';
+    motion.className = 'chip-val solid-c';
+    spacing.className = 'chip-val solid-c';
+  } else if (molState === 'liquid') {
+    arrange.textContent = '较紧密但无序';
+    motion.textContent = '可滑动，整体流动';
+    spacing.textContent = '较小（保持接触）';
+    arrange.className = 'chip-val liquid-c';
+    motion.className = 'chip-val liquid-c';
+    spacing.className = 'chip-val liquid-c';
+  } else {
+    arrange.textContent = '随机分布，充满容器';
+    motion.textContent = '自由飞行';
+    spacing.textContent = '很大（远大于分子）';
+    arrange.className = 'chip-val gas-c';
+    motion.className = 'chip-val gas-c';
+    spacing.className = 'chip-val gas-c';
+  }
+}
+
+function molLoop() {
+  updateMolecules();
+  drawMolecules();
+  requestAnimationFrame(molLoop);
+}
+
+// 状态按钮
+document.querySelectorAll('.state-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    molState = btn.dataset.state;
+    initMolecules();
+    updateMolInfo();
+  });
+});
+
+// 温度滑块
+const tempSlider1 = document.getElementById('tempSlider1');
+const tempVal1 = document.getElementById('tempVal1');
+tempSlider1.addEventListener('input', () => {
+  molTemp = parseInt(tempSlider1.value);
+  tempVal1.textContent = molTemp;
+});
+
+initMolecules();
+updateMolInfo();
+molLoop();
+
+
+/* ========================================================
+ *  交互2：水的三态变化演示
+ * ====================================================== */
+const phaseCanvas = document.getElementById('phaseCanvas');
+const phaseCtx = phaseCanvas.getContext('2d');
+const PH_W = phaseCanvas.width;
+const PH_H = phaseCanvas.height;
+
+let phaseTemp = 25;
+let phaseMolecules = [];
+
+function initPhaseMolecules() {
+  phaseMolecules = [];
+  // 根据温度判断状态
+  // < 0 : 固态（整齐排列）
+  // 0~100: 液态（流动）
+  // > 100: 气态（自由）
+  // 过渡（-2~2, 98~102）：混合
+  if (phaseTemp < 0) {
+    const cols = 5, rows = 6;
+    const startX = (PH_W - (cols - 1) * 38) / 2;
+    const startY = (PH_H - (rows - 1) * 38) / 2;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        phaseMolecules.push({
+          baseX: startX + c * 38,
+          baseY: startY + r * 38,
+          x: startX + c * 38,
+          y: startY + r * 38,
+          type: 'solid'
+        });
+      }
+    }
+  } else if (phaseTemp <= 100) {
+    for (let i = 0; i < 30; i++) {
+      phaseMolecules.push({
+        x: 30 + Math.random() * (PH_W - 60),
+        y: 60 + Math.random() * (PH_H - 90),
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        type: 'liquid'
+      });
+    }
+  } else {
+    for (let i = 0; i < 16; i++) {
+      phaseMolecules.push({
+        x: Math.random() * (PH_W - 30) + 15,
+        y: Math.random() * (PH_H - 30) + 15,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3,
+        type: 'gas'
+      });
+    }
+  }
+}
+
+function getPhaseState() {
+  if (phaseTemp < 0) return 'solid';
+  if (phaseTemp < 0.5) return 'mixed-ice';      // 冰水混合
+  if (phaseTemp < 100) return 'liquid';
+  if (phaseTemp < 100.5) return 'mixed-vapor';   // 水气混合
+  return 'gas';
+}
+
+function updatePhaseMolecules() {
+  const tf = 0.3 + ((phaseTemp + 50) / 200) * 2.2;
+  const state = getPhaseState();
+
+  if (state === 'solid') {
+    phaseMolecules.forEach(m => {
+      const amp = 1 + tf * 2;
+      m.x = m.baseX + (Math.random() - 0.5) * amp;
+      m.y = m.baseY + (Math.random() - 0.5) * amp;
+    });
+  } else if (state === 'liquid') {
+    phaseMolecules.forEach(m => {
+      m.x += m.vx * tf * 0.8;
+      m.y += m.vy * tf * 0.8;
+      if (m.x < 15) { m.x = 15; m.vx *= -1; }
+      if (m.x > PH_W - 15) { m.x = PH_W - 15; m.vx *= -1; }
+      if (m.y < 40) { m.y = 40; m.vy *= -1; }
+      if (m.y > PH_H - 15) { m.y = PH_H - 15; m.vy *= -1; }
+      m.vx += (Math.random() - 0.5) * 0.2;
+      m.vy += (Math.random() - 0.5) * 0.2;
+      const sp = Math.hypot(m.vx, m.vy);
+      if (sp > 1.8) { m.vx = m.vx / sp * 1.8; m.vy = m.vy / sp * 1.8; }
+    });
+  } else if (state === 'gas') {
+    phaseMolecules.forEach(m => {
+      m.x += m.vx * tf;
+      m.y += m.vy * tf;
+      if (m.x < 12) { m.x = 12; m.vx *= -1; }
+      if (m.x > PH_W - 12) { m.x = PH_W - 12; m.vx *= -1; }
+      if (m.y < 12) { m.y = 12; m.vy *= -1; }
+      if (m.y > PH_H - 12) { m.y = PH_H - 12; m.vy *= -1; }
+      m.vx += (Math.random() - 0.5) * 0.4;
+      m.vy += (Math.random() - 0.5) * 0.4;
+      const sp = Math.hypot(m.vx, m.vy);
+      if (sp > 3) { m.vx = m.vx / sp * 3; m.vy = m.vy / sp * 3; }
+    });
+  } else {
+    // 混合态：分子部分按各自规则运动
+    phaseMolecules.forEach(m => {
+      if (m.type === 'solid') {
+        const amp = 1 + tf * 2;
+        m.x = m.baseX + (Math.random() - 0.5) * amp;
+        m.y = m.baseY + (Math.random() - 0.5) * amp;
+      } else if (m.type === 'liquid') {
+        m.x += m.vx * tf * 0.8;
+        m.y += m.vy * tf * 0.8;
+        if (m.x < 15) { m.x = 15; m.vx *= -1; }
+        if (m.x > PH_W - 15) { m.x = PH_W - 15; m.vx *= -1; }
+        if (m.y < 40) { m.y = 40; m.vy *= -1; }
+        if (m.y > PH_H - 15) { m.y = PH_H - 15; m.vy *= -1; }
+        m.vx += (Math.random() - 0.5) * 0.2;
+        m.vy += (Math.random() - 0.5) * 0.2;
+      } else {
+        m.x += m.vx * tf;
+        m.y += m.vy * tf;
+        if (m.x < 12) { m.x = 12; m.vx *= -1; }
+        if (m.x > PH_W - 12) { m.x = PH_W - 12; m.vx *= -1; }
+        if (m.y < 12) { m.y = 12; m.vy *= -1; }
+        if (m.y > PH_H - 12) { m.y = PH_H - 12; m.vy *= -1; }
+      }
+    });
+  }
+}
+
+function drawPhase() {
+  phaseCtx.clearRect(0, 0, PH_W, PH_H);
+  // 容器
+  phaseCtx.strokeStyle = '#b0bec5';
+  phaseCtx.lineWidth = 2;
+  phaseCtx.strokeRect(6, 6, PH_W - 12, PH_H - 12);
+
+  const state = getPhaseState();
+  // 背景色（根据状态）
+  let bgColor = 'rgba(255,255,255,0)';
+  if (state === 'solid') bgColor = 'rgba(174,214,241,0.15)';
+  else if (state === 'liquid' || state === 'mixed-ice') bgColor = 'rgba(52,152,219,0.08)';
+  else if (state === 'gas' || state === 'mixed-vapor') bgColor = 'rgba(189,196,199,0.1)';
+  phaseCtx.fillStyle = bgColor;
+  phaseCtx.fillRect(8, 8, PH_W - 16, PH_H - 16);
+
+  // 分子
+  phaseMolecules.forEach(m => {
+    let color = '#3498DB';
+    if (m.type === 'solid') color = '#5DADE2';
+    else if (m.type === 'gas') color = '#B0BEC5';
+    const grad = phaseCtx.createRadialGradient(m.x - 1.5, m.y - 1.5, 0.5, m.x, m.y, 6);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.4, color);
+    grad.addColorStop(1, m.type === 'solid' ? '#2E86C1' : (m.type === 'liquid' ? '#2874A6' : '#90A4AE'));
+    phaseCtx.beginPath();
+    phaseCtx.arc(m.x, m.y, 6, 0, Math.PI * 2);
+    phaseCtx.fillStyle = grad;
+    phaseCtx.fill();
+  });
+
+  // 温度刻度（侧边）
+  phaseCtx.fillStyle = '#7F8C8D';
+  phaseCtx.font = '11px sans-serif';
+  phaseCtx.fillText('温度 ' + phaseTemp + '°C', 10, PH_H - 8);
+}
+
+function updatePhaseInfo() {
+  const state = getPhaseState();
+  const label = document.getElementById('phaseStateLabel');
+  const feature = document.getElementById('phaseFeature');
+  if (state === 'solid') {
+    label.textContent = '固态（冰）';
+    label.className = 'phase-state-label solid';
+    feature.innerHTML = '<strong>分子特征：</strong><br>水分子在固定位置振动，排列整齐紧密。分子间作用力强，有确定的形状和体积。<br><strong>状态：</strong>温度低于熔点 0°C，水以固态冰的形式存在。';
+  } else if (state === 'mixed-ice') {
+    label.textContent = '冰水混合（熔化/凝固）';
+    label.className = 'phase-state-label mixed';
+    feature.innerHTML = '<strong>分子特征：</strong><br>部分分子挣脱束缚开始滑动（液态），部分仍在原位振动（固态）。此时吸收的热量用于打破晶格，温度保持 0°C 不变。<br><strong>状态：</strong>到达熔点 0°C，冰和水共存。';
+  } else if (state === 'liquid') {
+    label.textContent = '液态（水）';
+    label.className = 'phase-state-label liquid';
+    feature.innerHTML = '<strong>分子特征：</strong><br>水分子在较小范围内滑动，能流动但保持一定体积。分子间仍存在较强作用力。<br><strong>状态：</strong>温度在熔点 0°C 与沸点 100°C 之间，水以液态存在。';
+  } else if (state === 'mixed-vapor') {
+    label.textContent = '水气混合（汽化/液化）';
+    label.className = 'phase-state-label mixed2';
+    feature.innerHTML = '<strong>分子特征：</strong><br>部分分子运动剧烈，挣脱液面成为自由水蒸气（气态），部分仍在液态中滑动。温度保持 100°C 不变。<br><strong>状态：</strong>到达沸点 100°C，水和水蒸气共存。';
+  } else {
+    label.textContent = '气态（水蒸气）';
+    label.className = 'phase-state-label gas';
+    feature.innerHTML = '<strong>分子特征：</strong><br>水分子自由运动，充满整个容器，分子间距很大，分子间作用力极弱。<br><strong>状态：</strong>温度高于沸点 100°C，水以气态水蒸气存在。';
+  }
+}
+
+function phaseLoop() {
+  updatePhaseMolecules();
+  drawPhase();
+  requestAnimationFrame(phaseLoop);
+}
+
+const tempSlider2 = document.getElementById('tempSlider2');
+const tempVal2 = document.getElementById('tempVal2');
+tempSlider2.addEventListener('input', () => {
+  const newTemp = parseInt(tempSlider2.value);
+  // 检测状态是否改变，若改变则重新初始化分子
+  const oldState = getPhaseState();
+  phaseTemp = newTemp;
+  tempVal2.textContent = phaseTemp + '°C';
+  const newState = getPhaseState();
+  if (oldState !== newState) {
+    initPhaseMolecules();
+    // 混合态特殊处理：添加两种类型的分子
+    if (newState === 'mixed-ice') {
+      phaseMolecules = [];
+      const cols = 4, rows = 3;
+      const startX = (PH_W - (cols - 1) * 40) / 2;
+      const startY = 60;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          phaseMolecules.push({
+            baseX: startX + c * 40, baseY: startY + r * 40,
+            x: startX + c * 40, y: startY + r * 40, type: 'solid'
+          });
+        }
+      }
+      for (let i = 0; i < 14; i++) {
+        phaseMolecules.push({
+          x: 30 + Math.random() * (PH_W - 60),
+          y: 180 + Math.random() * 100,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: (Math.random() - 0.5) * 1.2,
+          type: 'liquid'
+        });
+      }
+    } else if (newState === 'mixed-vapor') {
+      phaseMolecules = [];
+      for (let i = 0; i < 20; i++) {
+        phaseMolecules.push({
+          x: 30 + Math.random() * (PH_W - 60),
+          y: 150 + Math.random() * 130,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: (Math.random() - 0.5) * 1.2,
+          type: 'liquid'
+        });
+      }
+      for (let i = 0; i < 10; i++) {
+        phaseMolecules.push({
+          x: 20 + Math.random() * (PH_W - 40),
+          y: 20 + Math.random() * 110,
+          vx: (Math.random() - 0.5) * 2.5,
+          vy: (Math.random() - 0.5) * 2.5,
+          type: 'gas'
+        });
+      }
+    }
+  }
+  updatePhaseInfo();
+});
+
+initPhaseMolecules();
+updatePhaseInfo();
+phaseLoop();
+
+
+/* ========================================================
+ *  交互3：物质状态鉴别游戏
+ * ====================================================== */
+const substances = [
+  {
+    emoji: '🔩', name: '铁块', cond: '温度：0°C',
+    hint: '铁的熔点 1538°C，沸点 2861°C',
+    answer: 'solid',
+    explain: '铁的熔点是 1538°C，0°C 远低于熔点，所以铁在 0°C 是固态。'
+  },
+  {
+    emoji: '🍶', name: '酒精', cond: '温度：100°C',
+    hint: '酒精的熔点 -114°C，沸点 78°C',
+    answer: 'gas',
+    explain: '酒精的沸点是 78°C，100°C 高于沸点，所以酒精在 100°C 已经汽化成气态。'
+  },
+  {
+    emoji: '🧊', name: '水', cond: '温度：-50°C',
+    hint: '水的熔点 0°C，沸点 100°C',
+    answer: 'solid',
+    explain: '水的熔点是 0°C，-50°C 低于熔点，所以水在 -50°C 是固态（冰）。'
+  },
+  {
+    emoji: '💨', name: '氧气', cond: '温度：常温（25°C）',
+    hint: '氧气的熔点 -218°C，沸点 -183°C',
+    answer: 'gas',
+    explain: '氧气的沸点是 -183°C，25°C 远高于沸点，所以常温下氧气是气态。'
+  },
+  {
+    emoji: '🌡️', name: '水银', cond: '温度：常温（25°C）',
+    hint: '水银的熔点 -39°C，沸点 357°C',
+    answer: 'liquid',
+    explain: '水银的熔点 -39°C、沸点 357°C，25°C 介于两者之间，所以常温下水银是液态。这也是温度计用水银的原因。'
+  }
+];
+
+const qgState = {
+  questions: substances,
+  current: 0,
+  score: 0,
+  answered: false,
+  results: []
+};
+
+function renderQgDots() {
+  const wrap = document.getElementById('qgProgress');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'qg-dot';
+    if (qgState.results[i] === 'done') dot.classList.add('done');
+    else if (qgState.results[i] === 'wrong') dot.classList.add('wrong');
+    else if (i === qgState.current) dot.classList.add('current');
+    wrap.appendChild(dot);
+  }
+}
+
+function loadQgQuestion() {
+  if (qgState.current >= 5) {
+    showQgResult();
+    return;
+  }
+  const q = qgState.questions[qgState.current];
+  document.getElementById('subEmoji').textContent = q.emoji;
+  document.getElementById('subName').textContent = q.name;
+  document.getElementById('subCond').textContent = q.cond;
+  document.getElementById('subHint').textContent = q.hint;
+  document.getElementById('qgQNum').textContent = qgState.current + 1;
+  document.getElementById('subCard').className = 'substance-card';
+  document.querySelectorAll('.ch-btn').forEach(b => b.disabled = false);
+  document.getElementById('qgFeedback').className = 'qg-feedback';
+  document.getElementById('qgNextBtn').style.display = 'none';
+  qgState.answered = false;
+  renderQgDots();
+}
+
+function answerQg(choice) {
+  if (qgState.answered) return;
+  qgState.answered = true;
+  const q = qgState.questions[qgState.current];
+  const card = document.getElementById('subCard');
+  const fb = document.getElementById('qgFeedback');
+  const isRight = choice === q.answer;
+
+  document.querySelectorAll('.ch-btn').forEach(b => b.disabled = true);
+
+  if (isRight) {
+    card.classList.add('correct');
+    qgState.score++;
+    qgState.results[qgState.current] = 'done';
+    fb.className = 'qg-feedback show right';
+    fb.innerHTML = '<strong style="color:#27AE60;">✓ 答对了！</strong> ' + q.explain;
+  } else {
+    card.classList.add('wrong');
+    qgState.results[qgState.current] = 'wrong';
+    const stateMap = { solid: '固态', liquid: '液态', gas: '气态' };
+    fb.className = 'qg-feedback show wrong-fb';
+    fb.innerHTML = '<strong style="color:#E74C3C;">✗ 答错了</strong> 正确答案是<strong>' + stateMap[q.answer] + '</strong>。' + q.explain;
+  }
+  document.getElementById('qgScore').textContent = qgState.score;
+  document.getElementById('qgNextBtn').style.display = 'inline-block';
+  renderQgDots();
+}
+
+function showQgResult() {
+  document.getElementById('qgPlayArea').style.display = 'none';
+  const result = document.getElementById('qgResult');
+  result.classList.add('show');
+  document.getElementById('qgFinalScore').textContent = qgState.score;
+  const stars = document.getElementById('qgStars');
+  const comment = document.getElementById('qgComment');
+  if (qgState.score >= 5) {
+    stars.textContent = '⭐⭐⭐';
+    comment.textContent = '太棒了！你已经完全掌握了用熔点、沸点判断物质状态的方法！';
+  } else if (qgState.score >= 3) {
+    stars.textContent = '⭐⭐';
+    comment.textContent = '不错哦！记住：温度<熔点是固态，熔点≤温度<沸点是液态，温度≥沸点是气态。';
+  } else {
+    stars.textContent = '⭐';
+    comment.textContent = '别灰心，回顾一下熔点和沸点的概念，再挑战一次吧。';
+  }
+}
+
+function startQgGame() {
+  qgState.current = 0;
+  qgState.score = 0;
+  qgState.results = [];
+  document.getElementById('qgScore').textContent = '0';
+  document.getElementById('qgPlayArea').style.display = 'block';
+  document.getElementById('qgResult').classList.remove('show');
+  loadQgQuestion();
+}
+
+document.querySelectorAll('.ch-btn').forEach(btn => {
+  btn.addEventListener('click', () => answerQg(btn.dataset.choice));
+});
+document.getElementById('qgNextBtn').addEventListener('click', () => {
+  qgState.current++;
+  loadQgQuestion();
+});
+document.getElementById('qgRestartBtn').addEventListener('click', startQgGame);
+
+startQgGame();
+
+
+/* ========================================================
+ *  交互4：水的三态循环
+ * ====================================================== */
+const cycleCanvas = document.getElementById('cycleCanvas');
+const cycleCtx = cycleCanvas.getContext('2d');
+const CY_W = cycleCanvas.width;
+const CY_H = cycleCanvas.height;
+
+let cycleSpeed = 1;      // 0.5 减速，1 正常，2 加速
+let cyclePaused = false;
+let cycleT = 0;          // 动画时间
+
+// 蒸发粒子（水分子从海面上升）
+let vaporParticles = [];
+// 云中水滴
+let cloudDrops = [];
+// 雨滴
+let rainDrops = [];
+// 河流粒子
+let riverParticles = [];
+
+function initCycleScene() {
+  vaporParticles = [];
+  cloudDrops = [];
+  rainDrops = [];
+  riverParticles = [];
+  // 河流粒子（沿河流动）
+  for (let i = 0; i < 8; i++) {
+    riverParticles.push({
+      x: 100 + Math.random() * 200,
+      y: 290 + Math.random() * 12,
+      speed: 0.5 + Math.random() * 0.5
+    });
+  }
+}
+
+function spawnVapor() {
+  // 从海面（右下）生成水蒸气粒子
+  if (Math.random() < 0.15 * cycleSpeed) {
+    vaporParticles.push({
+      x: 480 + Math.random() * 180,
+      y: 285,
+      vx: -0.3 - Math.random() * 0.3,
+      vy: -0.6 - Math.random() * 0.4,
+      r: 2 + Math.random() * 2,
+      life: 1,
+      targetY: 60 + Math.random() * 60
+    });
+  }
+}
+
+function spawnRain() {
+  // 从云生成雨滴
+  if (cloudDrops.length > 12 && Math.random() < 0.2 * cycleSpeed) {
+    const cloud = { x: 180 + Math.random() * 150, y: 90 };
+    rainDrops.push({
+      x: cloud.x + Math.random() * 60,
+      y: cloud.y + 20,
+      vy: 2 + Math.random() * 1.5,
+      life: 1
+    });
+  }
+}
+
+function updateCycle() {
+  if (cyclePaused) return;
+  cycleT += 0.016 * cycleSpeed;
+
+  // 蒸发粒子上升
+  spawnVapor();
+  vaporParticles.forEach(p => {
+    p.x += p.vx * cycleSpeed;
+    p.y += p.vy * cycleSpeed;
+    // 上升到云层高度，变成云中水滴
+    if (p.y <= p.targetY) {
+      cloudDrops.push({
+        x: p.x + (Math.random() - 0.5) * 20,
+        y: p.y + (Math.random() - 0.5) * 15,
+        r: 3 + Math.random() * 2
+      });
+      p.life = 0;
+    }
+  });
+  vaporParticles = vaporParticles.filter(p => p.life > 0 && p.y > 0);
+
+  // 云中水滴聚集、漂移
+  cloudDrops.forEach(d => {
+    d.x += -0.2 * cycleSpeed; // 向左漂移
+  });
+  // 限制云中水滴数量
+  if (cloudDrops.length > 25) {
+    cloudDrops = cloudDrops.slice(cloudDrops.length - 25);
+  }
+
+  // 降水
+  spawnRain();
+  rainDrops.forEach(r => {
+    r.y += r.vy * cycleSpeed;
+    if (r.y > 280) r.life = 0; // 落入河流
+  });
+  rainDrops = rainDrops.filter(r => r.life > 0);
+
+  // 河流粒子流动（向右汇入海洋）
+  riverParticles.forEach(p => {
+    p.x += p.speed * cycleSpeed;
+    if (p.x > 460) {
+      p.x = 100;
+      p.y = 290 + Math.random() * 12;
+    }
+  });
+}
+
+function drawCycle() {
+  cycleCtx.clearRect(0, 0, CY_W, CY_H);
+
+  // 天空背景
+  const skyGrad = cycleCtx.createLinearGradient(0, 0, 0, CY_H);
+  skyGrad.addColorStop(0, '#87CEEB');
+  skyGrad.addColorStop(0.6, '#B0E0E6');
+  skyGrad.addColorStop(1, '#98D8C8');
+  cycleCtx.fillStyle = skyGrad;
+  cycleCtx.fillRect(0, 0, CY_W, CY_H);
+
+  // 太阳（左上）
+  const sunX = 80, sunY = 55;
+  const sunGrad = cycleCtx.createRadialGradient(sunX, sunY, 5, sunX, sunY, 35);
+  sunGrad.addColorStop(0, '#FFF59D');
+  sunGrad.addColorStop(0.5, '#FFD700');
+  sunGrad.addColorStop(1, 'rgba(255,215,0,0.2)');
+  cycleCtx.fillStyle = sunGrad;
+  cycleCtx.beginPath();
+  cycleCtx.arc(sunX, sunY, 32, 0, Math.PI * 2);
+  cycleCtx.fill();
+  // 太阳光线
+  cycleCtx.strokeStyle = 'rgba(255,215,0,0.5)';
+  cycleCtx.lineWidth = 2;
+  for (let i = 0; i < 8; i++) {
+    const ang = i * Math.PI / 4 + cycleT * 0.3;
+    cycleCtx.beginPath();
+    cycleCtx.moveTo(sunX + Math.cos(ang) * 38, sunY + Math.sin(ang) * 38);
+    cycleCtx.lineTo(sunX + Math.cos(ang) * 48, sunY + Math.sin(ang) * 48);
+    cycleCtx.stroke();
+  }
+
+  // 海洋（右下）
+  cycleCtx.fillStyle = '#2E86C1';
+  cycleCtx.beginPath();
+  cycleCtx.moveTo(460, 290);
+  cycleCtx.quadraticCurveTo(550, 285, 660, 290);
+  cycleCtx.lineTo(660, 320);
+  cycleCtx.lineTo(460, 320);
+  cycleCtx.closePath();
+  cycleCtx.fill();
+  // 海浪
+  cycleCtx.strokeStyle = 'rgba(255,255,255,0.5)';
+  cycleCtx.lineWidth = 1.5;
+  for (let i = 0; i < 3; i++) {
+    cycleCtx.beginPath();
+    const baseY = 295 + i * 6;
+    cycleCtx.moveTo(465, baseY);
+    for (let x = 465; x <= 655; x += 10) {
+      cycleCtx.lineTo(x, baseY + Math.sin((x + cycleT * 50 + i * 30) * 0.1) * 2);
+    }
+    cycleCtx.stroke();
+  }
+
+  // 地面（左下）
+  cycleCtx.fillStyle = '#D4A574';
+  cycleCtx.fillRect(0, 295, 460, 25);
+  cycleCtx.fillStyle = '#A0522D';
+  cycleCtx.fillRect(0, 318, 460, 4);
+
+  // 河流（从地面流向海洋）
+  cycleCtx.fillStyle = '#5DADE2';
+  cycleCtx.beginPath();
+  cycleCtx.moveTo(100, 295);
+  cycleCtx.quadraticCurveTo(250, 305, 460, 300);
+  cycleCtx.lineTo(460, 315);
+  cycleCtx.quadraticCurveTo(250, 320, 100, 310);
+  cycleCtx.closePath();
+  cycleCtx.fill();
+
+  // 河流粒子（流动）
+  riverParticles.forEach(p => {
+    cycleCtx.fillStyle = 'rgba(255,255,255,0.7)';
+    cycleCtx.beginPath();
+    cycleCtx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+    cycleCtx.fill();
+  });
+
+  // 山（背景）
+  cycleCtx.fillStyle = '#95A5A6';
+  cycleCtx.beginPath();
+  cycleCtx.moveTo(200, 295);
+  cycleCtx.lineTo(280, 200);
+  cycleCtx.lineTo(360, 295);
+  cycleCtx.closePath();
+  cycleCtx.fill();
+  // 山顶雪
+  cycleCtx.fillStyle = '#fff';
+  cycleCtx.beginPath();
+  cycleCtx.moveTo(265, 230);
+  cycleCtx.lineTo(280, 200);
+  cycleCtx.lineTo(295, 230);
+  cycleCtx.closePath();
+  cycleCtx.fill();
+
+  // 云（由 cloudDrops 组成）
+  if (cloudDrops.length > 0) {
+    // 云的轮廓（白色半透明）
+    cycleCtx.fillStyle = 'rgba(255,255,255,0.85)';
+    let avgX = 0, avgY = 0;
+    cloudDrops.forEach(d => { avgX += d.x; avgY += d.y; });
+    avgX /= cloudDrops.length;
+    avgY /= cloudDrops.length;
+    cycleCtx.beginPath();
+    cycleCtx.arc(avgX - 25, avgY + 5, 18, 0, Math.PI * 2);
+    cycleCtx.arc(avgX, avgY, 22, 0, Math.PI * 2);
+    cycleCtx.arc(avgX + 25, avgY + 3, 18, 0, Math.PI * 2);
+    cycleCtx.fill();
+    // 云中水滴（小蓝点）
+    cloudDrops.forEach(d => {
+      cycleCtx.fillStyle = 'rgba(52,152,219,0.6)';
+      cycleCtx.beginPath();
+      cycleCtx.arc(d.x, d.y, d.r * 0.6, 0, Math.PI * 2);
+      cycleCtx.fill();
+    });
+  }
+
+  // 水蒸气粒子（上升）
+  vaporParticles.forEach(p => {
+    cycleCtx.fillStyle = 'rgba(255,255,255,' + (0.6 * p.life) + ')';
+    cycleCtx.beginPath();
+    cycleCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    cycleCtx.fill();
+  });
+
+  // 雨滴
+  cycleCtx.strokeStyle = '#5DADE2';
+  cycleCtx.lineWidth = 1.5;
+  rainDrops.forEach(r => {
+    cycleCtx.beginPath();
+    cycleCtx.moveTo(r.x, r.y);
+    cycleCtx.lineTo(r.x, r.y + 6);
+    cycleCtx.stroke();
+  });
+
+  // 标注（环节编号和物态变化）
+  cycleCtx.font = 'bold 12px sans-serif';
+  cycleCtx.fillStyle = '#C0392B';
+  // ① 蒸发
+  cycleCtx.fillText('① 蒸发', 540, 250);
+  cycleCtx.fillStyle = '#2C3E50';
+  cycleCtx.font = '11px sans-serif';
+  cycleCtx.fillText('液→气', 540, 265);
+  // 蒸发箭头
+  cycleCtx.strokeStyle = '#E74C3C';
+  cycleCtx.lineWidth = 2;
+  cycleCtx.beginPath();
+  cycleCtx.moveTo(550, 280);
+  cycleCtx.lineTo(490, 150);
+  cycleCtx.stroke();
+
+  // ② 凝结
+  cycleCtx.font = 'bold 12px sans-serif';
+  cycleCtx.fillStyle = '#C0392B';
+  cycleCtx.fillText('② 凝结', 130, 75);
+  cycleCtx.fillStyle = '#2C3E50';
+  cycleCtx.font = '11px sans-serif';
+  cycleCtx.fillText('气→液', 130, 90);
+
+  // ③ 降水
+  cycleCtx.font = 'bold 12px sans-serif';
+  cycleCtx.fillStyle = '#C0392B';
+  cycleCtx.fillText('③ 降水', 250, 130);
+  cycleCtx.fillStyle = '#2C3E50';
+  cycleCtx.font = '11px sans-serif';
+  cycleCtx.fillText('液→液/固', 250, 145);
+
+  // ④ 汇流
+  cycleCtx.font = 'bold 12px sans-serif';
+  cycleCtx.fillStyle = '#C0392B';
+  cycleCtx.fillText('④ 汇流', 250, 280);
+  cycleCtx.fillStyle = '#2C3E50';
+  cycleCtx.font = '11px sans-serif';
+  cycleCtx.fillText('液→液', 250, 292);
+
+  // 海洋标签
+  cycleCtx.font = 'bold 13px sans-serif';
+  cycleCtx.fillStyle = '#fff';
+  cycleCtx.fillText('🌊 海洋', 530, 315);
+  // 河流标签
+  cycleCtx.fillText('🏞️ 河流', 230, 312);
+}
+
+function cycleLoop() {
+  updateCycle();
+  drawCycle();
+  requestAnimationFrame(cycleLoop);
+}
+
+document.getElementById('cyclePause').addEventListener('click', function() {
+  cyclePaused = !cyclePaused;
+  this.textContent = cyclePaused ? '▶ 继续' : '⏸ 暂停';
+  document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
+  if (cyclePaused) this.classList.add('active'); else document.getElementById('cycleNormal').classList.add('active');
+});
+document.getElementById('cycleNormal').addEventListener('click', function() {
+  cycleSpeed = 1; cyclePaused = false;
+  document.getElementById('cyclePause').textContent = '⏸ 暂停';
+  document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
+  this.classList.add('active');
+});
+document.getElementById('cycleFast').addEventListener('click', function() {
+  cycleSpeed = 2; cyclePaused = false;
+  document.getElementById('cyclePause').textContent = '⏸ 暂停';
+  document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
+  this.classList.add('active');
+});
+document.getElementById('cycleSlow').addEventListener('click', function() {
+  cycleSpeed = 0.5; cyclePaused = false;
+  document.getElementById('cyclePause').textContent = '⏸ 暂停';
+  document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
+  this.classList.add('active');
+});
+
+initCycleScene();
+cycleLoop();
+
+
+/* ========================================================
+ *  练习题
+ * ====================================================== */
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '常温（约25°C）下：水银（-39°C~357°C）是液态；铁（熔点1538°C）是固态；酒精（沸点78°C）是液态；氧气（沸点-183°C）已经是气态。所以选B。',
+  hint: '比较常温（约25°C）与各物质的熔点和沸点：温度<熔点为固态，熔点≤温度<沸点为液态，温度≥沸点为气态。'
+});
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '固态物质中分子在固定位置振动，排列紧密有序，分子间作用力强。A描述气态，B描述液态，D描述气态。',
+  hint: '回忆分子运动模拟器中固态分子的表现：在格点上振动。'
+});
+initQuiz('quiz3', {
+  correct: 1,
+  explain: '水结冰是凝固过程（液态→固态）。水分子（H₂O）本身没有改变，只是运动减慢、间距减小、排列变得有序，所以是物理变化，不是化学变化。',
+  hint: '状态变化是物理变化，分子本身不变。冰、水、水蒸气的分子都是 H₂O。'
+});
+</script>
 </body>
 </html>

@@ -6,50 +6,287 @@
   <title>空气 · 九年级化学</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
-      text-align: center;
-      padding: 80px 20px;
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px; font-weight: 700; color: var(--chemistry);
+      margin: 32px 0 14px; padding-bottom: 8px;
+      border-bottom: 2px solid #E74C3C55;
+      display: flex; align-items: center; gap: 8px;
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .section-header:first-of-type { margin-top: 8px; }
+    .section-header .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--chemistry); color: white; font-size: 15px;
     }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #E74C3C;
+
+    /* 知识卡片 */
+    .knowledge-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px; margin: 16px 0;
     }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
+    .know-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow);
+      border-left: 5px solid var(--chemistry);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .related {
-      max-width: 600px;
-      margin: 0 auto;
+    .know-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .know-card .kc-title {
+      font-size: 17px; font-weight: 700; margin-bottom: 8px;
+      color: var(--chemistry); display: flex; align-items: center; gap: 8px;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
-      background: var(--bg-soft);
+    .know-card .kc-def { font-size: 14px; color: var(--text-main); line-height: 1.7; margin-bottom: 8px; }
+    .know-card .kc-examples { font-size: 13px; color: var(--text-secondary); }
+    .know-card .kc-examples strong { color: var(--text-main); }
+
+    /* 交互容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #fff7f5, #fce4e0);
+      border-radius: var(--radius); padding: 24px 20px;
+      margin: 16px 0; text-align: center; border: 1px solid #E74C3C30;
+    }
+    .demo-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .demo-container h3 { color: var(--chemistry); margin-bottom: 8px; }
+    .demo-container .demo-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 14px; }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.25);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 12px 18px; margin: 14px auto; max-width: 520px;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 19px; color: var(--chemistry); text-align: center; font-weight: 600;
     }
-    .related-card:hover {
-      background: #E74C3C20;
-      transform: translateY(-2px);
+    .formula-box .label {
+      font-family: -apple-system, "PingFang SC", sans-serif;
+      font-size: 13px; color: var(--text-secondary);
+      display: block; margin-top: 4px; font-weight: 400;
     }
+    .formula-box sub { font-size: 0.7em; }
+
+    /* 饼图交互 */
+    .pie-layout {
+      display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; justify-content: center;
+    }
+    .pie-svg-wrap { flex: 0 0 auto; }
+    .pie-detail {
+      flex: 1; min-width: 260px; max-width: 380px;
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 18px 20px; box-shadow: var(--shadow); text-align: left;
+      border-top: 4px solid var(--border); transition: border-color 0.3s;
+    }
+    .pie-detail.active-n2 { border-top-color: #4A90D9; }
+    .pie-detail.active-o2 { border-top-color: #E74C3C; }
+    .pie-detail.active-rare { border-top-color: #27AE60; }
+    .pie-detail.active-co2 { border-top-color: #F39C12; }
+    .pie-detail.active-other { border-top-color: #95A5A6; }
+    .pie-detail .pd-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .pie-detail .pd-pct { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+    .pie-detail .pd-desc { font-size: 14px; color: var(--text-main); line-height: 1.7; }
+    .pie-detail .pd-hint { font-size: 12px; color: var(--text-secondary); margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); }
+
+    .pie-legend {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px;
+    }
+    .legend-item {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 14px; background: var(--bg-card);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .legend-item:hover { transform: translateY(-2px); }
+    .legend-item.active { border-color: var(--text-main); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    /* 实验步骤 */
+    .exp-layout {
+      display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; justify-content: center;
+    }
+    .exp-svg-wrap { flex: 0 0 auto; }
+    .exp-panel {
+      flex: 1; min-width: 260px; max-width: 380px; text-align: left;
+    }
+    .exp-steps {
+      display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .exp-step-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
+      background: var(--bg-card); color: var(--text-secondary); font-weight: 700;
+      font-size: 15px; cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .exp-step-btn:hover { border-color: var(--chemistry); color: var(--chemistry); }
+    .exp-step-btn.active { background: var(--chemistry); color: white; border-color: var(--chemistry); }
+    .exp-step-btn.done { background: rgba(231,76,60,0.15); color: var(--chemistry); border-color: var(--chemistry); }
+    .exp-step-desc {
+      background: var(--bg-card); border-radius: var(--radius); padding: 16px 18px;
+      box-shadow: var(--shadow); min-height: 100px;
+    }
+    .exp-step-desc .esd-title { font-size: 16px; font-weight: 700; color: var(--chemistry); margin-bottom: 8px; }
+    .exp-step-desc .esd-text { font-size: 14px; line-height: 1.7; color: var(--text-main); }
+    .exp-nav { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* 拖拽分类 */
+    .dnd-area {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+    }
+    @media (max-width: 640px) { .dnd-area { grid-template-columns: 1fr; } }
+    .dnd-zone {
+      background: var(--bg-card); border: 2px dashed var(--border);
+      border-radius: var(--radius); padding: 16px; min-height: 160px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .dnd-zone.over { border-color: var(--chemistry); background: rgba(231,76,60,0.05); }
+    .dnd-zone.pure { border-color: var(--info); }
+    .dnd-zone.pure.over { background: rgba(52,152,219,0.05); }
+    .dnd-zone.mixture { border-color: var(--warning); }
+    .dnd-zone.mixture.over { background: rgba(243,156,18,0.05); }
+    .dnd-zone .dz-title {
+      font-size: 15px; font-weight: 700; margin-bottom: 10px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dnd-zone.pure .dz-title { color: var(--info); }
+    .dnd-zone.mixture .dz-title { color: var(--warning); }
+    .dnd-zone .dz-count { font-size: 12px; color: var(--text-secondary); margin-left: auto; }
+
+    .dnd-pool {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; justify-content: center;
+      padding: 14px; background: var(--bg-soft); border-radius: var(--radius);
+    }
+    .dnd-item {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 8px 14px; background: var(--bg-card);
+      border-radius: var(--radius-sm); cursor: grab; font-size: 14px;
+      border: 2px solid transparent; transition: all 0.2s; user-select: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .dnd-item:hover { transform: translateY(-2px); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+    .dnd-item.dragging { opacity: 0.4; }
+    .dnd-item.placed { cursor: default; }
+    .dnd-item.placed.correct { border-color: var(--success); background: rgba(39,174,96,0.1); color: var(--success); }
+    .dnd-item.placed.wrong { border-color: var(--danger); background: rgba(231,76,60,0.1); color: var(--danger); }
+    .dnd-item sub { font-size: 0.75em; }
+    .dnd-check { margin-top: 12px; text-align: center; }
+
+    /* 计算器 */
+    .calc-layout {
+      display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch; justify-content: center;
+    }
+    .calc-controls {
+      flex: 1; min-width: 280px; background: var(--bg-card); border-radius: var(--radius);
+      padding: 20px; box-shadow: var(--shadow);
+    }
+    .calc-display {
+      flex: 1; min-width: 280px; background: linear-gradient(135deg, #1a2332, #2c3e50);
+      border-radius: var(--radius); padding: 24px; color: white; text-align: center;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .calc-display .cd-label { font-size: 14px; opacity: 0.7; margin-bottom: 6px; }
+    .calc-display .cd-value { font-size: 42px; font-weight: 800; color: #fde049; }
+    .calc-display .cd-unit { font-size: 18px; opacity: 0.8; }
+    .calc-display .cd-status { margin-top: 12px; font-size: 14px; padding: 8px 14px; border-radius: var(--radius-sm); display: inline-block; align-self: center; }
+    .calc-display .cd-status.ok { background: rgba(39,174,96,0.3); color: #6ee7b7; }
+    .calc-display .cd-status.warn { background: rgba(231,76,60,0.3); color: #fca5a5; }
+    .calc-slider-row { margin: 14px 0; }
+    .calc-slider-row label { font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .calc-slider-row label span { color: var(--chemistry); font-weight: 700; }
+    .calc-reasons {
+      margin-top: 12px; font-size: 13px; color: var(--text-secondary);
+      background: var(--bg-soft); border-radius: var(--radius-sm); padding: 12px;
+      display: none; line-height: 1.8;
+    }
+    .calc-reasons.show { display: block; }
+    .calc-reasons li { margin-left: 16px; }
+
+    /* 拉瓦锡步骤 */
+    .lav-layout {
+      display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; justify-content: center;
+    }
+    .lav-svg-wrap { flex: 0 0 auto; }
+    .lav-panel { flex: 1; min-width: 260px; max-width: 380px; }
+    .lav-timeline {
+      position: relative; padding-left: 24px;
+    }
+    .lav-timeline::before {
+      content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border);
+    }
+    .lav-step {
+      position: relative; margin-bottom: 16px; padding: 12px 16px;
+      background: var(--bg-card); border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+    }
+    .lav-step::before {
+      content: ''; position: absolute; left: -20px; top: 18px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--border); border: 2px solid var(--bg-card); transition: all 0.2s;
+    }
+    .lav-step:hover { transform: translateX(4px); }
+    .lav-step.active { border-color: var(--chemistry); }
+    .lav-step.active::before { background: var(--chemistry); }
+    .lav-step .ls-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+    .lav-step.active .ls-title { color: var(--chemistry); }
+    .lav-step .ls-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* 学科交叉 */
+    .cross-row {
+      display: flex; justify-content: space-between; align-items: stretch;
+      gap: 12px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .cross-link {
+      flex: 1; min-width: 180px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--text-main); transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--border);
+    }
+    .cross-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cross-link.cross-chem { border-left-color: var(--chemistry); }
+    .cross-link.cross-phys { border-left-color: var(--physics); }
+    .cross-link .arrow { font-size: 20px; color: var(--text-secondary); }
+    .cross-link .cl-label { font-size: 12px; color: var(--text-secondary); }
+    .cross-link .cl-title { font-size: 14px; font-weight: 600; }
+
+    /* 小结 */
+    .summary-box {
+      background: linear-gradient(135deg, #E74C3C10, #F5A62310);
+      border: 1.5px solid #E74C3C40;
+      border-radius: var(--radius); padding: 18px 22px; margin: 18px 0;
+    }
+    .summary-box .sb-title {
+      font-size: 17px; font-weight: 700; color: var(--chemistry);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .summary-box .sb-item {
+      padding: 6px 0; font-size: 14px; line-height: 1.7;
+      border-bottom: 1px dashed var(--border);
+    }
+    .summary-box .sb-item:last-child { border-bottom: none; }
+    .summary-box .sb-item strong { color: var(--chemistry); }
+    .summary-box .sb-item em { color: var(--info); font-style: normal; font-weight: 600; }
+
+    /* 导航栏化学红配色 */
+    .navbar.chem-nav { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+
+    /* SVG动画 */
+    .smoke-particle { opacity: 0; transition: opacity 0.5s; }
+    .smoke-particle.show { opacity: 0.8; }
+    .water-rise { transition: y 1s ease, height 1s ease; }
+    .flame-anim { opacity: 0; transition: opacity 0.3s; }
+    .flame-anim.show { opacity: 1; animation: flicker 0.4s infinite alternate; }
+    @keyframes flicker { from { opacity: 0.7; } to { opacity: 1; } }
+    .clamp-open { transition: transform 0.3s; transform-origin: center; }
+
+    sub { font-size: 0.75em; vertical-align: sub; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-brand">⚗️ 空气</div>
+<nav class="navbar chem-nav">
+  <div class="navbar-brand">💨 空气</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级化学目录</a></li>
@@ -62,29 +299,902 @@
     <span class="separator">/</span>
     <a href="index.html">化学</a>
     <span class="separator">/</span>
-    <span>九年级</span>
+    <a href="index.html">九年级</a>
     <span class="separator">/</span>
     <span>空气</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">⚗️</div>
-    <h2>空气</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级化学目录</a>
+  <div class="card">
+    <div class="card-title">🧪 第二单元 课题1：空气</div>
+    <p style="color: var(--text-secondary); font-size: 15px;">
+      空气是我们身边最常见的物质之一。它无形无味，却由多种气体混合而成。
+      本节课我们将探究<strong style="color:var(--chemistry);">空气的成分</strong>，
+      了解<strong style="color:var(--chemistry);">拉瓦锡</strong>测定空气成分的经典实验，
+      并学习<strong style="color:var(--chemistry);">纯净物与混合物</strong>的区别。
+    </p>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ========== 知识点 1：空气的成分 ========== -->
+  <h2 class="section-header"><span class="num">1</span>空气的成分</h2>
+  <p style="font-size:15px; color:var(--text-main); margin-bottom:12px;">
+    空气是混合物，其成分按<strong style="color:var(--chemistry);">体积分数</strong>计算（注意不是质量分数）。
+    各成分及含量如下：
+  </p>
+
+  <div class="knowledge-grid">
+    <div class="know-card" style="border-left-color:#4A90D9;">
+      <div class="kc-title" style="color:#4A90D9;">🔵 氮气 N<sub>2</sub> — 78%</div>
+      <div class="kc-def">空气的主要成分，性质稳定，常用作保护气（如食品包装充氮防腐、灯泡充氮）。</div>
+    </div>
+    <div class="know-card" style="border-left-color:#E74C3C;">
+      <div class="kc-title" style="color:#E74C3C;">🔴 氧气 O<sub>2</sub> — 21%</div>
+      <div class="kc-def">支持燃烧和呼吸的重要气体。动植物呼吸、燃料燃烧都离不开氧气。</div>
+    </div>
+    <div class="know-card" style="border-left-color:#27AE60;">
+      <div class="kc-title" style="color:#27AE60;">🟢 稀有气体 — 0.94%</div>
+      <div class="kc-def">包括氦He、氖Ne、氩Ar等。化学性质极不活泼，可用作保护气、电光源（霓虹灯）。</div>
+    </div>
+    <div class="know-card" style="border-left-color:#F39C12;">
+      <div class="kc-title" style="color:#F39C12;">🟠 二氧化碳 CO<sub>2</sub> — 0.03%</div>
+      <div class="kc-def">植物光合作用的原料。温室气体，固态CO<sub>2</sub>俗称"干冰"，可用于人工降雨。</div>
+    </div>
+    <div class="know-card" style="border-left-color:#95A5A6;">
+      <div class="kc-title" style="color:#95A5A6;">⚪ 其他气体和杂质 — 0.03%</div>
+      <div class="kc-def">包括水蒸气、二氧化硫、臭氧等微量气体和杂质。</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 易错点</div>
+    空气成分是按<strong>体积分数</strong>而不是质量分数！氮气约占<strong>78%</strong>、氧气约占<strong>21%</strong>，
+    二者合计约<strong>99%</strong>，是空气的主要成分。"其他气体和杂质"中包含水蒸气等。
+  </div>
+
+  <!-- 交互1：饼图 -->
+  <div class="demo-container">
+    <h3>📊 空气成分饼图（点击各部分查看详情）</h3>
+    <div class="demo-desc">各扇形按体积分数真实比例绘制</div>
+    <div class="pie-layout">
+      <div class="pie-svg-wrap">
+        <svg id="pieChart" width="340" height="340" viewBox="0 0 340 340"></svg>
+        <div class="pie-legend" id="pieLegend"></div>
+      </div>
+      <div class="pie-detail" id="pieDetail">
+        <div class="pd-name">👆 点击饼图或图例</div>
+        <div class="pd-pct">—</div>
+        <div class="pd-desc">选择任意一种气体成分，查看详细说明。</div>
+        <div class="pd-hint">提示：N<sub>2</sub>和O<sub>2</sub>占空气总体积的约99%，是主要成分。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 知识点 2：空气成分的发现 ========== -->
+  <h2 class="section-header"><span class="num">2</span>空气成分的发现 — 拉瓦锡实验</h2>
+  <p style="font-size:15px; color:var(--text-main); margin-bottom:12px;">
+    <strong style="color:var(--chemistry);">拉瓦锡</strong>（Antoine Lavoisier，法国化学家）在18世纪通过实验首次得出结论：
+    <strong>空气由氧气和氮气组成</strong>，其中氧气约占空气总体积的1/5。
+  </p>
+
+  <!-- 交互4：拉瓦锡实验介绍 -->
+  <div class="demo-container">
+    <h3>⚗️ 拉瓦锡测定空气成分实验</h3>
+    <div class="demo-desc">点击右侧时间线各步骤，观察实验装置变化</div>
+    <div class="lav-layout">
+      <div class="lav-svg-wrap">
+        <svg id="lavApparatus" width="340" height="300" viewBox="0 0 340 300">
+          <!-- 钟罩 -->
+          <ellipse cx="170" cy="50" rx="70" ry="10" fill="none" stroke="#7F8C8D" stroke-width="2"/>
+          <path d="M 100 50 Q 100 45 105 45 L 235 45 Q 240 45 240 50 L 240 180 Q 240 185 235 185 L 105 185 Q 100 185 100 180 Z"
+                fill="rgba(189,195,199,0.15)" stroke="#7F8C8D" stroke-width="2"/>
+          <!-- 钟罩内初始空气 -->
+          <rect id="lavAir" x="101" y="46" width="138" height="138" fill="rgba(135,206,235,0.15)"/>
+          <!-- 汞液面 -->
+          <rect id="lavMercury" x="101" y="140" width="138" height="44" fill="#C0C0C0" opacity="0.6"/>
+          <line id="lavMercuryLine" x1="101" y1="140" x2="239" y2="140" stroke="#7F8C8D" stroke-width="1.5"/>
+
+          <!-- 汞槽底部 -->
+          <rect x="80" y="185" width="180" height="50" rx="6" fill="#BDC3C7" stroke="#7F8C8D" stroke-width="2"/>
+          <rect x="80" y="225" width="180" height="10" fill="#95A5A6"/>
+
+          <!-- 加热炉（步骤2显示） -->
+          <g id="lavHeater" opacity="0">
+            <rect x="135" y="200" width="70" height="35" rx="4" fill="#E74C3C" opacity="0.8"/>
+            <rect x="140" y="195" width="60" height="8" rx="2" fill="#C0392B"/>
+            <!-- 火焰 -->
+            <path d="M 155 200 Q 155 190 160 188 Q 158 195 162 196 Q 160 190 165 190 Q 168 195 165 200 Z" fill="#F39C12" opacity="0.9"/>
+            <path d="M 170 200 Q 170 188 175 186 Q 173 193 177 194 Q 175 188 180 188 Q 183 193 180 200 Z" fill="#F39C12" opacity="0.9"/>
+          </g>
+
+          <!-- 氧化汞红色粉末（步骤3显示） -->
+          <g id="lavHgO" opacity="0">
+            <circle cx="150" cy="135" r="3" fill="#C0392B"/>
+            <circle cx="160" cy="138" r="2.5" fill="#C0392B"/>
+            <circle cx="170" cy="133" r="3" fill="#C0392B"/>
+            <circle cx="180" cy="137" r="2.5" fill="#C0392B"/>
+            <circle cx="190" cy="134" r="3" fill="#C0392B"/>
+            <circle cx="165" cy="142" r="2" fill="#C0392B"/>
+            <circle cx="185" cy="141" r="2" fill="#C0392B"/>
+          </g>
+
+          <!-- 标注 -->
+          <text x="170" y="30" text-anchor="middle" font-size="12" fill="#2C3E50" font-weight="600">钟罩（密闭容器）</text>
+          <text x="170" y="260" text-anchor="middle" font-size="12" fill="#2C3E50" font-weight="600">汞槽</text>
+          <text id="lavLabel" x="170" y="280" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="700"></text>
+        </svg>
+      </div>
+      <div class="lav-panel">
+        <div class="lav-timeline" id="lavTimeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 拉瓦锡实验的意义</div>
+    拉瓦锡的实验<strong>第一次</strong>用定量方法研究了空气的成分，得出空气由<strong>氧气</strong>和<strong>氮气</strong>组成，
+    其中氧气约占空气体积的1/5。这一实验奠定了近代化学的基础。
+  </div>
+
+  <!-- ========== 知识点 3：测定氧气含量实验 ========== -->
+  <h2 class="section-header"><span class="num">3</span>测定空气中氧气含量</h2>
+  <p style="font-size:15px; color:var(--text-main); margin-bottom:12px;">
+    现代教材中常用<strong style="color:var(--chemistry);">红磷燃烧法</strong>测定空气中氧气的含量。
+    利用红磷燃烧消耗密闭容器中的氧气，使容器内压强减小，水被吸入，进入水的体积即为氧气的体积。
+  </p>
+
+  <!-- 公式 -->
+  <div class="formula-box">
+    4P + 5O<sub>2</sub> <span style="font-size:14px;">→(点燃)</span> 2P<sub>2</sub>O<sub>5</sub>
+    <span class="label">红磷燃烧化学方程式（产物五氧化二磷为白色固体）</span>
+  </div>
+
+  <!-- 交互2：实验模拟 -->
+  <div class="demo-container">
+    <h3>🔥 红磷燃烧法测定氧气含量实验模拟</h3>
+    <div class="demo-desc">点击步骤按钮，观察实验现象</div>
+    <div class="exp-layout">
+      <div class="exp-svg-wrap">
+        <svg id="expApparatus" width="340" height="340" viewBox="0 0 340 340">
+          <!-- 集气瓶 -->
+          <path d="M 110 60 L 110 70 Q 100 75 100 85 L 100 220 Q 100 230 110 230 L 230 230 Q 240 230 240 220 L 240 85 Q 240 75 230 70 L 230 60 Z"
+                fill="rgba(189,195,199,0.1)" stroke="#7F8C8D" stroke-width="2"/>
+          <!-- 瓶塞 -->
+          <rect x="105" y="52" width="130" height="14" rx="3" fill="#8B4513"/>
+          <rect x="108" y="48" width="124" height="6" rx="2" fill="#A0522D"/>
+
+          <!-- 瓶内空气区域 -->
+          <rect id="expAir" x="102" y="72" width="136" height="156" fill="rgba(135,206,235,0.1)"/>
+
+          <!-- 水位（初始在瓶底） -->
+          <rect id="expWater" class="water-rise" x="102" y="225" width="136" height="3" fill="#3498DB" opacity="0.7"/>
+          <line id="expWaterLine" class="water-rise" x1="102" y1="225" x2="238" y2="225" stroke="#2980B9" stroke-width="1.5"/>
+
+          <!-- 燃烧匙 + 红磷 -->
+          <g id="expSpoon" style="transition: transform 0.6s ease;">
+            <line x1="170" y1="66" x2="170" y2="130" stroke="#5D6D7E" stroke-width="2"/>
+            <ellipse cx="170" cy="135" rx="14" ry="8" fill="#5D6D7E"/>
+            <!-- 红磷 -->
+            <ellipse id="expPhosphorus" cx="170" cy="132" rx="10" ry="5" fill="#C0392B"/>
+          </g>
+
+          <!-- 火焰 -->
+          <g id="expFlame" class="flame-anim">
+            <path d="M 170 125 Q 165 115 170 105 Q 175 115 170 125 Z" fill="#F39C12"/>
+            <path d="M 170 122 Q 167 115 170 108 Q 173 115 170 122 Z" fill="#F1C40F"/>
+          </g>
+
+          <!-- 白烟 P2O5 -->
+          <g id="expSmoke">
+            <circle class="smoke-particle" cx="130" cy="100" r="12" fill="rgba(236,240,241,0.7)"/>
+            <circle class="smoke-particle" cx="155" cy="90" r="15" fill="rgba(236,240,241,0.7)"/>
+            <circle class="smoke-particle" cx="185" cy="88" r="14" fill="rgba(236,240,241,0.7)"/>
+            <circle class="smoke-particle" cx="210" cy="95" r="13" fill="rgba(236,240,241,0.7)"/>
+            <circle class="smoke-particle" cx="140" cy="120" r="10" fill="rgba(236,240,241,0.6)"/>
+            <circle class="smoke-particle" cx="200" cy="118" r="11" fill="rgba(236,240,241,0.6)"/>
+            <circle class="smoke-particle" cx="170" cy="105" r="13" fill="rgba(236,240,241,0.65)"/>
+            <circle class="smoke-particle" cx="120" cy="140" r="8" fill="rgba(236,240,241,0.5)"/>
+            <circle class="smoke-particle" cx="220" cy="138" r="9" fill="rgba(236,240,241,0.5)"/>
+          </g>
+
+          <!-- 导管 -->
+          <path d="M 240 85 Q 270 85 270 120 Q 270 270 170 270 Q 100 270 100 250"
+                fill="none" stroke="#7F8C8D" stroke-width="3"/>
+          <!-- 导管内的水（步骤5显示） -->
+          <path id="expTubeWater" d="M 240 85 Q 270 85 270 120 Q 270 270 170 270 Q 100 270 100 250"
+                fill="none" stroke="#3498DB" stroke-width="2" opacity="0" stroke-dasharray="0"/>
+
+          <!-- 止水夹 -->
+          <g id="expClamp" class="clamp-open">
+            <rect x="262" y="100" width="16" height="8" rx="2" fill="#E74C3C"/>
+            <rect x="264" y="96" width="12" height="4" rx="1" fill="#C0392B"/>
+          </g>
+
+          <!-- 水槽 -->
+          <path d="M 70 250 L 70 290 Q 70 300 80 300 L 260 300 Q 270 300 270 290 L 270 250"
+                fill="none" stroke="#7F8C8D" stroke-width="2"/>
+          <rect x="72" y="265" width="196" height="34" fill="#3498DB" opacity="0.3"/>
+          <line x1="72" y1="265" x2="268" y2="265" stroke="#2980B9" stroke-width="1.5"/>
+
+          <!-- 标注 -->
+          <text x="170" y="42" text-anchor="middle" font-size="11" fill="#2C3E50" font-weight="600">集气瓶</text>
+          <text x="285" y="106" text-anchor="start" font-size="10" fill="#E74C3C" font-weight="600">止水夹</text>
+          <text x="170" y="320" text-anchor="middle" font-size="11" fill="#2C3E50" font-weight="600">水槽</text>
+
+          <!-- 体积刻度线（1/5标记） -->
+          <line x1="92" y1="191" x2="100" y2="191" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="2,2"/>
+          <text x="88" y="195" text-anchor="end" font-size="10" fill="#E74C3C" font-weight="600">1/5</text>
+        </svg>
+      </div>
+      <div class="exp-panel">
+        <div class="exp-steps" id="expSteps"></div>
+        <div class="exp-step-desc" id="expStepDesc">
+          <div class="esd-title">准备开始</div>
+          <div class="esd-text">点击上方步骤按钮，逐步完成实验操作。观察红磷燃烧现象和水位变化。</div>
+        </div>
+        <div class="exp-nav">
+          <button class="btn btn-outline btn-sm" id="expPrev" onclick="expPrev()">← 上一步</button>
+          <button class="btn btn-primary btn-sm" id="expNext" onclick="expNext()" style="background:var(--chemistry);">下一步 →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-box" style="margin-top:18px;">
+      进入水的体积 ≈ 消耗氧气的体积 ≈ 集气瓶容积的 <strong>1/5</strong>
+      <span class="label">结论：氧气约占空气体积的1/5（即21%）</span>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="tip-title" style="color:var(--warning);">⚠ 实验成功的关键条件</div>
+    <div style="font-size:14px; line-height:1.8;">
+      ① <strong>装置不漏气</strong>——否则空气进出，影响压强差；<br>
+      ② <strong>红磷要过量</strong>——确保瓶内氧气充分消耗完；<br>
+      ③ <strong>冷却到室温后</strong>再打开止水夹——否则气体热膨胀导致测量不准；<br>
+      ④ <strong>导管要预先充满水</strong>——排出导管内空气，减少误差。
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 为什么不能用木炭、硫替代红磷？</div>
+    木炭燃烧生成CO<sub>2</sub>气体、硫燃烧生成SO<sub>2</sub>气体，<strong>生成物是气体</strong>，
+    瓶内气体体积不会明显减少，水不会被吸入或吸入很少。<strong>红磷</strong>燃烧产物P<sub>2</sub>O<sub>5</sub>
+    是<strong>固体</strong>，能真正消耗氧气且不产生新气体，是最合适的选择。
+  </div>
+
+  <!-- ========== 知识点 4：纯净物与混合物 ========== -->
+  <h2 class="section-header"><span class="num">4</span>纯净物与混合物</h2>
+  <div class="knowledge-grid">
+    <div class="know-card" style="border-left-color:var(--info);">
+      <div class="kc-title" style="color:var(--info);">🔵 纯净物</div>
+      <div class="kc-def">由<strong>一种物质</strong>组成的物质。</div>
+      <div class="kc-examples">
+        <strong>特征：</strong>有固定的组成和性质（如固定的熔点、沸点）。<br>
+        <strong>举例：</strong>氧气 O<sub>2</sub>、水 H<sub>2</sub>O、二氧化碳 CO<sub>2</sub>、铁 Fe、蔗糖。
+      </div>
+    </div>
+    <div class="know-card" style="border-left-color:var(--warning);">
+      <div class="kc-title" style="color:var(--warning);">🟡 混合物</div>
+      <div class="kc-def">由<strong>两种或多种物质</strong>混合而成的物质。</div>
+      <div class="kc-examples">
+        <strong>特征：</strong>各组分保持各自的性质，没有固定的组成。<br>
+        <strong>举例：</strong>空气、海水、食盐水、矿石、自来水。
+      </div>
+    </div>
+  </div>
+
+  <!-- 交互3：拖拽分类 -->
+  <div class="demo-container">
+    <h3>🎴 拖拽分类：纯净物 vs 混合物</h3>
+    <div class="demo-desc">将下方物质拖入对应的分类区域，点击"检查"验证</div>
+    <div class="dnd-pool" id="dndPool"></div>
+    <div class="dnd-area">
+      <div class="dnd-zone pure" id="zonePure" data-type="pure">
+        <div class="dz-title">🔵 纯净物 <span class="dz-count" id="countPure">0</span></div>
+      </div>
+      <div class="dnd-zone mixture" id="zoneMixture" data-type="mixture">
+        <div class="dz-title">🟡 混合物 <span class="dz-count" id="countMixture">0</span></div>
+      </div>
+    </div>
+    <div class="dnd-check">
+      <button class="btn btn-success btn-sm" onclick="checkDnd()" style="margin-right:8px;">✓ 检查答案</button>
+      <button class="btn btn-outline btn-sm" onclick="resetDnd()">↻ 重置</button>
+      <div id="dndFeedback" style="margin-top:10px; font-size:14px; min-height:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ========== 交互5：氧气含量计算 ========== -->
+  <h2 class="section-header"><span class="num">5</span>氧气含量计算</h2>
+  <p style="font-size:15px; color:var(--text-main); margin-bottom:12px;">
+    用红磷燃烧法测定一个 <strong>500 mL</strong> 集气瓶中的氧气含量。调节滑块改变进入水的体积，
+    实时计算氧气含量，并判断实验是否成功。
+  </p>
+
+  <div class="demo-container">
+    <h3>🧮 氧气含量计算器</h3>
+    <div class="demo-desc">氧气含量 = 进入水体积 ÷ 集气瓶体积 × 100%</div>
+    <div class="calc-layout">
+      <div class="calc-controls">
+        <div class="calc-slider-row">
+          <label>集气瓶体积 <span>500 mL</span></label>
+        </div>
+        <div class="calc-slider-row">
+          <label>进入水的体积 <span id="waterVolDisplay">105 mL</span></label>
+          <input type="range" id="waterVolSlider" min="0" max="200" value="105" step="5">
+        </div>
+        <ul class="calc-reasons" id="calcReasons">
+          <li><strong>装置漏气</strong>：外界空气进入瓶内，水进入偏少</li>
+          <li><strong>红磷不足</strong>：瓶内氧气未消耗完，水进入偏少</li>
+          <li><strong>未冷却到室温</strong>就打开止水夹：气体膨胀，水进入偏少</li>
+          <li><strong>导管未预先充满水</strong>：导管内空气影响测量</li>
+        </ul>
+      </div>
+      <div class="calc-display">
+        <div class="cd-label">氧气含量</div>
+        <div class="cd-value" id="o2PctDisplay">21.0<span class="cd-unit">%</span></div>
+        <div class="cd-status ok" id="calcStatus">✓ 实验成功！约等于21%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 小结 ========== -->
+  <h2 class="section-header"><span class="num">结</span>本节小结</h2>
+  <div class="summary-box">
+    <div class="sb-title">📋 知识要点</div>
+    <div class="sb-item">空气是<strong>混合物</strong>，按体积分数：N<sub>2</sub> <strong>78%</strong>、O<sub>2</sub> <strong>21%</strong>、稀有气体 <strong>0.94%</strong>、CO<sub>2</sub> <strong>0.03%</strong>、其他 <strong>0.03%</strong>。</div>
+    <div class="sb-item"><strong>拉瓦锡</strong>首次通过实验得出空气由氧气和氮气组成，氧气约占1/5。</div>
+    <div class="sb-item">红磷燃烧法测定氧气含量：<em>4P + 5O<sub>2</sub> →(点燃) 2P<sub>2</sub>O<sub>5</sub></em>，进入水的体积≈氧气体积≈1/5。</div>
+    <div class="sb-item">实验成功条件：<strong>不漏气、红磷过量、冷却到室温</strong>再打开止水夹。</div>
+    <div class="sb-item">纯净物由一种物质组成（如O<sub>2</sub>、H<sub>2</sub>O），混合物由多种物质混合而成（如空气、海水）。</div>
+  </div>
+
+  <!-- ========== 练习题 ========== -->
+  <h2 class="section-header"><span class="num">练</span>课堂练习</h2>
+
+  <div class="quiz-question" id="q1">
+    <div class="question-text">1. 空气中体积分数最大的气体是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 氧气 O<sub>2</sub></div>
+    <div class="quiz-option" data-idx="1">B. 氮气 N<sub>2</sub></div>
+    <div class="quiz-option" data-idx="2">C. 二氧化碳 CO<sub>2</sub></div>
+    <div class="quiz-option" data-idx="3">D. 稀有气体</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="question-text">2. 红磷燃烧法测定空气中氧气含量时，观察到的主要现象是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 产生大量白烟，水进入约1/5体积</div>
+    <div class="quiz-option" data-idx="1">B. 产生大量白雾，水进入约1/5体积</div>
+    <div class="quiz-option" data-idx="2">C. 产生大量白烟，水进入约4/5体积</div>
+    <div class="quiz-option" data-idx="3">D. 红磷剧烈燃烧，瓶内无水进入</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="question-text">3. 下列物质中，属于纯净物的是（ ）</div>
+    <div class="quiz-option" data-idx="0">A. 海水</div>
+    <div class="quiz-option" data-idx="1">B. 空气</div>
+    <div class="quiz-option" data-idx="2">C. 食盐水</div>
+    <div class="quiz-option" data-idx="3">D. 二氧化碳</div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+
+  <!-- ========== 学科交叉 ========== -->
+  <h2 class="section-header"><span class="num">叉</span>学科交叉</h2>
+  <div class="cross-row">
+    <a class="cross-link cross-chem" href="01-物质的变化和性质.html">
+      <span class="arrow">←</span>
+      <div>
+        <div class="cl-label">化学 · 九年级（上一课）</div>
+        <div class="cl-title">01-物质的变化和性质</div>
+      </div>
+    </a>
+    <a class="cross-link cross-chem" href="03-物质构成的奥秘.html">
+      <div style="text-align:right;">
+        <div class="cl-label">化学 · 九年级（下一课）</div>
+        <div class="cl-title">03-物质构成的奥秘</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="cross-link cross-phys" href="../../物理/八年级/09-压强.html">
+      <span class="arrow">↔</span>
+      <div>
+        <div class="cl-label">物理 · 八年级</div>
+        <div class="cl-title">09-压强（大气压强）</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- 步骤导航 -->
+  <div class="step-nav">
+    <a href="01-物质的变化和性质.html" class="btn btn-outline">← 上一章：01-物质的变化和性质</a>
+    <a href="03-物质构成的奥秘.html" class="btn btn-primary" style="background:var(--chemistry);">下一章：03-物质构成的奥秘 →</a>
   </div>
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+/* ===================== 交互1：空气成分饼图 ===================== */
+const pieData = [
+  { name: '氮气 N₂', short: 'N₂', pct: 78, color: '#4A90D9', cls: 'n2',
+    desc: '氮气是空气中含量最多的气体，约占空气体积的78%。化学性质稳定，常温下难与其他物质反应，常用作食品包装的保护气、灯泡填充气，也是制造硝酸、氮肥的重要原料。',
+    hint: '含量最多！约占空气体积的3/4。' },
+  { name: '氧气 O₂', short: 'O₂', pct: 21, color: '#E74C3C', cls: 'o2',
+    desc: '氧气约占空气体积的21%，是支持燃烧和呼吸的关键气体。动植物呼吸、燃料燃烧都需要氧气。工业上通过分离液态空气制取氧气。',
+    hint: '支持燃烧和呼吸，约占1/5。' },
+  { name: '稀有气体', short: '稀有', pct: 0.94, color: '#27AE60', cls: 'rare',
+    desc: '稀有气体包括氦(He)、氖(Ne)、氩(Ar)等，约占空气体积的0.94%。化学性质极不活泼（很难与其他物质反应），常用作保护气（如电焊）和电光源（霓虹灯、氙灯）。',
+    hint: '化学性质极不活泼，曾叫"惰性气体"。' },
+  { name: '二氧化碳 CO₂', short: 'CO₂', pct: 0.03, color: '#F39C12', cls: 'co2',
+    desc: '二氧化碳约占空气体积的0.03%。植物光合作用的原料；不能燃烧也不支持燃烧，可用于灭火；固态CO₂俗称"干冰"，可用于人工降雨和食品冷藏。',
+    hint: '光合作用原料，温室气体。注意：含量仅为0.03%！' },
+  { name: '其他气体和杂质', short: '其他', pct: 0.03, color: '#95A5A6', cls: 'other',
+    desc: '包括水蒸气、二氧化硫、臭氧及其他微量气体和杂质。含量很少但不可或缺，如水蒸气影响天气变化。',
+    hint: '包括水蒸气等微量成分。' }
+];
+
+function polarToCartesian(cx, cy, r, angleDeg) {
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+function describeArc(cx, cy, r, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, r, startAngle);
+  const end = polarToCartesian(cx, cy, r, endAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
+}
+
+function buildPieChart() {
+  const svg = document.getElementById('pieChart');
+  const legend = document.getElementById('pieLegend');
+  const cx = 170, cy = 170, r = 120;
+  let currentAngle = 0;
+  const detail = document.getElementById('pieDetail');
+
+  pieData.forEach((d, i) => {
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + (d.pct / 100) * 360;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', describeArc(cx, cy, r, startAngle, endAngle));
+    path.setAttribute('fill', d.color);
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '2');
+    path.style.cursor = 'pointer';
+    path.style.transition = 'transform 0.3s, opacity 0.3s';
+    path.setAttribute('data-idx', i);
+    path.classList.add('clickable');
+    path.addEventListener('click', () => selectPie(i));
+    svg.appendChild(path);
+
+    // 标签引出线（对小扇形特别处理）
+    const midAngle = (startAngle + endAngle) / 2;
+    const labelPos = polarToCartesian(cx, cy, r * 0.65, midAngle);
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', labelPos.x);
+    text.setAttribute('y', labelPos.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('fill', '#fff');
+    text.setAttribute('font-size', d.pct > 5 ? '16' : '10');
+    text.setAttribute('font-weight', '700');
+    text.setAttribute('pointer-events', 'none');
+    text.textContent = d.short;
+    svg.appendChild(text);
+
+    // 对小扇形加引出线
+    if (d.pct < 2) {
+      const outerPos = polarToCartesian(cx, cy, r + 5, midAngle);
+      const labelOuter = polarToCartesian(cx, cy, r + 25, midAngle);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', polarToCartesian(cx, cy, r, midAngle).x);
+      line.setAttribute('y1', polarToCartesian(cx, cy, r, midAngle).y);
+      line.setAttribute('x2', outerPos.x);
+      line.setAttribute('y2', outerPos.y);
+      line.setAttribute('stroke', d.color);
+      line.setAttribute('stroke-width', '1.5');
+      svg.appendChild(line);
+
+      const lt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lt.setAttribute('x', labelOuter.x);
+      lt.setAttribute('y', labelOuter.y);
+      lt.setAttribute('text-anchor', midAngle > 180 ? 'end' : 'start');
+      lt.setAttribute('dominant-baseline', 'middle');
+      lt.setAttribute('fill', d.color);
+      lt.setAttribute('font-size', '11');
+      lt.setAttribute('font-weight', '600');
+      lt.textContent = d.short;
+      svg.appendChild(lt);
+    }
+
+    // 图例
+    const li = document.createElement('span');
+    li.className = 'legend-item';
+    li.setAttribute('data-idx', i);
+    li.innerHTML = `<span class="legend-dot" style="background:${d.color};"></span>${d.short} ${d.pct}%`;
+    li.addEventListener('click', () => selectPie(i));
+    legend.appendChild(li);
+
+    currentAngle = endAngle;
+  });
+
+  // 中心圆（环形效果）
+  const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  innerCircle.setAttribute('cx', cx);
+  innerCircle.setAttribute('cy', cy);
+  innerCircle.setAttribute('r', 35);
+  innerCircle.setAttribute('fill', '#fff');
+  svg.appendChild(innerCircle);
+
+  const centerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  centerText.setAttribute('x', cx);
+  centerText.setAttribute('y', cy - 5);
+  centerText.setAttribute('text-anchor', 'middle');
+  centerText.setAttribute('font-size', '14');
+  centerText.setAttribute('font-weight', '700');
+  centerText.setAttribute('fill', '#E74C3C');
+  centerText.textContent = '空气成分';
+  svg.appendChild(centerText);
+
+  const centerSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  centerSub.setAttribute('x', cx);
+  centerSub.setAttribute('y', cy + 12);
+  centerSub.setAttribute('text-anchor', 'middle');
+  centerSub.setAttribute('font-size', '10');
+  centerSub.setAttribute('fill', '#7F8C8D');
+  centerSub.textContent = '体积分数';
+  svg.appendChild(centerSub);
+}
+
+function selectPie(idx) {
+  const d = pieData[idx];
+  const detail = document.getElementById('pieDetail');
+  detail.className = 'pie-detail active-' + d.cls;
+  detail.innerHTML = `
+    <div class="pd-name" style="color:${d.color};">${d.name}</div>
+    <div class="pd-pct" style="color:${d.color};">${d.pct}<span style="font-size:20px;">%</span></div>
+    <div class="pd-desc">${d.desc}</div>
+    <div class="pd-hint">💡 ${d.hint}</div>
+  `;
+  // 高亮图例
+  document.querySelectorAll('.legend-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  // 高亮扇形
+  document.querySelectorAll('#pieChart path').forEach((el) => {
+    if (el.tagName === 'path' && el.hasAttribute('data-idx')) {
+      const i = parseInt(el.getAttribute('data-idx'));
+      el.style.opacity = (i === idx || idx === -1) ? '1' : '0.5';
+      el.style.transform = (i === idx) ? 'scale(1.03)' : 'scale(1)';
+      el.style.transformOrigin = '170px 170px';
+    }
+  });
+}
+
+/* ===================== 交互2：拉瓦锡实验 ===================== */
+const lavSteps = [
+  { title: '① 加热汞', desc: '拉瓦锡将少量汞放在密闭的钟罩内，持续加热12天。',
+    action: () => { setLavState('heat'); } },
+  { title: '② 汞与氧气反应', desc: '汞与钟罩内空气中的氧气反应，生成红色的氧化汞（HgO），银白色的汞逐渐减少。容器内气体体积减少约1/5。',
+    action: () => { setLavState('react'); } },
+  { title: '③ 液面上升', desc: '氧气被消耗后，钟罩内气体压强减小，外部汞被压入钟罩，汞液面上升约1/5体积。剩余气体不能支持燃烧——这就是氮气。',
+    action: () => { setLavState('rise'); } },
+  { title: '④ 加热氧化汞分解', desc: '拉瓦锡将收集到的红色氧化汞重新加热，氧化汞分解生成汞和氧气。收集到的气体能支持燃烧——这就是氧气。',
+    action: () => { setLavState('decompose'); } },
+  { title: '⑤ 得出结论', desc: '拉瓦锡得出结论：空气由氧气和氮气组成，其中氧气约占空气体积的1/5。这是人类首次定量测定空气成分。',
+    action: () => { setLavState('conclude'); } }
+];
+
+function buildLavTimeline() {
+  const tl = document.getElementById('lavTimeline');
+  lavSteps.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'lav-step';
+    div.innerHTML = `<div class="ls-title">${s.title}</div><div class="ls-desc">${s.desc}</div>`;
+    div.addEventListener('click', () => selectLavStep(i));
+    tl.appendChild(div);
+  });
+}
+
+function selectLavStep(idx) {
+  document.querySelectorAll('.lav-step').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  lavSteps[idx].action();
+}
+
+function setLavState(state) {
+  const heater = document.getElementById('lavHeater');
+  const hgO = document.getElementById('lavHgO');
+  const mercury = document.getElementById('lavMercury');
+  const mercuryLine = document.getElementById('lavMercuryLine');
+  const air = document.getElementById('lavAir');
+  const label = document.getElementById('lavLabel');
+
+  switch(state) {
+    case 'heat':
+      heater.setAttribute('opacity', '1');
+      hgO.setAttribute('opacity', '0');
+      mercury.setAttribute('y', '140'); mercury.setAttribute('height', '44');
+      mercuryLine.setAttribute('y1', '140'); mercuryLine.setAttribute('y2', '140');
+      air.setAttribute('y', '46'); air.setAttribute('height', '94');
+      label.textContent = '加热汞...';
+      break;
+    case 'react':
+      heater.setAttribute('opacity', '1');
+      hgO.setAttribute('opacity', '1');
+      mercury.setAttribute('y', '140'); mercury.setAttribute('height', '44');
+      mercuryLine.setAttribute('y1', '140'); mercuryLine.setAttribute('y2', '140');
+      air.setAttribute('y', '46'); air.setAttribute('height', '94');
+      label.textContent = '汞 + 氧气 → 氧化汞（红色固体）';
+      break;
+    case 'rise':
+      heater.setAttribute('opacity', '0');
+      hgO.setAttribute('opacity', '1');
+      // 汞液面上升约1/5（从y=140上升到y=120，上升20px≈1/5的94px空气区域）
+      mercury.setAttribute('y', '115'); mercury.setAttribute('height', '69');
+      mercuryLine.setAttribute('y1', '115'); mercuryLine.setAttribute('y2', '115');
+      air.setAttribute('y', '46'); air.setAttribute('height', '69');
+      label.textContent = '液面上升约1/5 → 氧气被消耗';
+      break;
+    case 'decompose':
+      heater.setAttribute('opacity', '1');
+      hgO.setAttribute('opacity', '0.3');
+      mercury.setAttribute('y', '115'); mercury.setAttribute('height', '69');
+      mercuryLine.setAttribute('y1', '115'); mercuryLine.setAttribute('y2', '115');
+      air.setAttribute('y', '46'); air.setAttribute('height', '69');
+      label.textContent = '氧化汞 → 汞 + 氧气 ↑';
+      break;
+    case 'conclude':
+      heater.setAttribute('opacity', '0');
+      hgO.setAttribute('opacity', '0');
+      mercury.setAttribute('y', '115'); mercury.setAttribute('height', '69');
+      mercuryLine.setAttribute('y1', '115'); mercuryLine.setAttribute('y2', '115');
+      air.setAttribute('y', '46'); air.setAttribute('height', '69');
+      label.textContent = '结论：空气 = 氧气(1/5) + 氮气(4/5)';
+      break;
+  }
+}
+
+/* ===================== 交互3：测定氧气含量实验模拟 ===================== */
+const expSteps = [
+  { title: '检查气密性', desc: '实验前先检查装置气密性：用手紧握集气瓶，若导管口有气泡冒出，松手后导管内形成一段水柱，说明气密性良好。', action: () => setExpState('check') },
+  { title: '点燃红磷', desc: '在燃烧匙中放入足量红磷，点燃后迅速伸入集气瓶中，立即塞紧橡胶塞。注意动作要快，防止空气受热膨胀逸出。', action: () => setExpState('ignite') },
+  { title: '红磷燃烧', desc: '红磷在集气瓶内剧烈燃烧，产生大量白烟（P₂O₅固体小颗粒）。方程式：4P + 5O₂ →(点燃) 2P₂O₅。瓶内氧气逐渐被消耗。', action: () => setExpState('burn') },
+  { title: '冷却至室温', desc: '燃烧停止后，等待集气瓶冷却至室温。此时瓶内氧气已耗尽，气体因消耗而压强减小，但温度未恢复前不能打开止水夹。', action: () => setExpState('cool') },
+  { title: '打开止水夹', desc: '冷却到室温后打开止水夹，由于瓶内气压小于外界大气压，水被压入集气瓶，进入的水的体积约等于消耗氧气的体积，约为集气瓶容积的1/5。', action: () => setExpState('open') }
+];
+let expCurrentStep = -1;
+
+function buildExpSteps() {
+  const container = document.getElementById('expSteps');
+  expSteps.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'exp-step-btn';
+    btn.textContent = i + 1;
+    btn.addEventListener('click', () => goExpStep(i));
+    container.appendChild(btn);
+  });
+}
+
+function goExpStep(idx) {
+  expCurrentStep = idx;
+  document.querySelectorAll('.exp-step-btn').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < idx) el.classList.add('done');
+    if (i === idx) el.classList.add('active');
+  });
+  const s = expSteps[idx];
+  const desc = document.getElementById('expStepDesc');
+  desc.innerHTML = `<div class="esd-title">${idx + 1}. ${s.title}</div><div class="esd-text">${s.desc}</div>`;
+  s.action();
+}
+
+function expNext() {
+  if (expCurrentStep < expSteps.length - 1) goExpStep(expCurrentStep + 1);
+}
+
+function expPrev() {
+  if (expCurrentStep > 0) goExpStep(expCurrentStep - 1);
+}
+
+function setExpState(state) {
+  const spoon = document.getElementById('expSpoon');
+  const flame = document.getElementById('expFlame');
+  const smoke = document.getElementById('expSmoke');
+  const water = document.getElementById('expWater');
+  const waterLine = document.getElementById('expWaterLine');
+  const phosphorus = document.getElementById('expPhosphorus');
+  const tubeWater = document.getElementById('expTubeWater');
+  const clamp = document.getElementById('expClamp');
+
+  // 重置
+  flame.classList.remove('show');
+  smoke.querySelectorAll('.smoke-particle').forEach(p => p.classList.remove('show'));
+  water.setAttribute('y', '225'); water.setAttribute('height', '3');
+  waterLine.setAttribute('y1', '225'); waterLine.setAttribute('y2', '225');
+  tubeWater.setAttribute('opacity', '0');
+  clamp.style.transform = '';
+  phosphorus.setAttribute('fill', '#C0392B');
+
+  switch(state) {
+    case 'check':
+      // 装置就绪，红磷在瓶内
+      spoon.style.transform = '';
+      break;
+    case 'ignite':
+      // 点燃红磷，火焰显示
+      flame.classList.add('show');
+      spoon.style.transform = '';
+      break;
+    case 'burn':
+      // 燃烧，白烟产生，红磷减少
+      flame.classList.add('show');
+      smoke.querySelectorAll('.smoke-particle').forEach(p => p.classList.add('show'));
+      phosphorus.setAttribute('fill', '#8B0000');
+      break;
+    case 'cool':
+      // 燃烧停止，白烟慢慢消散
+      flame.classList.remove('show');
+      smoke.querySelectorAll('.smoke-particle').forEach(p => p.classList.remove('show'));
+      phosphorus.setAttribute('fill', '#5D6D7E');
+      break;
+    case 'open':
+      // 打开止水夹，水进入约1/5
+      // 集气瓶内部空气区域从 y=72 到 y=228（高度156）
+      // 1/5 ≈ 31px，水位从 y=225 上升到 y=194
+      clamp.style.transform = 'rotate(30deg)';
+      water.setAttribute('y', '194'); water.setAttribute('height', '34');
+      waterLine.setAttribute('y1', '194'); waterLine.setAttribute('y2', '194');
+      tubeWater.setAttribute('opacity', '0.8');
+      break;
+  }
+}
+
+/* ===================== 交互4：纯净物vs混合物拖拽 ===================== */
+const dndItems = [
+  { name: 'O₂', display: '氧气 O<sub>2</sub>', type: 'pure' },
+  { name: 'H₂O', display: '水 H<sub>2</sub>O', type: 'pure' },
+  { name: '空气', display: '空气', type: 'mixture' },
+  { name: '海水', display: '海水', type: 'mixture' },
+  { name: 'CO₂', display: '二氧化碳 CO<sub>2</sub>', type: 'pure' },
+  { name: 'Fe', display: '铁 Fe', type: 'pure' },
+  { name: '食盐水', display: '食盐水', type: 'mixture' },
+  { name: '蔗糖', display: '蔗糖', type: 'pure' }
+];
+let dndState = {}; // item name -> zone type or null
+
+function buildDnd() {
+  const pool = document.getElementById('dndPool');
+  pool.innerHTML = '';
+  dndState = {};
+  dndItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'dnd-item';
+    el.setAttribute('draggable', 'true');
+    el.setAttribute('data-name', item.name);
+    el.setAttribute('data-type', item.type);
+    el.innerHTML = item.display;
+    el.addEventListener('dragstart', onDragStart);
+    el.addEventListener('dragend', onDragEnd);
+    pool.appendChild(el);
+    dndState[item.name] = null;
+  });
+  // 清空区域
+  ['zonePure', 'zoneMixture'].forEach(zid => {
+    const zone = document.getElementById(zid);
+    zone.querySelectorAll('.dnd-item').forEach(el => el.remove());
+    updateCounts();
+  });
+  // 注册drop区域
+  document.querySelectorAll('.dnd-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', onDrop);
+  });
+  document.getElementById('dndFeedback').innerHTML = '';
+}
+
+let draggedItem = null;
+function onDragStart(e) {
+  draggedItem = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.dnd-zone').forEach(z => z.classList.remove('over'));
+}
+function onDrop(e) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.classList.remove('over');
+  if (!draggedItem) return;
+  // 从原位置移除
+  if (draggedItem.parentElement.classList.contains('dnd-zone')) {
+    draggedItem.parentElement.querySelectorAll('.dnd-item').forEach(el => el.classList.remove('placed','correct','wrong'));
+  }
+  draggedItem.classList.remove('placed','correct','wrong');
+  zone.appendChild(draggedItem);
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('countPure').textContent = document.querySelectorAll('#zonePure .dnd-item').length;
+  document.getElementById('countMixture').textContent = document.querySelectorAll('#zoneMixture .dnd-item').length;
+}
+
+function checkDnd() {
+  let correctCount = 0, total = 0;
+  document.querySelectorAll('.dnd-zone').forEach(zone => {
+    const zoneType = zone.getAttribute('data-type');
+    zone.querySelectorAll('.dnd-item').forEach(el => {
+      el.classList.add('placed');
+      total++;
+      if (el.getAttribute('data-type') === zoneType) {
+        el.classList.add('correct');
+        correctCount++;
+      } else {
+        el.classList.add('wrong');
+      }
+    });
+  });
+  const fb = document.getElementById('dndFeedback');
+  if (total === 0) {
+    fb.innerHTML = '<span style="color:var(--text-secondary);">请先将物质拖入分类区域</span>';
+  } else if (correctCount === dndItems.length) {
+    fb.innerHTML = `<span style="color:var(--success); font-weight:700;">✓ 全部正确！${correctCount}/${dndItems.length} 分类的物质都正确。</span>`;
+  } else {
+    fb.innerHTML = `<span style="color:var(--danger); font-weight:700;">✗ 答对 ${correctCount}/${total}。红色为分类错误，请重新拖拽。</span>`;
+  }
+}
+
+function resetDnd() {
+  buildDnd();
+}
+
+/* ===================== 交互5：氧气含量计算 ===================== */
+function initCalc() {
+  const slider = document.getElementById('waterVolSlider');
+  const display = document.getElementById('waterVolDisplay');
+  const pctDisplay = document.getElementById('o2PctDisplay');
+  const status = document.getElementById('calcStatus');
+  const reasons = document.getElementById('calcReasons');
+  const totalVol = 500;
+
+  slider.addEventListener('input', () => {
+    const waterVol = parseInt(slider.value);
+    display.textContent = waterVol + ' mL';
+    const pct = (waterVol / totalVol * 100);
+    pctDisplay.innerHTML = pct.toFixed(1) + '<span class="cd-unit">%</span>';
+
+    if (pct >= 19 && pct <= 23) {
+      status.className = 'cd-status ok';
+      status.textContent = '✓ 实验成功！氧气含量约等于21%';
+      reasons.classList.remove('show');
+    } else {
+      status.className = 'cd-status warn';
+      if (pct < 19) {
+        status.textContent = '✗ 氧气含量偏低，实验可能失败';
+      } else {
+        status.textContent = '✗ 氧气含量偏高，实验可能失败';
+      }
+      reasons.classList.add('show');
+    }
+  });
+}
+
+/* ===================== 初始化 ===================== */
+buildPieChart();
+selectPie(-1);
+buildLavTimeline();
+selectLavStep(0);
+buildExpSteps();
+buildDnd();
+initCalc();
+
+// 练习题
+initQuiz('q1', { correct: 1, explain: '氮气N₂约占空气体积的78%，是空气中含量最大的气体。', hint: '氧气21%、稀有气体0.94%、CO₂0.03%，都比氮气少。' });
+initQuiz('q2', { correct: 0, explain: '红磷燃烧产生大量白烟（P₂O₅固体小颗粒），水进入约1/5体积。注意是"白烟"不是"白雾"——烟是固体，雾是液体。', hint: '产物P₂O₅是固体，所以是"白烟"。水进入约1/5而非4/5。' });
+initQuiz('q3', { correct: 3, explain: '二氧化碳由一种物质（CO₂）组成，是纯净物。海水、空气、食盐水都是由多种物质混合而成，是混合物。', hint: '海水含水和盐等多种物质；空气含N₂、O₂等；食盐水含水和NaCl。' });
+</script>
+
 </body>
 </html>

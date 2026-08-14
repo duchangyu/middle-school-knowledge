@@ -6,50 +6,236 @@
   <title>电流和电路 · 九年级物理</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <style>
-    .placeholder {
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    /* 演示容器 */
+    .demo-container {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin: 16px 0;
       text-align: center;
-      padding: 80px 20px;
+      border: 1px solid var(--border);
     }
-    .placeholder .emoji {
-      font-size: 72px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    .placeholder h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #4A90D9;
-    }
-    .placeholder p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    .related {
-      max-width: 600px;
+    .demo-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
       margin: 0 auto;
     }
-    .related-card {
-      display: inline-block;
-      margin: 8px;
-      padding: 12px 20px;
+
+    /* 滑块行 */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .slider-row label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .slider-row .value-display {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 64px;
+      text-align: center;
+      background: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    /* 公式框 */
+    .formula-box {
+      background: rgba(74,144,217,0.08);
+      border: 1px solid rgba(74,144,217,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 14px 0;
+      font-family: 'Cambria', 'Times New Roman', serif;
+      font-size: 18px;
+      color: var(--primary-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 模式切换按钮组 */
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
       background: var(--bg-soft);
       border-radius: var(--radius-sm);
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.2s;
+      padding: 4px;
+      margin: 8px 4px;
+      flex-wrap: wrap;
     }
-    .related-card:hover {
-      background: #4A90D920;
-      transform: translateY(-2px);
+    .mode-toggle button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .mode-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .mode-toggle button:hover:not(.active) {
+      background: rgba(74,144,217,0.1);
+    }
+
+    /* 信息读数 */
+    .info-readout {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .info-readout .readout-item {
+      background: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .info-readout .readout-item .label {
+      color: var(--text-secondary);
+      margin-right: 6px;
+    }
+    .info-readout .readout-item .value {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* 对比结果 */
+    .compare-result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .compare-result .box {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .compare-result .box.plain {
+      background: rgba(74,144,217,0.08);
+      border: 2px solid var(--primary);
+    }
+    .compare-result .box.plain .title { font-size: 14px; margin-bottom: 6px; font-weight: 700; color: var(--primary-dark); }
+    .compare-result .box .num { font-size: 24px; font-weight: 700; font-family: 'Cambria', serif; color: var(--primary-dark); }
+    .compare-result .box .sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* 属性列表 */
+    .property-list {
+      list-style: none;
+      padding: 0;
+    }
+    .property-list li {
+      padding: 8px 16px;
+      margin-bottom: 6px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+      font-size: 15px;
+    }
+    .property-list li strong { color: var(--primary-dark); }
+
+    /* 生活实例网格 */
+    .life-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .life-example {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      border-top: 3px solid var(--primary);
+      transition: transform 0.2s;
+    }
+    .life-example:hover { transform: translateY(-3px); }
+    .life-example .icon { font-size: 28px; }
+    .life-example .name { font-size: 14px; margin: 4px 0; font-weight: 600; }
+    .life-example .desc { font-size: 13px; color: var(--text-secondary); }
+
+    /* 两列布局 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    /* 警告框 */
+    .error-warning {
+      background: rgba(231,76,60,0.1);
+      border: 2px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin: 14px 0;
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+      font-size: 15px;
+    }
+    .error-warning .big { font-size: 18px; }
+
+    /* 可点击元素 */
+    .clickable { cursor: pointer; }
+    .clickable:hover { opacity: 0.85; }
+
+    /* 短路发热导线 */
+    @keyframes hotPulse {
+      0%, 100% { stroke-opacity: 1; }
+      50% { stroke-opacity: 0.4; }
+    }
+    .hot-wire { animation: hotPulse 0.6s infinite; }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .compare-result { grid-template-columns: 1fr; }
+      .slider-row { flex-direction: column; }
+      .slider-row input[type="range"] { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="navbar-brand">🔌 电流和电路</div>
+  <div class="navbar-brand">⚡ 电流和电路</div>
   <ul class="navbar-links">
     <li><a href="../../index.html">🏠 首页</a></li>
     <li><a href="index.html">九年级物理目录</a></li>
@@ -67,24 +253,943 @@
     <span>电流和电路</span>
   </div>
 
-  <div class="placeholder">
-    <div class="emoji">🔌</div>
-    <h2>电流和电路</h2>
-    <p>本章节的交互式内容正在建设中，敬请期待！<br>
-    你可以先学习其他已完成的章节，或返回目录浏览。</p>
-    <a href="index.html" class="btn btn-primary">← 返回九年级物理目录</a>
+  <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚡ 电流和电路</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 24px;">从摩擦起电到电路图，认识两种电荷、电流的方向，学会连接串联与并联电路</p>
+
+  <!-- ===== 第一部分：两种电荷 ===== -->
+  <div class="card">
+    <div class="section-header">🧲 1. 两种电荷</div>
+
+    <p>用塑料梳子梳干燥的头发，梳子会<strong>吸引</strong>头发；气球在毛衣上摩擦后能"粘"在墙上；冬天脱毛衣时常听到"噼啪"声甚至看到小火花……这些现象都是<strong>摩擦起电</strong>。</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      用<strong>摩擦</strong>的方法使物体带电，叫做<strong>摩擦起电</strong>。带电体能够<strong>吸引轻小物体</strong>
+    </div>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">自然界只有两种电荷</h3>
+    <ul class="property-list">
+      <li><strong>正电荷（+）</strong>：用<strong>丝绸</strong>摩擦过的<strong>玻璃棒</strong>所带的电荷</li>
+      <li><strong>负电荷（−）</strong>：用<strong>毛皮</strong>摩擦过的<strong>橡胶棒</strong>所带的电荷</li>
+      <li><strong>相互作用规律</strong>：<strong>同种电荷互相排斥，异种电荷互相吸引</strong></li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">摩擦起电的实质</h3>
+    <p>不同物质的原子核<strong>束缚电子的本领</strong>不同。摩擦时，束缚本领弱的物体<strong>失去电子</strong>而带<strong>正电</strong>，束缚本领强的物体<strong>得到电子</strong>而带<strong>负电</strong>。</p>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 易错提醒</div>
+      • 摩擦起电<strong>不是创造了电荷</strong>，只是<strong>电子从一个物体转移到另一个物体</strong><br>
+      • 玻璃棒带正电，是因为它<strong>失去了电子</strong>（不是得到了正电荷！）<br>
+      • 电荷的多少叫做<strong>电荷量</strong>，单位是<strong>库仑</strong>，符号 <strong>C</strong>；最小电荷叫做元电荷 e = 1.6×10⁻¹⁹ C
+    </div>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">验电器与导体、绝缘体</h3>
+    <ul class="property-list">
+      <li><strong>验电器</strong>：检验物体是否带电的仪器，原理是<strong>同种电荷互相排斥</strong>（金属箔张开）</li>
+      <li><strong>导体</strong>：容易导电的物体——金属、人体、大地、石墨、酸碱盐的水溶液</li>
+      <li><strong>绝缘体</strong>：不容易导电的物体——橡胶、玻璃、塑料、干燥的空气、陶瓷</li>
+      <li><strong>注意</strong>：导体和绝缘体之间<strong>没有绝对界限</strong>（如湿木头能导电）</li>
+    </ul>
+
+    <!-- ===== 交互1：电荷实验室 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🧪 交互1：电荷实验室</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">左边：点击按钮体验"丝绸摩擦玻璃棒"；右边：切换电荷种类，观察小球的排斥与吸引</p>
+
+      <svg viewBox="0 0 640 340" width="640" height="340">
+        <!-- 分隔线 -->
+        <line x1="320" y1="20" x2="320" y2="320" stroke="#D5DCE4" stroke-width="2" stroke-dasharray="6,4"/>
+
+        <!-- ===== 左半：摩擦起电 ===== -->
+        <text x="170" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E6BA8">① 摩擦起电</text>
+
+        <!-- 丝绸 -->
+        <g>
+          <rect x="60" y="232" width="150" height="60" rx="10" fill="#F5CBA7" stroke="#E59866" stroke-width="2"/>
+          <path d="M70 246 Q135 236 200 246 M70 262 Q135 252 200 262 M70 278 Q135 268 200 278" stroke="#E59866" stroke-width="1.5" fill="none"/>
+          <text x="135" y="312" text-anchor="middle" font-size="13" fill="#8D6E63" font-weight="bold">丝绸</text>
+        </g>
+
+        <!-- 玻璃棒 -->
+        <g id="glassRod">
+          <rect x="90" y="150" width="160" height="26" rx="13" fill="rgba(74,144,217,0.25)" stroke="#4A90D9" stroke-width="2"/>
+          <text x="170" y="140" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="bold">玻璃棒</text>
+        </g>
+
+        <!-- 电子点 -->
+        <g id="eDots" fill="#2980B9">
+          <circle id="eDot0" cx="120" cy="163" r="5"/>
+          <circle id="eDot1" cx="160" cy="163" r="5"/>
+          <circle id="eDot2" cx="200" cy="163" r="5"/>
+          <circle id="eDot3" cx="240" cy="163" r="5"/>
+        </g>
+        <text x="60" y="130" font-size="12" fill="#2980B9" font-weight="bold">电子(−)：</text>
+
+        <!-- 摩擦后玻璃棒上的正电荷 -->
+        <g id="rodPlus" style="display:none;" fill="#E74C3C" font-size="18" font-weight="bold" text-anchor="middle">
+          <text x="115" y="170">+</text>
+          <text x="155" y="170">+</text>
+          <text x="195" y="170">+</text>
+          <text x="235" y="170">+</text>
+        </g>
+        <!-- 摩擦后丝绸上的负电荷 -->
+        <g id="silkMinus" style="display:none;" fill="#2980B9" font-size="18" font-weight="bold" text-anchor="middle">
+          <text x="95" y="266">−</text>
+          <text x="125" y="280">−</text>
+          <text x="155" y="262">−</text>
+          <text x="185" y="276">−</text>
+        </g>
+
+        <!-- ===== 右半：电荷间的相互作用 ===== -->
+        <text x="480" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E6BA8">② 电荷间的相互作用</text>
+
+        <!-- 支架横杆 -->
+        <rect x="370" y="50" width="220" height="10" rx="4" fill="#8D6E63"/>
+        <rect x="468" y="60" width="8" height="14" fill="#8D6E63" opacity="0"/>
+
+        <!-- 小球1（悬挂点 415,60） -->
+        <g id="pb1">
+          <line x1="415" y1="60" x2="415" y2="170" stroke="#7F8C8D" stroke-width="2"/>
+          <circle cx="415" cy="192" r="22" fill="#5BA0E9" stroke="#2E6BA8" stroke-width="2"/>
+          <text id="pbSym1" x="415" y="200" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff">+</text>
+        </g>
+
+        <!-- 小球2（悬挂点 545,60） -->
+        <g id="pb2">
+          <line x1="545" y1="60" x2="545" y2="170" stroke="#7F8C8D" stroke-width="2"/>
+          <circle cx="545" cy="192" r="22" fill="#F0B27A" stroke="#CA6F1E" stroke-width="2"/>
+          <text id="pbSym2" x="545" y="200" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff">+</text>
+        </g>
+
+        <text x="480" y="300" text-anchor="middle" font-size="12" fill="#7F8C8D">两个带电的轻质小球</text>
+      </svg>
+
+      <div style="margin-top: 10px;">
+        <button class="btn btn-primary" id="frictionBtn">🖐️ 用丝绸摩擦玻璃棒</button>
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">🔬 摩擦起电观察</div>
+        <span id="frictionTip">点击上方按钮，观察电子（蓝点）的转移方向。</span>
+      </div>
+
+      <div class="mode-toggle" id="chargeModeToggle" style="margin-top: 10px;">
+        <button class="active" data-cmode="same">⚡ 两球带同种电荷（均为+）</button>
+        <button data-cmode="diff">🧲 两球带异种电荷（+ 与 −）</button>
+      </div>
+
+      <div class="tip-box" style="margin-top: 12px; text-align: left;">
+        <div class="tip-title">🎯 电荷相互作用规律</div>
+        <span id="chargeTip"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="card" style="max-width:600px;margin:20px auto;">
-    <div class="card-title">📚 学习建议</div>
-    <p style="color: var(--text-secondary); font-size: 14px;">
-      · 先完成目录中标注"已完成"或"交互"的章节<br>
-      · 利用学科交叉参考，从已学知识迁移理解<br>
-      · 每个交互页面都有滑块和练习，动手试试
-    </p>
+  <!-- ===== 第二部分：电流 ===== -->
+  <div class="card">
+    <div class="section-header">🔋 2. 电流及其方向</div>
+
+    <p>电荷的<strong>定向移动</strong>形成电流。就像水流是水分子的定向移动一样，电流是电荷"排队朝一个方向走"。</p>
+
+    <div class="formula-box" style="font-size: 18px;">
+      电荷的<strong>定向移动</strong>形成电流。<br>
+      规定：<strong style="color: var(--danger);">正电荷</strong>定向移动的方向为<strong>电流方向</strong>
+    </div>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">一个"别扭"的规定</h3>
+    <p>金属导体中实际能够自由移动的是带<strong>负电</strong>的<strong>自由电子</strong>。由于电流方向是按<strong>正电荷</strong>移动方向规定的，所以：</p>
+
+    <div class="formula-box" style="font-size: 17px;">
+      金属导体中：<strong>自由电子</strong>定向移动的方向 与 <strong>电流方向</strong> <strong style="color: var(--danger);">相反</strong>
+    </div>
+
+    <ul class="property-list">
+      <li><strong>电路中有持续电流的条件</strong>：① 电路中有<strong>电源</strong>；② 电路<strong>闭合</strong>（通路）</li>
+      <li><strong>电源外部</strong>：电流从电源<strong>正极</strong>流出，经过用电器，回到<strong>负极</strong></li>
+      <li><strong>金属中的载流子</strong>：自由电子（负电荷），从负极流向正极</li>
+    </ul>
+
+    <div class="tip-box">
+      <div class="tip-title">💡 生活类比</div>
+      把电流想象成环形跑道上的" conveyor 传送带"：电源是发动机，正极是出口，负极是入口。电流从正极出发绕一圈回到负极——方向的规定只是约定俗成，真正在导线里跑的是反方向的电子。
+    </div>
   </div>
+
+  <!-- ===== 第三部分：电路的组成 ===== -->
+  <div class="card">
+    <div class="section-header">🔧 3. 电路的组成：通路、断路与短路</div>
+
+    <p>一个完整的电路由四部分组成，缺一不可：</p>
+
+    <ul class="property-list">
+      <li><strong>电源</strong>：提供电能（持续电流）——干电池、蓄电池、发电机</li>
+      <li><strong>用电器</strong>：消耗电能，把电能转化为其他形式的能——灯泡、电扇、电饭锅</li>
+      <li><strong>开关</strong>：控制电路的通断</li>
+      <li><strong>导线</strong>：输送电能，把各元件连接起来</li>
+    </ul>
+
+    <h3 style="margin: 18px 0 8px; color: var(--primary-dark);">电路的三种状态</h3>
+    <ul class="property-list">
+      <li><strong>通路</strong>：处处接通的电路，用电器<strong>能工作</strong></li>
+      <li><strong>断路（开路）</strong>：某处断开的电路，电路中<strong>没有电流</strong>，用电器不工作</li>
+      <li><strong>短路</strong>：导线不经过用电器，直接把电源<strong>两极</strong>相连——电流极大，会烧坏电源，<strong>绝对不允许！</strong></li>
+    </ul>
+
+    <div class="error-warning">
+      <span class="big">⚠️ 短路非常危险！</span><br>
+      <span style="font-size: 13px; font-weight: 500;">短路时电流很大，会烧坏电源和导线，甚至引起火灾。连接电路时绝不允许用导线直接连接电源正负极。</span>
+    </div>
+
+    <!-- ===== 交互2：电路搭建模拟 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">🔌 交互2：电路搭建模拟</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">点击开关闭合/断开电路；蓝色小点是自由电子（注意它们的运动方向与红色电流箭头<strong>相反</strong>）</p>
+
+      <div class="mode-toggle" id="circuitModeToggle">
+        <button class="active" data-ckt="normal">✅ 正常电路</button>
+        <button data-ckt="short">⚠️ 短路演示（危险！）</button>
+      </div>
+
+      <svg viewBox="0 0 640 380" width="640" height="380">
+        <!-- 主回路（隐藏的电子运动路径） -->
+        <path id="mainPath" d="M 350 320 L 560 320 L 560 60 L 350 60 L 290 60 L 80 60 L 80 320 L 290 320" fill="none" stroke="none"/>
+        <path id="shortPath" d="M 350 320 L 560 320 L 560 220 L 628 220 L 628 160 L 560 160 L 560 60 L 350 60 L 290 60 L 80 60 L 80 320 L 290 320" fill="none" stroke="none"/>
+
+        <!-- 导线 -->
+        <g stroke="#7F8C8D" stroke-width="4" fill="none">
+          <path d="M 350 320 L 560 320 L 560 60 L 350 60"/>
+          <path d="M 290 60 L 80 60 L 80 320 L 290 320"/>
+        </g>
+
+        <!-- 短路导线（并联在灯泡两端） -->
+        <path id="shortWire" d="M 560 160 L 628 160 L 628 220 L 560 220" fill="none" stroke="#E74C3C" stroke-width="5" style="display:none;"/>
+        <text id="shortLabel" x="628" y="145" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="bold" style="display:none;">短路导线发烫！🔥</text>
+
+        <!-- 电流方向箭头（红） -->
+        <g fill="#E74C3C">
+          <polygon points="450,313 466,320 450,327"/>
+          <polygon points="553,120 560,104 567,120"/>
+          <polygon points="210,53 194,60 210,67"/>
+          <polygon points="73,200 80,216 87,200"/>
+        </g>
+        <text x="470" y="345" font-size="12" fill="#E74C3C" font-weight="bold">▲ 红色箭头 = 规定的电流方向</text>
+        <text x="90" y="345" font-size="12" fill="#2980B9" font-weight="bold">● 蓝点 = 自由电子（方向相反）</text>
+
+        <!-- 电池（底部中央，长正短负） -->
+        <line x1="350" y1="304" x2="350" y2="336" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="290" y1="310" x2="290" y2="330" stroke="#2C3E50" stroke-width="8"/>
+        <text x="350" y="298" text-anchor="middle" font-size="16" font-weight="bold" fill="#E74C3C">+</text>
+        <text x="290" y="298" text-anchor="middle" font-size="16" font-weight="bold" fill="#2980B9">−</text>
+        <text x="320" y="360" text-anchor="middle" font-size="13" fill="#7F8C8D">电源</text>
+
+        <!-- 开关（顶部 290~350） -->
+        <g id="swGroup" class="clickable">
+          <circle cx="290" cy="60" r="5" fill="#2C3E50"/>
+          <circle cx="350" cy="60" r="5" fill="#2C3E50"/>
+          <g id="swLever">
+            <line x1="290" y1="60" x2="346" y2="60" stroke="#2C3E50" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="346" cy="60" r="6" fill="#F39C12"/>
+          </g>
+          <text x="320" y="36" text-anchor="middle" font-size="13" fill="#2E6BA8" font-weight="bold">开关（点击）</text>
+        </g>
+
+        <!-- 灯泡（右侧 560,190） -->
+        <g>
+          <circle id="bulbGlow" cx="560" cy="190" r="34" fill="#FFE066" opacity="0"/>
+          <circle id="bulbGlass" cx="560" cy="190" r="18" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+          <path id="bulbFilament" d="M 550 190 L 556 182 L 564 198 L 570 190" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+          <text x="560" y="245" text-anchor="middle" font-size="13" fill="#7F8C8D">小灯泡</text>
+        </g>
+
+        <!-- 电子点 -->
+        <g id="electrons" fill="#2980B9"></g>
+      </svg>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">开关状态：</span><span class="value" id="cktSwitch">断开</span></div>
+        <div class="readout-item"><span class="label">灯泡：</span><span class="value" id="cktBulb">不亮</span></div>
+        <div class="readout-item"><span class="label">电路状态：</span><span class="value" id="cktState">断路</span></div>
+      </div>
+
+      <div class="error-warning" id="shortAlert" style="display:none;">
+        <span class="big">⚠️ 发生短路！</span><br>
+        <span style="font-size: 13px; font-weight: 500;">电流"抄近路"绕过了灯泡：灯泡不亮，而短路导线电流极大、迅速发烫，电源会被烧坏！</span>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 观察要点</div>
+        • <strong>断开开关</strong> → 电路成<strong>断路</strong>，电子停止移动，灯灭<br>
+        • <strong>闭合开关</strong> → 电路成<strong>通路</strong>，电子定向移动形成电流，灯亮<br>
+        • 注意：蓝点（电子）从电源<strong>负极</strong>出发，方向与红色电流箭头<strong>相反</strong><br>
+        • 切换到"短路演示"再闭合开关，看看会发生什么危险！
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第四部分：电路图 ===== -->
+  <div class="card">
+    <div class="section-header">📐 4. 电路图与元件符号</div>
+
+    <p>画实物图太麻烦，人们用<strong>规定的符号</strong>表示电路元件，画出的图叫做<strong>电路图</strong>。下面是必须记住的常用元件符号：</p>
+
+    <svg viewBox="0 0 640 250" width="640" height="250" style="max-width:100%; display:block; margin: 10px auto; background: white; border-radius: var(--radius-sm); box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+      <!-- 电池 -->
+      <g>
+        <line x1="60" y1="60" x2="110" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="110" y1="42" x2="110" y2="78" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="124" y1="50" x2="124" y2="70" stroke="#2C3E50" stroke-width="8"/>
+        <line x1="124" y1="60" x2="170" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <text x="110" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#E74C3C">+</text>
+        <text x="124" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#2980B9">−</text>
+        <text x="115" y="105" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">电池（电源）</text>
+      </g>
+      <!-- 开关 -->
+      <g>
+        <line x1="230" y1="60" x2="265" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <circle cx="265" cy="60" r="4" fill="#2C3E50"/>
+        <line x1="265" y1="60" x2="300" y2="36" stroke="#2C3E50" stroke-width="3"/>
+        <circle cx="305" cy="60" r="4" fill="#2C3E50"/>
+        <line x1="305" y1="60" x2="340" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <text x="285" y="105" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">开关（断开）</text>
+      </g>
+      <!-- 小灯泡 -->
+      <g>
+        <line x1="410" y1="60" x2="445" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <circle cx="465" cy="60" r="20" fill="none" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="451" y1="46" x2="479" y2="74" stroke="#2C3E50" stroke-width="2.5"/>
+        <line x1="479" y1="46" x2="451" y2="74" stroke="#2C3E50" stroke-width="2.5"/>
+        <line x1="485" y1="60" x2="520" y2="60" stroke="#2C3E50" stroke-width="3"/>
+        <text x="465" y="105" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">小灯泡</text>
+      </g>
+      <!-- 电阻 -->
+      <g>
+        <line x1="60" y1="170" x2="90" y2="170" stroke="#2C3E50" stroke-width="3"/>
+        <rect x="90" y="158" width="60" height="24" fill="none" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="150" y1="170" x2="180" y2="170" stroke="#2C3E50" stroke-width="3"/>
+        <text x="120" y="215" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">电阻</text>
+      </g>
+      <!-- 导线相连 -->
+      <g>
+        <line x1="250" y1="170" x2="340" y2="170" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="295" y1="140" x2="295" y2="200" stroke="#2C3E50" stroke-width="3"/>
+        <circle cx="295" cy="170" r="5" fill="#2C3E50"/>
+        <text x="295" y="225" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">导线相连（加点）</text>
+      </g>
+      <!-- 导线不相连 -->
+      <g>
+        <line x1="420" y1="170" x2="510" y2="170" stroke="#2C3E50" stroke-width="3"/>
+        <path d="M 455 170 A 10 10 0 0 1 475 170" fill="none" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="465" y1="140" x2="465" y2="160" stroke="#2C3E50" stroke-width="3"/>
+        <line x1="465" y1="180" x2="465" y2="200" stroke="#2C3E50" stroke-width="3"/>
+        <text x="465" y="225" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">导线交叉不相连</text>
+      </g>
+    </svg>
+
+    <div class="tip-box">
+      <div class="tip-title">📏 画电路图的要求</div>
+      • 元件符号要<strong>规范</strong>，位置安排适当、分布均匀<br>
+      • 导线横平竖直，整个电路图最好呈<strong>长方形</strong>，元件不要画在拐角处<br>
+      • 电路图要与实物图<strong>一一对应</strong>（元件顺序、电源正负极方向一致）
+    </div>
+  </div>
+
+  <!-- ===== 第五部分：串联与并联 ===== -->
+  <div class="card">
+    <div class="section-header">🔗 5. 串联与并联</div>
+
+    <p>两个小灯泡，怎样连接才能让它们都发光？有两种最基本的连接方式：</p>
+
+    <ul class="property-list">
+      <li><strong>串联</strong>：把元件<strong>逐个顺次</strong>连接起来的电路——电流只有<strong>一条</strong>路径</li>
+      <li><strong>并联</strong>：把元件<strong>并列地接在电路两点之间</strong>——电流有<strong>多条</strong>路径（各走各的支路）</li>
+    </ul>
+
+    <div class="compare-result">
+      <div class="box plain">
+        <div class="title">🔗 串联电路</div>
+        <div class="num">1 条路径</div>
+        <div class="sub">一处断开 → 全路断开；一个开关控制所有用电器；各用电器互相影响</div>
+      </div>
+      <div class="box plain">
+        <div class="title">🔀 并联电路</div>
+        <div class="num">多条路径</div>
+        <div class="sub">各支路独立工作、互不影响；干路开关控制全部，支路开关只控制本支路</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-title">🏠 生活中的串并联</div>
+      • <strong>并联</strong>：家庭电路中的电灯、电视、冰箱（一个坏了不影响其他）；马路上的路灯<br>
+      • <strong>串联</strong>：节日小彩灯串（一个烧断整串熄灭）；手电筒里的电池与灯泡<br>
+      • 判断技巧：从电源正极出发"走电流"，看电流是只有一条路，还是会"分叉"
+    </div>
+
+    <!-- ===== 交互3：串联 vs 并联对比实验 ===== -->
+    <div class="demo-container">
+      <h3 style="color: var(--primary-dark); margin-bottom: 6px;">💡 交互3：串联 vs 并联对比实验</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">切换电路拓扑；<strong>点击灯泡可以把它"拧下"</strong>，观察另一个灯泡是否还亮；点击开关控制通断</p>
+
+      <div class="mode-toggle" id="topoToggle">
+        <button class="active" data-topo="series">🔗 串联电路</button>
+        <button data-topo="parallel">🔀 并联电路</button>
+      </div>
+
+      <svg viewBox="0 0 640 400" width="640" height="400">
+        <!-- ================= 串联电路 ================= -->
+        <g id="seriesG">
+          <path id="sPath" d="M 330 330 L 540 330 L 540 80 L 320 80 L 280 80 L 100 80 L 100 330 L 270 330" fill="none" stroke="none"/>
+          <!-- 导线 -->
+          <g stroke="#7F8C8D" stroke-width="4" fill="none">
+            <path d="M 330 330 L 540 330 L 540 80 L 320 80"/>
+            <path d="M 280 80 L 100 80 L 100 330 L 270 330"/>
+          </g>
+          <!-- 电池 -->
+          <line x1="330" y1="314" x2="330" y2="346" stroke="#2C3E50" stroke-width="3"/>
+          <line x1="270" y1="320" x2="270" y2="340" stroke="#2C3E50" stroke-width="8"/>
+          <text x="330" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#E74C3C">+</text>
+          <text x="270" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#2980B9">−</text>
+          <!-- 开关 -->
+          <g id="sSwitch" class="clickable">
+            <circle cx="280" cy="80" r="5" fill="#2C3E50"/>
+            <circle cx="320" cy="80" r="5" fill="#2C3E50"/>
+            <g id="sLever">
+              <line x1="280" y1="80" x2="316" y2="80" stroke="#2C3E50" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="316" cy="80" r="6" fill="#F39C12"/>
+            </g>
+            <text x="300" y="56" text-anchor="middle" font-size="12" fill="#2E6BA8" font-weight="bold">开关</text>
+          </g>
+          <!-- 灯泡1（左） -->
+          <g id="sb1" class="clickable">
+            <circle id="sb1Glow" cx="100" cy="205" r="32" fill="#FFE066" opacity="0"/>
+            <circle id="sb1Glass" cx="100" cy="205" r="18" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+            <path d="M 90 205 L 96 197 L 104 213 L 110 205" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+            <g id="sb1Off" style="display:none;">
+              <circle cx="100" cy="205" r="24" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="5,4"/>
+              <text x="100" y="160" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">已拧下</text>
+            </g>
+            <text x="100" y="255" text-anchor="middle" font-size="13" fill="#7F8C8D">L₁（点击拧下）</text>
+          </g>
+          <!-- 灯泡2（右） -->
+          <g id="sb2" class="clickable">
+            <circle id="sb2Glow" cx="540" cy="205" r="32" fill="#FFE066" opacity="0"/>
+            <circle id="sb2Glass" cx="540" cy="205" r="18" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+            <path d="M 530 205 L 536 197 L 544 213 L 550 205" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+            <g id="sb2Off" style="display:none;">
+              <circle cx="540" cy="205" r="24" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="5,4"/>
+              <text x="540" y="160" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">已拧下</text>
+            </g>
+            <text x="540" y="255" text-anchor="middle" font-size="13" fill="#7F8C8D">L₂（点击拧下）</text>
+          </g>
+          <g id="sElectrons" fill="#2980B9"></g>
+        </g>
+
+        <!-- ================= 并联电路 ================= -->
+        <g id="parallelG" style="display:none;">
+          <path id="pPathA" d="M 330 330 L 430 330 L 470 330 L 540 330 L 540 80 L 240 80 L 240 330 L 270 330" fill="none" stroke="none"/>
+          <path id="pPathB" d="M 330 330 L 430 330 L 470 330 L 540 330 L 540 80 L 400 80 L 400 330 L 270 330" fill="none" stroke="none"/>
+          <!-- 导线 -->
+          <g stroke="#7F8C8D" stroke-width="4" fill="none">
+            <path d="M 240 80 L 540 80 L 540 330 L 470 330"/>
+            <path d="M 430 330 L 330 330"/>
+            <path d="M 270 330 L 240 330"/>
+            <path d="M 240 80 L 240 330"/>
+            <path d="M 400 80 L 400 330"/>
+          </g>
+          <!-- 电池 -->
+          <line x1="330" y1="314" x2="330" y2="346" stroke="#2C3E50" stroke-width="3"/>
+          <line x1="270" y1="320" x2="270" y2="340" stroke="#2C3E50" stroke-width="8"/>
+          <text x="330" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#E74C3C">+</text>
+          <text x="270" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#2980B9">−</text>
+          <!-- 干路开关（底部 430~470） -->
+          <g id="pSwitch" class="clickable">
+            <circle cx="430" cy="330" r="5" fill="#2C3E50"/>
+            <circle cx="470" cy="330" r="5" fill="#2C3E50"/>
+            <g id="pLever">
+              <line x1="430" y1="330" x2="466" y2="330" stroke="#2C3E50" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="466" cy="330" r="6" fill="#F39C12"/>
+            </g>
+            <text x="450" y="362" text-anchor="middle" font-size="12" fill="#2E6BA8" font-weight="bold">干路开关</text>
+          </g>
+          <!-- 灯泡1（支路 x=240） -->
+          <g id="pbl1" class="clickable">
+            <circle id="pbl1Glow" cx="240" cy="205" r="32" fill="#FFE066" opacity="0"/>
+            <circle id="pbl1Glass" cx="240" cy="205" r="18" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+            <path d="M 230 205 L 236 197 L 244 213 L 250 205" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+            <g id="pbl1Off" style="display:none;">
+              <circle cx="240" cy="205" r="24" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="5,4"/>
+              <text x="240" y="160" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">已拧下</text>
+            </g>
+            <text x="240" y="255" text-anchor="middle" font-size="13" fill="#7F8C8D">L₁ 支路（点击拧下）</text>
+          </g>
+          <!-- 灯泡2（支路 x=400） -->
+          <g id="pbl2" class="clickable">
+            <circle id="pbl2Glow" cx="400" cy="205" r="32" fill="#FFE066" opacity="0"/>
+            <circle id="pbl2Glass" cx="400" cy="205" r="18" fill="#E8EEF4" stroke="#2C3E50" stroke-width="3"/>
+            <path d="M 390 205 L 396 197 L 404 213 L 410 205" stroke="#7F8C8D" stroke-width="2.5" fill="none"/>
+            <g id="pbl2Off" style="display:none;">
+              <circle cx="400" cy="205" r="24" fill="none" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="5,4"/>
+              <text x="400" y="160" text-anchor="middle" font-size="12" fill="#E74C3C" font-weight="bold">已拧下</text>
+            </g>
+            <text x="400" y="255" text-anchor="middle" font-size="13" fill="#7F8C8D">L₂ 支路（点击拧下）</text>
+          </g>
+          <g id="pElectrons" fill="#2980B9"></g>
+        </g>
+      </svg>
+
+      <div class="info-readout">
+        <div class="readout-item"><span class="label">电路模式：</span><span class="value" id="spMode">串联</span></div>
+        <div class="readout-item"><span class="label">L₁：</span><span class="value" id="spL1">亮</span></div>
+        <div class="readout-item"><span class="label">L₂：</span><span class="value" id="spL2">亮</span></div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 14px; text-align: left;">
+        <div class="tip-title">🎯 实验结论</div>
+        <span id="spTip"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第六部分：练习题 ===== -->
+  <div class="card">
+    <div class="section-header">📝 6. 练习题</div>
+    <p>检验一下你对电流和电路知识的掌握情况：</p>
+
+    <div id="quiz1" class="quiz-question">
+      <div class="question-text">1. 用丝绸摩擦过的玻璃棒带正电，其原因是：</div>
+      <div class="quiz-option" data-idx="0">A. 摩擦创造了正电荷</div>
+      <div class="quiz-option" data-idx="1">B. 玻璃棒上的电子转移到了丝绸上</div>
+      <div class="quiz-option" data-idx="2">C. 丝绸上的正电荷转移到了玻璃棒上</div>
+      <div class="quiz-option" data-idx="3">D. 玻璃棒从空气中吸收了正电荷</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz2" class="quiz-question">
+      <div class="question-text">2. 关于金属导体中的电流方向，下列说法正确的是：</div>
+      <div class="quiz-option" data-idx="0">A. 与自由电子定向移动的方向相同</div>
+      <div class="quiz-option" data-idx="1">B. 在电源外部从负极流向正极</div>
+      <div class="quiz-option" data-idx="2">C. 与自由电子定向移动的方向相反</div>
+      <div class="quiz-option" data-idx="3">D. 没有固定方向，可以随意规定</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+
+    <div id="quiz3" class="quiz-question">
+      <div class="question-text">3. 小明家里的一盏台灯坏了，但其他电灯和电视机仍能正常工作，这说明这些用电器之间是：</div>
+      <div class="quiz-option" data-idx="0">A. 串联的</div>
+      <div class="quiz-option" data-idx="1">B. 先串联后并联的</div>
+      <div class="quiz-option" data-idx="2">C. 无法判断的</div>
+      <div class="quiz-option" data-idx="3">D. 并联的</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 学科交叉参考 ===== -->
+  <div class="cross-ref-box">
+    <div class="ref-title">🔗 学科交叉参考</div>
+    <p>· 摩擦起电的实质（电子转移） ↔ <a href="../../化学/九年级/03-物质构成的奥秘.html">化学 · 物质构成的奥秘</a>（原子结构与核外电子）</p>
+    <p>· 电荷间的相互作用使小球偏转 ↔ <a href="../八年级/07-力.html">物理八年级 · 力</a>（力可以改变物体的运动状态）</p>
+    <p>· 电荷"定向移动"的定量描述 ↔ 下一章 <a href="14-电压电阻.html">电压 电阻</a> 与 <a href="15-欧姆定律.html">欧姆定律</a>（电流 I = Q/t 与 I = U/R）</p>
+  </div>
+
+  <!-- ===== 步骤导航 ===== -->
+  <div class="step-nav">
+    <a href="../八年级/12-简单机械.html" class="btn btn-outline">← 上一章：简单机械</a>
+    <a href="14-电压电阻.html" class="btn btn-primary">下一章：电压 电阻 →</a>
+  </div>
+
 </div>
 
 <script src="../../assets/js/main.js"></script>
+<script>
+// ============================================================
+// 交互1：电荷实验室（摩擦起电 + 电荷间相互作用）
+// ============================================================
+(function() {
+  // ---------- 摩擦起电 ----------
+  var rod = document.getElementById('glassRod');
+  var frictionBtn = document.getElementById('frictionBtn');
+  var rodPlus = document.getElementById('rodPlus');
+  var silkMinus = document.getElementById('silkMinus');
+  var frictionTip = document.getElementById('frictionTip');
+  var dots = [];
+  for (var i = 0; i < 4; i++) dots.push(document.getElementById('eDot' + i));
+  var startPos = [[120, 163], [160, 163], [200, 163], [240, 163]];
+  var endPos = [[95, 258], [125, 272], [155, 254], [185, 268]];
+  var animating = false;
+
+  function setDot(i, x, y) {
+    dots[i].setAttribute('cx', x);
+    dots[i].setAttribute('cy', y);
+  }
+
+  function resetFriction() {
+    rod.setAttribute('transform', 'translate(0,0)');
+    rodPlus.style.display = 'none';
+    silkMinus.style.display = 'none';
+    for (var i = 0; i < 4; i++) setDot(i, startPos[i][0], startPos[i][1]);
+  }
+
+  frictionBtn.addEventListener('click', function() {
+    if (animating) return;
+    animating = true;
+    resetFriction();
+    frictionTip.textContent = '摩擦中……注意看电子（蓝点）从玻璃棒转移到丝绸上！';
+    var t0 = null;
+    var dur = 1800;
+    function step(now) {
+      if (!t0) t0 = now;
+      var t = (now - t0) / dur;
+      if (t >= 1) {
+        rod.setAttribute('transform', 'translate(0,0)');
+        for (var i = 0; i < 4; i++) setDot(i, endPos[i][0], endPos[i][1]);
+        rodPlus.style.display = '';
+        silkMinus.style.display = '';
+        frictionTip.innerHTML = '摩擦结果：玻璃棒<strong>失去电子 → 带正电（+）</strong>；丝绸<strong>得到电子 → 带负电（−）</strong>。<br>摩擦起电的实质是<strong>电子的转移</strong>，电荷不能被创造，只能转移！';
+        frictionBtn.textContent = '↺ 再摩擦一次';
+        animating = false;
+        return;
+      }
+      var osc = Math.sin(t * Math.PI * 8) * 10 * (1 - t * 0.4);
+      rod.setAttribute('transform', 'translate(' + osc + ',0)');
+      for (var i = 0; i < 4; i++) {
+        var lt = (t - (0.25 + i * 0.12)) / 0.4;
+        if (lt < 0) {
+          setDot(i, startPos[i][0] + osc, startPos[i][1]);
+        } else if (lt >= 1) {
+          setDot(i, endPos[i][0], endPos[i][1]);
+        } else {
+          var e = lt * lt * (3 - 2 * lt);
+          setDot(i,
+            startPos[i][0] + (endPos[i][0] - startPos[i][0]) * e,
+            startPos[i][1] + (endPos[i][1] - startPos[i][1]) * e);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+  resetFriction();
+
+  // ---------- 电荷间相互作用 ----------
+  var pb1 = document.getElementById('pb1');
+  var pb2 = document.getElementById('pb2');
+  var sym1 = document.getElementById('pbSym1');
+  var sym2 = document.getElementById('pbSym2');
+  var chargeTip = document.getElementById('chargeTip');
+  var a1 = 0, a2 = 0, anim = null;
+
+  function animateTo(t1, t2) {
+    if (anim) cancelAnimationFrame(anim);
+    var s1 = a1, s2 = a2, t0 = null;
+    function step(now) {
+      if (!t0) t0 = now;
+      var t = Math.min(1, (now - t0) / 800);
+      var e = t * t * (3 - 2 * t);
+      a1 = s1 + (t1 - s1) * e;
+      a2 = s2 + (t2 - s2) * e;
+      pb1.setAttribute('transform', 'rotate(' + a1 + ' 415 60)');
+      pb2.setAttribute('transform', 'rotate(' + a2 + ' 545 60)');
+      if (t < 1) anim = requestAnimationFrame(step);
+    }
+    anim = requestAnimationFrame(step);
+  }
+
+  function setChargeMode(m) {
+    document.querySelectorAll('#chargeModeToggle button').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.cmode === m);
+    });
+    if (m === 'same') {
+      sym1.textContent = '+';
+      sym2.textContent = '+';
+      animateTo(-16, 16);
+      chargeTip.innerHTML = '两个小球都带<strong>正电</strong>（同种电荷）→ 它们<strong>互相排斥</strong>，向两侧荡开！<br>规律①：<strong>同种电荷互相排斥</strong>。验电器的金属箔张开，利用的正是这个原理。';
+    } else {
+      sym1.textContent = '+';
+      sym2.textContent = '−';
+      animateTo(9, -9);
+      chargeTip.innerHTML = '左球带<strong>正电</strong>、右球带<strong>负电</strong>（异种电荷）→ 它们<strong>互相吸引</strong>，向中间靠拢！<br>规律②：<strong>异种电荷互相吸引</strong>。带电体吸引轻小物体也属于静电吸引现象。';
+    }
+  }
+
+  document.querySelectorAll('#chargeModeToggle button').forEach(function(b) {
+    b.addEventListener('click', function() { setChargeMode(b.dataset.cmode); });
+  });
+  setChargeMode('same');
+})();
+
+// ============================================================
+// 交互2：电路搭建模拟（通路/断路/短路）
+// ============================================================
+(function() {
+  var closed = false;
+  var shortMode = false;
+
+  var mainPath = document.getElementById('mainPath');
+  var shortPath = document.getElementById('shortPath');
+  var swGroup = document.getElementById('swGroup');
+  var swLever = document.getElementById('swLever');
+  var bulbGlow = document.getElementById('bulbGlow');
+  var bulbGlass = document.getElementById('bulbGlass');
+  var bulbFilament = document.getElementById('bulbFilament');
+  var shortWire = document.getElementById('shortWire');
+  var shortLabel = document.getElementById('shortLabel');
+  var shortAlert = document.getElementById('shortAlert');
+  var electronsG = document.getElementById('electrons');
+
+  var N = 14;
+  var dots = [];
+  for (var i = 0; i < N; i++) {
+    var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('r', '5');
+    electronsG.appendChild(c);
+    dots.push(c);
+  }
+
+  var offset = 0;
+  var lastTime = 0;
+
+  function currentPath() { return shortMode ? shortPath : mainPath; }
+
+  function bulbLit() { return closed && !shortMode; }
+
+  function updateVisuals() {
+    swLever.setAttribute('transform', closed ? 'rotate(0 290 60)' : 'rotate(-40 290 60)');
+    var lit = bulbLit();
+    bulbGlow.setAttribute('opacity', lit ? '0.85' : '0');
+    bulbGlass.setAttribute('fill', lit ? '#FFF3B0' : '#E8EEF4');
+    bulbFilament.setAttribute('stroke', lit ? '#E67E22' : '#7F8C8D');
+
+    shortWire.style.display = shortMode ? '' : 'none';
+    shortLabel.style.display = shortMode ? '' : 'none';
+    if (shortMode && closed) {
+      shortWire.setAttribute('class', 'hot-wire');
+      shortAlert.style.display = '';
+    } else {
+      shortWire.removeAttribute('class');
+      shortAlert.style.display = 'none';
+    }
+
+    document.getElementById('cktSwitch').textContent = closed ? '闭合' : '断开';
+    document.getElementById('cktBulb').textContent = lit ? '发光 ✨' : '不亮';
+    document.getElementById('cktState').textContent =
+      !closed ? '断路' : (shortMode ? '短路（危险！）' : '通路');
+    document.getElementById('cktState').style.color =
+      closed && shortMode ? '#E74C3C' : '';
+  }
+
+  swGroup.addEventListener('click', function() {
+    closed = !closed;
+    updateVisuals();
+  });
+
+  document.querySelectorAll('#circuitModeToggle button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      shortMode = (b.dataset.ckt === 'short');
+      document.querySelectorAll('#circuitModeToggle button').forEach(function(x) {
+        x.classList.toggle('active', x === b);
+      });
+      updateVisuals();
+    });
+  });
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    var path = currentPath();
+    var total = path.getTotalLength();
+
+    if (closed) offset = (offset + dt * 110) % total;
+
+    for (var i = 0; i < N; i++) {
+      if (!closed) {
+        dots[i].style.display = 'none';
+        continue;
+      }
+      dots[i].style.display = '';
+      // 电子运动方向与规定电流方向相反：沿路径反向取点
+      var L = (offset + i * (total / N)) % total;
+      var pt = path.getPointAtLength(total - L);
+      dots[i].setAttribute('cx', pt.x);
+      dots[i].setAttribute('cy', pt.y);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  updateVisuals();
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 交互3：串联 vs 并联对比实验
+// ============================================================
+(function() {
+  var topo = 'series';     // series | parallel
+  var closed = true;
+  var removed1 = false;    // L1 被拧下
+  var removed2 = false;    // L2 被拧下
+
+  var seriesG = document.getElementById('seriesG');
+  var parallelG = document.getElementById('parallelG');
+  var sPath = document.getElementById('sPath');
+  var pPathA = document.getElementById('pPathA');
+  var pPathB = document.getElementById('pPathB');
+  var sLever = document.getElementById('sLever');
+  var pLever = document.getElementById('pLever');
+  var spTip = document.getElementById('spTip');
+
+  function makeDots(container, n) {
+    var arr = [];
+    for (var i = 0; i < n; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('r', '5');
+      container.appendChild(c);
+      arr.push(c);
+    }
+    return arr;
+  }
+  var sDots = makeDots(document.getElementById('sElectrons'), 12);
+  var pDots = makeDots(document.getElementById('pElectrons'), 16);
+
+  function lampLit(which) {
+    var removedSelf = which === 1 ? removed1 : removed2;
+    if (!closed || removedSelf) return false;
+    if (topo === 'series') {
+      // 串联：任一处断开，全路断开
+      return !(removed1 || removed2);
+    }
+    // 并联：各支路独立
+    return true;
+  }
+
+  function setLamp(prefix, lit, removed) {
+    document.getElementById(prefix + 'Glow').setAttribute('opacity', lit ? '0.85' : '0');
+    document.getElementById(prefix + 'Glass').setAttribute('fill', lit ? '#FFF3B0' : (removed ? '#F5D0CC' : '#E8EEF4'));
+    document.getElementById(prefix + 'Off').style.display = removed ? '' : 'none';
+  }
+
+  function updateVisuals() {
+    seriesG.style.display = topo === 'series' ? '' : 'none';
+    parallelG.style.display = topo === 'parallel' ? '' : 'none';
+
+    sLever.setAttribute('transform', closed ? 'rotate(0 280 80)' : 'rotate(-40 280 80)');
+    pLever.setAttribute('transform', closed ? 'rotate(0 430 330)' : 'rotate(-40 430 330)');
+
+    if (topo === 'series') {
+      setLamp('sb1', lampLit(1), removed1);
+      setLamp('sb2', lampLit(2), removed2);
+    } else {
+      setLamp('pbl1', lampLit(1), removed1);
+      setLamp('pbl2', lampLit(2), removed2);
+    }
+
+    document.getElementById('spMode').textContent = topo === 'series' ? '串联' : '并联';
+    document.getElementById('spL1').textContent = removed1 ? '已拧下' : (lampLit(1) ? '亮 ✨' : '灭');
+    document.getElementById('spL2').textContent = removed2 ? '已拧下' : (lampLit(2) ? '亮 ✨' : '灭');
+
+    // 动态结论
+    var tip = '';
+    if (topo === 'series') {
+      if (!closed) tip = '<strong>串联</strong>：开关断开，整个电路断路，两灯都灭。串联电路中<strong>一个开关控制所有用电器</strong>。';
+      else if (removed1 || removed2) tip = '<strong>串联</strong>：拧下' + (removed1 ? 'L₁' : 'L₂') + ' 后，电流唯一的通路被切断 → <strong>两灯全灭</strong>！这就是"一处断，全路断"。';
+      else tip = '<strong>串联</strong>：电流只有<strong>一条</strong>路径，依次经过 L₁、L₂，两灯都亮。试着"拧下"一个灯泡看看！';
+    } else {
+      if (!closed) tip = '<strong>并联</strong>：干路开关断开，整个电路没电，两灯都灭。<strong>干路开关控制所有用电器</strong>。';
+      else if (removed1 && removed2) tip = '<strong>并联</strong>：两条支路的灯都被拧下了，电路中没有用电器。';
+      else if (removed1 || removed2) tip = '<strong>并联</strong>：拧下' + (removed1 ? 'L₁' : 'L₂') + ' 只断开了<strong>它所在的支路</strong>，另一条支路仍有电流 → ' + (removed1 ? 'L₂' : 'L₁') + ' <strong>照常发光</strong>！这就是"各支路互不影响"。';
+      else tip = '<strong>并联</strong>：电流在分叉点分成<strong>两条支路</strong>，分别经过 L₁、L₂。试着"拧下"一个灯泡，看另一个是否受影响！';
+    }
+    spTip.innerHTML = tip;
+  }
+
+  // 切换拓扑
+  document.querySelectorAll('#topoToggle button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      topo = b.dataset.topo;
+      document.querySelectorAll('#topoToggle button').forEach(function(x) {
+        x.classList.toggle('active', x === b);
+      });
+      updateVisuals();
+    });
+  });
+
+  // 开关
+  document.getElementById('sSwitch').addEventListener('click', function() {
+    closed = !closed;
+    updateVisuals();
+  });
+  document.getElementById('pSwitch').addEventListener('click', function() {
+    closed = !closed;
+    updateVisuals();
+  });
+
+  // 拧下 / 装回灯泡
+  document.getElementById('sb1').addEventListener('click', function() { removed1 = !removed1; updateVisuals(); });
+  document.getElementById('sb2').addEventListener('click', function() { removed2 = !removed2; updateVisuals(); });
+  document.getElementById('pbl1').addEventListener('click', function() { removed1 = !removed1; updateVisuals(); });
+  document.getElementById('pbl2').addEventListener('click', function() { removed2 = !removed2; updateVisuals(); });
+
+  // 电子动画
+  var offset = 0;
+  var lastTime = 0;
+
+  function drawDotsOnPath(dots, path, active, from, count) {
+    var total = path.getTotalLength();
+    for (var i = 0; i < count; i++) {
+      var d = dots[from + i];
+      if (!active) { d.style.display = 'none'; continue; }
+      d.style.display = '';
+      var L = (offset + i * (total / count)) % total;
+      var pt = path.getPointAtLength(total - L);
+      d.setAttribute('cx', pt.x);
+      d.setAttribute('cy', pt.y);
+    }
+  }
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    var dt = (now - lastTime) / 1000;
+    lastTime = now;
+    offset = (offset + dt * 100) % 100000;
+
+    if (topo === 'series') {
+      var sActive = closed && !removed1 && !removed2;
+      drawDotsOnPath(sDots, sPath, sActive, 0, sDots.length);
+    } else {
+      // 干路有电 = 开关闭合；支路A有电流还需 L1 未被拧下
+      var aActive = closed && !removed1;
+      var bActive = closed && !removed2;
+      drawDotsOnPath(pDots, pPathA, aActive, 0, 8);
+      drawDotsOnPath(pDots, pPathB, bActive, 8, 8);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  updateVisuals();
+  requestAnimationFrame(tick);
+})();
+
+// ============================================================
+// 练习题
+// ============================================================
+initQuiz('quiz1', {
+  correct: 1,
+  explain: '摩擦起电的实质是电子的转移。玻璃棒的原子核束缚电子的本领比丝绸弱，摩擦时玻璃棒上的电子转移到丝绸上，玻璃棒因失去电子而带正电。电荷不能被"创造"。',
+  hint: '想一想：摩擦起电是"创造"电荷还是"转移"电荷？玻璃棒带正电是得到还是失去了电子？'
+});
+
+initQuiz('quiz2', {
+  correct: 2,
+  explain: '物理学规定正电荷定向移动的方向为电流方向。金属中是带负电的自由电子在移动，所以电子移动方向与电流方向相反；在电源外部，电流从正极流向负极。',
+  hint: '电流方向是按"正电荷"的移动方向规定的，而金属中移动的是带负电的自由电子……'
+});
+
+initQuiz('quiz3', {
+  correct: 3,
+  explain: '并联电路各支路独立工作、互不影响：一盏灯坏了，其他支路仍是通路。串联电路"一处断、全路断"，若是串联，台灯坏了其他用电器都不能工作。',
+  hint: '回忆串联"一处断全路断"、并联"各支路互不影响"的特点——一盏坏了其他还能工作，符合哪种？'
+});
+</script>
+
 </body>
 </html>
