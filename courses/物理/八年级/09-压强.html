@@ -392,55 +392,6 @@
     }
     .btn-row .btn { min-width: 110px; }
 
-    /* ===== 半球状态显示 ===== */
-    .hemisphere-status {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .status-block {
-      background: white;
-      padding: 10px 18px;
-      border-radius: var(--radius-sm);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      text-align: center;
-      min-width: 140px;
-    }
-    .status-block .status-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
-    }
-    .status-block .status-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      font-family: 'Cambria', serif;
-    }
-    .status-block .status-value.warn { color: var(--danger); }
-    .status-block .status-value.ok { color: var(--success); }
-
-    .pull-result {
-      text-align: center;
-      margin-top: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      min-height: 28px;
-      padding: 10px;
-      border-radius: var(--radius-sm);
-      transition: all 0.3s;
-    }
-    .pull-result.stuck {
-      background: rgba(231,76,60,0.12);
-      color: var(--danger);
-    }
-    .pull-result.open {
-      background: rgba(39,174,96,0.12);
-      color: var(--success);
-    }
-
     /* ===== 知识小卡片 ===== */
     .know-grid {
       display: grid;
@@ -884,45 +835,50 @@
     </div>
   </div>
 
-  <!-- ===== 交互5：马德堡半球 ===== -->
+  <!-- ===== 马德堡半球：大气压有多大（静态图示） ===== -->
   <div class="card">
-    <div class="section-header">🧲 交互 5：马德堡半球实验</div>
-    <p style="font-size:14px; color:var(--text-secondary);">先"抽出空气"，再尝试"拉开"两半球。调节球内残余气压，看看拉力会发生什么变化。</p>
+    <div class="section-header">🧲 马德堡半球实验：大气压究竟有多大？</div>
+    <p style="font-size:14px; color:var(--text-secondary);">既然大气压真实存在，它到底有多大？1654 年格里克把两个铜半球抽真空后，连 16 匹马都拉不开——下面用一张图看清原因。</p>
 
     <div class="demo-container">
-      <svg id="hemi-svg" viewBox="0 0 480 280" width="480" height="280">
-        <!-- 由 JS 渲染 -->
+      <svg class="model-svg" viewBox="0 0 480 280" width="460" height="268" role="img" aria-label="大气压从四面把马德堡半球压紧">
+        <!-- 球体：左、右两个半球，在 x=240 处接合 -->
+        <path d="M240,70 A70,70 0 0,0 240,210 Z" fill="#E74C3C" fill-opacity="0.85" stroke="#C0392B" stroke-width="2"/>
+        <path d="M240,70 A70,70 0 0,1 240,210 Z" fill="#E74C3C" fill-opacity="0.85" stroke="#C0392B" stroke-width="2"/>
+        <!-- 接缝（赤道圆面） -->
+        <line x1="240" y1="70" x2="240" y2="210" stroke="#7B241C" stroke-width="2.5" stroke-dasharray="5 4"/>
+        <!-- 大气压箭头：从四面八方压向接缝 -->
+        <g stroke="#4A90D9" stroke-width="3" marker-end="url(#atmArrow)">
+          <line x1="66" y1="140" x2="166" y2="140"/>
+          <line x1="414" y1="140" x2="314" y2="140"/>
+          <line x1="240" y1="18" x2="240" y2="60"/>
+          <line x1="240" y1="262" x2="240" y2="220"/>
+        </g>
+        <text x="66" y="128" font-size="12" fill="#4A90D9" font-weight="600">大气压 p₀</text>
+        <text x="314" y="128" font-size="12" fill="#4A90D9" font-weight="600">大气压 p₀</text>
+        <text x="240" y="12" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="600">大气压 p₀</text>
+        <text x="240" y="278" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="600">大气压 p₀</text>
+        <text x="240" y="145" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">铜半球</text>
+        <text x="250" y="98" font-size="12" fill="#7B241C" font-weight="600">接缝 S</text>
+        <defs>
+          <marker id="atmArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4A90D9"/>
+          </marker>
+        </defs>
       </svg>
     </div>
 
-    <div class="slider-row">
-      <label>球内残余气压（相对大气压）：</label>
-      <input type="range" id="hemi-slider" min="0" max="100" value="0">
-      <div class="value-display" id="hemi-display">0%</div>
+    <div class="formula-box">
+      F = p₀ × S
+      <div class="sub">F — 大气压把两半球压紧的总力（N）　p₀ — 大气压 ≈ 1.0×10⁵ Pa　S — 接缝（圆面）面积（m²）</div>
     </div>
 
-    <div class="hemisphere-status">
-      <div class="status-block">
-        <div class="status-label">球内气压</div>
-        <div class="status-value warn" id="hemi-inner">0 Pa</div>
-      </div>
-      <div class="status-block">
-        <div class="status-label">外部大气压</div>
-        <div class="status-value" id="hemi-outer">1.01×10⁵ Pa</div>
-      </div>
-      <div class="status-block">
-        <div class="status-label">压力差（压紧力）</div>
-        <div class="status-value" id="hemi-diff">1.01×10⁵ Pa</div>
-      </div>
+    <div class="tip-box">
+      <div class="tip-title">💡 为什么 16 匹马拉不开？</div>
+      格里克的铜球直径约 37 cm，接缝圆面积 S = π(0.185 m)² ≈ 0.11 m²。于是压紧力
+      F = p₀S ≈ 1.0×10⁵ × 0.11 ≈ <strong>1.1×10⁴ N</strong>，相当于约 <strong>1.1 吨</strong>的重物压在接缝上！
+      球内抽得越空（p内 越小），内外压力差越接近 p₀，压紧力越大，自然拉不开。
     </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="hemi-pump">💨 抽出空气</button>
-      <button class="btn btn-danger" id="hemi-pull">💪 拉开半球</button>
-      <button class="btn btn-outline" id="hemi-reset">↩️ 重置</button>
-    </div>
-
-    <div class="pull-result" id="hemi-result" style="background:var(--bg-soft);">先点击"抽出空气"开始实验</div>
   </div>
 
   <!-- ===== 练习题 ===== -->
@@ -1504,146 +1460,6 @@ function initTor() {
 }
 
 // ============================================================
-// 交互 5：马德堡半球
-// ============================================================
-var hemiState = {
-  pumped: false,    // 是否已抽气
-  pulled: false,    // 是否尝试拉开
-  innerPct: 0       // 球内残余气压百分比（0=真空，100=大气压）
-};
-
-function renderHemiSVG() {
-  var svg = $('hemi-svg');
-  var innerP = hemiState.innerPct / 100 * 1.01e5;
-  var outerP = 1.01e5;
-  var diffP = outerP - innerP;
-  var separated = hemiState.pulled && hemiState.innerPct > 70;  // 残余气压大时拉得开
-
-  var content = '';
-  var cx = 240, cy = 140;
-
-  // 拉力箭头
-  var pullOffset = separated ? 50 : 0;
-
-  // 左半球
-  content += '<g transform="translate(' + (cx - 60 - pullOffset) + ',' + cy + ')">';
-  content += '<path d="M 0 -50 A 50 50 0 0 1 0 50 L 0 -50 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>';
-  content += '<path d="M 0 -50 A 50 50 0 0 1 0 50" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>';
-  content += '<circle cx="-25" cy="0" r="4" fill="#fff" opacity="0.4"/>';
-  content += '</g>';
-
-  // 右半球
-  content += '<g transform="translate(' + (cx + 60 + pullOffset) + ',' + cy + ')">';
-  content += '<path d="M 0 -50 A 50 50 0 0 0 0 50 L 0 -50 Z" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>';
-  content += '<path d="M 0 -50 A 50 50 0 0 0 0 50" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>';
-  content += '<circle cx="25" cy="0" r="4" fill="#fff" opacity="0.4"/>';
-  content += '</g>';
-
-  // 拉绳
-  content += '<line x1="' + (cx - 110 - pullOffset) + '" y1="' + cy + '" x2="20" y2="' + cy + '" stroke="#5D4037" stroke-width="3"/>';
-  content += '<line x1="' + (cx + 110 + pullOffset) + '" y1="' + cy + '" x2="460" y2="' + cy + '" stroke="#5D4037" stroke-width="3"/>';
-  // 拉力箭头
-  if (hemiState.pulled) {
-    content += '<path d="M 80 ' + (cy - 20) + ' L 80 ' + (cy - 50) + '" stroke="#F5A623" stroke-width="2.5" marker-end="url(#hemiArrow)"/>';
-    content += '<text x="80" y="' + (cy - 56) + '" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="600">拉力↑</text>';
-    content += '<path d="M 400 ' + (cy - 20) + ' L 400 ' + (cy - 50) + '" stroke="#F5A623" stroke-width="2.5" marker-end="url(#hemiArrow)"/>';
-    content += '<text x="400" y="' + (cy - 56) + '" text-anchor="middle" font-size="12" fill="#F5A623" font-weight="600">拉力↑</text>';
-  }
-
-  // 抽气管
-  if (hemiState.pumped && !separated) {
-    content += '<line x1="' + cx + '" y1="' + (cy + 50) + '" x2="' + cx + '" y2="230" stroke="#888" stroke-width="3"/>';
-    content += '<rect x="' + (cx - 20) + '" y="230" width="40" height="20" rx="3" fill="#7F8C8D" stroke="#555" stroke-width="1.5"/>';
-    content += '<text x="' + cx + '" y="270" text-anchor="middle" font-size="11" fill="#666">抽气泵</text>';
-  }
-
-  // 球内气压指示
-  if (hemiState.pumped) {
-    var innerColor = hemiState.innerPct < 30 ? '#E74C3C' : (hemiState.innerPct < 70 ? '#F5A623' : '#27AE60');
-    content += '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="12" fill="' + innerColor + '" font-weight="700">球内</text>';
-    content += '<text x="' + cx + '" y="' + (cy + 22) + '" text-anchor="middle" font-size="10" fill="' + innerColor + '">' + (innerP / 1000).toFixed(1) + ' kPa</text>';
-  }
-
-  // 外部大气压箭头
-  content += '<path d="M ' + (cx - 130 - pullOffset) + ' 60 L ' + (cx - 80 - pullOffset) + ' 60" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#hemiArrowBlue)"/>';
-  content += '<text x="' + (cx - 130 - pullOffset) + '" y="50" font-size="11" fill="#4A90D9" font-weight="600">大气压</text>';
-  content += '<path d="M ' + (cx + 130 + pullOffset) + ' 60 L ' + (cx + 80 + pullOffset) + ' 60" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#hemiArrowBlue)"/>';
-  content += '<text x="' + (cx + 80 + pullOffset) + '" y="50" text-anchor="end" font-size="11" fill="#4A90D9" font-weight="600">大气压</text>';
-
-  // 标题
-  if (!hemiState.pumped) {
-    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#2C3E50" font-weight="600">两半球合拢，球内气压 = 大气压</text>';
-  } else if (separated) {
-    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#27AE60" font-weight="600">球内气压较高，被拉开了！</text>';
-  } else {
-    content += '<text x="240" y="24" text-anchor="middle" font-size="14" fill="#E74C3C" font-weight="600">球内气压低，大气压把半球压紧</text>';
-  }
-
-  content = '<defs><marker id="hemiArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#F5A623"/></marker><marker id="hemiArrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/></marker></defs>' + content;
-
-  svg.innerHTML = content;
-
-  // 更新状态显示
-  $('hemi-display').textContent = hemiState.innerPct + '%';
-  $('hemi-inner').textContent = (innerP / 1000).toFixed(1) + ' kPa';
-  $('hemi-inner').className = 'status-value ' + (hemiState.innerPct < 50 ? 'warn' : 'ok');
-  $('hemi-outer').textContent = (outerP / 100000).toFixed(2) + '×10⁵ Pa';
-  $('hemi-diff').textContent = fmtPa(diffP);
-  $('hemi-diff').className = 'status-value ' + (diffP > 30000 ? 'warn' : 'ok');
-
-  // 拉开结果
-  var result = $('hemi-result');
-  result.className = 'pull-result';
-  if (!hemiState.pumped) {
-    result.textContent = '先点击"抽出空气"开始实验';
-    result.style.background = 'var(--bg-soft)';
-  } else if (!hemiState.pulled) {
-    result.textContent = '球内已抽气，现在点击"拉开半球"试试';
-    result.style.background = 'rgba(74,144,217,0.12)';
-    result.style.color = 'var(--primary-dark)';
-  } else if (separated) {
-    result.className = 'pull-result open';
-    result.textContent = '✓ 球内残余气压较高（' + hemiState.innerPct + '%），压力差小，拉力大于压力差——半球被拉开了！';
-  } else {
-    result.className = 'pull-result stuck';
-    result.textContent = '✗ 球内气压低，大气压把两半球紧紧压在一起（压力差 ' + fmtPa(diffP) + '）——拉不开！';
-  }
-}
-
-function initHemi() {
-  $('hemi-slider').addEventListener('input', function() {
-    hemiState.innerPct = parseInt($('hemi-slider').value);
-    // 调节后重置拉开状态
-    hemiState.pulled = false;
-    if (hemiState.innerPct === 100) hemiState.pumped = false;
-    else hemiState.pumped = true;
-    renderHemiSVG();
-  });
-  $('hemi-pump').addEventListener('click', function() {
-    hemiState.pumped = true;
-    hemiState.innerPct = 0;
-    hemiState.pulled = false;
-    $('hemi-slider').value = 0;
-    renderHemiSVG();
-  });
-  $('hemi-pull').addEventListener('click', function() {
-    if (!hemiState.pumped) {
-      $('hemi-result').className = 'pull-result stuck';
-      $('hemi-result').textContent = '请先点击"抽出空气"再尝试拉开！';
-      return;
-    }
-    hemiState.pulled = true;
-    renderHemiSVG();
-  });
-  $('hemi-reset').addEventListener('click', function() {
-    hemiState = { pumped: false, pulled: false, innerPct: 0 };
-    $('hemi-slider').value = 0;
-    renderHemiSVG();
-  });
-  renderHemiSVG();
-}
-
-// ============================================================
 // 初始化
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
@@ -1651,7 +1467,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initCompare();
   initLiquid();
   initTor();
-  initHemi();
 
   // 练习题
   initQuiz('quiz1', {
