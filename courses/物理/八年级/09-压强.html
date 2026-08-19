@@ -741,23 +741,31 @@
       <div class="derive-title">🧩 关键一步：把"一大片液体"想成一个"竖直液柱"</div>
       <p>液体是连续的一大片，直接算不好下手。我们做个聪明的简化：在液体中<strong>想象取出一个竖直的圆柱形液柱</strong>，它的底面积为 S，高度为 h（从液面一直延伸到我们关心的那个点）。接下来只算这个"小柱子"给底面多大的压强。</p>
 
-      <svg class="model-svg" viewBox="0 0 380 250" width="360" height="236" role="img" aria-label="液柱模型">
-        <rect x="120" y="40" width="140" height="150" fill="#74b9ff" fill-opacity="0.35" stroke="#2980b9" stroke-width="2"/>
-        <line x1="120" y1="40" x2="260" y2="40" stroke="#2980b9" stroke-width="2"/>
-        <text x="266" y="36" font-size="13" fill="#2980b9">液面</text>
-        <line x1="100" y1="40" x2="100" y2="190" stroke="#636e72" stroke-width="1.5"/>
-        <polygon points="100,40 96,50 104,50" fill="#636e72"/>
-        <polygon points="100,190 96,180 104,180" fill="#636e72"/>
-        <text x="74" y="118" font-size="13" fill="#636e72" transform="rotate(-90 74 118)">深度 h</text>
-        <line x1="120" y1="190" x2="260" y2="190" stroke="#2d3436" stroke-width="3"/>
-        <line x1="120" y1="212" x2="260" y2="212" stroke="#636e72" stroke-width="1.5"/>
-        <polygon points="120,212 130,208 130,216" fill="#636e72"/>
-        <polygon points="260,212 250,208 250,216" fill="#636e72"/>
-        <text x="168" y="230" font-size="13" fill="#636e72">底面积 S</text>
-        <line x1="190" y1="55" x2="190" y2="178" stroke="#27AE60" stroke-width="2.5" marker-end="url(#deriveArrowG)"/>
-        <text x="198" y="120" font-size="13" fill="#1e7e44">G = ρShg</text>
-        <line x1="190" y1="190" x2="190" y2="202" stroke="#E74C3C" stroke-width="3" marker-end="url(#deriveArrowF)"/>
-        <text x="200" y="199" font-size="13" fill="#c0392b">F = G</text>
+      <svg class="model-svg" viewBox="0 0 380 280" width="360" height="266" role="img" aria-label="液柱模型（圆柱体）">
+        <!-- 圆柱侧面：矩形 + 底椭圆，形成立体圆底 -->
+        <rect x="120" y="50" width="140" height="150" fill="#74b9ff" fill-opacity="0.30"/>
+        <ellipse cx="190" cy="200" rx="70" ry="18" fill="#74b9ff" fill-opacity="0.45" stroke="#2980b9" stroke-width="2"/>
+        <line x1="120" y1="50" x2="120" y2="200" stroke="#2980b9" stroke-width="2"/>
+        <line x1="260" y1="50" x2="260" y2="200" stroke="#2980b9" stroke-width="2"/>
+        <!-- 顶面椭圆（高光面，体现立体） -->
+        <ellipse cx="190" cy="50" rx="70" ry="18" fill="#aee0ff" fill-opacity="0.75" stroke="#2980b9" stroke-width="2"/>
+        <text x="268" y="46" font-size="13" fill="#2980b9">液面</text>
+        <!-- 深度 h：左侧双箭头 -->
+        <line x1="100" y1="50" x2="100" y2="200" stroke="#636e72" stroke-width="1.5"/>
+        <polygon points="100,50 96,60 104,60" fill="#636e72"/>
+        <polygon points="100,200 96,190 104,190" fill="#636e72"/>
+        <text x="72" y="128" font-size="13" fill="#636e72" transform="rotate(-90 72 128)">深度 h</text>
+        <!-- 重力 G：柱内向下 -->
+        <line x1="190" y1="70" x2="190" y2="190" stroke="#27AE60" stroke-width="2.5" marker-end="url(#deriveArrowG)"/>
+        <text x="200" y="135" font-size="13" fill="#1e7e44">G = ρShg</text>
+        <!-- 底部压力 F：圆底下方 -->
+        <line x1="190" y1="220" x2="190" y2="236" stroke="#E74C3C" stroke-width="3" marker-end="url(#deriveArrowF)"/>
+        <text x="200" y="233" font-size="13" fill="#c0392b">F = G</text>
+        <!-- 底面积 S：底部标注 -->
+        <line x1="120" y1="250" x2="260" y2="250" stroke="#636e72" stroke-width="1.5"/>
+        <polygon points="120,250 130,246 130,254" fill="#636e72"/>
+        <polygon points="260,250 250,246 250,254" fill="#636e72"/>
+        <text x="166" y="268" font-size="13" fill="#636e72">底面积 S</text>
         <defs>
           <marker id="deriveArrowG" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
             <path d="M0,0 L10,5 L0,10 z" fill="#27AE60"/>
