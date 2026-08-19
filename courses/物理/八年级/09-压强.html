@@ -460,7 +460,7 @@
     <p>你用力按桌面，桌面就被向下压；图钉尖压在墙上，墙受到一个垂直墙面的力。这类<strong>垂直作用在物体表面上的力</strong>，叫做<strong>压力</strong>，用 F 表示，单位是牛顿（N）。</p>
 
     <ul class="property-list">
-      <li><strong>方向</strong>：压力的方向<strong>垂直于受力面</strong>，指向受力物体内部。</li>
+      <li><strong>方向</strong>：压力的方向<strong>始终垂直于受力面</strong>（沿接触面的法线方向），指向受力物体内部。</li>
       <li><strong>作用点</strong>：在受力面上。</li>
       <li><strong>压力 ≠ 重力</strong>：只有当物体<strong>自由放在水平面上</strong>，且只受重力和支持力时，压力的大小才等于重力（F = G）。斜面上、墙上压着的物体，压力都不等于重力。</li>
     </ul>
@@ -496,20 +496,21 @@
         <line x1="130" y1="180" x2="130" y2="220" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
         <text x="138" y="212" font-size="13" fill="#E74C3C" font-weight="600">F = G</text>
 
-        <!-- 场景二：斜面，F < G -->
-        <text x="290" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">② 斜面：F &lt; G</text>
-        <!-- 斜面 -->
-        <polygon points="220,250 360,250 360,150" fill="url(#hatchPattern)" stroke="#555" stroke-width="2"/>
-        <!-- 物体（旋转放在斜面上） -->
-        <g transform="translate(290,178) rotate(-32)">
+        <!-- 场景二：斜面，F ⊥ 斜面 -->
+        <text x="290" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">② 斜面：F ⊥ 斜面 &lt; G</text>
+        <!-- 斜面（直角三角形，斜边为接触面） -->
+        <polygon points="215,245 375,245 375,150" fill="url(#hatchPattern)" stroke="#555" stroke-width="2"/>
+        <!-- 斜面上的物体：方块贴合斜边 -->
+        <g transform="translate(280,172) rotate(-31)">
           <rect x="-22" y="-18" width="44" height="36" fill="#7BB0E8" stroke="#2E6BA8" stroke-width="2" rx="3"/>
         </g>
         <!-- 重力 G（竖直向下） -->
-        <line x1="290" y1="165" x2="290" y2="225" stroke="#27AE60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
-        <text x="296" y="200" font-size="13" fill="#27AE60" font-weight="600">G</text>
-        <!-- 压力 F（垂直斜面） -->
-        <line x1="290" y1="178" x2="312" y2="160" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
-        <text x="316" y="156" font-size="13" fill="#E74C3C" font-weight="600">F</text>
+        <line x1="280" y1="172" x2="280" y2="230" stroke="#27AE60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+        <text x="286" y="218" font-size="13" fill="#27AE60" font-weight="600">G</text>
+        <!-- 压力 F（垂直斜面、指向斜面内，红线） -->
+        <line x1="280" y1="172" x2="296" y2="198" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+        <text x="300" y="204" font-size="13" fill="#E74C3C" font-weight="600">F</text>
+        <text x="232" y="240" font-size="11" fill="#E74C3C" font-weight="600">F ⊥ 斜面</text>
 
         <!-- 场景三：墙上按图钉，F 由手施加 -->
         <text x="450" y="22" text-anchor="middle" font-size="13" fill="#2C3E50" font-weight="600">③ 按图钉：F 由手施加</text>
@@ -519,6 +520,9 @@
         <!-- 图钉 -->
         <circle cx="415" cy="170" r="10" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>
         <line x1="415" y1="170" x2="428" y2="170" stroke="#888" stroke-width="2"/>
+        <!-- 图钉重力 G（竖直向下） -->
+        <line x1="415" y1="170" x2="415" y2="214" stroke="#27AE60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+        <text x="409" y="206" font-size="13" fill="#27AE60" font-weight="600">G</text>
         <!-- 手的推力 -->
         <line x1="370" y1="170" x2="403" y2="170" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
         <text x="362" y="162" font-size="13" fill="#4A90D9" font-weight="600">手的力</text>
@@ -623,45 +627,37 @@
       </div>
     </div>
 
-    <div class="section-header" style="font-size:18px; margin-top:24px;">🔄 交互 2：增大 / 减小压强对比</div>
-    <p style="font-size:14px; color:var(--text-secondary);">选择一个场景，拖动滑块改变"接触面积"，观察压强变化和"陷入"效果。</p>
+    <div class="section-header" style="font-size:18px; margin-top:24px;">🔄 交互 2：压力方向 → 始终垂直于受力面</div>
+    <p style="font-size:14px; color:var(--text-secondary);">压力是弹力，它的方向<strong>永远垂直于接触面</strong>，而不一定竖直向下。拖动滑块改变接触面倾角，或选择情境，观察<strong style="color:#E74C3C;">压力箭头 F</strong>怎样随平面转动，而<strong style="color:#27AE60;">重力 G</strong>始终竖直向下。</p>
 
     <div class="scene-tabs" id="scene-tabs">
-      <button class="scene-tab active" data-scene="knife">🔪 刀刃薄 vs 厚</button>
-      <button class="scene-tab" data-scene="thumbtack">📌 图钉尖 vs 平</button>
-      <button class="scene-tab" data-scene="snow">⛷️ 雪地靴宽 vs 窄</button>
-      <button class="scene-tab" data-scene="bag">🎒 书包带宽 vs 窄</button>
+      <button class="scene-tab active" data-angle="0">➡️ 水平面 0°</button>
+      <button class="scene-tab" data-angle="35">📐 斜面 35°</button>
+      <button class="scene-tab" data-angle="90">🧱 竖直墙 90°</button>
+      <button class="scene-tab" data-angle="60">⛰️ 陡坡 60°</button>
     </div>
 
     <div class="demo-container">
-      <svg id="compare-svg" viewBox="0 0 560 320" width="560" height="320">
+      <svg id="compare-svg" viewBox="0 0 560 340" width="560" height="340">
         <!-- 内容由 JS 动态渲染 -->
       </svg>
     </div>
 
     <div class="slider-row">
-      <label>接触面积 S：</label>
-      <input type="range" id="area-slider" min="1" max="100" value="50">
-      <div class="value-display" id="area-display">50</div>
+      <label>接触面倾角 θ：</label>
+      <input type="range" id="angle-slider" min="-60" max="90" value="0" step="1">
+      <div class="value-display" id="angle-display">0°</div>
     </div>
 
     <div class="info-readout">
-      <div class="readout-item"><span class="label">压力 F：</span><span class="value" id="cmp-F">10 N</span></div>
-      <div class="readout-item"><span class="label">面积 S：</span><span class="value" id="cmp-S">—</span></div>
-      <div class="readout-item"><span class="label">压强 p：</span><span class="value" id="cmp-p">—</span></div>
+      <div class="readout-item"><span class="label">重力 G：</span><span class="value" id="cmp-G">竖直向下</span></div>
+      <div class="readout-item"><span class="label">压力 F：</span><span class="value" id="cmp-F">垂直于接触面</span></div>
+      <div class="readout-item"><span class="label">接触面倾角：</span><span class="value" id="cmp-angle">0°</span></div>
     </div>
 
-    <div class="compare-grid">
-      <div class="compare-cell high" id="cell-high">
-        <h5>减小面积 · 增大压强 <span class="tag-mini">压强大</span></h5>
-        <div style="font-size:13px; color:var(--text-secondary);" id="desc-high">接触面积小，压力集中，作用效果显著</div>
-        <div class="p-val" id="p-high">—</div>
-      </div>
-      <div class="compare-cell low" id="cell-low">
-        <h5>增大面积 · 减小压强 <span class="tag-mini">压强小</span></h5>
-        <div style="font-size:13px; color:var(--text-secondary);" id="desc-low">接触面积大，压力分散，作用效果弱</div>
-        <div class="p-val" id="p-low">—</div>
-      </div>
+    <div class="tip-box" style="margin-top:14px;">
+      <div class="tip-title">💡 观察要点</div>
+      无论平面怎样倾斜，<strong style="color:#E74C3C;">压力箭头始终垂直于接触面</strong>（沿法线指向受力物内部）；而<strong style="color:#27AE60;">重力箭头始终竖直向下</strong>。只有水平面时二者方向一致（此时 F = G）；斜面上 F &lt; G 且方向不同；竖直墙上的压力则完全水平。
     </div>
   </div>
 
@@ -1078,166 +1074,53 @@ function initCalc() {
 }
 
 // ============================================================
-// 交互 2：增大/减小压强对比
+// 交互 2：压力方向——始终垂直于受力面
 // ============================================================
-var compareScenes = {
-  knife: {
-    F: 20,
-    descHigh: '薄刃：接触面积小，压强大，容易切开食物',
-    descLow: '厚背：接触面积大，压强小，切不动',
-    icon: 'knife'
-  },
-  thumbtack: {
-    F: 5,
-    descHigh: '尖端：面积仅 ~0.05 mm²，压强极大，轻松扎入',
-    descLow: '钉帽：面积大，压强小，按住不疼',
-    icon: 'thumbtack'
-  },
-  snow: {
-    F: 600,
-    descHigh: '窄鞋：陷入雪中很深，行走困难',
-    descLow: '宽雪地靴：面积大，压强小，不易陷入',
-    icon: 'snow'
-  },
-  bag: {
-    F: 30,
-    descHigh: '窄带：勒肩疼，压强大',
-    descLow: '宽带：分散压力，舒适不勒',
-    icon: 'bag'
-  }
-};
-var currentScene = 'knife';
+
+var currentAngle = 0;
 
 function renderCompareSVG() {
   var svg = $('compare-svg');
-  var scene = compareScenes[currentScene];
-  var F = scene.F;
-  // 滑块值 1-100 表示 "接触面积比例"，1=极小，100=极大
-  var sliderVal = parseInt($('area-slider').value);
-  // 计算两个对比面积（m²）
-  // 用滑块控制"小"场景的面积比例
-  var S_high, S_low;
-  if (currentScene === 'knife') {
-    // 刀刃：0.5 mm² ~ 50 mm²
-    S_high = (0.5 + sliderVal * 0.5) * 1e-6;  // m²
-    S_low = (50 + sliderVal * 5) * 1e-6;
-  } else if (currentScene === 'thumbtack') {
-    S_high = (0.05 + sliderVal * 0.05) * 1e-6;
-    S_low = (50 + sliderVal * 2) * 1e-6;
-  } else if (currentScene === 'snow') {
-    // 鞋：50 cm² ~ 500 cm²
-    S_high = (30 + sliderVal * 1) * 1e-4;
-    S_low = (300 + sliderVal * 10) * 1e-4;
-  } else { // bag
-    S_high = (2 + sliderVal * 0.2) * 1e-4;
-    S_low = (20 + sliderVal * 1) * 1e-4;
-  }
-  var p_high = F / S_high;
-  var p_low = F / S_low;
-
-  // 更新读数
-  $('cmp-F').textContent = F + ' N';
-  $('cmp-S').textContent = (S_high * 1e6).toFixed(2) + ' mm²（小）';
-  $('cmp-p').textContent = fmtPa(p_high);
-  $('p-high').textContent = 'p = ' + fmtPa(p_high);
-  $('p-low').textContent = 'p = ' + fmtPa(p_low);
-  $('desc-high').textContent = scene.descHigh;
-  $('desc-low').textContent = scene.descLow;
-
-  // 绘制 SVG（左：小面积陷入深，右：大面积陷入浅）
-  // 陷入深度 ∝ 压强
-  var sinkHigh = clamp(p_high / (p_high + p_low) * 40 + 8, 5, 50);
-  var sinkLow = clamp(p_low / (p_high + p_low) * 40 + 3, 2, 30);
-
-  var svgContent = '';
-  // 表面线
-  var surfaceY = 220;
-
-  // ===== 左侧（小面积，压强大，陷入深） =====
-  var leftX = 140;
-  // 表面凹陷
-  svgContent += '<path d="M 30 ' + surfaceY + ' Q ' + (leftX - 30) + ' ' + (surfaceY + sinkHigh) + ' ' + leftX + ' ' + (surfaceY + sinkHigh) + ' Q ' + (leftX + 30) + ' ' + (surfaceY + sinkHigh) + ' ' + 250 + ' ' + surfaceY + '" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>';
-  svgContent += '<line x1="30" y1="' + surfaceY + '" x2="250" y2="' + surfaceY + '" stroke="#B8956A" stroke-width="1" stroke-dasharray="4,3"/>';
-  svgContent += '<text x="140" y="58" text-anchor="middle" font-size="13" fill="#E74C3C" font-weight="600">小面积 · 压强大</text>';
-
-  if (currentScene === 'knife') {
-    // 刀
-    var knifeY = surfaceY - 50 + sinkHigh;
-    svgContent += '<g transform="translate(' + leftX + ',' + knifeY + ')">';
-    svgContent += '<path d="M -40 -40 L 40 -40 L 0 10 Z" fill="#BDC3C7" stroke="#7F8C8D" stroke-width="1.5"/>';
-    svgContent += '<rect x="-10" y="-70" width="20" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '</g>';
-  } else if (currentScene === 'thumbtack') {
-    var tackY = surfaceY - 60 + sinkHigh;
-    svgContent += '<g transform="translate(' + leftX + ',' + tackY + ')">';
-    svgContent += '<circle cx="0" cy="-30" r="14" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>';
-    svgContent += '<line x1="0" y1="-16" x2="0" y2="20" stroke="#888" stroke-width="3"/>';
-    svgContent += '<polygon points="-2,20 2,20 0,28" fill="#666"/>';
-    svgContent += '</g>';
-  } else if (currentScene === 'snow') {
-    var bootY = surfaceY - 50 + sinkHigh;
-    svgContent += '<g transform="translate(' + leftX + ',' + bootY + ')">';
-    svgContent += '<rect x="-22" y="-30" width="44" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '<rect x="-15" y="-50" width="22" height="22" fill="#7B5E3D" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '</g>';
-  } else { // bag
-    var strapY = surfaceY - 35 + sinkHigh;
-    svgContent += '<g transform="translate(' + leftX + ',' + strapY + ')">';
-    svgContent += '<rect x="-30" y="-10" width="60" height="6" fill="' + (sliderVal < 30 ? '#E74C3C' : '#9B59B6') + '" stroke="#333" stroke-width="1"/>';
-    svgContent += '<text x="0" y="22" text-anchor="middle" font-size="11" fill="#666">肩</text>';
-    svgContent += '</g>';
-  }
-
-  // 压力箭头
-  svgContent += '<line x1="' + leftX + '" y1="80" x2="' + leftX + '" y2="' + (surfaceY - 60 + sinkHigh) + '" stroke="#4A90D9" stroke-width="2" marker-end="url(#cmpArrow)"/>';
-  svgContent += '<text x="' + (leftX + 8) + '" y="90" font-size="12" fill="#4A90D9" font-weight="600">F=' + F + 'N</text>';
-  // 压强标签
-  svgContent += '<rect x="' + (leftX - 50) + '" y="' + (surfaceY + 60) + '" width="100" height="22" rx="11" fill="#E74C3C"/>';
-  svgContent += '<text x="' + leftX + '" y="' + (surfaceY + 75) + '" text-anchor="middle" font-size="12" fill="white" font-weight="600">' + fmtPa(p_high) + '</text>';
-
-  // ===== 右侧（大面积，压强小，陷入浅） =====
-  var rightX = 420;
-  svgContent += '<path d="M 310 ' + surfaceY + ' Q ' + (rightX - 30) + ' ' + (surfaceY + sinkLow) + ' ' + rightX + ' ' + (surfaceY + sinkLow) + ' Q ' + (rightX + 30) + ' ' + (surfaceY + sinkLow) + ' ' + 530 + ' ' + surfaceY + '" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>';
-  svgContent += '<line x1="310" y1="' + surfaceY + '" x2="530" y2="' + surfaceY + '" stroke="#B8956A" stroke-width="1" stroke-dasharray="4,3"/>';
-  svgContent += '<text x="420" y="58" text-anchor="middle" font-size="13" fill="#27AE60" font-weight="600">大面积 · 压强小</text>';
-
-  if (currentScene === 'knife') {
-    var knifeY2 = surfaceY - 50 + sinkLow;
-    svgContent += '<g transform="translate(' + rightX + ',' + knifeY2 + ')">';
-    svgContent += '<path d="M -40 -38 L 40 -38 L 0 -10 L 0 5 L -2 5 Z" fill="#BDC3C7" stroke="#7F8C8D" stroke-width="1.5"/>';
-    svgContent += '<rect x="-10" y="-70" width="20" height="32" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '</g>';
-  } else if (currentScene === 'thumbtack') {
-    var tackY2 = surfaceY - 60 + sinkLow;
-    svgContent += '<g transform="translate(' + rightX + ',' + tackY2 + ')">';
-    svgContent += '<circle cx="0" cy="-10" r="20" fill="#E74C3C" stroke="#C0392B" stroke-width="1.5"/>';
-    svgContent += '<line x1="0" y1="10" x2="0" y2="22" stroke="#888" stroke-width="3"/>';
-    svgContent += '<polygon points="-2,22 2,22 0,28" fill="#666"/>';
-    svgContent += '</g>';
-  } else if (currentScene === 'snow') {
-    var bootY2 = surfaceY - 50 + sinkLow;
-    svgContent += '<g transform="translate(' + rightX + ',' + bootY2 + ')">';
-    svgContent += '<rect x="-50" y="-30" width="100" height="30" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '<rect x="-40" y="-50" width="22" height="22" fill="#7B5E3D" stroke="#3E2723" stroke-width="1.5" rx="2"/>';
-    svgContent += '</g>';
-  } else { // bag
-    var strapY2 = surfaceY - 35 + sinkLow;
-    svgContent += '<g transform="translate(' + rightX + ',' + strapY2 + ')">';
-    svgContent += '<rect x="-50" y="-10" width="100" height="8" fill="#27AE60" stroke="#333" stroke-width="1"/>';
-    svgContent += '<text x="0" y="24" text-anchor="middle" font-size="11" fill="#666">肩</text>';
-    svgContent += '</g>';
-  }
-
-  // 压力箭头
-  svgContent += '<line x1="' + rightX + '" y1="80" x2="' + rightX + '" y2="' + (surfaceY - 60 + sinkLow) + '" stroke="#4A90D9" stroke-width="2" marker-end="url(#cmpArrow)"/>';
-  svgContent += '<text x="' + (rightX + 8) + '" y="90" font-size="12" fill="#4A90D9" font-weight="600">F=' + F + 'N</text>';
-  svgContent += '<rect x="' + (rightX - 50) + '" y="' + (surfaceY + 50) + '" width="100" height="22" rx="11" fill="#27AE60"/>';
-  svgContent += '<text x="' + rightX + '" y="' + (surfaceY + 65) + '" text-anchor="middle" font-size="12" fill="white" font-weight="600">' + fmtPa(p_low) + '</text>';
-
-  // 底部说明
-  svgContent += '<text x="280" y="' + (320 - 8) + '" text-anchor="middle" font-size="12" fill="#7F8C8D">压力相同时，受力面积越小 → 压强越大 → 陷入越深</text>';
-
-  svg.innerHTML = '<defs><marker id="cmpArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A90D9"/></marker></defs>' + svgContent;
+  var a = currentAngle * Math.PI / 180;
+  var P0 = { x: 280, y: 205 };
+  var halfLen = 130;
+  var u = { x: Math.cos(a), y: -Math.sin(a) };
+  var nOut = { x: -Math.sin(a), y: -Math.cos(a) };
+  var d = 34;
+  var objC = { x: P0.x + nOut.x * d, y: P0.y + nOut.y * d };
+  var content = '';
+  var p1 = { x: P0.x - u.x * halfLen, y: P0.y - u.y * halfLen };
+  var p2 = { x: P0.x + u.x * halfLen, y: P0.y + u.y * halfLen };
+  content += '<line x1="' + p1.x.toFixed(1) + '" y1="' + p1.y.toFixed(1) + '" x2="' + p2.x.toFixed(1) + '" y2="' + p2.y.toFixed(1) + '" stroke="#8D6E63" stroke-width="9" stroke-linecap="round"/>';
+  content += '<line x1="' + p1.x.toFixed(1) + '" y1="' + p1.y.toFixed(1) + '" x2="' + p2.x.toFixed(1) + '" y2="' + p2.y.toFixed(1) + '" stroke="#C8A27C" stroke-width="2"/>';
+  var nLen = 78;
+  var nA = { x: P0.x + nOut.x * nLen, y: P0.y + nOut.y * nLen };
+  var nB = { x: P0.x - nOut.x * nLen, y: P0.y - nOut.y * nLen };
+  content += '<line x1="' + nA.x.toFixed(1) + '" y1="' + nA.y.toFixed(1) + '" x2="' + nB.x.toFixed(1) + '" y2="' + nB.y.toFixed(1) + '" stroke="#7F8C8D" stroke-width="1.2" stroke-dasharray="5,4"/>';
+  content += '<text x="' + (nA.x + nOut.x * 8).toFixed(1) + '" y="' + (nA.y + nOut.y * 8 + 4).toFixed(1) + '" font-size="11" fill="#7F8C8D">法线</text>';
+  content += '<g transform="translate(' + objC.x.toFixed(1) + ',' + objC.y.toFixed(1) + ') rotate(' + (-currentAngle) + ')">';
+  content += '<rect x="-24" y="-22" width="48" height="44" rx="4" fill="#7BB0E8" stroke="#2E6BA8" stroke-width="2"/>';
+  content += '</g>';
+  var gLen = 54;
+  content += '<line x1="' + objC.x.toFixed(1) + '" y1="' + objC.y.toFixed(1) + '" x2="' + objC.x.toFixed(1) + '" y2="' + (objC.y + gLen).toFixed(1) + '" stroke="#27AE60" stroke-width="2.5" marker-end="url(#cmpArrowGreen)"/>';
+  content += '<text x="' + (objC.x + 8).toFixed(1) + '" y="' + (objC.y + gLen - 4).toFixed(1) + '" font-size="13" fill="#27AE60" font-weight="600">G</text>';
+  var fLen = 44;
+  var fEnd = { x: objC.x - nOut.x * fLen, y: objC.y - nOut.y * fLen };
+  content += '<line x1="' + objC.x.toFixed(1) + '" y1="' + objC.y.toFixed(1) + '" x2="' + fEnd.x.toFixed(1) + '" y2="' + fEnd.y.toFixed(1) + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cmpArrow)"/>';
+  var fLabelX = fEnd.x > objC.x ? fEnd.x + 6 : fEnd.x - 6;
+  var fLabelY = fEnd.y > objC.y ? fEnd.y + 14 : fEnd.y - 6;
+  content += '<text x="' + fLabelX.toFixed(1) + '" y="' + fLabelY.toFixed(1) + '" font-size="13" fill="#E74C3C" font-weight="600" text-anchor="middle">F</text>';
+  content += '<text x="280" y="28" text-anchor="middle" font-size="15" fill="#2C3E50" font-weight="600">压力方向始终垂直于受力面（随平面转动）</text>';
+  content += '<text x="' + P0.x.toFixed(1) + '" y="' + (P0.y + 26).toFixed(1) + '" text-anchor="middle" font-size="12" fill="#8D6E63" font-weight="600">接触面（倾角 ' + currentAngle + '°）</text>';
+  content += '<text x="' + fEnd.x.toFixed(1) + '" y="' + (fEnd.y - 12).toFixed(1) + '" text-anchor="middle" font-size="11" fill="#E74C3C">⊥ 面</text>';
+  content = '<defs>' +
+    '<marker id="cmpArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/></marker>' +
+    '<marker id="cmpArrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#27AE60"/></marker>' +
+    '</defs>' + content;
+  svg.innerHTML = content;
+  $('cmp-G').textContent = '竖直向下';
+  $('cmp-F').textContent = '垂直于接触面（偏离竖直 ' + currentAngle + '°）';
+  $('cmp-angle').textContent = currentAngle + '°';
 }
 
 function initCompare() {
@@ -1245,18 +1128,24 @@ function initCompare() {
     tab.addEventListener('click', function() {
       $('scene-tabs').querySelectorAll('.scene-tab').forEach(function(t) { t.classList.remove('active'); });
       tab.classList.add('active');
-      currentScene = tab.dataset.scene;
+      currentAngle = parseInt(tab.dataset.angle, 10);
+      $('angle-slider').value = currentAngle;
+      $('angle-display').textContent = currentAngle + '°';
       renderCompareSVG();
     });
   });
-  $('area-slider').addEventListener('input', function() {
-    $('area-display').textContent = $('area-slider').value;
+  $('angle-slider').addEventListener('input', function() {
+    currentAngle = parseInt($('angle-slider').value, 10);
+    $('angle-display').textContent = currentAngle + '°';
+    $('scene-tabs').querySelectorAll('.scene-tab').forEach(function(t) {
+      t.classList.toggle('active', parseInt(t.dataset.angle, 10) === currentAngle);
+    });
     renderCompareSVG();
   });
   renderCompareSVG();
 }
 
-// ============================================================
+
 // 交互 3：液体压强模拟
 // ============================================================
 var liquids = {
