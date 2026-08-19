@@ -10,8 +10,8 @@
 | 部署源 | 仓库根目录 |
 | 构建框架 | **Other（静态站点）** |
 | 构建命令 | *（留空，无需构建）* |
-| 输出目录 | `knowledge` |
-| 默认入口 | `knowledge/index.html` |
+| 输出目录 | `courses` |
+| 默认入口 | `courses/index.html` |
 
 ## 一次性配置（EdgeOne Pages 控制台）
 
@@ -21,7 +21,7 @@
 4. 框架选择 **Other（静态站点）**
 5. 配置构建设置：
    - 构建命令：**留空**
-   - 输出目录：**`knowledge`**（**注意**：不要写 `./`，直接写相对仓库根的路径）
+   - 输出目录：**`courses`**（**注意**：不要写 `./`，直接写相对仓库根的路径）
    - 安装命令：**留空**
 6. 在「环境变量」中按需添加（如暂不需要可跳过）
 7. 点击 **「开始部署」**
@@ -56,7 +56,7 @@
 {
   "name": "middle-school-knowledge",
   "build": {
-    "outputDir": "knowledge",
+    "outputDir": "courses",
     "installCommand": "",
     "buildCommand": ""
   }

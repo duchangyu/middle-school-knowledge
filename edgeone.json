@@ -1,6 +1,6 @@
 {
   "name": "middle-school-knowledge",
   "build": {
-    "outputDir": "knowledge"
+    "outputDir": "courses"
   }
 }
