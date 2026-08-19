@@ -123,6 +123,64 @@
     }
     .property-list li strong { color: var(--primary-dark); }
 
+    /* ===== 回顾旧知 / 推导链 ===== */
+    .recall-box {
+      background: rgba(39,174,96,0.08);
+      border: 1px solid rgba(39,174,96,0.28);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin: 16px 0;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+    .recall-title {
+      font-weight: 700;
+      color: #1e7e44;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+    .recall-box ul { margin: 8px 0 4px; padding-left: 22px; }
+    .recall-box li { margin-bottom: 4px; }
+    .recall-box p { margin: 10px 0 0; color: var(--text-secondary); }
+
+    .derive-box {
+      background: rgba(142,68,173,0.06);
+      border: 1px solid rgba(142,68,173,0.28);
+      border-radius: var(--radius-sm);
+      padding: 16px 22px;
+      margin: 16px 0;
+      font-size: 15px;
+      line-height: 1.9;
+    }
+    .derive-title {
+      font-weight: 700;
+      color: #8e44ad;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .derive-box p { margin: 8px 0; }
+    .derive-steps {
+      margin: 12px 0;
+      padding-left: 24px;
+    }
+    .derive-steps li {
+      margin-bottom: 8px;
+      padding: 7px 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid #8e44ad;
+    }
+    .derive-steps li strong { color: #8e44ad; }
+    .derive-note {
+      margin: 10px 0 2px;
+      padding: 10px 14px;
+      background: rgba(142,68,173,0.10);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+    }
+    .derive-note strong { color: #8e44ad; }
+    .model-svg { max-width: 100%; height: auto; margin: 14px auto; display: block; }
+
     /* ===== 压强计算器 ===== */
     .calc-grid {
       display: grid;
@@ -667,17 +725,70 @@
 
     <p>把气球套在矿泉水瓶上，扎几个小孔，灌满水——你会发现水会从每个孔向<strong>各个方向</strong>喷出。这说明：液体内部向<strong>各个方向都有压强</strong>。</p>
 
-    <ul class="property-list">
-      <li>液体内部向<strong>各个方向</strong>都有压强。</li>
-      <li>在同一深度，液体向各个方向的压强<strong>相等</strong>。</li>
-      <li><strong>深度越深，压强越大</strong>——所以深水潜水员要穿特制潜水服。</li>
-      <li>液体压强还与液体<strong>密度</strong>有关：密度越大，压强越大。</li>
-    </ul>
+    <div class="recall-box">
+      <div class="recall-title">📚 先回顾我们已经学过的三块"积木"</div>
+      <ul>
+        <li><strong>压强的定义</strong>：p = F / S（压力除以受力面积）。</li>
+        <li><strong>重力</strong>：G = m g（物体由于地球吸引而受到的力，方向竖直向下）。</li>
+        <li><strong>密度</strong>：ρ = m / V，变形可得 m = ρ V（体积越大、密度越大，质量越大）。</li>
+      </ul>
+      <p>液体压强的公式，就是用这三块积木一步步"拼"出来的，而不是凭空记住的。</p>
+    </div>
+
+    <p>为什么液体也会产生压强？想一想：液体和固体一样<strong>有质量、会受到重力</strong>，重力会让液体"压"在它下方的物体上；同时液体<strong>能够流动</strong>，会把这种挤压向四面八方传递。所以液体不仅对容器底，对侧壁、对内部任意位置都会产生压强。</p>
+
+    <div class="derive-box">
+      <div class="derive-title">🧩 关键一步：把"一大片液体"想成一个"竖直液柱"</div>
+      <p>液体是连续的一大片，直接算不好下手。我们做个聪明的简化：在液体中<strong>想象取出一个竖直的圆柱形液柱</strong>，它的底面积为 S，高度为 h（从液面一直延伸到我们关心的那个点）。接下来只算这个"小柱子"给底面多大的压强。</p>
+
+      <svg class="model-svg" viewBox="0 0 380 250" width="360" height="236" role="img" aria-label="液柱模型">
+        <rect x="120" y="40" width="140" height="150" fill="#74b9ff" fill-opacity="0.35" stroke="#2980b9" stroke-width="2"/>
+        <line x1="120" y1="40" x2="260" y2="40" stroke="#2980b9" stroke-width="2"/>
+        <text x="266" y="36" font-size="13" fill="#2980b9">液面</text>
+        <line x1="100" y1="40" x2="100" y2="190" stroke="#636e72" stroke-width="1.5"/>
+        <polygon points="100,40 96,50 104,50" fill="#636e72"/>
+        <polygon points="100,190 96,180 104,180" fill="#636e72"/>
+        <text x="74" y="118" font-size="13" fill="#636e72" transform="rotate(-90 74 118)">深度 h</text>
+        <line x1="120" y1="190" x2="260" y2="190" stroke="#2d3436" stroke-width="3"/>
+        <line x1="120" y1="212" x2="260" y2="212" stroke="#636e72" stroke-width="1.5"/>
+        <polygon points="120,212 130,208 130,216" fill="#636e72"/>
+        <polygon points="260,212 250,208 250,216" fill="#636e72"/>
+        <text x="168" y="230" font-size="13" fill="#636e72">底面积 S</text>
+        <line x1="190" y1="55" x2="190" y2="178" stroke="#27AE60" stroke-width="2.5" marker-end="url(#deriveArrowG)"/>
+        <text x="198" y="120" font-size="13" fill="#1e7e44">G = ρShg</text>
+        <line x1="190" y1="190" x2="190" y2="202" stroke="#E74C3C" stroke-width="3" marker-end="url(#deriveArrowF)"/>
+        <text x="200" y="199" font-size="13" fill="#c0392b">F = G</text>
+        <defs>
+          <marker id="deriveArrowG" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#27AE60"/>
+          </marker>
+          <marker id="deriveArrowF" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#E74C3C"/>
+          </marker>
+        </defs>
+      </svg>
+
+      <p>这个液柱自己有多重？它给底面多大的压力？用刚才回顾的公式，一步步算：</p>
+      <ol class="derive-steps">
+        <li>液柱体积：<strong>V = S · h</strong></li>
+        <li>液柱质量：<strong>m = ρV = ρ · S · h</strong></li>
+        <li>液柱重力：<strong>G = m g = ρ S h g</strong></li>
+        <li>液柱对底面的压力：液体静止时，底面受到的压力正来自上方这柱液体的重力，所以 <strong>F = G = ρ S h g</strong></li>
+        <li>液柱对底面的压强：<strong>p = F / S = (ρ S h g) / S = ρ g h</strong></li>
+      </ol>
+      <div class="derive-note">注意第 5 步里 <strong>S 被约掉了</strong>！这说明：同一深度处的液体压强，只跟<strong>液体密度 ρ</strong> 和<strong>深度 h</strong> 有关，跟液柱的粗细、跟容器是胖是瘦都<strong>无关</strong>。这一结论也由实验验证，适用于静止液体内部任意位置。</div>
+    </div>
 
     <div class="formula-box">
       p = ρ g h
       <div class="sub">p — 液体压强（Pa）　ρ — 液体密度（kg/m³）　g = 10 N/kg　h — 深度（m，从液面竖直向下计算）</div>
     </div>
+
+    <ul class="property-list">
+      <li>液体内部向<strong>各个方向</strong>都有压强；同一深度，向各个方向的压强<strong>相等</strong>。</li>
+      <li><strong>深度 h 越大，压强越大</strong>——公式里 p 与 h 成正比，所以深水潜水员要穿特制潜水服。</li>
+      <li>液体压强还与<strong>密度 ρ</strong>有关：ρ 越大，压强越大（同深度下，盐水比清水"压"得更狠）。</li>
+    </ul>
 
     <div class="tip-box">
       <div class="tip-title">⚠️ 注意</div>
