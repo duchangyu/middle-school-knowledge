@@ -807,19 +807,22 @@
       y: (e.clientY - rect.top) * (canvas.height / rect.height)
     };
   }
-  canvas.addEventListener('mousedown', function (e) {
+  canvas.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
     var m = toCanvas(e);
     var d = Math.sqrt((m.x - center.x) * (m.x - center.x) + (m.y - center.y) * (m.y - center.y));
     if (d < 18) dragging = true;
   });
-  canvas.addEventListener('mousemove', function (e) {
+  canvas.addEventListener('pointermove', function (e) {
     if (!dragging) return;
+    e.preventDefault();
     var m = toCanvas(e);
     center.x = Math.max(20, Math.min(W - 20, m.x));
     center.y = Math.max(20, Math.min(H - 20, m.y));
     drawRot();
   });
-  window.addEventListener('mouseup', function () { dragging = false; });
+  window.addEventListener('pointerup', function () { dragging = false; });
+  window.addEventListener('pointercancel', function () { dragging = false; });
 
   drawRot();
 })();
@@ -1068,13 +1071,15 @@
       y: (e.clientY - rect.top) * (canvas.height / rect.height)
     };
   }
-  canvas.addEventListener('mousedown', function (e) {
+  canvas.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
     var m = toCanvasPt(e);
     var p1 = toPx(P);
     if (Math.hypot(m.x - p1.x, m.y - p1.y) < 16) dragging = true;
   });
-  canvas.addEventListener('mousemove', function (e) {
+  canvas.addEventListener('pointermove', function (e) {
     if (!dragging) return;
+    e.preventDefault();
     var m = toCanvasPt(e);
     var gx = Math.round((m.x - originX) / scale);
     var gy = Math.round((originY - m.y) / scale);
@@ -1082,7 +1087,8 @@
     P.y = Math.max(-4, Math.min(4, gy));
     drawSym();
   });
-  window.addEventListener('mouseup', function () { dragging = false; });
+  window.addEventListener('pointerup', function () { dragging = false; });
+  window.addEventListener('pointercancel', function () { dragging = false; });
 
   drawSym();
 })();

@@ -188,7 +188,7 @@
 
   /* === ATOMIC BUILDER === */
   .atom-builder { text-align: center; }
-  .builder-display { position: relative; width: 260px; height: 260px; margin: 0 auto 16px; }
+  .builder-display { position: relative; width: 300px; height: 300px; margin: 0 auto 16px; }
   .builder-nucleus {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle, #f59e0b, #d97706);
@@ -228,6 +228,40 @@
     margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center;
     min-height: 40px; transition: all .3s;
   }
+
+  /* === 电子排布清晰面板 === */
+  .shell-panel { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 14px auto 4px; max-width: 560px; }
+  .shell-chip { flex: 1 1 150px; min-width: 140px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 10px 12px; text-align: left; transition: all .3s; }
+  .shell-chip.full { border-color: rgba(16,185,129,.55); background: rgba(16,185,129,.1); }
+  .shell-chip .sc-top { display: flex; align-items: center; justify-content: space-between; }
+  .shell-chip .sc-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .shell-chip .sc-cap { font-size: 11px; color: rgba(255,255,255,.5); }
+  .shell-chip .sc-count { font-size: 26px; font-weight: 800; margin-top: 4px; line-height: 1; }
+  .shell-chip .sc-bar { height: 6px; border-radius: 4px; background: rgba(255,255,255,.12); margin-top: 8px; overflow: hidden; }
+  .shell-chip .sc-bar > i { display: block; height: 100%; border-radius: 4px; transition: width .3s; }
+  .shell-chip .sc-status { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 6px; }
+  .shell-chip.full .sc-status { color: #34d399; font-weight: 700; }
+
+  /* === 排布规律说明框 === */
+  .arrange-rule { max-width: 600px; margin: 18px auto 0; text-align: left; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 16px 18px; }
+  .arrange-rule h4 { color: #fff; font-size: 15px; margin-bottom: 10px; }
+  .arrange-rule ul { list-style: none; padding: 0; margin: 0; }
+  .arrange-rule li { color: rgba(255,255,255,.82); font-size: 13px; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,.1); display: flex; gap: 8px; align-items: baseline; }
+  .arrange-rule li:last-child { border-bottom: none; }
+  .arrange-rule .tag { flex-shrink: 0; font-weight: 700; color: #fbbf24; min-width: 52px; }
+  .arrange-rule li strong { color: #fff; }
+  .arrange-demo { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+
+  /* === 价电子得失趋势状态条 === */
+  .valence-status { max-width: 600px; margin: 12px auto 0; }
+  .vs-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); border-radius: 12px; padding: 10px 14px; }
+  .vs-label { color: #fff; font-size: 13px; }
+  .vs-badge { font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 20px; color: #0f172a; white-space: nowrap; }
+  .vs-badge.lose { background: #f59e0b; }
+  .vs-badge.gain { background: #10b981; }
+  .vs-badge.share { background: #8b5cf6; color: #fff; }
+  .vs-badge.stable { background: #64748b; color: #fff; }
+  .vs-desc { color: rgba(255,255,255,.72); font-size: 12px; flex: 1 1 200px; }
 
   /* === PERIODIC TABLE EXPLORER === */
   .periodic-grid {
@@ -362,6 +396,66 @@
   <div class="main-container" id="mainContainer">
     <!-- Content loaded dynamically -->
   </div>
+
+  <!-- 日常生活中的应用 -->
+  <div class="card life-app chem-accent">
+    <div class="section-header">🏠 日常生活中的应用</div>
+    <p class="lead">把这一章的知识带出课堂，看看化学如何在你每天的柴米油盐、衣食住行里真实地运转。</p>
+    <div class="life-app-grid">
+      <div class="life-app-card">
+        <div class="la-icon">🌸</div>
+        <h4>墙内开花墙外香</h4>
+        <p>桂花的香气能飘出墙外，是因为花香分子在不停地做无规则运动，扩散到空气中。这是分子运动最生活化的证明，也说明物质是由微小粒子构成的。</p>
+        <span class="la-tag">分子运动</span>
+      </div>
+      <div class="life-app-card">
+        <div class="la-icon">💊</div>
+        <h4>补铁、补钙、补碘</h4>
+        <p>贫血要补铁、小孩缺钙易佝偻、缺碘会甲状腺肿——广告里说的"补"补的都是化学元素，与具体是单质还是化合物无关，人体只认元素的种类。</p>
+        <span class="la-tag">元素与人体</span>
+      </div>
+      <div class="life-app-card">
+        <div class="la-icon">🏭</div>
+        <h4>工业制取氧气</h4>
+        <p>医院和工厂的大量氧气，是把空气液化后利用各成分沸点不同分离出来的（液氮先蒸发，留下液氧），属于物理变化，得到的是混合物。</p>
+        <span class="la-tag">混合物分离</span>
+      </div>
+    </div>
+    <div id="quiz4" class="quiz-question" data-correct="a" data-explain="营养强化剂标注的是元素种类（碘元素），而不是单质碘或某种具体化合物。" data-hint="食盐中添加的是含碘化合物，强调的是碘元素这一类别。">
+      <div class="question-text">💡 生活应用题：超市买的"加碘食盐"包装上写的"碘"，指的是：</div>
+      <div class="quiz-option" data-key="a">A. 碘元素</div>
+      <div class="quiz-option" data-key="b">B. 碘原子</div>
+      <div class="quiz-option" data-key="c">C. 碘单质</div>
+      <div class="quiz-option" data-key="d">D. 碘分子</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var q = document.getElementById('quiz4'); if(!q) return;
+    var opts = q.querySelectorAll('.quiz-option');
+    var fb = q.querySelector('.quiz-feedback');
+    var correct = q.getAttribute('data-correct');
+    opts.forEach(function(o){
+      o.addEventListener('click', function(){
+        if(q.classList.contains('correct') || q.classList.contains('wrong')) return;
+        opts.forEach(function(x){ x.classList.remove('selected','correct-answer','wrong-answer'); });
+        o.classList.add('selected');
+        var k = o.getAttribute('data-key');
+        if(k === correct){
+          q.classList.add('correct'); o.classList.add('correct-answer');
+          fb.innerHTML = '<span style="color:#27AE60;">✓ 正确！</span> ' + q.getAttribute('data-explain');
+        } else {
+          q.classList.add('wrong'); o.classList.add('wrong-answer');
+          opts.forEach(function(x){ if(x.getAttribute('data-key') === correct) x.classList.add('correct-answer'); });
+          fb.innerHTML = '<span style="color:#E74C3C;">✗ 再想想</span> ' + q.getAttribute('data-hint');
+        }
+        fb.style.display = 'block';
+      });
+    });
+  })();
+  </script>
 </div>
 
 <script>
@@ -1409,9 +1503,11 @@ function renderChapter4() {
         <div class="lab-title">⚛️ 原子搭建器</div>
         <div class="atom-builder">
           <div class="builder-display" id="builderDisplay">
-            <canvas id="builderCanvas" width="260" height="260"></canvas>
+            <canvas id="builderCanvas" width="300" height="300"></canvas>
           </div>
           <div class="builder-result" id="builderResult"></div>
+          <div class="shell-panel" id="shellPanel"></div>
+          <div class="valence-status" id="valenceStatus"></div>
           <div class="builder-controls">
             <div class="builder-group">
               <label style="color:#ef4444">🔴 质子</label>
@@ -1437,6 +1533,22 @@ function renderChapter4() {
                 <button class="btn-plus" onclick="adjustParticle('electron',1)">+</button>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="arrange-rule">
+          <h4>📐 电子排布规律（"2-8-8"原则的正确含义）</h4>
+          <ul>
+            <li><span class="tag">第1层</span> 最里层（K层），最多容纳 <strong>2</strong> 个电子</li>
+            <li><span class="tag">第2层</span> （L层），最多容纳 <strong>8</strong> 个电子</li>
+            <li><span class="tag">第3层</span> （M层），最多容纳 <strong>18</strong> 个；但在前18号元素里它作最外层时最多 <strong>8</strong> 个</li>
+            <li><span class="tag">最外层</span> 电子数不超过 <strong>8</strong> 个（若第1层就是最外层，则不超过 2 个）</li>
+            <li><span class="tag">排布顺序</span> 先排满内层，再排外层（能量最低原理）</li>
+            <li><span class="tag">记忆口诀</span> 第 n 层最多容纳 <strong>2n²</strong> 个电子</li>
+          </ul>
+          <p style="color:rgba(255,255,255,.72);font-size:12px;margin:10px 0 0">📌 示例：氖(10号) 排布为 <b>2, 8</b>；氩(18号) 排布为 <b>2, 8, 8</b> —— 这就是常说"2-8-8"的由来。</p>
+          <div class="arrange-demo">
+            <button class="lab-btn" onclick="demoArgon()">✨ 一键演示：氩 (2,8,8)</button>
+            <button class="lab-btn" onclick="demoNeon()">💡 演示：氖 (2,8)</button>
           </div>
         </div>
         <div class="lab-feedback" id="ch4Feedback">尝试构建一个碳原子：6质子 + 6中子 + 6电子</div>
@@ -1484,9 +1596,8 @@ function initChapter4() {
 
 function adjustParticle(particle, delta) {
   const key = particle;
-  builderState[key] = Math.max(0, Math.min(20, builderState[key] + delta));
-  
-  // Auto-balance: if adjusting proton, suggest matching electron for neutral atom
+  // 演示范围内只建 1~18 号元素，三层模型(2,8,8)完全准确，避免展示错误排布
+  builderState[key] = Math.max(0, Math.min(18, builderState[key] + delta));
   updateBuilder();
 }
 
@@ -1494,27 +1605,15 @@ function updateBuilder() {
   document.getElementById('protonCount').textContent = builderState.proton;
   document.getElementById('neutronCount').textContent = builderState.neutron;
   document.getElementById('electronCount').textContent = builderState.electron;
-  
+
+  renderShellPanel();
   drawBuilder();
   checkBuilder();
 }
 
-function drawBuilder() {
-  const canvas = document.getElementById('builderCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const cx = 130, cy = 130;
-  ctx.clearRect(0, 0, 260, 260);
-  
-  // Shell labels and data
-  const shellNames = ['K层', 'L层', 'M层'];
-  const shellRadii = [55, 87, 119];
+// 计算电子分层排布（K/L/M 三层上限 2/8/8）
+function getShellDistribution(eCount) {
   const shellLimits = [2, 8, 8];
-  const shellColors = ['rgba(59,130,246,0.35)', 'rgba(139,92,246,0.35)', 'rgba(236,72,153,0.35)'];
-  const shellColorsSolid = ['#3b82f6', '#8b5cf6', '#ec4899'];
-  
-  // Calculate electron distribution
-  const eCount = builderState.electron;
   const shells = [];
   let remaining = eCount;
   for (let s = 0; s < 3 && remaining > 0; s++) {
@@ -1522,74 +1621,220 @@ function drawBuilder() {
     shells.push(n);
     remaining -= n;
   }
-  
-  // Draw orbit rings
+  return shells;
+}
+
+// 渲染"每层电子数 / 上限"清晰面板
+function renderShellPanel() {
+  const panel = document.getElementById('shellPanel');
+  if (!panel) return;
+  const shellNames = ['K层', 'L层', 'M层'];
+  const shellLimits = [2, 8, 8];
+  const colors = ['#60a5fa', '#a78bfa', '#f472b6'];
+  const dist = getShellDistribution(builderState.electron);
+  let html = '';
+  for (let i = 0; i < 3; i++) {
+    const cur = dist[i] || 0;
+    const cap = shellLimits[i];
+    const pct = Math.round(cur / cap * 100);
+    const full = cur >= cap && cur > 0;
+    const has = cur > 0;
+    html += '<div class="shell-chip ' + (full ? 'full' : '') + '">' +
+      '<div class="sc-top"><span class="sc-name" style="color:' + colors[i] + '">' + shellNames[i] + '</span>' +
+      '<span class="sc-cap">最多 ' + cap + ' 个</span></div>' +
+      '<div class="sc-count" style="color:' + colors[i] + '">' + cur + '<span style="font-size:14px;color:rgba(255,255,255,.5)"> / ' + cap + '</span></div>' +
+      '<div class="sc-bar"><i style="width:' + pct + '%;background:' + colors[i] + '"></i></div>' +
+      '<div class="sc-status">' + (has ? (full ? '✅ 已排满' : '📥 已排 ' + cur + ' 个') : '空') + '</div>' +
+      '</div>';
+  }
+  panel.innerHTML = html;
+
+  // 价电子（最外层）与得失电子趋势
+  const vIdx = dist.length - 1;
+  const vCount = vIdx >= 0 ? dist[vIdx] : 0;
+  const vs = document.getElementById('valenceStatus');
+  if (!vs) return;
+  if (vCount <= 0) { vs.innerHTML = ''; return; }
+  let badge, desc;
+  if (vCount === 8) {
+    badge = '<span class="vs-badge stable">稳定结构</span>';
+    desc = '稀有气体型：最外层已达 8 电子稳定结构，化学性质很不活泼，不易得失电子。';
+  } else if (vCount === 2 && vIdx === 0) {
+    badge = '<span class="vs-badge stable">稳定结构</span>';
+    desc = '氦型：最外层 2 电子稳定结构，化学性质很不活泼，不易得失电子。';
+  } else if (vCount < 4) {
+    badge = '<span class="vs-badge lose">易失电子 ➜</span>';
+    desc = '金属性：最外层电子数 < 4，倾向于失去电子，形成阳离子。';
+  } else if (vCount === 4) {
+    badge = '<span class="vs-badge share">共用电子对</span>';
+    desc = '共价倾向：最外层 4 个电子，既不易得也不易失，常通过共用电子对成键。';
+  } else {
+    badge = '<span class="vs-badge gain">易得电子 ⬅</span>';
+    desc = '非金属性：最外层电子数 > 4，倾向于得到电子，形成阴离子。';
+  }
+  vs.innerHTML = '<div class="vs-row"><span class="vs-label">价电子（最外层）：<b>' + vCount + '</b> 个</span>' + badge + '<span class="vs-desc">' + desc + '</span></div>';
+}
+
+// 一键演示：氩(18号) → 2,8,8
+function demoArgon() {
+  builderState = { proton: 18, neutron: 18, electron: 18 };
+  updateBuilder();
+  document.getElementById('ch4Feedback').textContent = '已为你演示氩(Ar，18号)：电子排布 2, 8, 8 —— 三层刚好排满，这就是"2-8-8"的典型例子！';
+}
+
+// 一键演示：氖(10号) → 2,8
+function demoNeon() {
+  builderState = { proton: 10, neutron: 10, electron: 10 };
+  updateBuilder();
+  document.getElementById('ch4Feedback').textContent = '已为你演示氖(Ne，10号)：电子排布 2, 8 —— 前两层排满，最外层是 8 个。';
+}
+
+function drawBuilder() {
+  const canvas = document.getElementById('builderCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 150, cy = 150;
+  ctx.clearRect(0, 0, 300, 300);
+
+  // Shell labels and data
+  const shellNames = ['K层', 'L层', 'M层'];
+  const shellRadii = [58, 92, 126];
+  const shellLimits = [2, 8, 8];
+  const shellColors = ['rgba(59,130,246,0.35)', 'rgba(139,92,246,0.35)', 'rgba(236,72,153,0.35)'];
+  const shellColorsSolid = ['#3b82f6', '#8b5cf6', '#ec4899'];
+
+  // Calculate electron distribution (reuse shared helper)
+  const shells = getShellDistribution(builderState.electron);
+
+  // 最外层(价电子层)与得失电子趋势
+  const valenceIndex = shells.length - 1;                 // 最外层序号，-1 表示无电子
+  const valenceCount = valenceIndex >= 0 ? shells[valenceIndex] : 0;
+  let tendency = 'none';
+  if (valenceCount > 0) {
+    if (valenceCount === 8) tendency = 'stable';           // 8电子稳定结构（稀有气体）
+    else if (valenceCount === 2 && valenceIndex === 0) tendency = 'stable'; // 氦型稳定
+    else if (valenceCount < 4) tendency = 'lose';          // 金属性：易失电子
+    else if (valenceCount === 4) tendency = 'share';       // 共价倾向
+    else tendency = 'gain';                                // 非金属性：易得电子
+  }
+  const tendColor = { lose: '#f59e0b', gain: '#10b981', share: '#8b5cf6', stable: '#64748b', none: '#94a3b8' }[tendency];
+
+  // Draw orbit rings（最外层用趋势色高亮）
   for (let si = 0; si < 3; si++) {
     const r = shellRadii[si];
     const isActive = si < shells.length;
-    
-    // Orbit circle
-    ctx.strokeStyle = isActive ? shellColors[si] : 'rgba(100,116,139,0.12)';
-    ctx.lineWidth = isActive ? 2 : 1;
-    ctx.setLineDash(isActive ? [] : [3, 6]);
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-    ctx.setLineDash([]);
-    
-    // Shell label at right side of orbit
+    const isValence = (si === valenceIndex);
+
+    if (isValence && tendency !== 'none' && tendency !== 'stable') {
+      // 最外层高亮环（标出价电子层 + 得失趋势）
+      ctx.save();
+      ctx.shadowColor = tendColor; ctx.shadowBlur = 14;
+      ctx.strokeStyle = tendColor; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    } else if (isValence && tendency === 'stable') {
+      ctx.save();
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = tendColor; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    } else {
+      ctx.strokeStyle = isActive ? shellColors[si] : 'rgba(100,116,139,0.12)';
+      ctx.lineWidth = isActive ? 2 : 1;
+      ctx.setLineDash(isActive ? [] : [3, 6]);
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Shell label at top of orbit（清晰可见，不被裁切）
     if (isActive) {
-      const labelX = cx + r + 12, labelY = cy;
-      ctx.fillStyle = shellColorsSolid[si];
-      ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
-      ctx.fillText(`${shellNames[si]}`, labelX, labelY - 4);
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText(`${shells[si]}e⁻`, labelX, labelY + 12);
+      const labelX = cx, labelY = cy - r - 6;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = isValence ? tendColor : shellColorsSolid[si];
+      ctx.font = 'bold 12px sans-serif';
+      const cap = shellLimits[si];
+      const full = shells[si] >= cap;
+      ctx.fillText(`${shellNames[si]}  ${shells[si]}/${cap}${full ? ' 满' : ''}`, labelX, labelY);
     } else if (si === shells.length && si === 0) {
-      // Show empty shell hint for first unused shell
-      const labelX = cx + r + 12, labelY = cy;
-      ctx.fillStyle = 'rgba(148,163,184,0.4)';
-      ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
-      ctx.fillText(`${shellNames[si]} (未填)`, labelX, labelY + 4);
+      const labelX = cx, labelY = cy - r - 6;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(148,163,184,0.5)';
+      ctx.font = '10px sans-serif';
+      ctx.fillText(`${shellNames[si]} (空)`, labelX, labelY);
     }
   }
-  
+
+  // 在最外层外侧画出"得/失电子"方向箭头
+  if (valenceIndex >= 0 && (tendency === 'gain' || tendency === 'lose' || tendency === 'share')) {
+    drawTrendArrows(ctx, cx, cy, shellRadii[valenceIndex], tendency, tendColor);
+  }
+
   // Nucleus
   const nucSize = 20 + Math.max(0, Math.min(8, (builderState.proton + builderState.neutron - 4) * 2));
   const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, nucSize + 4);
   grad.addColorStop(0, '#f59e0b'); grad.addColorStop(1, 'rgba(245,158,11,0)');
   ctx.fillStyle = grad;
   ctx.beginPath(); ctx.arc(cx, cy, nucSize + 4, 0, Math.PI * 2); ctx.fill();
-  
+
   ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(cx, cy, nucSize, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(`P:${builderState.proton} N:${builderState.neutron}`, cx, cy + 4);
-  
-  // Draw electrons on each shell
-  const time = Date.now() * 0.001;
+
+  // Draw electrons on each shell —— 固定均匀分布，不旋转，便于数清个数
   shells.forEach((n, si) => {
     const r = shellRadii[si];
+    const start = -Math.PI / 2 + si * 0.4;  // 各层错开角度，避免竖向重叠
     for (let i = 0; i < n; i++) {
-      const angle = (i / n) * Math.PI * 2 + time * (1.8 - si * 0.4);
+      const angle = start + (i / n) * Math.PI * 2;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
-      
-      // Electron glow
-      ctx.fillStyle = shellColorsSolid[si].replace(')', ',0.25)').replace('rgb','rgba');
+
+      // 电子光晕
+      ctx.fillStyle = shellColorsSolid[si].replace(')', ',0.25)').replace('rgb', 'rgba');
       ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2); ctx.fill();
-      
-      // Electron
+
+      // 电子本体
       ctx.fillStyle = shellColorsSolid[si];
       ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
-      
-      // e⁻ label
+
+      // e⁻ 标签
       ctx.fillStyle = '#fff'; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('e⁻', x, y + 3);
     }
   });
-  
-  // Continue animation
-  if (builderState.electron > 0) {
-    requestAnimationFrame(() => { if (document.getElementById('builderCanvas')) drawBuilder(); });
+}
+
+// 在最外层外侧画"得/失电子"方向箭头
+function drawTrendArrows(ctx, cx, cy, r, tendency, color) {
+  const count = 4;
+  for (let k = 0; k < count; k++) {
+    const a = (k / count) * Math.PI * 2 - Math.PI / 2;
+    const dx = Math.cos(a), dy = Math.sin(a);
+    const base = r + 10;
+    if (tendency === 'gain') {
+      // 电子进入原子：箭头指向圆心（向内）
+      drawArrow(ctx, cx + dx * (base + 12), cy + dy * (base + 12), cx + dx * base, cy + dy * base, color);
+    } else if (tendency === 'lose') {
+      // 电子离开原子：箭头背离圆心（向外）
+      drawArrow(ctx, cx + dx * base, cy + dy * base, cx + dx * (base + 12), cy + dy * (base + 12), color);
+    } else if (tendency === 'share') {
+      // 共用电子对：双向小箭头
+      drawArrow(ctx, cx + dx * base, cy + dy * base, cx + dx * (base + 10), cy + dy * (base + 10), color);
+      drawArrow(ctx, cx + dx * (base + 10), cy + dy * (base + 10), cx + dx * base, cy + dy * base, color);
+    }
   }
+}
+
+// 画一条简单箭头（从 x1,y1 指向 x2,y2）
+function drawArrow(ctx, x1, y1, x2, y2, color) {
+  const head = 6;
+  const ang = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - head * Math.cos(ang - Math.PI / 6), y2 - head * Math.sin(ang - Math.PI / 6));
+  ctx.lineTo(x2 - head * Math.cos(ang + Math.PI / 6), y2 - head * Math.sin(ang + Math.PI / 6));
+  ctx.closePath(); ctx.fill();
 }
 
 function checkBuilder() {
@@ -1620,7 +1865,16 @@ function checkBuilder() {
   if (e === p) {
     result.style.background = '#d1fae5'; result.style.color = '#065f46';
     status = '✅ 中性原子';
-    fb.textContent = `你构建了 ${elName}！相对原子质量 ≈ ${mass}。${p === 6 ? '这就是碳原子！完美！' : ''}`;
+    const shellsB = getShellDistribution(e);
+    const vIdxB = shellsB.length - 1;
+    const vCountB = vIdxB >= 0 ? shellsB[vIdxB] : 0;
+    let tendNote = '';
+    if (vCountB === 8) tendNote = '最外层8电子稳定结构（稀有气体），不易得失。';
+    else if (vCountB === 2 && vIdxB === 0) tendNote = '最外层2电子稳定结构（氦型），不易得失。';
+    else if (vCountB < 4) tendNote = `最外层${vCountB}个电子(<4)，金属性，易失电子形成阳离子。`;
+    else if (vCountB === 4) tendNote = `最外层${vCountB}个电子，共价倾向，常共用电子对。`;
+    else tendNote = `最外层${vCountB}个电子(>4)，非金属性，易得电子形成阴离子。`;
+    fb.textContent = `你构建了 ${elName}！相对原子质量 ≈ ${mass}。${p === 6 ? '这就是碳原子！完美！' : ''} ${tendNote}`;
     if (!state.quizPassed['atombuild']) {
       state.quizPassed['atombuild'] = true;
       addStars(2, '成功构建原子');
@@ -1967,6 +2221,76 @@ function init() {
 }
 
 init();
+</script>
+  <!-- ===== 中考深度进阶模块（由浅入深） ===== -->
+  <div class="card advance-block advance-chem">
+    <div class="section-header">🚀 中考深度进阶：由浅入深</div>
+    <p class="lead">这一章要真正拿下中考，得把知识从「听懂」练到「用活」。下面分三层进阶：先巩固核心，再提升能力，最后用真实情境检验综合水平。</p>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-basic">① 基础巩固</span>
+      <p class="deeper">【概念深化】分子是保持由分子构成的物质化学性质的最小粒子；原子是化学变化中的最小粒子，化学反应里分子可分、原子不可分。易错点：原子并非绝对不可再分（它由原子核与电子构成），说「最小」限于化学变化范畴；物质可由分子、原子或离子构成，不只分子一种。</p>
+      <div class="adv-quiz" data-correct="a" data-explain="在化学变化中，分子可以分成原子，原子重新组合成新分子，原子本身不可再分。原子不一定比分子大，物质也不都由分子构成（也可由原子、离子构成），「原子任何情况下都不可再分」的说法错误。" data-hint="化学变化中：分子可分、原子不可再分。">
+        <div class="adv-q">【巩固题】下列关于分子、原子的说法，正确的是</div>
+        <div class="adv-option" data-key="a">A. 在化学变化中，分子可以再分，原子不可再分</div>
+        <div class="adv-option" data-key="b">B. 分子的质量一定比原子大</div>
+        <div class="adv-option" data-key="c">C. 物质都是由分子构成的</div>
+        <div class="adv-option" data-key="d">D. 原子在任何情况下都不可再分</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-mid">② 能力提升</span>
+      <p class="deeper">【方法提升】元素是具有相同质子数（即核电荷数）的一类原子的总称。质子数决定元素种类；最外层电子数决定化学性质；相对原子质量约等于质子数加中子数。同种元素可能含不同中子数，但种类只看质子数。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="元素种类由质子数（核电荷数）决定；最外层电子数决定化学性质而非种类；电子数可随得失电子变化，中子数不同只形成同位素，都不改变元素种类。" data-hint="质子数（核电荷数）相同，就是同一种元素。">
+        <div class="adv-q">【提升题】决定元素种类的是</div>
+        <div class="adv-option" data-key="a">A. 中子数</div>
+        <div class="adv-option" data-key="b">B. 质子数（核电荷数）</div>
+        <div class="adv-option" data-key="c">C. 最外层电子数</div>
+        <div class="adv-option" data-key="d">D. 电子数</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-exam">③ 中考综合</span>
+      <p class="deeper">【真实情境】芯片、太阳能电池用到高纯硅等高科技材料，认识物质的微观构成与相对原子质量，是从生活走向科技的桥梁。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="相对原子质量约等于质子数加中子数。硅原子质子数14、中子数14，相对原子质量约14+14=28。硅属于非金属元素，是构成半导体材料高纯硅的基本微粒。" data-hint="相对原子质量≈质子数+中子数。">
+        <div class="adv-q"><span class="scenario-tag">🚀科技前沿</span>芯片制造需要高纯硅（Si）。已知硅原子的质子数为14、中子数为14，则硅原子的相对原子质量约为</div>
+        <div class="adv-option" data-key="a">A. 14</div>
+        <div class="adv-option" data-key="b">B. 28</div>
+        <div class="adv-option" data-key="c">C. 42</div>
+        <div class="adv-option" data-key="d">D. 7</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* 中考深度进阶模块交互（03 页未引入 main.js，单独绑定 .adv-quiz） */
+document.querySelectorAll('.adv-quiz').forEach(function (quiz) {
+  var correct = (quiz.dataset.correct || '').trim();
+  var options = quiz.querySelectorAll('.adv-option');
+  var feedback = quiz.querySelector('.adv-feedback');
+  options.forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      options.forEach(function (o) { o.classList.remove('selected', 'correct-answer', 'wrong-answer'); });
+      this.classList.add('selected');
+      var key = (this.dataset.key || '').trim();
+      if (key === correct) {
+        this.classList.add('correct-answer');
+        quiz.classList.add('correct'); quiz.classList.remove('wrong');
+        if (feedback) { feedback.className = 'adv-feedback show ok'; feedback.innerHTML = '<strong>✓ 答对了！</strong> ' + (quiz.dataset.explain || ''); }
+      } else {
+        this.classList.add('wrong-answer');
+        quiz.classList.add('wrong'); quiz.classList.remove('correct');
+        options.forEach(function (o) { if ((o.dataset.key || '').trim() === correct) o.classList.add('correct-answer'); });
+        if (feedback) { feedback.className = 'adv-feedback show bad'; feedback.innerHTML = '<strong>✗ 再想想。</strong> ' + (quiz.dataset.hint || ''); }
+      }
+    });
+  });
+});
 </script>
 </body>
 </html>

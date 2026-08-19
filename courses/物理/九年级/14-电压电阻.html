@@ -793,6 +793,26 @@
     </div>
   </div>
 
+  <!-- ===== 日常生活中的应用 ===== -->
+  <div class="card life-app">
+    <div class="section-header">🏠 日常生活中的应用</div>
+    <p class="lead">把这一章的知识带出课堂，看看它如何在你每天的生活中真实地运转。</p>
+    <div class="life-app-grid">
+      <div class="life-app-card"><div class="la-icon">🔋</div><h4>电池的电压</h4><p>一节干电池约 <b>1.5V</b>，铅蓄电池约 <b>2V</b>，手机锂电池约 <b>3.7V</b>——不同电源提供的电压不同。</p><span class="la-tag">电压</span></div>
+      <div class="life-app-card"><div class="la-icon">🎚️</div><h4>滑动变阻器</h4><p>台灯调光、收音机调音量、电动车调速，核心都是<b>滑动变阻器</b>改变接入电阻，从而改变电流。</p><span class="la-tag">电阻</span></div>
+      <div class="life-app-card"><div class="la-icon">🗼</div><h4>电阻与输电损耗</h4><p>导线越长电阻越大、损耗越多，所以采用<b>高压输电</b>减小电流，从而大幅降低线路损耗。</p><span class="la-tag">电阻应用</span></div>
+      <div class="life-app-card"><div class="la-icon">💡</div><h4>半导体器件</h4><p><b>二极管、三极管</b>、太阳能电池、电脑芯片，都靠半导体对电流的巧妙控制来实现各种功能。</p><span class="la-tag">半导体</span></div>
+    </div>
+    <div id="quiz4" class="quiz-question">
+      <div class="question-text">💡 生活应用题：收音机的音量旋钮，本质上是一个？</div>
+      <div class="quiz-option" data-idx="0">A. 开关</div>
+      <div class="quiz-option" data-idx="1">B. 滑动变阻器</div>
+      <div class="quiz-option" data-idx="2">C. 电源</div>
+      <div class="quiz-option" data-idx="3">D. 电流表</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
   <!-- ===== 学科交叉参考 ===== -->
   <div class="cross-ref-box">
     <div class="ref-title">🔗 学科交叉参考</div>
@@ -803,6 +823,51 @@
   </div>
 
   <!-- ===== 步骤导航 ===== -->
+  <!-- ===== 中考深度进阶模块（由浅入深） ===== -->
+  <div class="card advance-block">
+    <div class="section-header">🚀 中考深度进阶：由浅入深</div>
+    <p class="lead">这一章要真正拿下中考，得把知识从"听懂"练到"用活"。下面分三层进阶：先巩固核心，再提升能力，最后用真实情境检验综合水平。</p>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-basic">① 基础巩固</span>
+      <p class="deeper">【概念深化】本章易错点集中在电压表的使用与串并联电压规律。电压表内阻很大，必须并联在被测电路两端，且可以直接接在电源两极测电源电压；串联电路 U=U₁+U₂，并联电路 U=U₁=U₂；"对人体的安全电压"是"不高于36V"而非"等于36V"。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="电压表内阻很大，应并联在待测电路两端，也可以直接接在电源两极上测电源电压，B正确、A错；被测电压不能超过电压表量程，否则可能损坏电表，C错；电流必须从『+』接线柱流入、『−』接线柱流出，D错。" data-hint="回忆电压表是并联还是串联使用？它能不能像测电源电压那样直接接在电池两极？">
+        <div class="adv-q">【巩固题】关于电压表的使用，下列说法正确的是：</div>
+        <div class="adv-option" data-key="a">A. 电压表必须串联在被测电路中使用</div>
+        <div class="adv-option" data-key="b">B. 电压表可以直接接在电源两极上测电源电压</div>
+        <div class="adv-option" data-key="c">C. 被测电压可以超过电压表量程，只要指针不偏到底就行</div>
+        <div class="adv-option" data-key="d">D. 电压表接入电路时，电流从『−』接线柱流入</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-mid">② 能力提升</span>
+      <p class="deeper">【方法提升】串联电路中电流处处相等，电压按电阻比例分配（串联分压）：U₁:U₂=R₁:R₂。解题时先求总电阻，再按比例求各部分电压，是中考常见的多步计算。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="串联电路各处电压按电阻分配：U₁:U₂=R₁:R₂=10:20=1:2。总电压220V，U₂=220×(R₂/(R₁+R₂))=220×(20/30)=220×2/3≈146.7V。验证：U₁=220×1/3≈73.3V，U₁+U₂=220V，符合串联 U=U₁+U₂。B正确。" data-hint="串联分压：电压之比等于电阻之比。R₂占总电阻的几分之几，就分得总电压的几分之几？">
+        <div class="adv-q">【提升题】小明用两个定值电阻做分压电路，R₁=10Ω、R₂=20Ω，串联后接在220V电源上。根据串联电压规律，R₂两端分得的电压约为：</div>
+        <div class="adv-option" data-key="a">A. 约 73.3 V</div>
+        <div class="adv-option" data-key="b">B. 约 146.7 V</div>
+        <div class="adv-option" data-key="c">C. 约 220 V</div>
+        <div class="adv-option" data-key="d">D. 约 110 V</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-exam">③ 中考综合</span>
+      <p class="deeper">【真实情境】中考综合题常把"电阻影响因素 R=ρL/S"与新能源、输电工程结合，考查对材料、长度、横截面积如何影响电阻及线路损耗的判断。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="由 R=ρL/S 可知：在材料ρ和横截面积S一定时，长度L越小，电阻R越小，线路发热损耗 Q=I²Rt 也越小，越有利于输电，B正确。增大S会使R变小（不是变大），A错；电阻与材料有关，ρ是材料的电阻率，C错；ρ越小R越小，D错。这正对应『低阻电缆减少输电损耗』的真实工程思路。" data-hint="由 R=ρL/S 判断：要让长距离输电损耗小，应该让电阻R变大还是变小？哪些因素能让R变小？">
+        <div class="adv-q"><span class="scenario-tag">🔥社会热点</span>新能源汽车充电桩选用电阻率ρ很小的铜做长距离电缆，并加大横截面积S。根据电阻公式 R=ρL/S，下列说法正确的是：</div>
+        <div class="adv-option" data-key="a">A. 增大横截面积S，电阻R变大，更利于输电</div>
+        <div class="adv-option" data-key="b">B. 减小电缆长度L，电阻R变小，线路损耗降低</div>
+        <div class="adv-option" data-key="c">C. 电阻R与材料无关，只与L、S有关</div>
+        <div class="adv-option" data-key="d">D. 电阻率ρ越小，电阻R越大</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="step-nav">
     <a href="13-电流和电路.html" class="btn btn-outline">← 上一章：电流和电路</a>
     <a href="15-欧姆定律.html" class="btn btn-primary">下一章：欧姆定律 →</a>
@@ -1230,6 +1295,12 @@ initQuiz('quiz3', {
   correct: 2,
   explain: '滑动变阻器必须"一上一下"接线：只接上面相当于导线，只接下面相当于定值电阻。它靠改变接入电阻丝的长度（不是材料）来改变电阻；闭合开关前滑片移到阻值最大处可保护电路。',
   hint: '想想"一上一下"四个字，以及开关闭合前滑片应该放在哪里（保护电路）。'
+});
+
+initQuiz('quiz4', {
+  correct: 1,
+  explain: '音量旋钮是滑动变阻器：旋转时改变接入电路的电阻大小，从而改变电路中的电流，电流越大喇叭声音越响（音量越大）。它既不电源也不电流表，更不是简单的通断开关。',
+  hint: '转动旋钮改变的是电阻大小，从而改变电流 → 这是哪种元件？'
 });
 </script>
 

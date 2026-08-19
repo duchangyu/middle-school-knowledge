@@ -417,3 +417,210 @@ input[type="range"]::-webkit-slider-thumb {
   .navbar-links { display: none; }
   .container, .container-wide { padding: 20px 16px; }
 }
+
+/* ===== 触屏 / Pad 优化 =====
+   适用：iPad、Android Pad、Windows 触控笔记本
+   原则：
+     1. 禁用高亮 / 选中 / 上下文菜单，避免误触干扰
+     2. 滑块 / 按钮命中区放大到 Apple HIG 推荐的 44px
+     3. :hover 在触屏无效，必须用 :focus / :active 双重触发
+     4. 关闭 iOS Safari 双击缩放
+*/
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+button, .btn, .quiz-option, .nav-link, a {
+  touch-action: manipulation;
+}
+input, textarea, select, button {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Pad 命中区最小尺寸（44×44px）*/
+@media (hover: none) and (pointer: coarse) {
+  .btn { min-height: 44px; padding: 12px 20px; font-size: 15px; }
+  .quiz-option { min-height: 48px; padding: 14px 18px; font-size: 15px; }
+  .slider-row label { font-size: 15px; }
+  /* range 滑块拇指更大，便于手指拖动 */
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px; height: 28px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px; height: 28px;
+  }
+  /* :hover 无效 → :active 立刻反馈 */
+  .quiz-option:active,
+  .btn:active,
+  .nav-link:active { transform: scale(0.98); }
+  /* 链接点击区域扩大 */
+  .breadcrumb a, .cross-link, .related-card { padding: 8px 6px; }
+}
+
+/* 横屏 Pad：双列布局 */
+@media (min-width: 768px) and (hover: none) and (pointer: coarse) {
+  .knowledge-grid,
+  .nutri-grid,
+  .fert-samples {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 触控 + 鼠标共存的混合设备 */
+@media (hover: hover) and (pointer: coarse) {
+  /* 用户用手指但设备支持 hover 时，保留 hover 反馈 */
+  .quiz-option:hover { background: #DCEAF5; }
+}
+
+/* ===== 日常生活中的应用 ===== */
+.life-app .lead {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 4px 0 18px;
+}
+.life-app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.life-app-card {
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  padding: 18px 18px 16px;
+  border-left: 4px solid var(--primary);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.life-app-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.la-icon {
+  font-size: 34px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.life-app-card h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--text-main);
+}
+.life-app-card p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.life-app-card .la-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--primary);
+  background: rgba(74,144,217,0.12);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+/* 化学学科卡片用红色强调 */
+.chem-accent .life-app-card { border-left-color: var(--chem, #E74C3C); }
+.chem-accent .life-app-card .la-tag { color: #E74C3C; background: rgba(231,76,60,0.12); }
+
+/* ===== 中考深度进阶模块 ===== */
+.advance-block {
+  background: linear-gradient(135deg, #f5f9ff, #eaf1fb);
+  border: 1.5px solid rgba(74,144,217,0.35);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin: 20px 0;
+}
+.advance-block.advance-chem {
+  background: linear-gradient(135deg, #fff6f4, #fdecea);
+  border-color: rgba(231,76,60,0.35);
+}
+.advance-block .lead {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 4px 0 18px;
+}
+.advance-level {
+  border-left: 4px solid var(--primary);
+  background: var(--bg-card);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+.advance-block.advance-chem .advance-level { border-left-color: #E74C3C; }
+.advance-level .lv-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  color: white;
+}
+.lv-basic { background: #27AE60; }
+.lv-mid { background: #F39C12; }
+.lv-exam { background: #E74C3C; }
+.advance-block.advance-chem .lv-exam { background: #C0392B; }
+.advance-level p.deeper {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--text-main);
+  margin: 6px 0 10px;
+}
+.advance-level p.deeper strong { color: var(--primary-dark); }
+.advance-block.advance-chem .advance-level p.deeper strong { color: #C0392B; }
+.scenario-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-right: 8px;
+  background: rgba(243,156,18,0.15);
+  color: #C77C0A;
+  vertical-align: middle;
+}
+/* 进阶习题（隔离 class，避免与 .quiz-question 冲突） */
+.adv-quiz {
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin: 12px 0;
+  border: 2px solid var(--border);
+}
+.adv-quiz.correct { border-color: var(--success); }
+.adv-quiz.wrong { border-color: var(--danger); }
+.adv-q {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+.adv-option {
+  display: block;
+  padding: 9px 14px;
+  margin-bottom: 8px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  font-size: 14px;
+}
+.adv-option:hover { background: #DCEAF5; }
+.adv-option.selected { border-color: var(--primary); background: rgba(74,144,217,0.1); }
+.adv-option.correct-answer { border-color: var(--success); background: rgba(39,174,96,0.1); }
+.adv-option.wrong-answer { border-color: var(--danger); background: rgba(231,76,60,0.1); }
+.adv-feedback {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.adv-feedback.show { display: block; }
+.adv-feedback.ok { background: rgba(39,174,96,0.1); color: #1e7e4f; }
+.adv-feedback.bad { background: rgba(231,76,60,0.1); color: #b03021; }

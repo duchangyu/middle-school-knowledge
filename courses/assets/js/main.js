@@ -106,3 +106,41 @@ function animateValue(element, start, end, duration, suffix) {
   }
   requestAnimationFrame(step);
 }
+
+// ===== 中考深度进阶模块自动绑定（.adv-quiz，隔离 class，不干扰 .quiz-question）=====
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.adv-quiz').forEach(function (quiz) {
+    var correct = (quiz.dataset.correct || '').trim();
+    var options = quiz.querySelectorAll('.adv-option');
+    var feedback = quiz.querySelector('.adv-feedback');
+    options.forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        options.forEach(function (o) {
+          o.classList.remove('selected', 'correct-answer', 'wrong-answer');
+        });
+        this.classList.add('selected');
+        var key = (this.dataset.key || '').trim();
+        if (key === correct) {
+          this.classList.add('correct-answer');
+          quiz.classList.add('correct');
+          quiz.classList.remove('wrong');
+          if (feedback) {
+            feedback.className = 'adv-feedback show ok';
+            feedback.innerHTML = '<strong>✓ 答对了！</strong> ' + (quiz.dataset.explain || '');
+          }
+        } else {
+          this.classList.add('wrong-answer');
+          quiz.classList.add('wrong');
+          quiz.classList.remove('correct');
+          options.forEach(function (o) {
+            if ((o.dataset.key || '').trim() === correct) o.classList.add('correct-answer');
+          });
+          if (feedback) {
+            feedback.className = 'adv-feedback show bad';
+            feedback.innerHTML = '<strong>✗ 再想想。</strong> ' + (quiz.dataset.hint || '');
+          }
+        }
+      });
+    });
+  });
+});

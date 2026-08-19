@@ -328,6 +328,14 @@ section{ margin-bottom:56px; scroll-margin-top:80px; }
 .sum-card li{ padding:4px 0 4px 18px; position:relative; font-size:14px; color:var(--ink-soft); }
 .sum-card li::before{ content:"▸"; position:absolute; left:0; color:var(--green); }
 
+/* 中考深度进阶模块标题（红主题，与 advance-chem 配套） */
+.section-header{
+  font-size:22px; font-weight:700; color:var(--red);
+  margin:32px 0 14px; padding-bottom:8px;
+  border-bottom:2px solid #E74C3C55;
+  display:flex; align-items:center; gap:8px;
+}
+
 footer{ text-align:center; padding:30px; color:var(--muted); font-size:13px; }
 
 /* 工具栏 */
@@ -1239,6 +1247,137 @@ function resetQuiz(){
   });
   document.getElementById('scoreBox').classList.remove('show');
 }
+</script>
+
+  <!-- 日常生活中的应用 -->
+  <div class="card life-app chem-accent">
+    <div class="section-header">🏠 日常生活中的应用</div>
+    <p class="lead">把这一章的知识带出课堂，看看化学方程式如何在你每天的柴米油盐、衣食住行里真实地运转。</p>
+    <div class="life-app-grid">
+      <div class="life-app-card">
+        <div class="la-icon">⚖️</div>
+        <h4>质量守恒定律</h4>
+        <p>配平化学方程式的根据就是反应前后原子种类和数目不变。火箭发射、钢铁冶炼、食品发酵，所有化学反应都严格遵循这条定律。</p>
+        <span class="la-tag">质量守恒</span>
+      </div>
+      <div class="life-app-card">
+        <div class="la-icon">🚀</div>
+        <h4>火箭燃料</h4>
+        <p>液氢与液氧燃烧 2H₂ + O₂ → 2H₂O，产物只有水，清洁无污染，是理想的高能燃料。配平保证了恰好完全反应、能量利用率最高。</p>
+        <span class="la-tag">燃料反应</span>
+      </div>
+      <div class="life-app-card">
+        <div class="la-icon">🧯</div>
+        <h4>灭火的本质</h4>
+        <p>灭火器、盖锅盖、喷水降温，本质都是让燃烧反应"断链"——隔绝氧气或把温度降到着火点以下，让正向反应停止。</p>
+        <span class="la-tag">反应控制</span>
+      </div>
+    </div>
+    <div id="quiz4" class="quiz-question" data-correct="c" data-explain="根据质量守恒定律：参加反应的各物质总质量 = 生成物总质量，故 D 的质量 = 12g + 8g − 9g = 11g。" data-hint="反应前后总质量不变，用总质量相减即可求出未知生成物的质量。">
+      <div class="question-text">💡 生活应用题：某反应 A + B → C + D，已知 12 g A 与 8 g B 恰好完全反应，生成 9 g C，则生成 D 的质量为：</div>
+      <div class="quiz-option" data-key="a">A. 20 g</div>
+      <div class="quiz-option" data-key="b">B. 4 g</div>
+      <div class="quiz-option" data-key="c">C. 11 g</div>
+      <div class="quiz-option" data-key="d">D. 29 g</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var q = document.getElementById('quiz4'); if(!q) return;
+    var opts = q.querySelectorAll('.quiz-option');
+    var fb = q.querySelector('.quiz-feedback');
+    var correct = q.getAttribute('data-correct');
+    opts.forEach(function(o){
+      o.addEventListener('click', function(){
+        if(q.classList.contains('correct') || q.classList.contains('wrong')) return;
+        opts.forEach(function(x){ x.classList.remove('selected','correct-answer','wrong-answer'); });
+        o.classList.add('selected');
+        var k = o.getAttribute('data-key');
+        if(k === correct){
+          q.classList.add('correct'); o.classList.add('correct-answer');
+          fb.innerHTML = '<span style="color:#27AE60;">✓ 正确！</span> ' + q.getAttribute('data-explain');
+        } else {
+          q.classList.add('wrong'); o.classList.add('wrong-answer');
+          opts.forEach(function(x){ if(x.getAttribute('data-key') === correct) x.classList.add('correct-answer'); });
+          fb.innerHTML = '<span style="color:#E74C3C;">✗ 再想想</span> ' + q.getAttribute('data-hint');
+        }
+        fb.style.display = 'block';
+      });
+    });
+  })();
+  </script>
+
+<!-- ===== 中考深度进阶模块（由浅入深） ===== -->
+<div class="card advance-block advance-chem">
+  <div class="section-header">🚀 中考深度进阶：由浅入深</div>
+  <p class="lead">这一章要真正拿下中考，得把知识从"听懂"练到"用活"。下面分三层进阶：先巩固核心，再提升能力，最后用真实情境检验综合水平。</p>
+
+  <div class="advance-level">
+    <span class="lv-tag lv-basic">① 基础巩固</span>
+    <p class="deeper">【概念深化】质量守恒定律的"参加"二字最易漏掉——未反应的剩余反应物不能计入总质量；配平时只能在化学式前加化学计量数（系数），绝不能改变化学式中元素符号右下角的数字，否则就改写了物质本身、违背客观事实。</p>
+    <div class="adv-quiz" data-correct="c" data-explain="质量守恒定律强调「参加」反应的各物质质量总和等于「生成」的各物质质量总和。A 错：氢气与氧气反应质量比为 1:8（H₂:O₂），10g 氢气需 80g 氧气才完全反应，氧气不足，不能生成 20g 水；B、D 错：镁燃烧增重是因为结合了空气中的氧气，蜡烛燃烧质量减小是因为生成的二氧化碳和水逸散到空气中，二者都遵守质量守恒定律，只是有气体参与或生成、敞口称量时未被计入。" data-hint="注意「参加」二字：有气体参与或生成的反应，要在密闭容器中称量才看不出质量变化。">
+      <div class="adv-q">【巩固题】下列关于质量守恒定律的说法，正确的是（&nbsp;）</div>
+      <div class="adv-option" data-key="a">A. 10g 氢气和 10g 氧气点燃后恰好完全反应，生成 20g 水</div>
+      <div class="adv-option" data-key="b">B. 镁条燃烧后固体质量增加，说明该反应不遵守质量守恒定律</div>
+      <div class="adv-option" data-key="c">C. 参加化学反应的各物质的质量总和，等于反应后生成的各物质的质量总和</div>
+      <div class="adv-option" data-key="d">D. 蜡烛燃烧后质量减小，说明化学反应不一定遵守质量守恒定律</div>
+      <div class="adv-feedback"></div>
+    </div>
+  </div>
+
+  <div class="advance-level">
+    <span class="lv-tag lv-mid">② 能力提升</span>
+    <p class="deeper">【方法提升】根据化学方程式计算的核心是「质量比 = 化学计量数 × 相对分子质量」。一定要先正确配平，再找出已知物与未知物的质量关系；还要注意只有纯净物的质量才能直接代入计算，含杂质的需先换算成纯净物质量。</p>
+    <div class="adv-quiz" data-correct="b" data-explain="化学方程式中 2H₂O 的相对分子质量总和为 2×18=36，生成的 2H₂ 的相对分子质量总和为 2×2=4，即每 36 份质量的水完全分解生成 4 份质量的氢气。所以 36 g 水对应生成 4 g 氢气（同时生成 32 g 氧气）。" data-hint="先算质量比：2H₂O : 2H₂ = 36 : 4，再按比例求 36 g 水对应的氢气质量。">
+      <div class="adv-q">【提升题】在电解水反应 2H₂O ═通电═ 2H₂↑ + O₂↑ 中，电解 36 g 水，理论上可得到氢气的质量是（&nbsp;）</div>
+      <div class="adv-option" data-key="a">A. 2 g</div>
+      <div class="adv-option" data-key="b">B. 4 g</div>
+      <div class="adv-option" data-key="c">C. 32 g</div>
+      <div class="adv-option" data-key="d">D. 36 g</div>
+      <div class="adv-feedback"></div>
+    </div>
+  </div>
+
+  <div class="advance-level">
+    <span class="lv-tag lv-exam">③ 中考综合</span>
+    <p class="deeper">【真实情境】把化学方程式的配平、书写与质量守恒计算放进真实生产或科技情境中，是中考综合题常见形式，如火箭燃料、钢铁冶炼、食品发酵等，考查"用活"知识的能力。</p>
+    <div class="adv-quiz" data-correct="a" data-explain="由方程式 2H₂ + O₂ ═点燃═ 2H₂O，氢气与氧气的质量比等于 (2×2):(1×32)=4:32=1:8。消耗 4 t 液氢时，需液氧质量 = 4 t × 8 = 32 t。注意这里算的是「理论至少需要」的氧气质量。" data-hint="先求 H₂ 与 O₂ 的质量比 1:8，再用 4 t 液氢按比例换算所需液氧。">
+      <div class="adv-q"><span class="scenario-tag">🚀科技前沿</span>液氢是理想的火箭燃料，其燃烧反应为 2H₂ + O₂ ═点燃═ 2H₂O。若某次发射需消耗 4 t（吨）液氢，理论上至少需要液氧的质量约为（相对原子质量 H-1，O-16）（&nbsp;）</div>
+      <div class="adv-option" data-key="a">A. 32 t</div>
+      <div class="adv-option" data-key="b">B. 24 t</div>
+      <div class="adv-option" data-key="c">C. 16 t</div>
+      <div class="adv-option" data-key="d">D. 8 t</div>
+      <div class="adv-feedback"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 中考深度进阶模块交互（05 页未引入 main.js，单独绑定 .adv-quiz） */
+document.querySelectorAll('.adv-quiz').forEach(function (quiz) {
+  var correct = (quiz.dataset.correct || '').trim();
+  var options = quiz.querySelectorAll('.adv-option');
+  var feedback = quiz.querySelector('.adv-feedback');
+  options.forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      options.forEach(function (o) { o.classList.remove('selected', 'correct-answer', 'wrong-answer'); });
+      this.classList.add('selected');
+      var key = (this.dataset.key || '').trim();
+      if (key === correct) {
+        this.classList.add('correct-answer');
+        quiz.classList.add('correct'); quiz.classList.remove('wrong');
+        if (feedback) { feedback.className = 'adv-feedback show ok'; feedback.innerHTML = '<strong>✓ 答对了！</strong> ' + (quiz.dataset.explain || ''); }
+      } else {
+        this.classList.add('wrong-answer');
+        quiz.classList.add('wrong'); quiz.classList.remove('correct');
+        options.forEach(function (o) { if ((o.dataset.key || '').trim() === correct) o.classList.add('correct-answer'); });
+        if (feedback) { feedback.className = 'adv-feedback show bad'; feedback.innerHTML = '<strong>✗ 再想想。</strong> ' + (quiz.dataset.hint || ''); }
+      }
+    });
+  });
+});
 </script>
 
 </body>

@@ -600,6 +600,26 @@
     </div>
   </div>
 
+  <!-- ===== 日常生活中的应用 ===== -->
+  <div class="card life-app">
+    <div class="section-header">🏠 日常生活中的应用</div>
+    <p class="lead">把这一章的知识带出课堂，看看它如何在你每天的生活中真实地运转。</p>
+    <div class="life-app-grid">
+      <div class="life-app-card"><div class="la-icon">🔌</div><h4>计算用电器电流</h4><p>知道电压和电阻，就能用 <b>I = U/R</b> 算出电流，例如 220V÷100Ω = <b>2.2A</b>。</p><span class="la-tag">欧姆定律</span></div>
+      <div class="life-app-card"><div class="la-icon">🛡️</div><h4>保险丝保护</h4><p>电流过大时，保险丝因<b>焦耳热</b>熔断，自动切断电路，防止火灾——这是 I²R 发热的实际应用。</p><span class="la-tag">焦耳定律</span></div>
+      <div class="life-app-card"><div class="la-icon">⚠️</div><h4>人体安全电压</h4><p>经验表明，加在人体上的电压<b>不高于 36V</b> 才安全，潮湿环境下阈值更低。</p><span class="la-tag">安全电压</span></div>
+      <div class="life-app-card"><div class="la-icon">📟</div><h4>电流表与电压表</h4><p>万用表能测电压、电流甚至电阻，原理正是<b>伏安法</b>：测出 U、I 再推算 R。</p><span class="la-tag">测量</span></div>
+    </div>
+    <div id="quiz4" class="quiz-question">
+      <div class="question-text">💡 生活应用题：一个标有"220V 40W"的灯泡，正常发光时的电阻约为？</div>
+      <div class="quiz-option" data-idx="0">A. 约 1210 Ω</div>
+      <div class="quiz-option" data-idx="1">B. 约 5.5 Ω</div>
+      <div class="quiz-option" data-idx="2">C. 约 0.18 Ω</div>
+      <div class="quiz-option" data-idx="3">D. 约 880 Ω</div>
+      <div class="quiz-feedback" style="display:none; margin-top:10px; font-size:14px; line-height:1.6;"></div>
+    </div>
+  </div>
+
   <!-- ===== 7. 学科交叉参考 ===== -->
   <div class="cross-ref-box">
     <div class="ref-title">🔗 学科交叉：欧姆定律 ↔ 数学·反比例函数</div>
@@ -613,6 +633,51 @@
   </div>
 
   <!-- ===== 底部步骤导航 ===== -->
+  <!-- ===== 中考深度进阶模块（由浅入深） ===== -->
+  <div class="card advance-block">
+    <div class="section-header">🚀 中考深度进阶：由浅入深</div>
+    <p class="lead">这一章要真正拿下中考，得把知识从"听懂"练到"用活"。下面分三层进阶：先巩固核心，再提升能力，最后用真实情境检验综合水平。</p>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-basic">① 基础巩固</span>
+      <p class="deeper">【概念深化】欧姆定律 I=U/R 的易错点是"电阻是导体本身的性质"。R=U/I 只是计算式，导体两端的电压和通过的电流变化时，电阻大小不变（只由材料、长度、横截面积、温度决定）。记住两个关系：U一定时 I与R成反比；R一定时 I与U成正比。</p>
+      <div class="adv-quiz" data-correct="c" data-explain="欧姆定律 I=U/R：电压U一定时，电流I与电阻R成反比，C正确。电流I与电压U成正比（不是反比），A错；电阻是导体本身的性质，与U、I无关，R=U/I只是计算式，B、D错。" data-hint="把公式变形看关系：电压不变时，电阻变大，电流怎么变？电阻是由U、I决定的吗？">
+        <div class="adv-q">【巩固题】对于一段定值导体，根据欧姆定律，下列说法正确的是：</div>
+        <div class="adv-option" data-key="a">A. 导体中的电流跟它两端的电压成反比</div>
+        <div class="adv-option" data-key="b">B. 导体的电阻跟它两端的电压成正比，跟电流成反比</div>
+        <div class="adv-option" data-key="c">C. 在电压一定时，导体中的电流跟它的电阻成反比</div>
+        <div class="adv-option" data-key="d">D. 电压为零时，导体的电阻也变为零</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-mid">② 能力提升</span>
+      <p class="deeper">【方法提升】串联动态电路是中考热点：滑动变阻器滑片移动→接入电阻变化→总电阻变化→总电流变化（I=U/R总）→再用 U=IR 判断各定值元件两端电压变化。口诀：先电阻、后电流、再电压。</p>
+      <div class="adv-quiz" data-correct="b" data-explain="滑片右移→滑动变阻器接入电阻 R滑 变大→总电阻 R总=R+R滑 变大→由 I=U/R总 得总电流 I 变小（A、C错）。定值电阻R两端电压 U_R=I×R，I变小→U_R变小（B对、D错）。这是串联动态电路『先总后分』的典型分析。" data-hint="滑片右移使变阻器电阻变大，总电阻怎么变？总电流怎么变？定值电阻R的电压 U=IR 又怎么变？">
+        <div class="adv-q">【提升题】定值电阻R与滑动变阻器串联接在电源上，电压表测R两端电压。当滑片右移使接入电阻变大时，下列说法正确的是：</div>
+        <div class="adv-option" data-key="a">A. 电路总电流变大，R两端电压变大</div>
+        <div class="adv-option" data-key="b">B. 电路总电流变小，R两端电压变小</div>
+        <div class="adv-option" data-key="c">C. 电路总电流不变，R两端电压不变</div>
+        <div class="adv-option" data-key="d">D. 电路总电流变小，R两端电压变大</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+
+    <div class="advance-level">
+      <span class="lv-tag lv-exam">③ 中考综合</span>
+      <p class="deeper">【真实情境】中考综合常把欧姆定律与"电功率、焦耳热、散热"结合进科技情境，要求先由 P=UI 或 R=U/I 计算，再判断能量转化与安全边界。</p>
+      <div class="adv-quiz" data-correct="a" data-explain="由 P=UI=1.2V×15A=18W，A正确。芯片这类发热元件，电能几乎全部转化为内能，故需强力散热。电阻 R=U/I=1.2/15=0.08Ω（不是80Ω），且电阻是芯片本身性质，并不随电压升高而线性『变大』，B错；接到220V远超额定会烧毁，C错；Q=I²Rt，电流越大发热越多，D错。这对应『算力中心高功耗与散热』的真实工程问题。" data-hint="先算功率 P=UI；芯片工作时的电能主要变成什么能？电阻 R=U/I 算出来是多少？">
+        <div class="adv-q"><span class="scenario-tag">🚀科技前沿</span>某数据中心服务器芯片工作电压1.2V、工作电流15A。下列说法或计算中合理的是：</div>
+        <div class="adv-option" data-key="a">A. 芯片消耗电功率 P=UI=1.2×15=18W，电能几乎全转化为热，需强力散热</div>
+        <div class="adv-option" data-key="b">B. 芯片电阻 R=U/I=1.2/15=80Ω，且随电压升高而变大</div>
+        <div class="adv-option" data-key="c">C. 若接到220V家庭电路，电流会变小，更省电</div>
+        <div class="adv-option" data-key="d">D. 电压不变时，电流越大，芯片发热越少</div>
+        <div class="adv-feedback"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="step-nav">
     <a href="14-电压电阻.html" class="btn btn-outline">← 上一章：电压电阻</a>
     <a href="index.html" class="btn btn-outline btn-sm">目录</a>
@@ -1007,6 +1072,12 @@ initQuiz('quiz3', {
   correct: 2,
   explain: '电阻是导体本身的性质，由材料、长度、横截面积、温度决定，与 U、I 无关。R = U/I 只是计算式。',
   hint: '想想：电阻是导体的固有属性，还是由 U、I 决定的？'
+});
+
+initQuiz('quiz4', {
+  correct: 0,
+  explain: '由 P = U²/R 变形得 R = U²/P = 220²/40 = 48400/40 = 1210 Ω。注意不能用 P/U（那是电流 0.18A），也不能用 U/P。',
+  hint: '先由 P = U²/R 推出 R = U²/P，再代入额定电压和额定功率。'
 });
 </script>
 </body>

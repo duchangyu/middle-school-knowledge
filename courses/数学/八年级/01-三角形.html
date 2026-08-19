@@ -1439,7 +1439,17 @@ function svgPoint(svg, evt) {
   return { x: p.x, y: p.y };
 }
 
-document.addEventListener('mousedown', function(e) {
+function svgPointFromTouch(svg, touch) {
+  const pt = svg.createSVGPoint();
+  pt.x = touch.clientX;
+  pt.y = touch.clientY;
+  const ctm = svg.getScreenCTM();
+  if (!ctm) return { x: 0, y: 0 };
+  const p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+
+document.addEventListener('pointerdown', function(e) {
   const t = e.target;
   if (t.classList && t.classList.contains('drag-vertex')) {
     const shape = t.dataset.shape;
@@ -1451,7 +1461,7 @@ document.addEventListener('mousedown', function(e) {
   }
 });
 
-document.addEventListener('mousemove', function(e) {
+document.addEventListener('pointermove', function(e) {
   if (!dragging) return;
   const svgEl = dragging.shape === 'tri' ? document.getElementById('stab-tri-svg') : document.getElementById('stab-quad-svg');
   const p = svgPoint(svgEl, e);
@@ -1489,8 +1499,8 @@ document.addEventListener('mousemove', function(e) {
   dragging.lastY = p.y;
 });
 
-document.addEventListener('mouseup', function() { dragging = null; });
-document.addEventListener('mouseleave', function() { dragging = null; });
+document.addEventListener('pointerup', function() { dragging = null; });
+document.addEventListener('pointercancel', function() { dragging = null; });
 
 document.getElementById('btn-stab-reset').addEventListener('click', function() {
   stabTriState.verts = stabTriState.init.map(v => v.slice());
