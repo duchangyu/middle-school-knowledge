@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>压强 p=ρgh 与 浮力 F浮=ρ液gV排 对比 · 八年级物理</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* ===== 页面专用样式 ===== */
+    .section-header {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header:first-child { margin-top: 0; }
+
+    .lead {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text-secondary);
+      background: var(--bg-soft);
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      margin: 12px 0;
+    }
+    .lead strong { color: var(--primary-dark); }
+
+    /* 双公式卡 */
+    .formula-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 18px 0;
+    }
+    .formula-card {
+      border-radius: var(--radius);
+      padding: 20px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      border-top: 5px solid var(--primary);
+    }
+    .formula-card.buoy { border-top-color: #16A085; }
+    .fc-head { font-size: 17px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+    .formula-card.buoy .fc-head { color: #0E7C66; }
+    .fc-formula {
+      font-family: 'Cambria','Times New Roman',serif;
+      font-size: 26px;
+      font-weight: 700;
+      text-align: center;
+      padding: 12px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+    }
+    .formula-card.buoy .fc-formula { color: #0E7C66; }
+    .fc-meaning { font-size: 14px; line-height: 1.8; }
+    .fc-meaning b { color: var(--primary-dark); }
+
+    /* 对比表 */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+      background: white;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .compare-table th, .compare-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.7;
+    }
+    .compare-table thead th {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .compare-table thead th:nth-child(2) { background: #2980B9; }
+    .compare-table thead th:nth-child(3) { background: #16A085; }
+    .compare-table tbody th {
+      background: var(--bg-soft);
+      color: var(--primary-dark);
+      font-weight: 700;
+      white-space: nowrap;
+      width: 140px;
+    }
+    .compare-table td:nth-child(2) { border-left: 3px solid #2980B9; }
+    .compare-table td:nth-child(3) { border-left: 3px solid #16A085; }
+
+    /* 相似 / 区别 列表 */
+    .point-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+    .point-card { border-radius: var(--radius); padding: 16px 18px; line-height: 1.9; font-size: 14px; }
+    .point-card.same { background: rgba(41,128,185,0.08); border: 1px solid rgba(41,128,185,0.25); }
+    .point-card.diff { background: rgba(231,76,60,0.07); border: 1px solid rgba(231,76,60,0.25); }
+    .point-card h4 { margin: 0 0 10px; font-size: 16px; }
+    .point-card.same h4 { color: #2471A3; }
+    .point-card.diff h4 { color: var(--danger); }
+    .point-card ul { margin: 0; padding-left: 20px; }
+    .point-card li { margin-bottom: 7px; }
+    .point-card strong { color: var(--primary-dark); }
+
+    /* 口诀 */
+    .mnemonic {
+      margin: 18px 0;
+      padding: 18px 22px;
+      background: linear-gradient(135deg,#FFF6E5,#FFE9C7);
+      border: 1px solid #F0C36D;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .mnemonic .rhyme {
+      font-size: 20px;
+      font-weight: 700;
+      color: #B9770E;
+      letter-spacing: 1px;
+      line-height: 1.8;
+    }
+    .mnemonic .rhyme small { display:block; font-size: 13px; font-weight: 400; color: #8A5A00; margin-top: 6px; letter-spacing: 0; }
+
+    /* 交互对照 */
+    .scene-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 14px 0; }
+    .scene-tab {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .scene-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+    .sim-panel { background: linear-gradient(135deg,#f8fafc,#eef2f7); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+    .sim-panel h4 { margin: 4px 0 8px; font-size: 15px; color: var(--primary-dark); }
+    .sim-panel.buoy h4 { color: #0E7C66; }
+    .sim-panel svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .sim-readout { font-size: 14px; margin-top: 8px; }
+    .sim-readout .big { font-size: 20px; font-weight: 700; font-family: 'Cambria',serif; }
+    .sim-readout .p { color: #2471A3; }
+    .sim-readout .f { color: #0E7C66; }
+
+    .slider-row {
+      display: flex; align-items: center; gap: 14px; margin: 12px 0;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .slider-row label { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
+    .slider-row input[type="range"] { flex: 1; min-width: 180px; max-width: 320px; }
+    .value-display {
+      font-weight: 700; color: var(--primary); font-size: 18px; min-width: 70px;
+      text-align: center; background: white; padding: 4px 12px;
+      border-radius: var(--radius-sm); box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .key-note {
+      margin: 16px 0;
+      padding: 14px 18px;
+      background: rgba(142,68,173,0.08);
+      border: 1px solid rgba(142,68,173,0.28);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .key-note b { color: #8E44AD; }
+
+    @media (max-width: 640px) {
+      .formula-pair, .point-grid, .sim-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">⚖️ 压强 vs 浮力</div>
+  <ul class="navbar-links">
+    <li><a href="../../index.html">🏠 首页</a></li>
+    <li><a href="index.html">八年级物理目录</a></li>
+    <li><a href="09-压强.html">📘 压强</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="../../index.html">首页</a>
+    <span>›</span>
+    <a href="../../物理/index.html">物理</a>
+    <span>›</span>
+    <a href="index.html">八年级</a>
+    <span>›</span>
+    <span>压强与浮力公式对比</span>
+  </div>
+
+  <div class="card">
+    <h1 style="font-size: 30px; color: var(--primary-dark); margin-bottom: 8px;">⚖️ 压强与浮力公式对比</h1>
+    <p style="color: var(--text-secondary);">八年级物理 · 易混公式辨析</p>
+
+    <div class="lead">
+      把铁块按进水中，手会感到一股<b>向上的托力</b>（浮力）；同时水也对铁块每一面产生<b>向内的挤压</b>（压强）。
+      两个公式都长得很像——<strong>p = ρ g h</strong> 和 <strong>F<sub>浮</sub> = ρ<sub>液</sub> g V<sub>排</sub></strong>，
+      都含有 <strong>ρ</strong> 和 <strong>g</strong>，却算出<strong>完全不同</strong>的东西。
+      本页帮你把两者彻底分清：一个算"单位面积受多大劲"（Pa），一个算"整块被托起多重"（N）。
+    </div>
+
+    <!-- 双公式卡 -->
+    <div class="section-header">📐 一、两张公式卡：先看清各自算什么</div>
+    <div class="formula-pair">
+      <div class="formula-card">
+        <div class="fc-head">💧 液体压强</div>
+        <div class="fc-formula">p = ρ g h</div>
+        <div class="fc-meaning">
+          算的是液体内部<strong>某一个点</strong>上，<strong>每 1 m² 面积</strong>受到多大的压力。<br>
+          它是一个"<b>强度</b>"，单位 <b>Pa</b>（= N/m²）。<br>
+          只由<strong>液体密度 ρ</strong> 和<strong>该点深度 h</strong> 决定，跟有没有物体无关。
+        </div>
+      </div>
+      <div class="formula-card buoy">
+        <div class="fc-head">🛟 浮力</div>
+        <div class="fc-formula">F<sub>浮</sub> = ρ<sub>液</sub> g V<sub>排</sub></div>
+        <div class="fc-meaning">
+          算的是浸在液体中的物体，受到液体<strong>整体向上托</strong>的合力有多大。<br>
+          它是一个"<b>总力</b>"，单位 <b>N</b>。<br>
+          只由<strong>液体密度 ρ<sub>液</sub></strong> 和<strong>排开液体体积 V<sub>排</sub></strong> 决定，跟深度 h 无关。
+        </div>
+      </div>
+    </div>
+
+    <!-- 对比表 -->
+    <div class="section-header">📊 二、逐行对比表</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>对比项目</th>
+          <th>液体压强　p = ρ g h</th>
+          <th>浮力　F<sub>浮</sub> = ρ<sub>液</sub> g V<sub>排</sub></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th>算的是什么</th><td>某一点<strong>单位面积</strong>受的压力（强度）</td><td>物体受到液体<strong>整体向上</strong>的合力（总力）</td></tr>
+        <tr><th>单位</th><td>Pa（= N/m²）</td><td>N</td></tr>
+        <tr><th>核心变量</th><td><strong>h</strong>：液面到该点的<strong>竖直距离</strong>（长度）</td><td><strong>V<sub>排</sub></strong>：物体排开液体的体积（体积）</td></tr>
+        <tr><th>决定因素</th><td>液体密度 ρ、该点深度 h</td><td>液体密度 ρ<sub>液</sub>、排开体积 V<sub>排</sub></td></tr>
+        <tr><th>与物体本身</th><td><strong>无关</strong>，只由所在位置决定</td><td><strong>有关</strong>，浸入越多（V<sub>排</sub>越大）浮力越大</td></tr>
+        <tr><th>方向</th><td>向各个方向，同深度相等</td><td>竖直向上</td></tr>
+        <tr><th>适用条件</th><td>静止液体内部任意点</td><td>浸在液体（或气体）中的物体</td></tr>
+        <tr><th>公式结构</th><td>ρg × <strong>长度 h</strong></td><td>ρg × <strong>体积 V<sub>排</sub></strong></td></tr>
+      </tbody>
+    </table>
+
+    <!-- 相似与区别 -->
+    <div class="section-header">🔍 三、为什么容易混？相似点与核心区别</div>
+    <div class="point-grid">
+      <div class="point-card same">
+        <h4>✅ 相似点（都源于液体本性）</h4>
+        <ul>
+          <li>都含有 <strong>ρ</strong>（液体密度）和 <strong>g</strong>（重力加速度）。</li>
+          <li>都来自"<strong>液体有重力、能流动</strong>"这一本性。</li>
+          <li>都随<strong>液体密度 ρ 增大</strong>而增大（盐水里比清水里都更"厉害"）。</li>
+          <li>共同因子都是 <strong>ρg</strong>，区别只在后面乘的几何量：压强乘<strong>长度 h</strong>，浮力乘<strong>体积 V<sub>排</sub></strong>。</li>
+          <li>都可用实验验证（压强计 / 阿基米德实验）。</li>
+        </ul>
+      </div>
+      <div class="point-card diff">
+        <h4>❌ 核心区别（千万别搞反）</h4>
+        <ul>
+          <li><strong>压强</strong>是"<b>强度</b>"（单位面积受力，Pa）；<strong>浮力</strong>是"<b>总量</b>"（整块受的合力，N）。</li>
+          <li><strong>h</strong> 是"<b>深度</b>"（长度，到液面的距离）；<strong>V<sub>排</sub></strong> 是"<b>体积</b>"（排开了多大一块液体）。</li>
+          <li><strong>p</strong> 与物体无关，只由位置决定；<strong>F<sub>浮</sub></strong> 与物体本身有关，浸入越多越大。</li>
+          <li>单位不同（Pa ≠ N），二者<strong>不能直接相加或比大小</strong>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 口诀 -->
+    <div class="section-header">🎯 四、记忆口诀</div>
+    <div class="mnemonic">
+      <div class="rhyme">
+        深 h 压一点，排 V 浮全盘；<br>
+        同乘 ρg，一帕一牛别混乱。
+        <small>—— h 管"压强"（压强看多深），V<sub>排</sub> 管"浮力"（浮力看排多少）；都乘 ρg，但一个是 Pa、一个是 N。</small>
+      </div>
+    </div>
+    <div class="lead">
+      <strong>类比帮记：</strong>压强像"<b>每平米被多少人踩住</b>"（看强度、看深度）；浮力像"<b>整块被托起来的总重量</b>"（看排开多少液体）。一个是"每平方米的强度"，一个是"整块的总力"，自然单位不同。
+    </div>
+
+    <!-- 交互对照 -->
+    <div class="section-header">🧪 五、交互对照：随手调，看谁在变</div>
+    <p style="font-size:14px; color:var(--text-secondary);">选液体、拖深度 h、拖排开体积 V<sub>排</sub>。注意观察：<b>只改 h，左边压强变、右边浮力不变；只改 V<sub>排</sub>，右边浮力变、左边压强不变。</b></p>
+
+    <div class="scene-tabs" id="cf-liquid-tabs">
+      <button class="scene-tab active" data-liquid="water">💧 水（ρ=1.0×10³）</button>
+      <button class="scene-tab" data-liquid="salt">🧂 盐水（ρ=1.2×10³）</button>
+      <button class="scene-tab" data-liquid="alcohol">🍶 酒精（ρ=0.8×10³）</button>
+    </div>
+
+    <div class="slider-row">
+      <label>深度 h：</label>
+      <input type="range" id="cf-depth" min="0.1" max="5" step="0.1" value="1">
+      <div class="value-display" id="cf-depth-disp">1.0 m</div>
+    </div>
+    <div class="slider-row">
+      <label>排开体积 V<sub>排</sub>：</label>
+      <input type="range" id="cf-vdisp" min="0.2" max="10" step="0.2" value="2">
+      <div class="value-display" id="cf-vdisp-disp">2.0 L</div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-panel">
+        <h4>💧 液体压强 p = ρgh</h4>
+        <svg id="cf-press-svg" viewBox="0 0 260 260" width="240" height="240"></svg>
+        <div class="sim-readout">点处压强 p = <span class="big p" id="cf-p-val">—</span> Pa</div>
+      </div>
+      <div class="sim-panel buoy">
+        <h4>🛟 浮力 F<sub>浮</sub> = ρ<sub>液</sub>gV<sub>排</sub></h4>
+        <svg id="cf-buoy-svg" viewBox="0 0 260 260" width="240" height="240"></svg>
+        <div class="sim-readout">向上托力 F<sub>浮</sub> = <span class="big f" id="cf-f-val">—</span> N</div>
+      </div>
+    </div>
+
+    <div class="key-note" id="cf-note">
+      <b>关键提醒：</b>压强（Pa）和浮力（N）单位不同，<b>不能直接相加或比较大小</b>。改深度 h 只改变左边；改 V<sub>排</sub> 只改变右边。
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 交互：压强 vs 浮力 对照 =====
+  var G = 10; // N/kg，初中取 10
+  var LIQUIDS = {
+    water:   { name: '水',   rho: 1000, color: '#74b9ff' },
+    salt:    { name: '盐水', rho: 1200, color: '#5fa8e0' },
+    alcohol: { name: '酒精', rho: 800,  color: '#9fd8c8' }
+  };
+  var cfState = { liquid: 'water', h: 1.0, vdisp: 2.0 }; // vdisp 单位：升
+
+  function $(id) { return document.getElementById(id); }
+
+  function renderCfpSVG() {
+    var L = LIQUIDS[cfState.liquid];
+    var h = cfState.h;
+    var p = L.rho * G * h;             // Pa
+    var cx = 130, top = 20, bottom = 230, tankH = bottom - top;
+    var py = top + (h / 5) * tankH;   // 深度映射到 y
+    var Larrow = 10 + Math.min(p / 50000, 1) * 22; // 箭头长度随压强
+    var content = '';
+    // 水槽
+    content += '<rect x="60" y="' + top + '" width="140" height="' + tankH + '" fill="' + L.color + '" fill-opacity="0.30" stroke="#2980b9" stroke-width="2"/>';
+    content += '<line x1="60" y1="' + top + '" x2="200" y2="' + top + '" stroke="#2980b9" stroke-width="2"/>';
+    content += '<text x="206" y="' + (top + 4) + '" font-size="11" fill="#2980b9">液面</text>';
+    // 深度标注
+    content += '<line x1="48" y1="' + top + '" x2="48" y2="' + py + '" stroke="#636e72" stroke-width="1.5"/>';
+    content += '<polygon points="48,' + top + ' 44,' + (top + 8) + ' 52,' + (top + 8) + '" fill="#636e72"/>';
+    content += '<polygon points="48,' + py + ' 44,' + (py - 8) + ' 52,' + (py - 8) + '" fill="#636e72"/>';
+    content += '<text x="34" y="' + ((top + py) / 2 + 4) + '" font-size="11" fill="#636e72" transform="rotate(-90 34 ' + ((top + py) / 2) + ')">h</text>';
+    // 该点（受压强处）
+    content += '<circle cx="' + cx + '" cy="' + py + '" r="5" fill="#E74C3C" stroke="#fff" stroke-width="1.5"/>';
+    // 四向压强箭头（向该点汇聚，长度随 p）
+    content += '<line x1="' + cx + '" y1="' + (py - Larrow) + '" x2="' + cx + '" y2="' + (py - 6) + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cfArr)"/>';
+    content += '<line x1="' + cx + '" y1="' + (py + Larrow) + '" x2="' + cx + '" y2="' + (py + 6) + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cfArr)"/>';
+    content += '<line x1="' + (cx - Larrow) + '" y1="' + py + '" x2="' + (cx - 6) + '" y2="' + py + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cfArr)"/>';
+    content += '<line x1="' + (cx + Larrow) + '" y1="' + py + '" x2="' + (cx + 6) + '" y2="' + py + '" stroke="#E74C3C" stroke-width="2.5" marker-end="url(#cfArr)"/>';
+    content += '<text x="' + cx + '" y="' + (py + 4) + '" font-size="10" fill="#fff" text-anchor="middle">p</text>';
+    content = '<defs><marker id="cfArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#E74C3C"/></marker></defs>' + content;
+    $('cf-press-svg').innerHTML = content;
+    $('cf-p-val').textContent = Math.round(p).toLocaleString();
+  }
+
+  function renderCfbSVG() {
+    var L = LIQUIDS[cfState.liquid];
+    var V = cfState.vdisp / 1000;      // m³
+    var F = L.rho * G * V;             // N
+    var cx = 130, top = 20, tankH = 210, bottom = top + tankH;
+    var FL = 14 + Math.min(F / 100, 1) * 68; // 箭头长度随浮力（满量程约 100 N，上限收在画布内）
+    var content = '';
+    content += '<rect x="60" y="' + top + '" width="140" height="' + tankH + '" fill="' + L.color + '" fill-opacity="0.30" stroke="#16A085" stroke-width="2"/>';
+    // 物体（完全浸没）
+    var ox = cx - 35, ow = 70, oy = 90, oh = 90;
+    content += '<rect x="' + ox + '" y="' + oy + '" width="' + ow + '" height="' + oh + '" fill="#7f8c8d" fill-opacity="0.55" stroke="#34495e" stroke-width="2"/>';
+    content += '<text x="' + cx + '" y="' + (oy + oh / 2 + 4) + '" font-size="11" fill="#fff" text-anchor="middle">物体</text>';
+    // 浮力箭头（向上）
+    var tipY = oy - FL;
+    content += '<line x1="' + cx + '" y1="' + oy + '" x2="' + cx + '" y2="' + tipY + '" stroke="#16A085" stroke-width="4" marker-end="url(#cfArrF)"/>';
+    content += '<text x="' + (cx + 8) + '" y="' + ((oy + tipY) / 2) + '" font-size="11" fill="#0E7C66" font-weight="700">F浮</text>';
+    content += '<text x="206" y="' + (top + 4) + '" font-size="11" fill="#16A085">液面</text>';
+    content = '<defs><marker id="cfArrF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#16A085"/></marker></defs>' + content;
+    $('cf-buoy-svg').innerHTML = content;
+    $('cf-f-val').textContent = F.toFixed(1);
+  }
+
+  function renderCf() {
+    renderCfpSVG();
+    renderCfbSVG();
+    var note = $('cf-note');
+    var L = LIQUIDS[cfState.liquid];
+    var p = L.rho * G * cfState.h;
+    var F = L.rho * G * (cfState.vdisp / 1000);
+    note.innerHTML = '<b>关键提醒：</b>压强（Pa）和浮力（N）单位不同，<b>不能直接相加或比较大小</b>。' +
+      '当前 深度 h=' + cfState.h.toFixed(1) + ' m → p=' + Math.round(p).toLocaleString() + ' Pa（只与 h 有关）；' +
+      ' V<sub>排</sub>=' + cfState.vdisp.toFixed(1) + ' L → F<sub>浮</sub>=' + F.toFixed(1) + ' N（只与 V<sub>排</sub> 有关）。' +
+      '改 h 不影响浮力，改 V<sub>排</sub> 不影响压强。';
+  }
+
+  function initCf() {
+    var tabs = document.querySelectorAll('#cf-liquid-tabs .scene-tab');
+    tabs.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        tabs.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        cfState.liquid = btn.getAttribute('data-liquid');
+        renderCf();
+      });
+    });
+    $('cf-depth').addEventListener('input', function () {
+      cfState.h = parseFloat(this.value);
+      $('cf-depth-disp').textContent = cfState.h.toFixed(1) + ' m';
+      renderCf();
+    });
+    $('cf-vdisp').addEventListener('input', function () {
+      cfState.vdisp = parseFloat(this.value);
+      $('cf-vdisp-disp').textContent = cfState.vdisp.toFixed(1) + ' L';
+      renderCf();
+    });
+    renderCf();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initCf();
+  });
+</script>
+</body>
+</html>
